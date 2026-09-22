@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-cinematic",
+      "settings": {}
+    },
+    "the_house": {
+      "type": "the-house",
+      "settings": {}
+    },
+    "signature": {
+      "type": "signature-fragrances",
+      "settings": {}
+    },
+    "discover": {
+      "type": "discover-scent",
+      "settings": {}
+    },
+    "art": {
+      "type": "art-of-perfumery",
+      "settings": {}
+    },
+    "best_sellers": {
+      "type": "best-sellers",
+      "settings": {}
+    },
+    "reels": {
+      "type": "watch-reels",
+      "settings": {}
+    },
+    "discovery": {
+      "type": "discovery-collection",
+      "settings": {}
+    },
+    "stories": {
+      "type": "customer-stories",
+      "settings": {}
+    },
+    "journal": {
+      "type": "journal",
+      "settings": {}
+    },
+    "private_access": {
+      "type": "private-access",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "the_house",
+    "signature",
+    "discover",
+    "art",
+    "best_sellers",
+    "reels",
+    "discovery",
+    "stories",
+    "journal",
+    "private_access"
+  ]
+}

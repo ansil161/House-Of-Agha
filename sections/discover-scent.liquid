@@ -1,0 +1,95 @@
+{% comment %}
+  04 — DISCOVER YOUR SCENT (INTERACTIVE QUIZ)
+{% endcomment %}
+
+<section class="section-padding border-top-thin" id="discover">
+  <div class="container">
+    <div style="text-align: center; max-width: 650px; margin: 0 auto var(--space-2xl) auto;" class="gsap-reveal">
+      <span class="editorial-label">04 — INTERACTIVE FINDER</span>
+      <h2 class="headline-section font-serif" style="margin-top: 12px;">DISCOVER YOUR SCENT</h2>
+      <p class="text-muted" style="margin-top: 12px; font-size: 0.9rem;">
+        Answer three olfactory questions to pinpoint the AGHA Extrait de Parfum tailored to your skin chemistry and presence.
+      </p>
+    </div>
+
+    <div class="scent-quiz-box gsap-reveal">
+      <!-- Step 1 -->
+      <div class="quiz-step active" data-step="1">
+        <span class="editorial-label">QUESTION 01 / 03</span>
+        <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">What mood or aura do you wish to project?</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="mysterious">
+            <h4 class="font-serif">Dark & Mysterious</h4>
+            <p>Smoky woods, deep resin, velvet leather.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="fresh">
+            <h4 class="font-serif">Fresh & Electric</h4>
+            <p>Crisp citrus, crushed botanicals, white amber.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="sensual">
+            <h4 class="font-serif">Warm & Sensual</h4>
+            <p>Vanilla bourbon, spicy iris, golden amber.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="quiz-step" data-step="2">
+        <span class="editorial-label">QUESTION 02 / 03</span>
+        <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">Select your preferred primary scent note:</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="oud">
+            <h4 class="font-serif">Rare Oud & Tobacco</h4>
+            <p>Deep, opulent, long-lasting wood extracts.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="iris">
+            <h4 class="font-serif">Powdery Iris & Suede</h4>
+            <p>Refined, elegant, high-fashion floral suede.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="amber">
+            <h4 class="font-serif">Golden Amber & Spices</h4>
+            <p>Intense warmth with pink pepper & cardamom.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="quiz-step" data-step="3">
+        <span class="editorial-label">QUESTION 03 / 03</span>
+        <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">When will you wear this fragrance?</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="night">
+            <h4 class="font-serif">Nocturnal & Evenings</h4>
+            <p>Formal galas, intimate dinners, night presence.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="signature">
+            <h4 class="font-serif">Daily Signature</h4>
+            <p>Unmistakable personal signature everywhere.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="statement">
+            <h4 class="font-serif">Special Occasions</h4>
+            <p>Unforgettable impression for milestone moments.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Step -->
+      <div class="quiz-step quiz-result-step" data-step="4">
+        <span class="editorial-label">YOUR OLFACTORY MATCH</span>
+        <h3 class="font-serif" style="font-size: 2.2rem; margin-top: 8px; text-transform: uppercase;">RECOMMENDED: OUD ROYAL EXTRAIT</h3>
+        <p class="text-soft" style="margin-top: 12px; font-size: 0.95rem;">
+          Based on your choices, Oud Royal Extrait matches 98% of your olfactory profile. Compounded with 35% oil concentration for an indelible nocturnal aura.
+        </p>
+        <div style="margin-top: 24px; display: flex; gap: 16px;">
+          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
+            <span>ADD MATCHED SCENT TO BAG (₹14,500)</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

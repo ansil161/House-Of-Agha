@@ -1,0 +1,40 @@
+{% comment %}
+  08 — DISCOVERY COLLECTION
+{% endcomment %}
+
+<section class="section-padding border-top-thin" id="discovery">
+  <div class="container">
+    <div class="discovery-card-box gsap-reveal" data-product-id="disc-set" data-title="THE DISCOVERY COLLECTION" data-price="₹4,500" data-image="assets/discovery_box.jpg">
+      <div style="aspect-ratio: 4/3; overflow: hidden; border-right: 1px solid var(--color-border);">
+        <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="AGHA Discovery Collection" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <div style="padding: var(--space-2xl); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span class="editorial-label">08 — SAMPLER EXPERIENCE</span>
+          <h2 class="font-serif" style="font-size: 2.5rem; margin-top: 12px; text-transform: uppercase;">THE DISCOVERY COLLECTION</h2>
+          <p class="text-soft" style="margin-top: 16px; font-size: 0.95rem; line-height: 1.7;">
+            Experience five of our iconic extraits de parfum (5 x 5ml) before committing to a full-size flacon. Encased in a matte black hardboard gift box lined with crushed velvet.
+          </p>
+          <ul style="list-style: none; margin-top: 20px; font-size: 0.85rem; color: var(--color-muted); display: flex; flex-direction: column; gap: 8px;">
+            <li>✓ Includes 5 x 5ml spray atomizers (Oud Royal, Velvet Iris, Santal Nocturne, Amber Absolute, Rose Noir)</li>
+            <li>✓ Includes a ₹4,500 complimentary voucher toward your full 50ml flacon</li>
+            <li>✓ Complimentary bespoke gift wrap & concierge delivery</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: 20px;">
+          <div>
+            <span style="font-size: 0.7rem; color: var(--color-muted); text-transform: uppercase;">SPECIAL EDITION</span>
+            <span style="font-size: 1.3rem; font-weight: 500; display: block; font-family: var(--font-serif);">₹4,500</span>
+          </div>
+
+          <button class="btn-primary js-add-to-cart" data-title="THE DISCOVERY COLLECTION (5X5ML)" data-price="₹4,500" data-image="assets/discovery_box.jpg" data-size="5 X 5ML">
+            <span>CLAIM DISCOVERY SET</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

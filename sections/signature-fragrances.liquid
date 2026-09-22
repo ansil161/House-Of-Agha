@@ -1,0 +1,59 @@
+{% comment %}
+  03 — SIGNATURE FRAGRANCES
+{% endcomment %}
+
+<section class="section-padding border-top-thin" id="signature">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+      <div>
+        <span class="editorial-label">03 — SIGNATURE COLLECTION</span>
+        <h2 class="headline-section font-serif" style="margin-top: 12px;">CULT SIGNATURES</h2>
+      </div>
+      <div class="tag-pill">EXTRAIT DE PARFUM SPOTLIGHT</div>
+    </div>
+
+    <div class="fragrance-spotlight-card gsap-reveal" data-product-id="sig-1" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg">
+      <div class="fragrance-image-col">
+        <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Oud Royal Extrait">
+      </div>
+
+      <div class="fragrance-info-col">
+        <div>
+          <span class="editorial-label">SPOTLIGHT FRAGRANCE</span>
+          <h3 class="font-serif" style="font-size: 2.8rem; margin-top: 8px; text-transform: uppercase;">OUD ROYAL</h3>
+          <p class="text-muted" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;">SMOKY · RESINOUS · INDELIBLE</p>
+        </div>
+
+        <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7; margin-top: 16px;">
+          An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black rose, and warm tanned leather.
+        </p>
+
+        <div class="notes-pyramid">
+          <div class="note-row">
+            <span class="note-category">TOP NOTES</span>
+            <span class="note-value">Pink Pepper, Crushed Cardamom, Saffron Threads</span>
+          </div>
+          <div class="note-row">
+            <span class="note-category">HEART NOTES</span>
+            <span class="note-value">Wild Black Rose, Tuscan Iris, Incense Mist</span>
+          </div>
+          <div class="note-row">
+            <span class="note-category">BASE NOTES</span>
+            <span class="note-value">Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 20px;">
+          <div>
+            <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">VOLUME & CONCENTRATION</span>
+            <span style="font-size: 1.1rem; font-weight: 500;">50 ML · ₹14,500</span>
+          </div>
+          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
+            <span>ADD TO BAG</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

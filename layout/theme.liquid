@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGHA PERFUMES — High-Fashion Luxury Fragrance House</title>
+  <meta name="description" content="AGHA PERFUMES is a luxury fragrance house crafting ultra-concentrated extraits de parfum (35% concentration). Enter the world of Agha.">
+  
+  <!-- CSS Assets -->
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  <!-- GSAP Animation Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- JS Assets -->
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  {% render 'header' %}
+
+  <!-- Main Content Layout -->
+  <main id="main-content" role="main">
+    {{ content_for_layout }}
+  </main>
+
+  <!-- Footer -->
+  {% render 'footer' %}
+
+  <!-- Modals & Drawers -->
+  {% render 'cart-drawer' %}
+  {% render 'quick-view-modal' %}
+
+</body>
+</html>

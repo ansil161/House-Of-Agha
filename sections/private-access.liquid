@@ -1,0 +1,27 @@
+{% comment %}
+  11 — PRIVATE ACCESS
+{% endcomment %}
+
+<section class="section-padding border-top-thin" id="private-access">
+  <div class="container">
+    <div class="private-access-box gsap-reveal">
+      <span class="editorial-label">11 — PRIVATE VAULT ACCESS</span>
+      <h2 class="font-serif" style="font-size: clamp(2.2rem, 4vw, 3.5rem); margin-top: 12px; text-transform: uppercase;">ENTER THE AGHA PRIVATE VAULT</h2>
+      <p class="text-soft" style="max-width: 580px; margin: 16px auto 0 auto; font-size: 0.95rem; line-height: 1.7;">
+        Receive private invitations to limited batch reserve compounding, bespoke engraving events, and unlisted extrait releases.
+      </p>
+
+      <form class="newsletter-form" onsubmit="event.preventDefault(); AghaStore.showToast('Your private access key has been requested.');">
+        <input type="email" placeholder="ENTER YOUR EMAIL ADDRESS" class="newsletter-input" required>
+        <button type="submit" class="btn-primary" style="white-space: nowrap;">
+          <span>REQUEST ACCESS</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; font-size: 0.7rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.2em;">
+        STRICT PRIVACY GUARANTEED · NO SPAM · UNSUBSCRIBE ANYTIME
+      </div>
+    </div>
+  </div>
+</section>
