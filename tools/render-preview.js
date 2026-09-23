@@ -120,9 +120,10 @@ async function renderTemplate(name, templateGlobals) {
   console.log('shared header on', inner.length, 'inner pages');
 
   // Pages built from JSON templates: replace the preview file's <main> with the rendered sections.
-  const pageTemplates = { 'the-house.html': 'page.the-house' };
+  const pageTemplates = { 'the-house.html': 'page.the-house', 'shop.html': 'collection' };
   for (const [file, name] of Object.entries(pageTemplates)) {
-    const rendered = await renderTemplate(name, { template: { name: 'page', suffix: name.split('.')[1] } });
+    const [tplName, suffix] = name.split('.');
+    const rendered = await renderTemplate(name, { template: { name: tplName, suffix } });
     const pagePath = path.join(THEME, file);
     let html = fs.readFileSync(pagePath, 'utf8');
     const start = html.search(/<main[\s>]/);

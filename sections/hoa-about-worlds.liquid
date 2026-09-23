@@ -8,8 +8,8 @@
 <section class="hoa-ab-worlds" id="worlds" data-hoa-ab-worlds>
   <div class="hoa-ab-worlds__pin" data-hoa-ab-pin>
     <div class="hoa-wrap hoa-ab-worlds__head">
-      <h2 class="hoa-h2">{{ s.heading }}{% if s.heading_serif != blank %} <em>{{ s.heading_serif }}</em>{% endif %}</h2>
-      {%- if s.text != blank -%}<p class="hoa-lede">{{ s.text }}</p>{%- endif -%}
+      <h2 class="hoa-ab-h2">{{ s.heading }}{% if s.heading_serif != blank %} <span class="hoa-ab-muted">{{ s.heading_serif }}</span>{% endif %}</h2>
+      {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
     </div>
 
     <div class="hoa-ab-worlds__viewport">
@@ -32,10 +32,10 @@
                 {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: b.alt, sizes: '(min-width: 900px) 26vw, 72vw' -%}
               </figure>
               <div class="hoa-ab-world__body">
-                <p class="hoa-ab-world__family">{{ b.family }}</p>
                 <h3 class="hoa-ab-world__name">{{ w_name }}</h3>
+                <p class="hoa-ab-chip hoa-ab-world__family">{{ b.family }}</p>
                 <p class="hoa-ab-world__line">{{ b.line }}</p>
-                <span class="hoa-ab-world__cta">Discover {% render 'hoa-btn-icon' %}</span>
+                <span class="hoa-ab-world__arrow">{% render 'hoa-btn-icon' %}</span>
               </div>
             </a>
           </li>
@@ -53,7 +53,7 @@
   "max_blocks": 12,
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "One house," },
-    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "seven worlds." },
+    { "type": "text", "id": "heading_serif", "label": "Heading, muted part", "default": "seven worlds." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Choose one to see it up close." }
   ],
   "blocks": [

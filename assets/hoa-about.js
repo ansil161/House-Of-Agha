@@ -2,13 +2,15 @@
    HOUSE OF AGHA · ABOUT PAGE MOTION (sections/hoa-about-*.liquid)
 
    Each animation has one job:
-     Opening ......... headline rises line by line, the portrait uncovers upward,
-                       then drifts gently as the page scrolls away (hierarchy).
-     Statement ....... words brighten in reading order with scroll (storytelling).
-     Fragrances ...... the section pins and the row pans sideways, so all seven
+     Opening bento ... headline rises line by line, then the tiles assemble in
+                       reading order (hierarchy); photos drift inside their tiles
+                       while scrolling (depth, subtle).
+     Stacking cards .. cards stick under the header; the card underneath recedes
+                       as the next one arrives (storytelling, one idea at a time).
+     Fragrances ...... the section pins and the row pans sideways so all seven
                        are seen in sequence (storytelling). Desktop only.
-     How we work ..... cells rise in once as they enter (hierarchy).
-     Closing ......... the framed photo opens to full width (emphasis before CTA).
+     Closing card .... grows from slightly inset to full size before the shop
+                       button (emphasis).
 
    Without GSAP, or with prefers-reduced-motion, the page is static and complete:
    initial states are only ever set from JS, never from CSS.
@@ -21,32 +23,6 @@
   var lenis = null;
   var hasGsap = function () { return typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined'; };
 
-  /* Wrap every word of the statement in a span, keeping <em> runs intact. */
-  function splitWords(el) {
-    if (el.dataset.hoaAbSplit) return el.querySelectorAll('.hoa-ab-w');
-    var walk = function (node) {
-      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
-        if (child.nodeType === 3) {
-          var frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach(function (piece) {
-            if (!piece) return;
-            if (/^\s+$/.test(piece)) { frag.appendChild(document.createTextNode(piece)); return; }
-            var span = document.createElement('span');
-            span.className = 'hoa-ab-w';
-            span.textContent = piece;
-            frag.appendChild(span);
-          });
-          node.replaceChild(frag, child);
-        } else if (child.nodeType === 1) {
-          walk(child);
-        }
-      });
-    };
-    walk(el);
-    el.dataset.hoaAbSplit = '1';
-    return el.querySelectorAll('.hoa-ab-w');
-  }
-
   function initLenis() {
     var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -57,7 +33,7 @@
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
     gsap.ticker.lagSmoothing(0);
 
-    // Hand anchor links (hero button to #worlds) to Lenis so they glide.
+    // Hand in-page anchors (hero button to #worlds) to Lenis so they glide.
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href^="#"]');
       if (!a || a.getAttribute('href').length < 2) return;
@@ -108,60 +84,57 @@
     mm.add('(prefers-reduced-motion: no-preference)', function () {
       var ease = 'expo.out';
 
-      /* 01 Opening */
+      /* 01 Opening bento */
       var hero = document.querySelector('[data-hoa-ab-hero]');
       if (hero) {
-        var tl = gsap.timeline({ defaults: { ease: ease } });
-        tl.from(hero.querySelectorAll('[data-hoa-ab-rise]'), { yPercent: 110, duration: 1.4, stagger: 0.12 }, 0.1)
-          .from(hero.querySelectorAll('[data-hoa-ab-line]'), { y: 24, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.35)
-          .fromTo(hero.querySelector('[data-hoa-ab-clip]'),
-            { clipPath: 'inset(100% 0% 0% 0% round 2px)' },
-            { clipPath: 'inset(0% 0% 0% 0% round 2px)', duration: 1.6, ease: 'expo.inOut' }, 0)
-          .from(hero.querySelector('[data-hoa-ab-drift]'), { scale: 1.18, duration: 2, ease: 'expo.out' }, 0.2)
-          .from(hero.querySelector('[data-hoa-ab-float]'), { y: 60, opacity: 0, duration: 1.3 }, 0.8);
-
-        gsap.to(hero.querySelector('[data-hoa-ab-drift]'), {
-          yPercent: 7, ease: 'none',
-          scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true }
-        });
-        gsap.to(hero.querySelector('[data-hoa-ab-float]'), {
-          y: -90, ease: 'none',
-          scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true }
-        });
+        gsap.timeline({ defaults: { ease: ease } })
+          .from(hero.querySelectorAll('[data-hoa-ab-rise]'), { yPercent: 110, duration: 1.3, stagger: 0.1 }, 0.05)
+          .from(hero.querySelectorAll('[data-hoa-ab-line]'), { y: 20, opacity: 0, duration: 1, stagger: 0.08 }, 0.3)
+          .from(hero.querySelectorAll('[data-hoa-ab-tile]'), {
+            y: 70, scale: 0.94, opacity: 0, duration: 1.4, stagger: 0.09, transformOrigin: '50% 100%'
+          }, 0.35);
       }
 
-      /* 02 Statement */
-      document.querySelectorAll('[data-hoa-ab-words]').forEach(function (el) {
-        gsap.fromTo(splitWords(el), { opacity: 0.16 }, {
-          opacity: 1, ease: 'none', stagger: 0.1,
-          scrollTrigger: { trigger: el, start: 'top 78%', end: 'bottom 48%', scrub: 0.6 }
+      // Photos drift a little inside their tiles and cards (the frames stay put).
+      gsap.utils.toArray('[data-hoa-ab-parallax]').forEach(function (el) {
+        gsap.fromTo(el, { yPercent: -4 }, {
+          yPercent: 4, ease: 'none',
+          scrollTrigger: { trigger: el.parentNode, start: 'top bottom', end: 'bottom top', scrub: true }
         });
       });
 
-      /* 04 + 05 Rise-in once */
+      /* Headings rise in once */
       var ups = gsap.utils.toArray('[data-hoa-ab-up]');
-      gsap.set(ups, { opacity: 0, y: 48 });
+      gsap.set(ups, { opacity: 0, y: 40 });
       ScrollTrigger.batch(ups, {
         start: 'top 88%',
         once: true,
-        onEnter: function (batch) {
-          gsap.to(batch, { opacity: 1, y: 0, duration: 1.2, ease: ease, stagger: 0.1, overwrite: true });
-        }
+        onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1.1, ease: ease, stagger: 0.1, overwrite: true }); }
       });
 
-      /* 05 Closing frame opens */
-      var closing = document.querySelector('[data-hoa-ab-closing]');
-      if (closing) {
-        var zoom = closing.querySelector('[data-hoa-ab-zoom]');
-        gsap.fromTo(zoom,
-          { clipPath: 'inset(0% 9% 0% 9% round 2px)' },
-          { clipPath: 'inset(0% 0% 0% 0% round 2px)', ease: 'none',
-            scrollTrigger: { trigger: closing, start: 'top 92%', end: 'top 20%', scrub: 0.8 } });
-        gsap.fromTo(zoom.querySelector('img'), { scale: 1.2 }, {
-          scale: 1, ease: 'none',
-          scrollTrigger: { trigger: closing, start: 'top bottom', end: 'bottom 60%', scrub: 0.8 }
+      /* 04 Closing card grows to full size */
+      var cta = document.querySelector('[data-hoa-ab-cta]');
+      if (cta) {
+        gsap.fromTo(cta, { scale: 0.9, borderRadius: 48 }, {
+          scale: 1, borderRadius: 24, ease: 'none',
+          scrollTrigger: { trigger: cta, start: 'top bottom', end: 'top 35%', scrub: 0.8 }
         });
       }
+    });
+
+    /* 02 Stacking cards: only where the cards are sticky (see CSS, 760px+) */
+    mm.add('(min-width: 760px) and (prefers-reduced-motion: no-preference)', function () {
+      var cards = gsap.utils.toArray('[data-hoa-ab-card]');
+      cards.forEach(function (card, i) {
+        var next = cards[i + 1];
+        if (!next) return;
+        gsap.to(card, {
+          scale: 0.93,
+          filter: 'brightness(0.86)',
+          ease: 'none',
+          scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 30%', scrub: true }
+        });
+      });
     });
 
     // Images change heights and pan width once decoded.

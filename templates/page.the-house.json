@@ -4,9 +4,58 @@
       "type": "hoa-about-hero",
       "settings": {}
     },
-    "statement": {
-      "type": "hoa-about-statement",
-      "settings": {}
+    "stack": {
+      "type": "hoa-about-stack",
+      "settings": {},
+      "blocks": {
+        "card_place": {
+          "type": "card",
+          "settings": {
+            "chip": "Place",
+            "title": "A place comes first",
+            "text": "Black sand, cold stone, a garden in late sun. Each fragrance starts from one setting and stays true to it.",
+            "tint": "#E4DED5",
+            "dark": false,
+            "asset": "hoa-craft-sand",
+            "w": 2000,
+            "h": 1125,
+            "alt": "Oud of Dark Paradise standing on dark sand in a beam of light"
+          }
+        },
+        "card_materials": {
+          "type": "card",
+          "settings": {
+            "chip": "Materials",
+            "title": "Materials from that world",
+            "text": "Tobacco leaf and moss, bergamot and jasmine, oud wood and sea salt. The notes follow the place.",
+            "tint": "#1C1916",
+            "dark": true,
+            "asset": "hoa-ingredients-tobacco",
+            "w": 969,
+            "h": 969,
+            "alt": "Tobacco Enigma surrounded by moss, bergamot, lemon, cinnamon and jasmine"
+          }
+        },
+        "card_bottle": {
+          "type": "card",
+          "settings": {
+            "chip": "Bottle",
+            "title": "A bottle of its own",
+            "text": "No shared flacon. Each fragrance gets its own glass, cap and colour, so you can tell them apart on the shelf.",
+            "tint": "#EADFCB",
+            "dark": false,
+            "asset": "hoa-shamamah-lily",
+            "w": 1086,
+            "h": 1448,
+            "alt": "Shamamah with its crystal cap among golden lilies"
+          }
+        }
+      },
+      "block_order": [
+        "card_place",
+        "card_materials",
+        "card_bottle"
+      ]
     },
     "worlds": {
       "type": "hoa-about-worlds",
@@ -107,10 +156,6 @@
       ],
       "settings": {}
     },
-    "method": {
-      "type": "hoa-about-method",
-      "settings": {}
-    },
     "closing": {
       "type": "hoa-about-closing",
       "settings": {}
@@ -118,9 +163,8 @@
   },
   "order": [
     "hero",
-    "statement",
+    "stack",
     "worlds",
-    "method",
     "closing"
   ]
 }

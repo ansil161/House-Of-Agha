@@ -1,34 +1,68 @@
 {%- comment -%}
-  House of Agha · About 01 · Opening
-  Asymmetric split: headline and intro on the left, one campaign portrait with a
-  product cutout overlapping it on the right. Motion in assets/hoa-about.js.
+  House of Agha · About 01 · Opening bento
+  Headline row, then a five-tile bento: large landscape, dark stat tile with the
+  scent families, tall portrait, square portrait, and a wide split tile.
+  Motion in assets/hoa-about.js.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-hero" data-hoa-ab-hero>
-  <div class="hoa-wrap hoa-ab-hero__grid">
-    <div class="hoa-ab-hero__copy">
-      {%- if s.eyebrow != blank -%}<p class="hoa-eyebrow" data-hoa-ab-line>{{ s.eyebrow }}</p>{%- endif -%}
-      <h1 class="hoa-ab-hero__title">
-        <span class="hoa-ab-mask"><span data-hoa-ab-rise>{{ s.heading }}</span></span>
-        {%- if s.heading_serif != blank -%}
-          <span class="hoa-ab-mask"><em data-hoa-ab-rise>{{ s.heading_serif }}</em></span>
+  <div class="hoa-wrap">
+    <div class="hoa-ab-hero__head">
+      <div class="hoa-ab-hero__lead">
+        {%- if s.chip != blank -%}<p class="hoa-ab-chip" data-hoa-ab-line>{{ s.chip }}</p>{%- endif -%}
+        <h1 class="hoa-ab-hero__title">
+          <span class="hoa-ab-mask"><span data-hoa-ab-rise>{{ s.heading }}</span></span>
+          {%- if s.heading_muted != blank -%}
+            <span class="hoa-ab-mask"><span class="hoa-ab-muted" data-hoa-ab-rise>{{ s.heading_muted }}</span></span>
+          {%- endif -%}
+        </h1>
+      </div>
+      <div class="hoa-ab-hero__aside" data-hoa-ab-line>
+        {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+        {%- if s.cta_label != blank -%}
+          <a class="hoa-btn" href="{{ s.cta_url | default: '#worlds' }}"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
         {%- endif -%}
-      </h1>
-      {%- if s.text != blank -%}<p class="hoa-lede hoa-ab-hero__text" data-hoa-ab-line>{{ s.text }}</p>{%- endif -%}
-      {%- if s.cta_label != blank -%}
-        <a class="hoa-btn" href="{{ s.cta_url | default: '#worlds' }}" data-hoa-ab-line><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
-      {%- endif -%}
+      </div>
     </div>
 
-    <div class="hoa-ab-hero__media">
-      <figure class="hoa-ab-hero__main" data-hoa-ab-clip>
-        <div class="hoa-ab-hero__drift" data-hoa-ab-drift>
-          {%- render 'hoa-img', name: s.asset_main, image: s.image_main, w: 1200, h: 2150, alt: s.alt_main, sizes: '(min-width: 900px) 34vw, 90vw', loading: 'eager', priority: true -%}
+    <div class="hoa-ab-bento">
+      <figure class="hoa-ab-tile hoa-ab-tile--a" data-hoa-ab-tile>
+        <div class="hoa-ab-tile__img" data-hoa-ab-parallax>
+          {%- render 'hoa-img', name: s.a_asset, image: s.a_image, w: 2000, h: 1125, alt: s.a_alt, sizes: '(min-width: 900px) 50vw, 100vw', loading: 'eager', priority: true -%}
         </div>
       </figure>
-      <figure class="hoa-ab-hero__cutout" data-hoa-ab-float>
-        {%- render 'hoa-img', name: s.asset_cutout, image: s.image_cutout, w: 1200, h: 1500, alt: s.alt_cutout, sizes: '(min-width: 900px) 16vw, 40vw', loading: 'eager' -%}
+
+      <div class="hoa-ab-tile hoa-ab-tile--stat" data-hoa-ab-tile>
+        <p class="hoa-ab-stat"><span class="hoa-ab-stat__num">{{ s.stat_value }}</span><span class="hoa-ab-stat__label">{{ s.stat_label }}</span></p>
+        {%- assign families = s.families | split: ',' -%}
+        {%- if families.size > 0 -%}
+          <ul class="hoa-ab-chips">
+            {%- for f in families -%}<li class="hoa-ab-chip hoa-ab-chip--dark">{{ f | strip }}</li>{%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <figure class="hoa-ab-tile hoa-ab-tile--b" data-hoa-ab-tile>
+        <div class="hoa-ab-tile__img" data-hoa-ab-parallax>
+          {%- render 'hoa-img', name: s.b_asset, image: s.b_image, w: 1122, h: 1402, alt: s.b_alt, sizes: '(min-width: 900px) 25vw, 50vw', loading: 'eager' -%}
+        </div>
       </figure>
+
+      <figure class="hoa-ab-tile hoa-ab-tile--c" data-hoa-ab-tile>
+        <div class="hoa-ab-tile__img" data-hoa-ab-parallax>
+          {%- render 'hoa-img', name: s.c_asset, image: s.c_image, w: 1200, h: 1607, alt: s.c_alt, sizes: '(min-width: 900px) 33vw, 50vw' -%}
+        </div>
+      </figure>
+
+      <div class="hoa-ab-tile hoa-ab-tile--wide" data-hoa-ab-tile>
+        <figure class="hoa-ab-tile__img hoa-ab-tile__img--half" data-hoa-ab-parallax>
+          {%- render 'hoa-img', name: s.d_asset, image: s.d_image, w: 1152, h: 1536, alt: s.d_alt, sizes: '(min-width: 900px) 33vw, 100vw' -%}
+        </figure>
+        <div class="hoa-ab-tile__copy">
+          <h2>{{ s.d_title }}</h2>
+          <p>{{ s.d_text }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -39,19 +73,34 @@
   "tag": "div",
   "class": "hoa-ab-section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About the House" },
+    { "type": "text", "id": "chip", "label": "Label chip", "default": "About House of Agha" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Seven fragrances." },
-    { "type": "text", "id": "heading_serif", "label": "Heading, serif line", "default": "Seven places." },
+    { "type": "text", "id": "heading_muted", "label": "Heading, second line (muted)", "default": "Seven places." },
     { "type": "textarea", "id": "text", "label": "Intro", "default": "House of Agha makes eaux de parfum. Each one is built around a single place, and dressed in a bottle of its own." },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Meet the fragrances" },
     { "type": "url", "id": "cta_url", "label": "Button link", "info": "Leave empty to scroll to the fragrances section." },
-    { "type": "header", "content": "Images" },
-    { "type": "image_picker", "id": "image_main", "label": "Main image (tall portrait)" },
-    { "type": "text", "id": "asset_main", "label": "Fallback theme asset", "default": "hoa-world-portrait" },
-    { "type": "text", "id": "alt_main", "label": "Main image alt text", "default": "A man in a white shirt holds a bottle of Oud Fury in warm evening light" },
-    { "type": "image_picker", "id": "image_cutout", "label": "Bottle cutout (white background)" },
-    { "type": "text", "id": "asset_cutout", "label": "Fallback theme asset", "default": "hoa-product-shamamah" },
-    { "type": "text", "id": "alt_cutout", "label": "Cutout alt text", "default": "Shamamah Eau de Parfum bottle with a crystal cap" }
+    { "type": "header", "content": "Large tile (landscape)" },
+    { "type": "image_picker", "id": "a_image", "label": "Image" },
+    { "type": "text", "id": "a_asset", "label": "Fallback theme asset", "default": "hoa-hero-oud-fury" },
+    { "type": "text", "id": "a_alt", "label": "Alt text", "default": "Oud Fury on oud wood in a shaft of amber light" },
+    { "type": "header", "content": "Stat tile" },
+    { "type": "text", "id": "stat_value", "label": "Number", "default": "7" },
+    { "type": "text", "id": "stat_label", "label": "Label", "default": "fragrances in four scent families" },
+    { "type": "text", "id": "families", "label": "Chips (comma separated)", "default": "Woody & Smoky, Fresh & Aquatic, Floral & Luminous, Aromatic & Green" },
+    { "type": "header", "content": "Tall tile" },
+    { "type": "image_picker", "id": "b_image", "label": "Image" },
+    { "type": "text", "id": "b_asset", "label": "Fallback theme asset", "default": "hoa-agha-blue-portrait" },
+    { "type": "text", "id": "b_alt", "label": "Alt text", "default": "Agha Blue Eau de Parfum in its campaign setting" },
+    { "type": "header", "content": "Square tile" },
+    { "type": "image_picker", "id": "c_image", "label": "Image" },
+    { "type": "text", "id": "c_asset", "label": "Fallback theme asset", "default": "hoa-maha-portrait" },
+    { "type": "text", "id": "c_alt", "label": "Alt text", "default": "Maha Eau de Parfum in its campaign setting" },
+    { "type": "header", "content": "Wide tile" },
+    { "type": "image_picker", "id": "d_image", "label": "Image" },
+    { "type": "text", "id": "d_asset", "label": "Fallback theme asset", "default": "hoa-world-water" },
+    { "type": "text", "id": "d_alt", "label": "Alt text", "default": "Sea Smoke held above clear shallow water" },
+    { "type": "text", "id": "d_title", "label": "Title", "default": "One world per bottle" },
+    { "type": "textarea", "id": "d_text", "label": "Text", "default": "A smoke-lit room, an ice cave, a palace garden. Every fragrance is built around its own place, then photographed in it." }
   ],
   "presets": [{ "name": "About: opening" }]
 }

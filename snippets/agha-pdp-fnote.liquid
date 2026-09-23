@@ -1,0 +1,25 @@
+{%- comment -%}
+  One fact in sections/agha-pdp-fragrance-notes.liquid.
+  Params: slot (l1–l3 / r1–r3 grid area), side ('left' | 'right'), icon (agha-pdp-icon name),
+          label, text (supporting line), and either list (comma-separated notes) or value (text).
+          Optional: detail + detail_label (a second, smaller value, e.g. sillage).
+{%- endcomment -%}
+<div class="pdp-fnote pdp-fnote--{{ side }}" style="grid-area: {{ slot }};" data-pdp-fnote data-side="{{ side }}">
+  <span class="pdp-fnote__icon">{% render 'agha-pdp-icon', icon: icon %}</span>
+  <div class="pdp-fnote__body">
+    <h3 class="pdp-fnote__label">{{ label }}</h3>
+    {%- if list != blank -%}
+      {%- assign notes = list | split: ',' -%}
+      <p class="pdp-fnote__value">
+        {%- for n in notes -%}
+          <span class="pdp-fnote__note">{{ n | strip }}</span>
+        {%- endfor -%}
+      </p>
+    {%- else -%}
+      <p class="pdp-fnote__value">{{ value }}</p>
+    {%- endif -%}
+    {%- if detail != blank -%}<p class="pdp-fnote__detail">{{ detail_label }} · {{ detail }}</p>{%- endif -%}
+    {%- if text != blank -%}<p class="pdp-fnote__text">{{ text }}</p>{%- endif -%}
+  </div>
+  <span class="pdp-fnote__rule" aria-hidden="true"></span>
+</div>

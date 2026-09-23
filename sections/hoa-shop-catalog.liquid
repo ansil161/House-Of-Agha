@@ -1,0 +1,226 @@
+{% comment %}
+  SHOP · Catalogue
+  Every fragrance in the collection, filterable by wearer (Men / Women / Unisex) and scent
+  family, sortable, and shown as a grid or a list. The toolbar sticks under the header.
+  Filtering happens in place (hoa-shop.js) and is mirrored in the URL (?for=, ?family=,
+  ?sort=, ?view=list) so a filtered view can be linked. Without JS every product is listed
+  in the grid.
+
+  Grid: three columns; one campaign photo (the interlude) spans two columns after the
+  third product, so seven products fill three rows. It only shows in the unfiltered,
+  featured view, where that arithmetic holds.
+
+  Data per product:
+    wearer  custom.gender metafield, else a tag named Men / Women / Unisex
+            (also accepts "For Men", "gender:men" …)
+    family  custom.family metafield, else the product type
+  With no products in the collection (local preview, fresh store) the static House of
+  Agha line-up below is listed instead.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign source = collection
+  assign use_shopify = false
+  if source != blank and source.products_count > 0
+    assign use_shopify = true
+  endif
+  assign families = s.families | split: ','
+
+  comment
+    Static line-up: name | handle | family | asset suffix | wearer
+    Wearers are a first draft; confirm them before launch.
+  endcomment
+  assign lineup = 'Oud Fury|oud-fury|Woody|oud-fury|men;Agha Blue|agha-blue|Fresh|agha-blue|men;Oud of Dark Paradise|oud-of-dark-paradise|Woody|dark-paradise|unisex;Maha|maha|Floral|maha|women;Sea Smoke|sea-smoke|Fresh|sea-smoke|unisex;Tobacco Enigma|tobacco-enigma|Aromatic|tobacco-enigma|men;Shamamah|shamamah|Floral|shamamah|women' | split: ';'
+  assign interlude_after = 3
+-%}
+
+{%- capture interlude -%}
+  {%- if s.show_interlude -%}
+    <figure class="hoa-shop-interlude" data-hoa-interlude>
+      <a class="hoa-shop-interlude__media" href="{{ s.interlude_url | default: '/products/sea-smoke' }}">
+        {%- render 'hoa-img', name: s.interlude_asset, image: s.interlude_image, w: 1200, h: 1200, alt: s.interlude_alt, sizes: '(min-width: 1000px) 62vw, 100vw' -%}
+      </a>
+      <figcaption class="hoa-pc__info hoa-shop-interlude__cap">
+        <p class="hoa-pc__name">{{ s.interlude_caption }}</p>
+        <p class="hoa-pc__meta"><span>{{ s.interlude_note }}</span></p>
+        <p class="hoa-pc__price"><a href="{{ s.interlude_url | default: '/products/sea-smoke' }}">{{ s.interlude_link }}<span aria-hidden="true">&rarr;</span></a></p>
+      </figcaption>
+    </figure>
+  {%- endif -%}
+{%- endcapture -%}
+
+<section class="hoa-shop-cat" id="catalog" data-hoa-shop>
+  <div class="hoa-shop-bar" data-hoa-shop-bar>
+    <div class="hoa-wrap hoa-shop-bar__inner">
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--for" role="group" aria-label="Filter by wearer">
+        <button type="button" class="hoa-ftab" aria-pressed="true" data-hoa-for="all">{{ s.all_label }}<sup data-hoa-count="all"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="men">{{ s.men_label }}<sup data-hoa-count="men"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="women">{{ s.women_label }}<sup data-hoa-count="women"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="unisex">{{ s.unisex_label }}<sup data-hoa-count="unisex"></sup></button>
+      </div>
+
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by scent family">
+        <span class="hoa-shop-bar__label">Family</span>
+        {%- for f in families -%}
+          {%- assign fl = f | strip -%}
+          <button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="{{ fl | handleize }}">{{ fl }}</button>
+        {%- endfor -%}
+      </div>
+
+      <div class="hoa-shop-bar__end">
+        <label class="hoa-sort">
+          <span class="hoa-shop-bar__label">Sort</span>
+          <select data-hoa-sort>
+            <option value="featured">Featured</option>
+            <option value="az">A to Z</option>
+            <option value="za">Z to A</option>
+            {%- if use_shopify -%}
+              <option value="price-asc">Price, low to high</option>
+              <option value="price-desc">Price, high to low</option>
+            {%- endif -%}
+          </select>
+        </label>
+        <div class="hoa-fview" role="group" aria-label="Layout">
+          <button type="button" class="hoa-fview__btn" aria-pressed="true" data-hoa-fview="grid" aria-label="Grid view">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5" height="5"/><rect x="9.5" y="1.5" width="5" height="5"/><rect x="1.5" y="9.5" width="5" height="5"/><rect x="9.5" y="9.5" width="5" height="5"/></svg>
+          </button>
+          <button type="button" class="hoa-fview__btn" aria-pressed="false" data-hoa-fview="list" aria-label="List view">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hoa-wrap">
+    <p class="hoa-shop-cat__status" aria-live="polite"><span data-hoa-shown></span><button type="button" class="hoa-shop-cat__clear" data-hoa-reset hidden>Clear filters</button></p>
+
+    <div class="hoa-shop-grid" data-hoa-shop-grid data-view="grid">
+      {%- if use_shopify -%}
+        {%- for product in source.products -%}
+          {%- liquid
+            assign fam = product.metafields.custom.family.value | default: product.type
+            assign wearer = product.metafields.custom.gender.value | downcase
+            if wearer == blank
+              for t in product.tags
+                assign tl = t | downcase | remove: 'gender:' | remove: 'for ' | strip
+                if tl == 'men' or tl == 'women' or tl == 'unisex'
+                  assign wearer = tl
+                  break
+                endif
+              endfor
+            endif
+            if wearer == 'man' or wearer == 'male' or wearer == 'him'
+              assign wearer = 'men'
+            elsif wearer == 'woman' or wearer == 'female' or wearer == 'her'
+              assign wearer = 'women'
+            endif
+            assign wearer = wearer | default: 'unisex'
+            assign variant = product.selected_or_first_available_variant
+            if product.price_varies
+              assign price = product.price_min | money | prepend: 'From '
+            else
+              assign price = product.price | money
+            endif
+            assign mood = product.media[1].preview_image
+            assign num = forloop.index | prepend: '0' | slice: -2, 2
+          -%}
+          <article class="hoa-pc" data-hoa-item data-for="{{ wearer }}" data-family="{{ fam | handleize }}" data-name="{{ product.title | escape }}" data-price="{{ product.price }}" data-index="{{ forloop.index0 }}">
+            <a class="hoa-pc__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 1000px) 30vw, 50vw', loading: 'lazy', alt: '' }}
+                {%- endif -%}
+              </span>
+              {%- if mood -%}
+                <span class="hoa-pc__img hoa-pc__img--mood">{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</span>
+              {%- endif -%}
+              <span class="hoa-pc__num">{{ num }}</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+              <p class="hoa-pc__meta"><span>{{ fam }}</span><span>{{ wearer | capitalize }}</span></p>
+              <p class="hoa-pc__price">{% if product.available %}{{ price }}{% else %}Sold out{% endif %}</p>
+              <div class="hoa-pc__action">
+                {%- if product.has_only_default_variant and variant.available -%}
+                  {%- form 'product', product -%}
+                    <input type="hidden" name="id" value="{{ variant.id }}">
+                    <button type="submit" name="add" class="hoa-pc__btn">Add to bag</button>
+                  {%- endform -%}
+                {%- else -%}
+                  <a class="hoa-pc__btn" href="{{ product.url }}">View</a>
+                {%- endif -%}
+              </div>
+            </div>
+          </article>
+          {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for row in lineup -%}
+          {%- liquid
+            assign f = row | split: '|'
+            assign p_asset = 'hoa-product-' | append: f[3]
+            assign m_asset = 'hoa-' | append: f[3] | append: '-portrait'
+            assign num = forloop.index | prepend: '0' | slice: -2, 2
+          -%}
+          <article class="hoa-pc" data-hoa-item data-for="{{ f[4] }}" data-family="{{ f[2] | handleize }}" data-name="{{ f[0] }}" data-index="{{ forloop.index0 }}"
+                   data-product-id="{{ f[1] }}" data-title="{{ f[0] | upcase }}" data-image="{{ p_asset | append: '-sm.webp' | asset_url }}" data-price="">
+            <a class="hoa-pc__media" href="/products/{{ f[1] }}" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product">
+                {%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
+              </span>
+              <span class="hoa-pc__img hoa-pc__img--mood">
+                {%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
+              </span>
+              <span class="hoa-pc__num">{{ num }}</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/products/{{ f[1] }}">{{ f[0] }}</a></h3>
+              <p class="hoa-pc__meta"><span>{{ f[2] }}</span><span>{{ f[4] | capitalize }}</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/products/{{ f[1] }}">View</a>
+              </div>
+            </div>
+          </article>
+          {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="hoa-shop-empty" data-hoa-empty hidden>
+      <p class="hoa-shop-empty__title">{{ s.empty_title }}</p>
+      <p class="hoa-shop-empty__text">{{ s.empty_text }}</p>
+      <button type="button" class="hoa-pc__btn hoa-pc__btn--solid" data-hoa-reset>Show all fragrances</button>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Shop catalogue",
+  "tag": "div",
+  "class": "hoa-shop-cat-section",
+  "settings": [
+    { "type": "text", "id": "all_label", "label": "All tab", "default": "All" },
+    { "type": "text", "id": "men_label", "label": "Men tab", "default": "Men" },
+    { "type": "text", "id": "women_label", "label": "Women tab", "default": "Women" },
+    { "type": "text", "id": "unisex_label", "label": "Unisex tab", "default": "Unisex" },
+    { "type": "text", "id": "families", "label": "Scent families (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
+    { "type": "header", "content": "Campaign photo in the grid" },
+    { "type": "checkbox", "id": "show_interlude", "label": "Show photo after the third product", "default": true },
+    { "type": "image_picker", "id": "interlude_image", "label": "Image" },
+    { "type": "text", "id": "interlude_asset", "label": "Theme asset (when no image is picked)", "default": "hoa-world-poolside" },
+    { "type": "text", "id": "interlude_alt", "label": "Alt text", "default": "Sea Smoke on a tray beside a pool" },
+    { "type": "text", "id": "interlude_caption", "label": "Caption", "default": "Sea Smoke" },
+    { "type": "text", "id": "interlude_note", "label": "Caption note", "default": "By the water" },
+    { "type": "text", "id": "interlude_link", "label": "Link label", "default": "View" },
+    { "type": "url", "id": "interlude_url", "label": "Link" },
+    { "type": "header", "content": "No results" },
+    { "type": "text", "id": "empty_title", "label": "Title", "default": "Nothing matches both filters." },
+    { "type": "text", "id": "empty_text", "label": "Text", "default": "Try another scent family, or see every fragrance." }
+  ],
+  "presets": [{ "name": "HOA Shop catalogue" }]
+}
+{% endschema %}

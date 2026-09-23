@@ -1,16 +1,21 @@
 {
   "sections": {
     "shop_hero": {
-      "type": "agha-shop-hero",
+      "type": "hoa-shop-hero",
       "settings": {}
     },
-    "collection_grid": {
-      "type": "agha-collection-grid",
+    "catalog": {
+      "type": "hoa-shop-catalog",
+      "settings": {}
+    },
+    "guide": {
+      "type": "hoa-shop-guide",
       "settings": {}
     }
   },
   "order": [
     "shop_hero",
-    "collection_grid"
+    "catalog",
+    "guide"
   ]
 }

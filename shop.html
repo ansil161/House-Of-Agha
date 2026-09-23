@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Collections — AGHA PERFUMES</title>
-  <meta name="description" content="Explore all extraits de parfum, signature fragrances, and discovery sets by AGHA Perfumes.">
+  <title>Shop | House of Agha</title>
+  <meta name="description" content="Shop every House of Agha Eau de Parfum, for men, for women and unisex.">
   <link rel="stylesheet" href="assets/theme.css">
   <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-shop.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="assets/theme.js" defer></script>
+  <script src="assets/hoa-shop.js" defer></script>
 </head>
-<body>
+<body class="hoa-shop-page">
 
   <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
   <header class="header hoa-header" data-hoa-header>
@@ -57,149 +59,310 @@
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
 </nav>
 
-  <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
-    <div class="container">
-      <!-- Collection Banner Header -->
-      <div style="margin-bottom: var(--space-2xl);">
-        <span class="editorial-label">CURATED COLLECTION</span>
-        <h1 class="headline-hero font-serif" style="font-size: clamp(2.5rem, 5vw, 5rem); margin-top: 12px;">
-          EXTRAITS DE PARFUM
-        </h1>
-        <p class="text-soft" style="max-width: 600px; margin-top: 16px; font-size: 0.95rem;">
-          Uncompromising 35% oil concentration extraits macerated for 90 days in dark chambers. Crafted to linger on skin and fabric for over 12 hours.
-        </p>
-      </div>
-
-      <!-- Controls & Tabs Bar -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--color-border); padding-bottom: 16px;">
-        <div class="collection-tabs-nav">
-          <a href="#" class="collection-tab-link active">ALL SCENTS (08)</a>
-          <a href="#" class="collection-tab-link">WOODY & OUD</a>
-          <a href="#" class="collection-tab-link">FLORAL SUEDE</a>
-          <a href="#" class="collection-tab-link">AMBER RESINS</a>
-          <a href="#" class="collection-tab-link">DISCOVERY SETS</a>
-        </div>
-
-        <button class="btn-secondary js-filter-toggle" style="padding: 10px 20px; font-size: 0.7rem;">
-          <span>FILTER & SORT</span>
-          <span>+</span>
-        </button>
-      </div>
-
-      <!-- Product Grid -->
-      <div class="grid-4">
-        <!-- Product 1 -->
-        <div class="product-card" data-product-id="shop-1" data-title="OUD ROYAL" data-price="₹14,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-family="WOODY & OUD">
-          <div class="product-card-media">
-            <img src="assets/bestseller_oud_royal.jpg" alt="Oud Royal">
-            <div class="product-card-quick-add">
-              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-            </div>
-          </div>
-          <div class="product-card-body">
-            <div>
-              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
-              <h3 class="product-title"><a href="/product.html?p=oud-royal">OUD ROYAL</a></h3>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-              <span class="product-price">₹14,500</span>
-              <button class="btn-secondary js-add-to-cart" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="product-card" data-product-id="shop-2" data-title="VELVET IRIS" data-price="₹13,200" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-family="FLORAL SUEDE">
-          <div class="product-card-media">
-            <img src="assets/hero_perfume_bottle.jpg" alt="Velvet Iris" style="filter: grayscale(70%);">
-            <div class="product-card-quick-add">
-              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-            </div>
-          </div>
-          <div class="product-card-body">
-            <div>
-              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
-              <h3 class="product-title"><a href="/product.html?p=velvet-iris">VELVET IRIS</a></h3>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-              <span class="product-price">₹13,200</span>
-              <button class="btn-secondary js-add-to-cart" data-title="VELVET IRIS" data-price="₹13,200" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card" data-product-id="shop-3" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-family="WOODY & OUD">
-          <div class="product-card-media">
-            <img src="assets/bestseller_oud_royal.jpg" alt="Santal Nocturne" style="filter: contrast(1.2);">
-            <div class="product-card-quick-add">
-              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-            </div>
-          </div>
-          <div class="product-card-body">
-            <div>
-              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
-              <h3 class="product-title"><a href="/product.html?p=santal-nocturne">SANTAL NOCTURNE</a></h3>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-              <span class="product-price">₹15,000</span>
-              <button class="btn-secondary js-add-to-cart" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="product-card" data-product-id="shop-4" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-family="AMBER RESINS">
-          <div class="product-card-media">
-            <img src="assets/hero_perfume_bottle.jpg" alt="Amber Absolute">
-            <div class="product-card-quick-add">
-              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-            </div>
-          </div>
-          <div class="product-card-body">
-            <div>
-              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
-              <h3 class="product-title"><a href="/product.html?p=amber-absolute">AMBER ABSOLUTE</a></h3>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-              <span class="product-price">₹16,500</span>
-              <button class="btn-secondary js-add-to-cart" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-            </div>
-          </div>
-        </div>
-      </div>
+  <main id="main-content">
+    <!-- Generated from templates/collection.json. Edit the Liquid sections, not this block. -->
+    <!-- shop_hero · sections/hoa-shop-hero.liquid -->
+    <div id="shopify-section-shop_hero" class="shopify-section hoa-shop-head-section"><section class="hoa-shop-head">
+  <div class="hoa-wrap hoa-shop-head__grid">
+    <div class="hoa-shop-head__title-wrap">
+      <p class="hoa-shop-head__crumb"><a href="/">Home</a><span aria-hidden="true">/</span>Shop</p>
+      <h1 class="hoa-shop-head__title">All fragrances<sup class="hoa-shop-head__count" data-hoa-total></sup></h1>
     </div>
-  </main>
-
-  <!-- Filter Slide-out Drawer -->
-  <div class="filter-drawer-overlay"></div>
-  <div class="filter-drawer">
-    <div class="cart-drawer-header">
-      <span class="editorial-label">REFINE SELECTION</span>
-      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FILTER FRAGRANCES</h3>
-      <button class="js-filter-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    <div class="hoa-shop-head__side"><p class="hoa-shop-head__text">Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family.</p><ul class="hoa-shop-head__links"><li><a href="/discover.html">Find your scent<span aria-hidden="true">&rarr;</span></a></li><li><a href="/gifts.html">Gifts<span aria-hidden="true">&rarr;</span></a></li></ul>
     </div>
-    <div style="padding: var(--space-lg); flex-grow: 1; overflow-y: auto;">
-      <div class="filter-group">
-        <h4 class="filter-group-title">OLFACTORY FAMILY</h4>
-        <div class="filter-options-list">
-          <button class="filter-chip">WOODY & OUD</button>
-          <button class="filter-chip">FLORAL SUEDE</button>
-          <button class="filter-chip">AMBER RESINS</button>
-          <button class="filter-chip">NOCTURNAL SMOKE</button>
-        </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- catalog · sections/hoa-shop-catalog.liquid -->
+    <div id="shopify-section-catalog" class="shopify-section hoa-shop-cat-section"><section class="hoa-shop-cat" id="catalog" data-hoa-shop>
+  <div class="hoa-shop-bar" data-hoa-shop-bar>
+    <div class="hoa-wrap hoa-shop-bar__inner">
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--for" role="group" aria-label="Filter by wearer">
+        <button type="button" class="hoa-ftab" aria-pressed="true" data-hoa-for="all">All<sup data-hoa-count="all"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="men">Men<sup data-hoa-count="men"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="women">Women<sup data-hoa-count="women"></sup></button>
+        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="unisex">Unisex<sup data-hoa-count="unisex"></sup></button>
       </div>
-      <div class="filter-group">
-        <h4 class="filter-group-title">VOLUME</h4>
-        <div class="filter-options-list">
-          <button class="filter-chip">30 ML</button>
-          <button class="filter-chip">50 ML</button>
-          <button class="filter-chip">100 ML</button>
-          <button class="filter-chip">DISCOVERY (5X5ML)</button>
+
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by scent family">
+        <span class="hoa-shop-bar__label">Family</span><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="woody">Woody</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="fresh">Fresh</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="floral">Floral</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="aromatic">Aromatic</button></div>
+
+      <div class="hoa-shop-bar__end">
+        <label class="hoa-sort">
+          <span class="hoa-shop-bar__label">Sort</span>
+          <select data-hoa-sort>
+            <option value="featured">Featured</option>
+            <option value="az">A to Z</option>
+            <option value="za">Z to A</option></select>
+        </label>
+        <div class="hoa-fview" role="group" aria-label="Layout">
+          <button type="button" class="hoa-fview__btn" aria-pressed="true" data-hoa-fview="grid" aria-label="Grid view">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5" height="5"/><rect x="9.5" y="1.5" width="5" height="5"/><rect x="1.5" y="9.5" width="5" height="5"/><rect x="9.5" y="9.5" width="5" height="5"/></svg>
+          </button>
+          <button type="button" class="hoa-fview__btn" aria-pressed="false" data-hoa-fview="list" aria-label="List view">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13"/></svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="hoa-wrap">
+    <p class="hoa-shop-cat__status" aria-live="polite"><span data-hoa-shown></span><button type="button" class="hoa-shop-cat__clear" data-hoa-reset hidden>Clear filters</button></p>
+
+    <div class="hoa-shop-grid" data-hoa-shop-grid data-view="grid"><article class="hoa-pc" data-hoa-item data-for="men" data-family="woody" data-name="Oud Fury" data-index="0"
+                   data-product-id="oud-fury" data-title="OUD FURY" data-image="assets/hoa-product-oud-fury-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=oud-fury" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-oud-fury.webp"
+    srcset="assets/hoa-product-oud-fury-sm.webp 700w, assets/hoa-product-oud-fury.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-oud-fury-portrait.webp"
+    srcset="assets/hoa-oud-fury-portrait-sm.webp 700w, assets/hoa-oud-fury-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">01</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=oud-fury">Oud Fury</a></h3>
+              <p class="hoa-pc__meta"><span>Woody</span><span>Men</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=oud-fury">View</a>
+              </div>
+            </div>
+          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="fresh" data-name="Agha Blue" data-index="1"
+                   data-product-id="agha-blue" data-title="AGHA BLUE" data-image="assets/hoa-product-agha-blue-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=agha-blue" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-agha-blue.webp"
+    srcset="assets/hoa-product-agha-blue-sm.webp 700w, assets/hoa-product-agha-blue.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-agha-blue-portrait.webp"
+    srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">02</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=agha-blue">Agha Blue</a></h3>
+              <p class="hoa-pc__meta"><span>Fresh</span><span>Men</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=agha-blue">View</a>
+              </div>
+            </div>
+          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="woody" data-name="Oud of Dark Paradise" data-index="2"
+                   data-product-id="oud-of-dark-paradise" data-title="OUD OF DARK PARADISE" data-image="assets/hoa-product-dark-paradise-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=oud-of-dark-paradise" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-dark-paradise.webp"
+    srcset="assets/hoa-product-dark-paradise-sm.webp 700w, assets/hoa-product-dark-paradise.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-dark-paradise-portrait.webp"
+    srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">03</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=oud-of-dark-paradise">Oud of Dark Paradise</a></h3>
+              <p class="hoa-pc__meta"><span>Woody</span><span>Unisex</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=oud-of-dark-paradise">View</a>
+              </div>
+            </div>
+          </article><figure class="hoa-shop-interlude" data-hoa-interlude>
+      <a class="hoa-shop-interlude__media" href="/product.html?p=sea-smoke"><img
+    src="assets/hoa-world-poolside.webp"
+    srcset="assets/hoa-world-poolside-sm.webp 700w, assets/hoa-world-poolside.webp 1200w"
+    sizes="(min-width: 1000px) 62vw, 100vw"
+    width="1200" height="1200"
+    alt="Sea Smoke on a tray beside a pool"
+    loading="lazy" decoding="async"></a>
+      <figcaption class="hoa-pc__info hoa-shop-interlude__cap">
+        <p class="hoa-pc__name">Sea Smoke</p>
+        <p class="hoa-pc__meta"><span>By the water</span></p>
+        <p class="hoa-pc__price"><a href="/product.html?p=sea-smoke">View<span aria-hidden="true">&rarr;</span></a></p>
+      </figcaption>
+    </figure><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-name="Maha" data-index="3"
+                   data-product-id="maha" data-title="MAHA" data-image="assets/hoa-product-maha-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=maha" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-maha.webp"
+    srcset="assets/hoa-product-maha-sm.webp 700w, assets/hoa-product-maha.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-maha-portrait.webp"
+    srcset="assets/hoa-maha-portrait-sm.webp 700w, assets/hoa-maha-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">04</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=maha">Maha</a></h3>
+              <p class="hoa-pc__meta"><span>Floral</span><span>Women</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=maha">View</a>
+              </div>
+            </div>
+          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="fresh" data-name="Sea Smoke" data-index="4"
+                   data-product-id="sea-smoke" data-title="SEA SMOKE" data-image="assets/hoa-product-sea-smoke-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=sea-smoke" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-sea-smoke.webp"
+    srcset="assets/hoa-product-sea-smoke-sm.webp 700w, assets/hoa-product-sea-smoke.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-sea-smoke-portrait.webp"
+    srcset="assets/hoa-sea-smoke-portrait-sm.webp 700w, assets/hoa-sea-smoke-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">05</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=sea-smoke">Sea Smoke</a></h3>
+              <p class="hoa-pc__meta"><span>Fresh</span><span>Unisex</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=sea-smoke">View</a>
+              </div>
+            </div>
+          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="aromatic" data-name="Tobacco Enigma" data-index="5"
+                   data-product-id="tobacco-enigma" data-title="TOBACCO ENIGMA" data-image="assets/hoa-product-tobacco-enigma-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=tobacco-enigma" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-tobacco-enigma.webp"
+    srcset="assets/hoa-product-tobacco-enigma-sm.webp 700w, assets/hoa-product-tobacco-enigma.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-tobacco-enigma-portrait.webp"
+    srcset="assets/hoa-tobacco-enigma-portrait-sm.webp 700w, assets/hoa-tobacco-enigma-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">06</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=tobacco-enigma">Tobacco Enigma</a></h3>
+              <p class="hoa-pc__meta"><span>Aromatic</span><span>Men</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=tobacco-enigma">View</a>
+              </div>
+            </div>
+          </article><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-name="Shamamah" data-index="6"
+                   data-product-id="shamamah" data-title="SHAMAMAH" data-image="assets/hoa-product-shamamah-sm.webp" data-price="">
+            <a class="hoa-pc__media" href="/product.html?p=shamamah" tabindex="-1" aria-hidden="true">
+              <span class="hoa-pc__img hoa-pc__img--product"><img
+    src="assets/hoa-product-shamamah.webp"
+    srcset="assets/hoa-product-shamamah-sm.webp 700w, assets/hoa-product-shamamah.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1500"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__img hoa-pc__img--mood"><img
+    src="assets/hoa-shamamah-portrait.webp"
+    srcset="assets/hoa-shamamah-portrait-sm.webp 700w, assets/hoa-shamamah-portrait.webp 1200w"
+    sizes="(min-width: 1000px) 30vw, 50vw"
+    width="1200" height="1607"
+    alt=""
+    loading="lazy" decoding="async"></span>
+              <span class="hoa-pc__num">07</span>
+            </a>
+            <div class="hoa-pc__info">
+              <h3 class="hoa-pc__name"><a href="/product.html?p=shamamah">Shamamah</a></h3>
+              <p class="hoa-pc__meta"><span>Floral</span><span>Women</span></p>
+              <p class="hoa-pc__price">Eau de Parfum</p>
+              <div class="hoa-pc__action">
+                <a class="hoa-pc__btn" href="/product.html?p=shamamah">View</a>
+              </div>
+            </div>
+          </article></div>
+
+    <div class="hoa-shop-empty" data-hoa-empty hidden>
+      <p class="hoa-shop-empty__title">Nothing matches both filters.</p>
+      <p class="hoa-shop-empty__text">Try another scent family, or see every fragrance.</p>
+      <button type="button" class="hoa-pc__btn hoa-pc__btn--solid" data-hoa-reset>Show all fragrances</button>
+    </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- guide · sections/hoa-shop-guide.liquid -->
+    <div id="shopify-section-guide" class="shopify-section hoa-shop-guide-section"><section class="hoa-shop-guide">
+  <div class="hoa-wrap">
+    <div class="hoa-shop-guide__head" data-hoa-reveal>
+      <h2 class="hoa-shop-guide__title">Not sure yet?</h2><p class="hoa-shop-guide__text">Two ways to narrow it down.</p></div>
+    <div class="hoa-shop-guide__cards"><a class="hoa-shop-guide__card" href="/discover.html" data-hoa-reveal>
+            <span class="hoa-shop-guide__media" style="--pos: 50% 40%;"><img
+    src="assets/hoa-world-hand.webp"
+    srcset="assets/hoa-world-hand-sm.webp 700w, assets/hoa-world-hand.webp 1200w"
+    sizes="(min-width: 800px) 34vw, 100vw"
+    width="1200" height="1500"
+    alt="A hand holding Oud of Dark Paradise"
+    loading="lazy" decoding="async"></span>
+            <span class="hoa-shop-guide__row">
+              <span class="hoa-shop-guide__label">Find your scent</span>
+              <span class="hoa-shop-guide__arrow" aria-hidden="true">&rarr;</span>
+            </span><span class="hoa-shop-guide__note">A few questions about the places and moods you love.</span></a><a class="hoa-shop-guide__card" href="/gifts.html" data-hoa-reveal>
+            <span class="hoa-shop-guide__media" style="--pos: 50% 55%;"><img
+    src="assets/hoa-world-gift.webp"
+    srcset="assets/hoa-world-gift-sm.webp 700w, assets/hoa-world-gift.webp 1200w"
+    sizes="(min-width: 800px) 34vw, 100vw"
+    width="1200" height="1500"
+    alt="Agha Blue in its open gift box among peonies"
+    loading="lazy" decoding="async"></span>
+            <span class="hoa-shop-guide__row">
+              <span class="hoa-shop-guide__label">Gifts</span>
+              <span class="hoa-shop-guide__arrow" aria-hidden="true">&rarr;</span>
+            </span><span class="hoa-shop-guide__note">Shopping for someone else.</span></a></div>
+  </div>
+</section>
+
+
+</div>
+
+  </main>
 
   <!-- Footer -->
   <footer class="footer">

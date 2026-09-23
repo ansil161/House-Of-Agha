@@ -234,6 +234,10 @@
     "finale": {
       "type": "agha-pdp-finale",
       "settings": {}
+    },
+    "fragrance_notes": {
+      "type": "agha-pdp-fragrance-notes",
+      "settings": {}
     }
   },
   "order": [
@@ -243,6 +247,7 @@
     "composition",
     "craft",
     "experience",
+    "fragrance_notes",
     "reviews",
     "faq",
     "related",

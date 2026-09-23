@@ -2197,3 +2197,141 @@ html:has(.pdp) body {
   transform: scale(var(--pdp-zoom, 1));
   transform-origin: var(--pdp-focal, 50% 50%);
 }
+
+/* ==========================================================================
+   DISCOVER THE FRAGRANCE — notes arranged around the product
+   sections/agha-pdp-fragrance-notes.liquid · snippets/agha-pdp-fnote.liquid
+   Desktop/tablet: image in the centre, three facts either side, each joined to the
+   image by a hairline. Mobile: image, then one scannable list.
+   ========================================================================== */
+.pdp-fnotes__stage {
+  --fn-gap: clamp(36px, 5vw, 88px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.15fr) minmax(0, 1fr);
+  grid-template-rows: repeat(3, auto);
+  grid-template-areas:
+    'l1 img r1'
+    'l2 img r2'
+    'l3 img r3';
+  column-gap: var(--fn-gap);
+  row-gap: clamp(28px, 3.2vw, 48px);
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* Centre image: an arch on warm paper; studio shots blend into it */
+.pdp-fnotes__image {
+  grid-area: img;
+  align-self: center;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  min-height: 0;
+  aspect-ratio: 4 / 5.2;
+  border-radius: 999px 999px var(--pdp-radius-sm) var(--pdp-radius-sm);
+  overflow: hidden;
+  background: var(--pdp-soft-2);
+}
+.pdp-fnotes__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+/* A fact: icon, label, value, one quiet line */
+.pdp-fnote {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  min-width: 0;
+}
+.pdp-fnote--left { flex-direction: row-reverse; text-align: right; }
+.pdp-fnote__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--pdp-line);
+  border-radius: 50%;
+  color: var(--pdp-ink-soft);
+  background: #fff;
+}
+.pdp-fnote__icon svg { width: 18px; height: 18px; }
+.pdp-fnote__body { min-width: 0; max-width: 300px; }
+.pdp-fnote--left .pdp-fnote__body { margin-left: auto; }
+.pdp-fnote__label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--pdp-muted);
+}
+.pdp-fnote__value {
+  margin-top: 8px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 1.35vw, 1.35rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--pdp-ink);
+}
+.pdp-fnote__note:not(:last-child)::after { content: ' · '; color: var(--pdp-muted); }
+.pdp-fnote__detail { margin-top: 4px; font-size: 0.82rem; color: var(--pdp-ink-soft); }
+.pdp-fnote__text { margin-top: 6px; font-size: 0.84rem; line-height: 1.55; color: var(--pdp-muted); }
+
+/* Hairline from the icon towards the image */
+.pdp-fnote__rule {
+  position: absolute;
+  top: 20px;
+  width: calc(var(--fn-gap) * 0.72);
+  height: 1px;
+  background: var(--pdp-line);
+  transform-origin: var(--fn-origin, left) center;
+}
+.pdp-fnote--left .pdp-fnote__rule { right: calc(var(--fn-gap) * -0.86); --fn-origin: left; }
+.pdp-fnote--right .pdp-fnote__rule { left: calc(var(--fn-gap) * -0.86); --fn-origin: right; }
+
+/* Tablet: same composition, tighter */
+@media (max-width: 1100px) {
+  .pdp-fnotes__stage {
+    --fn-gap: clamp(24px, 3.4vw, 40px);
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.8fr) minmax(0, 1fr);
+    row-gap: 28px;
+  }
+  .pdp-fnote { gap: 12px; }
+  .pdp-fnote__icon { width: 34px; height: 34px; }
+  .pdp-fnote__icon svg { width: 16px; height: 16px; }
+  .pdp-fnote__rule { top: 17px; }
+  .pdp-fnote__value { font-size: 1.02rem; }
+  .pdp-fnote__text { font-size: 0.78rem; }
+}
+
+/* Mobile: image first, then one list in reading order */
+@media (max-width: 768px) {
+  .pdp-fnotes__stage { display: block; }
+  .pdp-fnotes__image {
+    width: min(78vw, 360px);
+    margin: 0 auto 28px;
+  }
+  .pdp-fnote,
+  .pdp-fnote--left {
+    grid-area: auto !important;
+    flex-direction: row;
+    text-align: left;
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid var(--pdp-line);
+  }
+  .pdp-fnote:last-child { border-bottom: 1px solid var(--pdp-line); }
+  .pdp-fnote--left .pdp-fnote__body { margin-left: 0; }
+  .pdp-fnote__body { max-width: none; }
+  .pdp-fnote__rule { display: none; }
+  .pdp-fnote__value { font-size: 1.1rem; margin-top: 6px; }
+}

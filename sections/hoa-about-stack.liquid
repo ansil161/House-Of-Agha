@@ -1,0 +1,60 @@
+{%- comment -%}
+  House of Agha · About 02 · How a fragrance comes together
+  Sticky-stack: each card sticks under the header and the one before it recedes
+  as the next arrives (CSS position: sticky + GSAP scrub in assets/hoa-about.js).
+  Without JS the cards still stack via sticky; with reduced motion they do not scale.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="hoa-ab-stack" data-hoa-ab-stack>
+  <div class="hoa-wrap">
+    <h2 class="hoa-ab-h2" data-hoa-ab-up>{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
+
+    <div class="hoa-ab-stack__list">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <article class="hoa-ab-card{% if b.dark %} hoa-ab-card--dark{% endif %}" style="--hoa-card: {{ b.tint }}; --hoa-i: {{ forloop.index0 }};" data-hoa-ab-card {{ block.shopify_attributes }}>
+          <div class="hoa-ab-card__copy">
+            {%- if b.chip != blank -%}<p class="hoa-ab-chip{% if b.dark %} hoa-ab-chip--dark{% endif %}">{{ b.chip }}</p>{%- endif -%}
+            <h3>{{ b.title }}</h3>
+            <p>{{ b.text }}</p>
+          </div>
+          <figure class="hoa-ab-card__media">
+            {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 900px) 50vw, 100vw' -%}
+          </figure>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: stacking cards",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How a fragrance" },
+    { "type": "text", "id": "heading_muted", "label": "Heading, muted part", "default": "comes together." }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "text", "id": "chip", "label": "Chip" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" },
+        { "type": "color", "id": "tint", "label": "Card colour", "default": "#E4DED5" },
+        { "type": "checkbox", "id": "dark", "label": "Light text (for dark colours)", "default": false },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset" },
+        { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1200 },
+        { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1500 },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "About: stacking cards" }]
+}
+{% endschema %}

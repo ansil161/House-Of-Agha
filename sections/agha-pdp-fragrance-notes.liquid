@@ -1,0 +1,118 @@
+{% comment %}
+  AGHA PDP — FRAGRANCE NOTES ("Discover the Fragrance")
+  The product image at the centre, six facts arranged around it: top / heart notes and family
+  on the left, base notes, scent character and longevity on the right. Mobile: image first,
+  then the facts as one list (top, heart, base, family, character, longevity).
+
+  Data — every value comes from the current product, nothing is written into the section:
+    Top notes ........ custom.top_notes         (text, comma separated)  — shared with the notes collage
+    Heart notes ...... custom.heart_notes       (text, comma separated)
+    Base notes ....... custom.base_notes        (text, comma separated)
+    Family ........... custom.family            (text) → falls back to product.type
+    Scent character .. custom.scent_character   (text) → falls back to custom.scent_tags (list) → custom.mood
+    Longevity ........ custom.longevity         (text) + custom.sillage as a second line when present
+  A fact without data is left out; the section is skipped unless the product has notes,
+  a scent character or a longevity value (the family alone is not enough).
+
+  Motion: assets/pdp.js (heading, then image, then the facts pair by pair). Static without JS.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign mf = product.metafields.custom
+
+  assign top = mf.top_notes.value
+  assign heart = mf.heart_notes.value
+  assign base = mf.base_notes.value
+  assign family = mf.family.value | default: product.type
+
+  assign character = mf.scent_character.value
+  if character == blank and mf.scent_tags.value != blank
+    assign character = mf.scent_tags.value | join: ', '
+  endif
+  if character == blank
+    assign character = mf.mood.value
+  endif
+
+  assign longevity = mf.longevity.value
+  assign sillage = mf.sillage.value
+
+  assign image = s.image | default: product.featured_image
+
+  assign has_any = false
+  comment
+    Family alone does not justify the section (every product has a type); it needs real note data.
+  endcomment
+  if top != blank or heart != blank or base != blank or character != blank or longevity != blank
+    assign has_any = true
+  endif
+-%}
+
+{%- if has_any -%}
+<section class="pdp pdp-section pdp-fnotes" data-pdp-fnotes aria-labelledby="fnotes-{{ section.id }}-title">
+  <div class="container">
+    <header class="pdp-heading" data-pdp-reveal>
+      {%- if s.eyebrow != blank -%}<span class="pdp-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 id="fnotes-{{ section.id }}-title">{{ s.heading }}</h2>
+      {%- if s.intro != blank -%}<p>{{ s.intro }}</p>{%- endif -%}
+    </header>
+
+    <div class="pdp-fnotes__stage">
+      <figure class="pdp-fnotes__image" data-pdp-fnotes-image>
+        {%- if image -%}
+          {%- assign image_alt = image.alt | default: product.title -%}
+          {{ image | image_url: width: 1100 | image_tag: widths: '500, 700, 900, 1100', sizes: '(min-width: 1101px) 32vw, (min-width: 769px) 34vw, 86vw', loading: 'lazy', alt: image_alt }}
+        {%- endif -%}
+      </figure>
+
+      {%- comment -%} DOM order is the mobile reading order; desktop places each fact by grid area. {%- endcomment -%}
+      {%- if top != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'l1', side: 'left', icon: 'leaf', label: s.top_label, list: top, text: s.top_text -%}
+      {%- endif -%}
+      {%- if heart != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'l2', side: 'left', icon: 'flower', label: s.heart_label, list: heart, text: s.heart_text -%}
+      {%- endif -%}
+      {%- if base != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'r1', side: 'right', icon: 'wood', label: s.base_label, list: base, text: s.base_text -%}
+      {%- endif -%}
+      {%- if family != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'l3', side: 'left', icon: 'drop', label: s.family_label, value: family, text: s.family_text -%}
+      {%- endif -%}
+      {%- if character != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'r2', side: 'right', icon: 'sparkle', label: s.character_label, value: character, text: s.character_text -%}
+      {%- endif -%}
+      {%- if longevity != blank -%}
+        {%- render 'agha-pdp-fnote', slot: 'r3', side: 'right', icon: 'time', label: s.longevity_label, value: longevity, detail: sillage, detail_label: 'Sillage', text: s.longevity_text -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · Discover the fragrance",
+  "class": "pdp-fnotes-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The notes" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Discover the Fragrance" },
+    { "type": "textarea", "id": "intro", "label": "Supporting line", "default": "Explore the notes that shape this fragrance." },
+    { "type": "image_picker", "id": "image", "label": "Centre image", "info": "Defaults to the product's featured image." },
+    { "type": "paragraph", "content": "Values come from product metafields: custom.top_notes, custom.heart_notes, custom.base_notes, custom.family, custom.scent_character (or custom.scent_tags / custom.mood), custom.longevity and custom.sillage. Facts without a value are hidden." },
+    { "type": "header", "content": "Labels" },
+    { "type": "text", "id": "top_label", "label": "Top notes", "default": "Top notes" },
+    { "type": "text", "id": "top_text", "label": "Top notes line", "default": "The opening you meet first." },
+    { "type": "text", "id": "heart_label", "label": "Heart notes", "default": "Heart notes" },
+    { "type": "text", "id": "heart_text", "label": "Heart notes line", "default": "The character that unfolds." },
+    { "type": "text", "id": "base_label", "label": "Base notes", "default": "Base notes" },
+    { "type": "text", "id": "base_text", "label": "Base notes line", "default": "What stays on the skin." },
+    { "type": "text", "id": "family_label", "label": "Family", "default": "Fragrance family" },
+    { "type": "text", "id": "family_text", "label": "Family line", "default": "Where it sits in the house." },
+    { "type": "text", "id": "character_label", "label": "Scent character", "default": "Scent character" },
+    { "type": "text", "id": "character_text", "label": "Scent character line", "default": "How it feels to wear." },
+    { "type": "text", "id": "longevity_label", "label": "Longevity", "default": "Longevity" },
+    { "type": "text", "id": "longevity_text", "label": "Longevity line", "default": "How long it stays with you." }
+  ],
+  "presets": [{ "name": "Agha PDP · Discover the fragrance" }]
+}
+{% endschema %}

@@ -1,93 +1,201 @@
 /* ==========================================================================
    HOUSE OF AGHA · ABOUT PAGE (templates/page.the-house.json)
-   Builds on the tokens, type and buttons in hoa-home.css. Light page only:
-   warm paper throughout, one radius (2px) for media, pill buttons.
-   Every section is fully readable without JS; motion lives in hoa-about.js.
+   Bento, app-style. Builds on the tokens and pill buttons in hoa-home.css.
+
+   Shape rule:  surfaces (tiles, cards) 24px · media inside a card 16px ·
+                everything interactive or label-like is a full pill.
+   Type rule:   one family (Plus Jakarta Sans). Emphasis is colour (muted),
+                never a second typeface.
+   Light page only. Every section is complete without JS; motion lives in
+   assets/hoa-about.js and only ever sets initial states from script.
    ========================================================================== */
 
-.hoa-page { background: var(--hoa-paper); color: var(--hoa-ink); }
-.hoa-page main { overflow-x: clip; }
-.hoa-page .hoa-h2 em { padding-bottom: 0.06em; }
+.hoa-about {
+  --ab-r: 24px;
+  --ab-r-in: 16px;
+  --ab-surface: #FBFAF7;
+  --ab-space: clamp(72px, 9vw, 140px);
+  background: var(--hoa-paper);
+  color: var(--hoa-ink);
+}
+/* theme.css sets overflow-x: hidden on html AND body, which turns body into its own
+   scroll container and silently disables position: sticky (the stacking cards).
+   clip stops sideways scroll without creating a scroll container. */
+body.hoa-about { overflow-x: clip; overflow-y: visible; }
+.hoa-about main { overflow-x: clip; }
 
-/* ---------- 01 Opening ---------- */
-.hoa-ab-hero {
-  padding: calc(var(--hoa-header-h) + clamp(28px, 5vw, 72px)) 0 clamp(64px, 8vw, 120px);
+/* ---------- Shared type & chips ---------- */
+.hoa-ab-h2 {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 4.6vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-transform: none;
+  color: inherit;
 }
-.hoa-ab-hero__grid {
+.hoa-ab-muted { color: var(--hoa-mute); }
+.hoa-ab-sub { margin: 0; max-width: 44ch; font-size: 1rem; line-height: 1.6; color: var(--hoa-ink-2); }
+
+.hoa-ab-chip {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 6px 13px;
+  border: 1px solid var(--hoa-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  font-family: var(--hoa-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--hoa-ink-2);
+  white-space: nowrap;
+}
+.hoa-ab-chip--dark { border-color: rgba(246, 241, 231, 0.22); background: rgba(246, 241, 231, 0.06); color: rgba(246, 241, 231, 0.86); }
+.hoa-ab-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+/* ==========================================================================
+   01 Opening bento
+   ========================================================================== */
+.hoa-ab-hero { padding: calc(var(--hoa-header-h) + clamp(28px, 4vw, 56px)) 0 var(--ab-space); }
+.hoa-ab-hero__head {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(32px, 5vw, 88px);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
   align-items: end;
-  min-height: calc(100dvh - var(--hoa-header-h) - clamp(28px, 5vw, 72px) - clamp(64px, 8vw, 120px));
+  margin-bottom: clamp(28px, 3.4vw, 48px);
 }
-.hoa-ab-hero__copy { display: grid; justify-items: start; gap: clamp(22px, 2.4vw, 34px); padding-bottom: clamp(8px, 2vw, 32px); }
+.hoa-ab-hero__lead { display: grid; justify-items: start; gap: 22px; }
 .hoa-ab-hero__title {
   margin: 0;
   font-family: var(--hoa-sans);
-  font-weight: 400;
-  font-size: clamp(2.8rem, min(5.8vw, 10.5dvh), 6.6rem);
-  line-height: 0.96;
+  font-weight: 500;
+  font-size: clamp(2.8rem, min(6.2vw, 11dvh), 6.8rem);
+  line-height: 0.98;
   letter-spacing: -0.055em;
   text-transform: none;
   color: var(--hoa-ink);
 }
-.hoa-ab-mask { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
-.hoa-ab-mask > * { display: inline-block; }
-.hoa-ab-hero__title em {
-  font-family: var(--hoa-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: var(--hoa-ink-2);
-}
-.hoa-ab-hero__text { max-width: 38ch; }
+.hoa-ab-mask { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.hoa-ab-mask > span { display: inline-block; }
+.hoa-ab-hero__aside { display: grid; justify-items: start; gap: 22px; padding-bottom: 6px; }
+.hoa-ab-hero__aside p { margin: 0; max-width: 38ch; font-size: 1.02rem; line-height: 1.6; color: var(--hoa-ink-2); }
 
-.hoa-ab-hero__media { position: relative; justify-self: end; width: fit-content; max-width: 100%; }
-.hoa-ab-hero__main {
+.hoa-ab-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: clamp(250px, 27vw, 420px) clamp(220px, 22vw, 340px);
+  gap: clamp(10px, 1.1vw, 16px);
+}
+.hoa-ab-tile {
+  position: relative;
   margin: 0;
-  aspect-ratio: 4 / 5;
-  height: min(calc(100dvh - var(--hoa-header-h) - 120px), 680px);
-  max-width: 100%;
-  margin-left: auto;
   overflow: hidden;
-  border-radius: var(--hoa-radius);
-  background: #1d1712;
-}
-.hoa-ab-hero__drift { width: 100%; height: 118%; margin-top: -9%; }
-.hoa-ab-hero__drift img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 30%; display: block; }
-.hoa-ab-hero__cutout {
-  position: absolute;
-  left: -26%;
-  bottom: clamp(24px, 4vw, 56px);
-  width: 44%;
-  margin: 0;
-  padding: 10px 10px 0;
+  border-radius: var(--ab-r);
   background: var(--hoa-stone);
-  border-radius: var(--hoa-radius);
-  box-shadow: 0 24px 60px -30px rgba(40, 30, 20, 0.45);
+  isolation: isolate;
 }
-.hoa-ab-hero__cutout img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+.hoa-ab-tile--a { grid-column: 1 / 7; grid-row: 1; }
+.hoa-ab-tile--stat { grid-column: 7 / 10; grid-row: 1; }
+.hoa-ab-tile--b { grid-column: 10 / 13; grid-row: 1 / 3; }
+.hoa-ab-tile--c { grid-column: 1 / 4; grid-row: 2; }
+.hoa-ab-tile--wide { grid-column: 4 / 10; grid-row: 2; }
 
-/* ---------- 02 Statement ---------- */
-.hoa-ab-statement { padding: clamp(40px, 8vw, 140px) 0 var(--hoa-section); }
-.hoa-ab-statement__text {
-  max-width: 24ch;
-  margin: 0 auto;
-  text-align: center;
+.hoa-ab-tile__img { position: absolute; inset: -6% 0; }
+.hoa-ab-tile__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--hoa-ease); }
+.hoa-ab-tile:hover .hoa-ab-tile__img img { transform: scale(1.04); }
+
+.hoa-ab-tile--stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(20px, 2vw, 30px);
+  background: var(--hoa-ink);
+  color: var(--hoa-ivory);
+}
+.hoa-ab-stat { display: grid; gap: 6px; margin: 0; }
+.hoa-ab-stat__num { font-size: clamp(4rem, 8vw, 7.4rem); font-weight: 500; line-height: 0.9; letter-spacing: -0.06em; }
+.hoa-ab-stat__label { max-width: 16ch; font-size: 0.95rem; line-height: 1.45; color: rgba(246, 241, 231, 0.7); }
+
+.hoa-ab-tile--wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 10px;
+  padding: 10px;
+  background: var(--ab-surface);
+}
+.hoa-ab-tile__img--half { position: relative; inset: auto; margin: 0; overflow: hidden; border-radius: var(--ab-r-in); }
+.hoa-ab-tile__img--half img { position: absolute; inset: -6% 0; width: 100%; height: 112%; }
+.hoa-ab-tile__copy { display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; padding: clamp(14px, 1.6vw, 24px); }
+.hoa-ab-tile__copy h2 {
+  margin: 0;
   font-family: var(--hoa-sans);
-  font-size: clamp(1.9rem, 4.1vw, 4rem);
-  line-height: 1.14;
+  font-weight: 500;
+  font-size: clamp(1.3rem, 1.7vw, 1.75rem);
   letter-spacing: -0.035em;
+  line-height: 1.1;
+  text-transform: none;
   color: var(--hoa-ink);
 }
-.hoa-ab-statement__text em { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.02em; }
-.hoa-ab-statement__text .hoa-ab-w { display: inline; }
+.hoa-ab-tile__copy p { margin: 0; font-size: 0.94rem; line-height: 1.55; color: var(--hoa-ink-2); }
 
-/* ---------- 03 Fragrances row ---------- */
-.hoa-ab-worlds { padding-bottom: var(--hoa-section); }
-.hoa-ab-worlds__pin { display: flex; flex-direction: column; justify-content: center; gap: clamp(32px, 4vw, 56px); }
-.hoa-ab-worlds__head { display: grid; gap: 18px; }
+/* ==========================================================================
+   02 Stacking cards
+   ========================================================================== */
+.hoa-ab-stack { padding: 0 0 var(--ab-space); }
+.hoa-ab-stack .hoa-ab-h2 { margin-bottom: clamp(28px, 4vw, 56px); max-width: 16ch; }
+.hoa-ab-stack__list { display: grid; gap: clamp(16px, 2vw, 24px); }
+.hoa-ab-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--ab-r);
+  background: var(--hoa-card, var(--hoa-stone));
+  color: var(--hoa-ink);
+  transform-origin: 50% 0;
+}
+.hoa-ab-card--dark { color: var(--hoa-ivory); }
+.hoa-ab-card__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  padding: clamp(18px, 3vw, 44px);
+}
+.hoa-ab-card__copy h3 {
+  margin: auto 0 0;
+  font-family: var(--hoa-sans);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 3.4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-transform: none;
+  color: inherit;
+}
+.hoa-ab-card__copy p { margin: -12px 0 0; max-width: 40ch; font-size: 1rem; line-height: 1.6; opacity: 0.78; }
+.hoa-ab-card__media { position: relative; margin: 0; min-height: 280px; overflow: hidden; border-radius: var(--ab-r-in); }
+.hoa-ab-card__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+@media (min-width: 760px) {
+  .hoa-ab-card {
+    position: sticky;
+    top: calc(var(--hoa-header-h) + 20px + var(--hoa-i, 0) * 14px);
+    height: min(calc(100dvh - var(--hoa-header-h) - 64px), 600px);
+  }
+}
+
+/* ==========================================================================
+   03 Fragrances row
+   ========================================================================== */
+.hoa-ab-worlds { padding-bottom: var(--ab-space); }
+.hoa-ab-worlds__pin { display: flex; flex-direction: column; justify-content: center; gap: clamp(28px, 3.4vw, 48px); }
+.hoa-ab-worlds__head { display: grid; gap: 16px; }
 .hoa-ab-worlds__viewport {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -97,55 +205,63 @@
 .hoa-ab-worlds__viewport::-webkit-scrollbar { display: none; }
 .hoa-ab-worlds__track {
   display: flex;
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(10px, 1.1vw, 16px);
   width: max-content;
   margin: 0;
   padding: 0 var(--hoa-gutter);
   list-style: none;
 }
-.hoa-ab-world {
-  width: clamp(250px, 23vw, 360px);
-  scroll-snap-align: start;
-  scroll-margin-left: var(--hoa-gutter);
+.hoa-ab-world { width: clamp(250px, 22vw, 340px); scroll-snap-align: start; scroll-margin-left: var(--hoa-gutter); }
+.hoa-ab-world__link {
+  display: grid;
+  gap: 10px;
+  height: 100%;
+  padding: 10px;
+  border-radius: var(--ab-r);
+  background: var(--ab-surface);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.6s var(--hoa-ease), box-shadow 0.6s var(--hoa-ease);
 }
-.hoa-ab-world__link { display: grid; gap: 18px; color: inherit; text-decoration: none; }
+.hoa-ab-world__link:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -28px rgba(60, 45, 30, 0.45); }
+.hoa-ab-world__link:active { transform: translateY(-1px) scale(0.99); }
 .hoa-ab-world__media {
   margin: 0;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: var(--hoa-radius);
+  border-radius: var(--ab-r-in);
   background: var(--hoa-tint);
 }
-.hoa-ab-world__media img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  transition: transform 1.2s var(--hoa-ease);
+.hoa-ab-world__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--hoa-ease); }
+.hoa-ab-world__link:hover .hoa-ab-world__media img { transform: scale(1.05); }
+.hoa-ab-world__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px 12px;
+  padding: 8px 8px 10px;
 }
-.hoa-ab-world__link:hover .hoa-ab-world__media img,
-.hoa-ab-world__link:focus-visible .hoa-ab-world__media img { transform: scale(1.045); }
-.hoa-ab-world__body { display: grid; gap: 8px; }
-.hoa-ab-world__family { margin: 0; font-size: 0.82rem; color: var(--hoa-mute); }
 .hoa-ab-world__name {
+  grid-column: 1;
   margin: 0;
   font-family: var(--hoa-sans);
-  font-weight: 400;
-  font-size: clamp(1.4rem, 1.9vw, 1.9rem);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  font-weight: 500;
+  font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
   text-transform: none;
   color: var(--hoa-ink);
 }
-.hoa-ab-world__line { margin: 0; font-size: 0.95rem; line-height: 1.55; color: var(--hoa-ink-2); max-width: 32ch; }
-.hoa-ab-world__cta {
-  display: inline-flex; align-items: center; gap: 10px; margin-top: 6px;
-  font-size: 0.86rem; font-weight: 500; color: var(--hoa-ink);
-}
-.hoa-ab-world__cta .hoa-btn__icon {
+.hoa-ab-world__family { grid-column: 1; justify-self: start; }
+.hoa-ab-world__line { grid-column: 1 / -1; margin: 2px 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--hoa-ink-2); }
+.hoa-ab-world__arrow { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+.hoa-ab-world__arrow .hoa-btn__icon {
   position: relative; display: inline-grid; place-items: center; overflow: hidden;
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   background: var(--hoa-ink); color: var(--hoa-paper);
 }
-.hoa-ab-world__cta .hoa-btn__icon svg { width: 12px; height: 12px; transition: transform 0.6s var(--hoa-ease); }
-.hoa-ab-world__cta .hoa-btn__icon svg + svg { position: absolute; transform: translate(-150%, 150%); }
+.hoa-ab-world__arrow .hoa-btn__icon svg { width: 13px; height: 13px; transition: transform 0.6s var(--hoa-ease); }
+.hoa-ab-world__arrow .hoa-btn__icon svg + svg { position: absolute; transform: translate(-150%, 150%); }
 .hoa-ab-world__link:hover .hoa-btn__icon svg:first-child { transform: translate(150%, -150%); }
 .hoa-ab-world__link:hover .hoa-btn__icon svg + svg { transform: translate(0, 0); }
 
@@ -153,104 +269,82 @@
 .hoa-ab-worlds.is-panning { padding-bottom: 0; }
 .hoa-ab-worlds.is-panning .hoa-ab-worlds__pin {
   height: 100dvh;
-  gap: clamp(20px, 4vh, 48px);
+  gap: clamp(20px, 4vh, 44px);
   padding: calc(var(--hoa-header-h) + 3vh) 0 3vh;
 }
 .hoa-ab-worlds.is-panning .hoa-ab-worlds__viewport { overflow: visible; scroll-snap-type: none; }
-/* While pinned the whole row must fit one screen: card width follows viewport height. */
-.hoa-ab-worlds.is-panning .hoa-ab-world { width: clamp(190px, min(23vw, calc((100dvh - 390px) * 0.8)), 360px); }
-@media (max-height: 760px) {
+/* While pinned, the row must fit one screen: card width follows viewport height. */
+.hoa-ab-worlds.is-panning .hoa-ab-world { width: clamp(200px, min(22vw, calc((100dvh - 400px) * 0.8)), 340px); }
+@media (max-height: 780px) {
   .hoa-ab-worlds.is-panning .hoa-ab-world__line { display: none; }
-  .hoa-ab-worlds.is-panning .hoa-ab-worlds__head .hoa-h2 { font-size: clamp(2rem, 7vh, 3.6rem); }
+  .hoa-ab-worlds.is-panning .hoa-ab-worlds__head .hoa-ab-h2 { font-size: clamp(2rem, 7vh, 3.4rem); }
 }
 
-/* ---------- 04 How we work ---------- */
-.hoa-ab-method { padding: var(--hoa-section) 0; }
-.hoa-ab-method__title { margin: 0 0 clamp(36px, 5vw, 72px); max-width: 14ch; }
-.hoa-ab-bento {
+/* ==========================================================================
+   04 Closing card
+   ========================================================================== */
+.hoa-ab-closing { padding: var(--ab-space) 0; }
+.hoa-ab-cta {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(12px, 1.4vw, 20px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 12px;
+  min-height: clamp(420px, 40vw, 580px);
+  padding: 12px;
+  border-radius: var(--ab-r);
+  background: var(--hoa-ink);
+  color: var(--hoa-ivory);
+  transform-origin: 50% 100%;
 }
-.hoa-ab-cell {
+.hoa-ab-cta__copy {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border-radius: var(--hoa-radius);
-  background: var(--hoa-paper-2);
-}
-.hoa-ab-cell--place { grid-column: span 8; }
-.hoa-ab-cell--facts { grid-column: span 4; }
-.hoa-ab-cell--materials { grid-column: span 7; }
-.hoa-ab-cell--bottle { grid-column: span 5; }
-.hoa-ab-cell__media { position: relative; flex: 1 1 auto; min-height: clamp(260px, 30vw, 460px); margin: 0; overflow: hidden; }
-.hoa-ab-cell__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.hoa-ab-cell--materials .hoa-ab-cell__media img { object-position: 50% 40%; }
-.hoa-ab-cell__body { display: grid; gap: 8px; padding: clamp(20px, 2.2vw, 30px); }
-.hoa-ab-cell__body h3 {
-  margin: 0;
-  font-family: var(--hoa-sans);
-  font-weight: 500;
-  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
-  letter-spacing: -0.02em;
-  text-transform: none;
-  color: var(--hoa-ink);
-}
-.hoa-ab-cell__body p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2); max-width: 46ch; }
-
-.hoa-ab-cell--facts { background: var(--hoa-stone); justify-content: flex-end; padding: clamp(24px, 2.6vw, 40px); }
-.hoa-ab-facts { display: grid; gap: clamp(20px, 2.4vw, 32px); margin: 0; }
-.hoa-ab-facts > div { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid rgba(20, 18, 16, 0.18); }
-.hoa-ab-facts dt { font-size: 0.86rem; color: var(--hoa-ink-2); }
-.hoa-ab-facts dd {
-  margin: 0;
-  order: -1;
-  font-family: var(--hoa-sans);
-  font-size: clamp(2.6rem, 5vw, 4.6rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
-  color: var(--hoa-ink);
-}
-
-/* ---------- 05 Closing ---------- */
-.hoa-ab-closing { padding: 0 0 var(--hoa-section); }
-.hoa-ab-closing__frame { margin: 0; padding: 0 var(--hoa-gutter); }
-.hoa-ab-closing__img {
-  position: relative;
-  aspect-ratio: 16 / 8;
-  overflow: hidden;
-  border-radius: var(--hoa-radius);
-  background: #2b160a;
-}
-.hoa-ab-closing__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.hoa-ab-closing__foot {
-  display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 32px;
-  margin-top: clamp(32px, 4vw, 56px);
+  padding: clamp(18px, 3.4vw, 52px);
 }
-.hoa-ab-closing__foot .hoa-h2 { margin: 0; max-width: 12ch; }
+.hoa-ab-cta .hoa-ab-muted { color: rgba(246, 241, 231, 0.5); }
+.hoa-ab-cta__copy p { margin: 0; max-width: 36ch; font-size: 1rem; line-height: 1.6; color: rgba(246, 241, 231, 0.72); }
+.hoa-ab-cta__copy .hoa-btn { margin-top: auto; }
+.hoa-ab-cta__media { position: relative; margin: 0; overflow: hidden; border-radius: var(--ab-r-in); background: #2b160a; }
+.hoa-ab-cta__img { position: absolute; inset: -8% 0; }
+.hoa-ab-cta__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* ---------- Responsive ---------- */
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
 @media (max-width: 899px) {
-  .hoa-ab-hero__grid { grid-template-columns: 1fr; min-height: 0; align-items: start; }
-  .hoa-ab-hero__media { justify-self: stretch; width: auto; max-width: none; padding-left: 18%; }
-  .hoa-ab-hero__main { aspect-ratio: 4 / 5; height: auto; width: 100%; max-height: 70dvh; }
-  .hoa-ab-hero__cutout { left: 0; width: 34%; bottom: 10%; }
+  .hoa-ab-hero__head { grid-template-columns: 1fr; align-items: start; }
+  .hoa-ab-bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: minmax(180px, auto);
+  }
+  .hoa-ab-tile--a { grid-column: 1 / 7; grid-row: auto; aspect-ratio: 16 / 10; }
+  .hoa-ab-tile--stat { grid-column: 1 / 4; grid-row: auto; }
+  .hoa-ab-tile--b { grid-column: 4 / 7; grid-row: auto / span 2; }
+  .hoa-ab-tile--c { grid-column: 1 / 4; grid-row: auto; aspect-ratio: 4 / 5; }
+  .hoa-ab-tile--wide { grid-column: 1 / 7; grid-row: auto; }
+  .hoa-ab-cta { grid-template-columns: 1fr; }
+  .hoa-ab-cta__media { aspect-ratio: 4 / 3; }
 }
 @media (max-width: 759px) {
-  .hoa-ab-bento { grid-template-columns: 1fr; }
-  .hoa-ab-cell--place, .hoa-ab-cell--facts, .hoa-ab-cell--materials, .hoa-ab-cell--bottle { grid-column: auto; }
-  .hoa-ab-cell__media { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
-  .hoa-ab-cell--bottle .hoa-ab-cell__media { aspect-ratio: 4 / 5; }
-  .hoa-ab-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  .hoa-ab-facts dd { font-size: 2.4rem; }
-  .hoa-ab-closing__img { aspect-ratio: 4 / 5; }
-  .hoa-ab-closing__foot { flex-direction: column; align-items: flex-start; }
-  .hoa-ab-world { width: 74vw; }
+  .hoa-ab-card { grid-template-columns: 1fr; }
+  .hoa-ab-card__copy { order: 2; gap: 18px; padding: 12px 10px 14px; }
+  .hoa-ab-card__copy h3 { margin-top: 0; }
+  .hoa-ab-card__copy p { margin-top: 0; }
+  .hoa-ab-card__media { min-height: 0; aspect-ratio: 4 / 3; }
+  .hoa-ab-tile--wide { grid-template-columns: 1fr; }
+  .hoa-ab-tile__img--half { aspect-ratio: 4 / 3; }
+  .hoa-ab-world { width: 76vw; }
+}
+@media (max-width: 480px) {
+  .hoa-ab-tile--stat { grid-column: 1 / 7; }
+  .hoa-ab-tile--b { grid-column: 1 / 4; grid-row: auto; aspect-ratio: 4 / 5; }
+  .hoa-ab-tile--c { grid-column: 4 / 7; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hoa-ab-world__media img, .hoa-ab-world__cta svg { transition: none; }
+  .hoa-ab-tile__img img, .hoa-ab-world__link, .hoa-ab-world__media img, .hoa-ab-world__arrow svg { transition: none; }
+  .hoa-ab-world__link:hover { transform: none; }
 }

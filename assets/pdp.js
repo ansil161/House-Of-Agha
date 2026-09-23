@@ -576,6 +576,28 @@
         onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.1, ease, clearProps: 'transform' })
       });
 
+      /* Discover the fragrance — heading (above, via data-pdp-reveal), then the image,
+         then the facts in pairs from either side while their hairlines draw towards it */
+      $$('[data-pdp-fnotes]', scope).forEach((sec) => {
+        const stageEl = $('.pdp-fnotes__stage', sec);
+        const img = $('[data-pdp-fnotes-image]', sec);
+        const facts = $$('[data-pdp-fnote]', sec);
+        if (!stageEl || !facts.length) return;
+        const wide = window.matchMedia('(min-width: 769px)').matches;
+        const rules = wide ? facts.map((f) => $('.pdp-fnote__rule', f)).filter(Boolean) : [];
+        const row = (f) => parseInt((f.style.gridArea || '').replace(/\D/g, ''), 10) || 0;
+        const ordered = wide ? facts.slice().sort((a, b) => row(a) - row(b)) : facts;
+
+        if (img) gsap.set(img, { autoAlpha: 0, y: 24 });
+        facts.forEach((f) => gsap.set(f, { autoAlpha: 0, x: wide ? (f.dataset.side === 'left' ? -18 : 18) : 0, y: wide ? 0 : 16 }));
+        if (rules.length) gsap.set(rules, { scaleX: 0 });
+
+        const tl = gsap.timeline({ scrollTrigger: { trigger: stageEl, start: 'top 78%', once: true } });
+        if (img) tl.to(img, { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power2.out', clearProps: 'transform' }, 0);
+        tl.to(ordered, { autoAlpha: 1, x: 0, y: 0, duration: 1.1, stagger: 0.14, ease, clearProps: 'transform' }, 0.45);
+        if (rules.length) tl.to(rules, { scaleX: 1, duration: 0.9, stagger: 0.14, ease: 'power2.inOut' }, 0.75);
+      });
+
       /* Craft — steps rise in turn while the progress line draws across */
       const steps = $('[data-pdp-steps]', scope);
       if (steps) {
@@ -638,7 +660,7 @@
       motionCtx.revert();
       motionCtx = null;
       // Tweens that never started don't restore their pre-state on revert; clear it explicitly
-      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb', { clearProps: 'transform,opacity,visibility' });
+      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule', { clearProps: 'transform,opacity,visibility' });
     }
     cleanups.splice(0).forEach((fn) => fn());
   }

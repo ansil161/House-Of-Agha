@@ -35,7 +35,11 @@
     heart: '<path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9z"/>',
     expand: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
     prev: '<path d="m15 6-6 6 6 6"/>',
-    next: '<path d="m9 6 6 6-6 6"/>'
+    next: '<path d="m9 6 6 6-6 6"/>',
+    leaf: '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19l8-8"/>',
+    flower: '<circle cx="12" cy="12" r="2.2"/><path d="M12 9.8c-1.5-3.2-.6-5.8 0-6.8.6 1 1.5 3.6 0 6.8zM12 14.2c1.5 3.2.6 5.8 0 6.8-.6-1-1.5-3.6 0-6.8zM9.8 12c-3.2 1.5-5.8.6-6.8 0 1-.6 3.6-1.5 6.8 0zM14.2 12c3.2-1.5 5.8-.6 6.8 0-1 .6-3.6 1.5-6.8 0z"/>',
+    wood: '<ellipse cx="7" cy="12" rx="3" ry="6"/><path d="M7 6h10c1.7 0 3 2.7 3 6s-1.3 6-3 6H7"/><path d="M7 10.5c.6 0 1 .7 1 1.5s-.4 1.5-1 1.5"/>',
+    sparkle: '<path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/><path d="M19 16c.2 1.5.8 2.1 2.3 2.3-1.5.2-2.1.8-2.3 2.3-.2-1.5-.8-2.1-2.3-2.3 1.5-.2 2.1-.8 2.3-2.3z"/>'
   };
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
 
@@ -353,6 +357,54 @@
     </div>
   </section>`;
 
+  /* ------------------------------------------ Discover the fragrance (notes) */
+  // Mirrors sections/agha-pdp-fragrance-notes.liquid. Same sources, preview names:
+  //   notes.top / notes.heart / notes.base  → custom.top_notes / heart_notes / base_notes
+  //   family                                → custom.family
+  //   scentCharacter → tagline → mood       → custom.scent_character → custom.scent_tags → custom.mood
+  //   longevity (+ sillage)                 → custom.longevity (+ custom.sillage)
+  const character = product.scentCharacter || tags.join(', ') || product.mood || '';
+  const fnote = (slot, side, ic, label, text, { list, value, detail } = {}) => `
+        <div class="pdp-fnote pdp-fnote--${side}" style="grid-area: ${slot};" data-pdp-fnote data-side="${side}">
+          <span class="pdp-fnote__icon">${icon(ic)}</span>
+          <div class="pdp-fnote__body">
+            <h3 class="pdp-fnote__label">${label}</h3>
+            <p class="pdp-fnote__value">${list
+              ? list.split(',').map((n) => `<span class="pdp-fnote__note">${esc(n.trim())}</span>`).join('')
+              : esc(value)}</p>
+            ${detail ? `<p class="pdp-fnote__detail">Sillage · ${esc(detail)}</p>` : ''}
+            <p class="pdp-fnote__text">${text}</p>
+          </div>
+          <span class="pdp-fnote__rule" aria-hidden="true"></span>
+        </div>`;
+  const fnoteItems = [
+    notes.top && fnote('l1', 'left', 'leaf', 'Top notes', 'The opening you meet first.', { list: notes.top }),
+    notes.heart && fnote('l2', 'left', 'flower', 'Heart notes', 'The character that unfolds.', { list: notes.heart }),
+    notes.base && fnote('r1', 'right', 'wood', 'Base notes', 'What stays on the skin.', { list: notes.base }),
+    product.family && fnote('l3', 'left', 'drop', 'Fragrance family', 'Where it sits in the house.', { value: product.family }),
+    character && fnote('r2', 'right', 'sparkle', 'Scent character', 'How it feels to wear.', { value: character }),
+    product.longevity && fnote('r3', 'right', 'time', 'Longevity', 'How long it stays with you.', { value: product.longevity, detail: product.sillage })
+  ].filter(Boolean);
+  // Like the Liquid, only render when the product carries note data (family alone is not enough here,
+  // since every preview product has one; the real line-up has no confirmed notes yet).
+  const hasNoteData = notes.top || notes.heart || notes.base || product.scentCharacter || product.longevity;
+  const fragranceNotes = hasNoteData ? `
+  <section class="pdp pdp-section pdp-fnotes" data-pdp-fnotes aria-labelledby="fnotes-title">
+    <div class="container">
+      <header class="pdp-heading" data-pdp-reveal>
+        <span class="pdp-eyebrow">The notes</span>
+        <h2 id="fnotes-title">Discover the Fragrance</h2>
+        <p>Explore the notes that shape this fragrance.</p>
+      </header>
+      <div class="pdp-fnotes__stage">
+        <figure class="pdp-fnotes__image" data-pdp-fnotes-image>
+          <img src="${images[0]}" alt="${esc(niceTitle)}" loading="lazy" width="1100" height="1430">
+        </figure>
+        ${fnoteItems.join('')}
+      </div>
+    </div>
+  </section>` : '';
+
   /* ------------------------------------------------------------- 06 Reviews */
   const reviewsSection = `
   <section class="pdp pdp-section pdp-reviews" id="pdp-reviews" data-pdp-reviews>
@@ -454,6 +506,6 @@
     <div class="pdp-dock-spacer" aria-hidden="true"></div>
   </section>`;
 
-  root.innerHTML = hero + featuresSection + collage + story + craft + reviewsSection + faq + related + finale;
+  root.innerHTML = hero + featuresSection + collage + story + craft + fragranceNotes + reviewsSection + faq + related + finale;
   window.AghaPDP?.init();
 })();
