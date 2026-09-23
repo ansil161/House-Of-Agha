@@ -52,7 +52,7 @@
             "url": "/products/oud-fury",
             "line": "Amber smoke, charred wood and a single shaft of evening light.",
             "tint": "#2b160a",
-            "asset": "hoa-oud-fury-portrait"
+            "asset": "hoa-product-oud-fury"
           }
         },
         "f_agha_blue": {
@@ -62,7 +62,7 @@
             "url": "/products/agha-blue",
             "line": "Ice caves, cold stone and the deep blue of a winter night.",
             "tint": "#0a1a45",
-            "asset": "hoa-agha-blue-portrait"
+            "asset": "hoa-product-agha-blue"
           }
         },
         "f_dark_paradise": {
@@ -72,7 +72,7 @@
             "url": "/products/oud-of-dark-paradise",
             "line": "Black sand, rising smoke and a room lit only by embers.",
             "tint": "#15100d",
-            "asset": "hoa-dark-paradise-portrait"
+            "asset": "hoa-product-dark-paradise"
           }
         },
         "f_maha": {
@@ -82,7 +82,7 @@
             "url": "/products/maha",
             "line": "Blossom, warm sand and late sun through an open window.",
             "tint": "#5b3524",
-            "asset": "hoa-maha-portrait"
+            "asset": "hoa-product-maha"
           }
         },
         "f_sea_smoke": {
@@ -92,7 +92,7 @@
             "url": "/products/sea-smoke",
             "line": "Clear water, pale stone and salt carried in on the wind.",
             "tint": "#0b3a40",
-            "asset": "hoa-sea-smoke-portrait"
+            "asset": "hoa-product-sea-smoke"
           }
         },
         "f_tobacco": {
@@ -102,7 +102,7 @@
             "url": "/products/tobacco-enigma",
             "line": "Tobacco leaf, moss and a forest floor after rain.",
             "tint": "#2e3320",
-            "asset": "hoa-tobacco-enigma-portrait"
+            "asset": "hoa-product-tobacco-enigma"
           }
         },
         "f_shamamah": {
@@ -112,7 +112,7 @@
             "url": "/products/shamamah",
             "line": "Jasmine, gilded columns and the hush of a palace garden.",
             "tint": "#3d2f18",
-            "asset": "hoa-shamamah-portrait"
+            "asset": "hoa-product-shamamah"
           }
         }
       },

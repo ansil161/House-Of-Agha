@@ -4,8 +4,8 @@
 
    Hierarchy of motion
      Hero ............ strongest: word rise, slow crossfading campaign, drift on scroll
-     Editorial ....... controlled: word-by-word statement, floating details, pinned chapters
-     Product ......... subtle: staggered reveals, hover image swap, tab filtering
+     Editorial ....... controlled: word-by-word statement, floating details
+     Product ......... subtle: coverflow carousel, staggered reveals, hover image swap, tab filtering
      Content ......... restrained: fade-up once
 
    Smooth scrolling uses Lenis (desktop pointers only) wired into ScrollTrigger.
@@ -76,8 +76,6 @@
       var overHero = hero && hero.getBoundingClientRect().bottom > y;
       header.classList.toggle('is-transparent', !!overHero && !root.classList.contains('hoa-menu-open'));
       var overDark = darks.some(function (d) {
-        // The fragrance chapters are only dark while pinned (desktop); on mobile they sit on paper.
-        if (d.hasAttribute('data-hoa-frag') && !d.classList.contains('is-pinned')) return false;
         var r = d.getBoundingClientRect();
         return r.top <= y && r.bottom >= y;
       });
@@ -228,69 +226,117 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 03 Signature fragrances: pinned chapters                            */
+  /* 03 Signature fragrances: centred coverflow carousel                 */
   /* ------------------------------------------------------------------ */
-  function initFragrances(mm) {
-    var sec = document.querySelector('[data-hoa-frag]');
+  function initFragrances() {
+    var sec = document.querySelector('[data-hoa-cf]');
     if (!sec) return;
-    var stage = sec.querySelector('[data-hoa-frag-stage]');
-    var items = sec.querySelectorAll('[data-hoa-frag-item]');
-    var dots = sec.querySelectorAll('[data-hoa-frag-go]');
-    var bg = sec.querySelector('[data-hoa-frag-bg]');
-    var n = items.length;
-    if (!n) return;
+    var track = sec.querySelector('[data-hoa-cf-track]');
+    var cards = Array.prototype.slice.call(sec.querySelectorAll('[data-hoa-cf-card]'));
+    var infos = sec.querySelectorAll('[data-hoa-cf-info]');
+    var current = sec.querySelector('[data-hoa-cf-current]');
+    var bar = sec.querySelector('[data-hoa-cf-bar]');
+    var prev = sec.querySelector('[data-hoa-cf-prev]');
+    var next = sec.querySelector('[data-hoa-cf-next]');
+    var n = cards.length;
+    if (!n || !track) return;
     var active = 0;
+    var pad = function (k) { return (k < 9 ? '0' : '') + (k + 1); };
 
-    function setActive(i, instant) {
-      i = Math.max(0, Math.min(n - 1, i));
-      if (i === active && !instant) return;
-      var prev = active;
-      active = i;
-      items.forEach(function (it, k) {
-        it.classList.toggle('is-active', k === i);
-        it.classList.toggle('was-active', k === prev && k !== i);
-      });
-      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
-      if (bg) bg.style.backgroundColor = items[i].dataset.tint || '';
-
-      if (!hasGsap() || reduceMotion || instant) return;
-      var vis = items[i].querySelector('.hoa-frag__visual');
-      var img = vis && vis.querySelector('img');
-      gsap.killTweensOf([vis, img]);
-      gsap.fromTo(vis, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'expo.inOut',
-        onComplete: function () { items.forEach(function (it, k) { if (k !== active) it.classList.remove('was-active'); }); } });
-      if (img) gsap.fromTo(img, { scale: 1.18 }, { scale: 1, duration: 1.6, ease: 'expo.out' });
+    // Shortest signed distance from the active card, so the carousel loops.
+    function offset(k) {
+      var o = ((k - active) % n + n) % n;
+      return o > n / 2 ? o - n : o;
     }
 
-    if (bg) bg.style.backgroundColor = items[0].dataset.tint || '';
-
-    if (!hasGsap()) return;
-
-    mm.add('(min-width: 900px)', function () {
-      sec.classList.add('is-pinned');
-      var st = ScrollTrigger.create({
-        trigger: sec,
-        start: 'top top',
-        end: function () { return '+=' + (window.innerHeight * 0.75 * (n - 1)); },
-        pin: stage,
-        pinSpacing: true,
-        anticipatePin: 1,
-        refreshPriority: 2,   // pins refresh top-down: fragrances (2) before testimonials (1) before everything else
-        invalidateOnRefresh: true,
-        snap: reduceMotion ? false : { snapTo: 1 / (n - 1), duration: { min: 0.3, max: 0.8 }, delay: 0.12, ease: 'power2.inOut' },
-        onUpdate: function (self) { setActive(Math.round(self.progress * (n - 1))); }
+    function render() {
+      cards.forEach(function (c, k) {
+        var o = offset(k);
+        var isActive = o === 0;
+        c.style.setProperty('--o', Math.max(-2, Math.min(2, o)));
+        c.classList.toggle('is-active', isActive);
+        c.classList.toggle('is-far', Math.abs(o) > 1);
+        c.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        c.tabIndex = isActive ? 0 : -1;
       });
-      var onDot = function (e) {
-        var i = parseInt(e.currentTarget.dataset.hoaFragGo, 10);
-        var y = st.start + (st.end - st.start) * (i / (n - 1)) + 1;
-        if (lenis) lenis.scrollTo(y, { duration: 1.2 }); else window.scrollTo({ top: y, behavior: 'smooth' });
-      };
-      dots.forEach(function (d) { d.addEventListener('click', onDot); });
-      return function () {
-        sec.classList.remove('is-pinned');
-        dots.forEach(function (d) { d.removeEventListener('click', onDot); });
-        setActive(0, true);
-      };
+      infos.forEach(function (el, k) {
+        var on = k === active;
+        el.hidden = !on;
+        el.classList.toggle('is-active', on);
+      });
+      if (current) current.textContent = pad(active);
+      if (bar) bar.style.setProperty('--p', (active + 1) / n);
+    }
+
+    function go(i) { active = ((i % n) + n) % n; render(); }
+
+    var onPrev = function () { go(active - 1); };
+    var onNext = function () { go(active + 1); };
+    if (prev) prev.addEventListener('click', onPrev);
+    if (next) next.addEventListener('click', onNext);
+
+    // A click on a side bottle brings it to the centre instead of following its link.
+    var suppressClick = false;
+    var onCardClick = function (e) {
+      var k = cards.indexOf(e.currentTarget);
+      if (suppressClick || k !== active) { e.preventDefault(); }
+      if (!suppressClick && k !== active) go(k);
+      suppressClick = false;
+    };
+    cards.forEach(function (c) { c.addEventListener('click', onCardClick); });
+
+    var onKey = function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); onPrev(); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); onNext(); }
+    };
+    sec.addEventListener('keydown', onKey);
+
+    // Swipe / drag: the row follows the pointer, then settles on the nearest card.
+    var startX = 0, startY = 0, dx = 0, dragging = false, pid = null;
+    var onDown = function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      if (e.target.closest('.hoa-cf__arrow')) return;
+      pid = e.pointerId; startX = e.clientX; startY = e.clientY; dx = 0; dragging = false;
+    };
+    var onMove = function (e) {
+      if (e.pointerId !== pid) return;
+      dx = e.clientX - startX;
+      if (!dragging) {
+        if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(e.clientY - startY)) return;
+        dragging = true;
+        track.classList.add('is-dragging');
+        try { track.setPointerCapture(pid); } catch (err) {}
+      }
+      track.style.setProperty('--drag', dx * 0.6 + 'px');
+    };
+    var onUp = function (e) {
+      if (e.pointerId !== pid) return;
+      pid = null;
+      if (!dragging) return;
+      dragging = false;
+      suppressClick = true;
+      setTimeout(function () { suppressClick = false; }, 0);
+      track.classList.remove('is-dragging');
+      track.style.setProperty('--drag', '0px');
+      var threshold = Math.min(80, track.offsetWidth * 0.18);
+      if (dx <= -threshold) onNext(); else if (dx >= threshold) onPrev();
+    };
+    track.addEventListener('pointerdown', onDown);
+    track.addEventListener('pointermove', onMove);
+    track.addEventListener('pointerup', onUp);
+    track.addEventListener('pointercancel', onUp);
+
+    render();
+
+    cleanups.push(function () {
+      if (prev) prev.removeEventListener('click', onPrev);
+      if (next) next.removeEventListener('click', onNext);
+      cards.forEach(function (c) { c.removeEventListener('click', onCardClick); });
+      sec.removeEventListener('keydown', onKey);
+      track.removeEventListener('pointerdown', onDown);
+      track.removeEventListener('pointermove', onMove);
+      track.removeEventListener('pointerup', onUp);
+      track.removeEventListener('pointercancel', onUp);
     });
   }
 
@@ -357,6 +403,7 @@
     initLenis();
     initReveals();
     initCollection();
+    initFragrances();
 
     if (hasGsap()) {
       gsap.registerPlugin(ScrollTrigger);
@@ -365,11 +412,9 @@
         initHero();
         initManifesto();
         initParallax(mm);
-        initFragrances(mm);
       });
     } else {
       initHero();
-      initFragrances({ add: function () {} });
     }
     initHeader();
 

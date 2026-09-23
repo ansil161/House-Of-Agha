@@ -94,4 +94,25 @@ const globals = {
 
   fs.writeFileSync(indexPath, page);
   console.log('rendered', tpl.order.length, 'sections,', main.length, 'chars');
+
+  // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
+  // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
+  const redirects = {
+    'collections/all': '/shop.html', 'collections': '/shop.html', 'pages/about': '/the-house.html'
+  };
+  ['the-house', 'discover', 'gifts', 'private-access', 'contact', 'faq', 'shipping-returns']
+    .forEach((p) => { redirects['pages/' + p] = `/${p}.html`; });
+  const handles = new Set();
+  fs.readdirSync(THEME).filter((f) => f.endsWith('.html')).forEach((f) => {
+    for (const m of fs.readFileSync(path.join(THEME, f), 'utf8').matchAll(/product\.html\?p=([a-z0-9-]+)/g)) handles.add(m[1]);
+  });
+  handles.forEach((h) => { redirects['products/' + h] = `/product.html?p=${h}`; });
+  for (const [from, to] of Object.entries(redirects)) {
+    const dir = path.join(THEME, from);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'),
+      `<!DOCTYPE html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${to}">` +
+      `<script>location.replace(${JSON.stringify(to)} + location.hash)</script><a href="${to}">Continue</a>\n`);
+  }
+  console.log('wrote', Object.keys(redirects).length, 'preview redirects');
 })().catch((e) => { console.error(e); process.exit(1); });

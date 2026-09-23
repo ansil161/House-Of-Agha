@@ -12,14 +12,14 @@
 
   const slug = new URLSearchParams(window.location.search).get('p')
     || (window.location.pathname.match(/^\/products\/([^/]+)/) || [])[1]
-    || 'oud-royal';
-  const handle = AGHA_PRODUCTS[slug] ? slug : 'oud-royal';
+    || 'oud-fury';
+  const handle = AGHA_PRODUCTS[slug] ? slug : 'oud-fury';
   const product = AGHA_PRODUCTS[handle];
 
   const esc = (str) => String(str ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const pad = (n) => String(n).padStart(2, '0');
-  const titleCase = (s) => s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
-  const money = (rupees) => `₹${Number(rupees).toLocaleString('en-IN')}`;
+  const titleCase = (s) => s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase()).replace(/ Of /g, ' of ');
+  const money = (rupees) => (rupees == null ? 'Price on request' : `₹${Number(rupees).toLocaleString('en-IN')}`);
 
   // Same icon set as snippets/agha-pdp-icon.liquid
   const ICONS = {
@@ -44,7 +44,7 @@
     id: 1000 + i,
     title: size,
     options: [size],
-    price: price * 100,
+    price: price == null ? null : price * 100,
     compare_at_price: null,
     available: true
   }));
@@ -56,7 +56,8 @@
   const tags = (product.tagline || '').split('·').map((t) => t.trim()).filter(Boolean);
   const stars = (value) => `<span class="pdp-stars" role="img" aria-label="Rated ${value.toFixed(1)} out of 5"><span class="pdp-stars__fill" style="width: ${(value / 5) * 100}%"></span></span>`;
 
-  document.title = `${niceTitle} Extrait de Parfum — AGHA PERFUMES`;
+  const eyebrow = product.eyebrow || 'Extrait de parfum · 35%';
+  document.title = `${niceTitle} ${eyebrow} — AGHA PERFUMES`;
   document.querySelector('meta[name="description"]')?.setAttribute('content', product.description);
 
   const notes = product.notes || {};
@@ -106,7 +107,7 @@
 
         <div class="pdp-info">
           <div data-pdp-hero-item>
-            <span class="pdp-eyebrow">Extrait de parfum · 35%</span>
+            <span class="pdp-eyebrow">${esc(eyebrow)}</span>
             <h1 class="pdp-title">${esc(niceTitle)}</h1>
           </div>
 
@@ -122,7 +123,7 @@
           <p class="pdp-lede" data-pdp-hero-item>${esc(product.description)}</p>
 
           <div class="pdp-price" data-pdp-hero-item>
-            <span class="pdp-price__amount" data-pdp-price>${money(current.price / 100)}</span>
+            <span class="pdp-price__amount" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
             <s class="pdp-price__compare" data-pdp-compare hidden></s>
             <span class="pdp-price__note"><span data-pdp-variant-title>${current.title}</span> · Inclusive of all taxes</span>
           </div>
@@ -137,7 +138,7 @@
                   <label class="pdp-tile">
                     <input type="radio" name="preview-option-1" value="${v.title}"${v === current ? ' checked' : ''}>
                     <span class="pdp-tile__value">${v.title}</span>
-                    <span class="pdp-tile__price">${money(v.price / 100)}</span>
+                    <span class="pdp-tile__price">${money(v.price == null ? null : v.price / 100)}</span>
                   </label>`).join('')}
               </div>
             </fieldset>
@@ -151,7 +152,7 @@
               <button type="submit" name="add" class="pdp-btn pdp-add" data-pdp-add>
                 <span class="pdp-add__label" data-pdp-add-label>Add to bag</span>
                 <span class="pdp-add__sep" aria-hidden="true">—</span>
-                <span class="pdp-add__price" data-pdp-add-price>${money(current.price / 100)}</span>
+                <span class="pdp-add__price" data-pdp-add-price>${money(current.price == null ? null : current.price / 100)}</span>
                 <span class="pdp-add__progress" aria-hidden="true"></span>
               </button>
               <button type="button" class="pdp-icon-btn" data-pdp-wishlist aria-pressed="false" aria-label="Save to wishlist">${icon('heart')}</button>
@@ -224,7 +225,7 @@
           <p class="pdp-dock__meta" data-pdp-variant-title>${current.title}</p>
         </div>
         <span class="pdp-dock__spacer"></span>
-        <span class="pdp-dock__price" data-pdp-price>${money(current.price / 100)}</span>
+        <span class="pdp-dock__price" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
         <button type="button" class="pdp-btn pdp-add" data-pdp-dock-add tabindex="-1">
           <span class="pdp-add__label" data-pdp-add-label>Add to bag</span>
           <span class="pdp-add__progress" aria-hidden="true"></span>
@@ -427,7 +428,7 @@
             <div class="pdp-rel__body">
               <span class="pdp-rel__meta">${esc(p.family)}</span>
               <h3 class="pdp-rel__title">${esc(titleCase(p.title))}</h3>
-              <span class="pdp-rel__price">${money(p.sizes['50 ML'])}</span>
+              <span class="pdp-rel__price">${money(p.sizes['50 ML'] ?? Object.values(p.sizes)[0])}</span>
             </div>
           </a>`).join('')}
       </div>

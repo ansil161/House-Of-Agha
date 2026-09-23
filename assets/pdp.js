@@ -26,6 +26,7 @@
 
   /* ------------------------------------------------------------------ Money */
   function formatMoney(cents, format) {
+    if (cents == null) return 'Price on request';
     const value = cents / 100;
     const withDelims = (n, decimals, thousands = ',', decimal = '.') => {
       const [int, frac] = n.toFixed(decimals).split('.');

@@ -1,1 +1,6 @@
 node_modules/
+
+# Generated preview redirects (tools/render-preview.js)
+/collections/
+/pages/
+/products/

@@ -5,6 +5,72 @@
 // Local product catalogue for the static preview. On Shopify, the same fields come from
 // product data + metafields (custom.tagline, custom.family, custom.top_notes, …).
 const AGHA_PRODUCTS = {
+  // Real House of Agha line-up. Photography from the brand's Drive folder (see HOA-ASSETS.md).
+  // Prices, sizes and notes are not confirmed yet, so they are left empty (shown as "Price on request").
+  'oud-fury': {
+    title: "OUD FURY",
+    family: "Woody",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-oud-fury.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-hero-oud-fury.webp', '/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-craft-embers.webp', '/assets/hoa-world-profile.webp'],
+    description: "Amber smoke, charred wood and a single shaft of evening light.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Arjun M.", location: "Mumbai", verified: true, body: "I wore Oud Fury to a winter wedding and three people asked what it was before the first dance." }]
+  },
+  'agha-blue': {
+    title: "AGHA BLUE",
+    family: "Fresh",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-hero-agha-blue.webp', '/assets/hoa-craft-ice.webp', '/assets/hoa-world-gift.webp'],
+    description: "Ice caves, cold stone and the deep blue of a winter night.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Sara K.", location: "Dubai", verified: true, body: "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days." }]
+  },
+  'oud-of-dark-paradise': {
+    title: "OUD OF DARK PARADISE",
+    family: "Woody",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-dark-paradise-portrait.webp', '/assets/hoa-hero-dark-paradise.webp', '/assets/hoa-craft-sand.webp', '/assets/hoa-world-hand.webp'],
+    description: "Black sand, rising smoke and a room lit only by embers.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Rehan S.", location: "London", verified: true, body: "Dark Paradise is my evening scent. Smoky, close to the skin, never loud." }]
+  },
+  'maha': {
+    title: "MAHA",
+    family: "Floral",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-maha.webp', '/assets/hoa-maha-portrait.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
+    description: "Blossom, warm sand and late sun through an open window.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Noor A.", location: "Hyderabad", verified: true, body: "Maha is soft without being sweet. My mother borrowed it once and never gave it back." }]
+  },
+  'sea-smoke': {
+    title: "SEA SMOKE",
+    family: "Fresh",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-world-poolside.webp'],
+    description: "Clear water, pale stone and salt carried in on the wind.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Meera P.", location: "Bengaluru", verified: true, body: "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear." }]
+  },
+  'tobacco-enigma': {
+    title: "TOBACCO ENIGMA",
+    family: "Aromatic",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-ingredients-tobacco.webp', '/assets/hoa-family-green.webp', '/assets/hoa-craft-moss.webp'],
+    description: "Tobacco leaf, moss and a forest floor after rain.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Kabir D.", location: "Delhi", verified: true, body: "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much." }]
+  },
+  'shamamah': {
+    title: "SHAMAMAH",
+    family: "Floral",
+    eyebrow: 'Eau de Parfum',
+    images: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-shamamah-portrait.webp', '/assets/hoa-shamamah-lily.webp'],
+    description: "Jasmine, gilded columns and the hush of a palace garden.",
+    sizes: { 'Eau de Parfum': null },
+    reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]
+  },
+  // Older placeholder catalogue, still used by shop.html.
   'oud-royal': {
     title: 'OUD ROYAL',
     family: 'Woody & Oud',
