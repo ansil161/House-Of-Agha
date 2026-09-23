@@ -1,21 +1,126 @@
 {
   "sections": {
-    "house_hero": {
-      "type": "agha-house-hero",
+    "hero": {
+      "type": "hoa-about-hero",
       "settings": {}
     },
-    "house_origin": {
-      "type": "agha-house-origin",
+    "statement": {
+      "type": "hoa-about-statement",
       "settings": {}
     },
-    "house_craft": {
-      "type": "agha-house-craft",
+    "worlds": {
+      "type": "hoa-about-worlds",
+      "blocks": {
+        "world_oud_fury": {
+          "type": "world",
+          "settings": {
+            "name": "Oud Fury",
+            "url": "/products/oud-fury",
+            "family": "Woody & Smoky",
+            "line": "Amber smoke, charred wood and a single shaft of evening light.",
+            "asset": "hoa-oud-fury-portrait",
+            "alt": "Oud Fury Eau de Parfum in its campaign setting",
+            "tint": "#2b160a"
+          }
+        },
+        "world_agha_blue": {
+          "type": "world",
+          "settings": {
+            "name": "Agha Blue",
+            "url": "/products/agha-blue",
+            "family": "Fresh & Aquatic",
+            "line": "Ice caves, cold stone and the deep blue of a winter night.",
+            "asset": "hoa-agha-blue-portrait",
+            "alt": "Agha Blue Eau de Parfum in its campaign setting",
+            "tint": "#0a1a45"
+          }
+        },
+        "world_oud_of_dark_paradise": {
+          "type": "world",
+          "settings": {
+            "name": "Oud of Dark Paradise",
+            "url": "/products/oud-of-dark-paradise",
+            "family": "Woody & Smoky",
+            "line": "Black sand, rising smoke and a room lit only by embers.",
+            "asset": "hoa-dark-paradise-portrait",
+            "alt": "Oud of Dark Paradise Eau de Parfum in its campaign setting",
+            "tint": "#15100d"
+          }
+        },
+        "world_maha": {
+          "type": "world",
+          "settings": {
+            "name": "Maha",
+            "url": "/products/maha",
+            "family": "Floral & Luminous",
+            "line": "Blossom, warm sand and late sun through an open window.",
+            "asset": "hoa-maha-portrait",
+            "alt": "Maha Eau de Parfum in its campaign setting",
+            "tint": "#5b3524"
+          }
+        },
+        "world_sea_smoke": {
+          "type": "world",
+          "settings": {
+            "name": "Sea Smoke",
+            "url": "/products/sea-smoke",
+            "family": "Fresh & Aquatic",
+            "line": "Clear water, pale stone and salt carried in on the wind.",
+            "asset": "hoa-sea-smoke-portrait",
+            "alt": "Sea Smoke Eau de Parfum in its campaign setting",
+            "tint": "#0b3a40"
+          }
+        },
+        "world_tobacco_enigma": {
+          "type": "world",
+          "settings": {
+            "name": "Tobacco Enigma",
+            "url": "/products/tobacco-enigma",
+            "family": "Aromatic & Green",
+            "line": "Tobacco leaf, moss and a forest floor after rain.",
+            "asset": "hoa-tobacco-enigma-portrait",
+            "alt": "Tobacco Enigma Eau de Parfum in its campaign setting",
+            "tint": "#2e3320"
+          }
+        },
+        "world_shamamah": {
+          "type": "world",
+          "settings": {
+            "name": "Shamamah",
+            "url": "/products/shamamah",
+            "family": "Floral & Luminous",
+            "line": "Jasmine, gilded columns and the hush of a palace garden.",
+            "asset": "hoa-shamamah-portrait",
+            "alt": "Shamamah Eau de Parfum in its campaign setting",
+            "tint": "#3d2f18"
+          }
+        }
+      },
+      "block_order": [
+        "world_oud_fury",
+        "world_agha_blue",
+        "world_oud_of_dark_paradise",
+        "world_maha",
+        "world_sea_smoke",
+        "world_tobacco_enigma",
+        "world_shamamah"
+      ],
+      "settings": {}
+    },
+    "method": {
+      "type": "hoa-about-method",
+      "settings": {}
+    },
+    "closing": {
+      "type": "hoa-about-closing",
       "settings": {}
     }
   },
   "order": [
-    "house_hero",
-    "house_origin",
-    "house_craft"
+    "hero",
+    "statement",
+    "worlds",
+    "method",
+    "closing"
   ]
 }

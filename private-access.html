@@ -6,29 +6,53 @@
   <title>Private Access Vault — AGHA PERFUMES</title>
   <meta name="description" content="Request private access to AGHA Perfumes limited reserve batches, unlisted flacons, and bespoke compounding invitations.">
   <link rel="stylesheet" href="assets/theme.css">
+  <link rel="stylesheet" href="assets/hoa-home.css">
   <script src="assets/theme.js" defer></script>
 </head>
 <body>
-  <header class="header scrolled">
-    <div class="container header-container">
-      <a href="/" class="header-brand">AGHA</a>
-      <nav>
-        <ul class="header-nav">
-          <li><a href="/shop.html">Shop</a></li>
-          <li><a href="/discover.html">Discover</a></li>
-          <li><a href="/the-house.html">The House</a></li>
-          <li><a href="/gifts.html">Gifts</a></li>
-          <li><a href="/private-access.html" class="active">Private Access</a></li>
-        </ul>
-      </nav>
-      <div class="header-actions">
-        <button class="header-action-btn js-cart-toggle">
+  <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
+  <header class="header hoa-header" data-hoa-header>
+  <div class="hoa-header__inner">
+    <div class="hoa-header__start">
+      <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="/shop.html">Shop</a></li>
+        <li><a href="/#fragrances">Fragrances</a></li>
+        <li><a href="/the-house.html">The House</a></li>
+      </ul>
+      <button class="hoa-header__menu js-mobile-menu" type="button" aria-expanded="false" aria-controls="hoa-menu">
+        <span class="hoa-header__menu-lines" aria-hidden="true"></span>
+        <span class="hoa-header__menu-label">Menu</span>
+      </button>
+    </div>
+
+    <a href="/" class="header-brand hoa-header__brand" aria-label="House of Agha, home">
+      <small>HOUSE OF</small>AGHA
+    </a>
+
+    <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a href="/discover.html">Discover</a></li>
+      <li class="hoa-header__hide-sm"><a href="/gifts.html">Gifts</a></li>
+      <li>
+        <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
           <span>Bag</span>
           <span class="cart-count">0</span>
         </button>
-      </div>
-    </div>
-  </header>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<nav class="hoa-menu" id="hoa-menu" aria-label="Main">
+  <ul class="hoa-menu__links">
+    <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
+    <li><a href="/#fragrances"><span>02</span>Fragrances</a></li>
+    <li><a href="/discover.html"><span>03</span>Discover <em>your scent</em></a></li>
+    <li><a href="/the-house.html"><span>04</span>The House</a></li>
+    <li><a href="/gifts.html"><span>05</span>Gifts</a></li>
+    <li><a href="/private-access.html"><span>06</span>Private Access</a></li>
+  </ul>
+  <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
+</nav>
 
   <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
     <div class="container">

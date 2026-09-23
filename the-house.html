@@ -3,80 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The House Manifesto — AGHA PERFUMES</title>
-  <meta name="description" content="Learn about the heritage, craft, and 90-day maceration philosophy of AGHA Perfumes.">
+  <title>About | House of Agha</title>
+  <meta name="description" content="House of Agha makes eaux de parfum, each one built around a single place and dressed in a bottle of its own.">
   <link rel="stylesheet" href="assets/theme.css">
+  <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-about.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="assets/theme.js" defer></script>
+  <script src="assets/hoa-about.js" defer></script>
 </head>
-<body>
-  <header class="header scrolled">
-    <div class="container header-container">
-      <a href="/" class="header-brand">AGHA</a>
-      <nav>
-        <ul class="header-nav">
-          <li><a href="/shop.html">Shop</a></li>
-          <li><a href="/discover.html">Discover</a></li>
-          <li><a href="/the-house.html" class="active">The House</a></li>
-          <li><a href="/gifts.html">Gifts</a></li>
-          <li><a href="/private-access.html">Private Access</a></li>
-        </ul>
-      </nav>
-      <div class="header-actions">
-        <button class="header-action-btn js-cart-toggle">
+<body class="hoa-page hoa-about">
+  <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
+  <header class="header hoa-header" data-hoa-header>
+  <div class="hoa-header__inner">
+    <div class="hoa-header__start">
+      <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="/shop.html">Shop</a></li>
+        <li><a href="/#fragrances">Fragrances</a></li>
+        <li><a href="/the-house.html">The House</a></li>
+      </ul>
+      <button class="hoa-header__menu js-mobile-menu" type="button" aria-expanded="false" aria-controls="hoa-menu">
+        <span class="hoa-header__menu-lines" aria-hidden="true"></span>
+        <span class="hoa-header__menu-label">Menu</span>
+      </button>
+    </div>
+
+    <a href="/" class="header-brand hoa-header__brand" aria-label="House of Agha, home">
+      <small>HOUSE OF</small>AGHA
+    </a>
+
+    <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a href="/discover.html">Discover</a></li>
+      <li class="hoa-header__hide-sm"><a href="/gifts.html">Gifts</a></li>
+      <li>
+        <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
           <span>Bag</span>
           <span class="cart-count">0</span>
         </button>
-      </div>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<nav class="hoa-menu" id="hoa-menu" aria-label="Main">
+  <ul class="hoa-menu__links">
+    <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
+    <li><a href="/#fragrances"><span>02</span>Fragrances</a></li>
+    <li><a href="/discover.html"><span>03</span>Discover <em>your scent</em></a></li>
+    <li><a href="/the-house.html"><span>04</span>The House</a></li>
+    <li><a href="/gifts.html"><span>05</span>Gifts</a></li>
+    <li><a href="/private-access.html"><span>06</span>Private Access</a></li>
+  </ul>
+  <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
+</nav>
+
+  <main id="main-content">
+    <!-- Generated from templates/page.the-house.json. Edit the Liquid sections, not this block. -->
+    <!-- hero · sections/hoa-about-hero.liquid -->
+    <div id="shopify-section-hero" class="shopify-section hoa-ab-section"><section class="hoa-ab-hero" data-hoa-ab-hero>
+  <div class="hoa-wrap hoa-ab-hero__grid">
+    <div class="hoa-ab-hero__copy"><p class="hoa-eyebrow" data-hoa-ab-line>About the House</p><h1 class="hoa-ab-hero__title">
+        <span class="hoa-ab-mask"><span data-hoa-ab-rise>Seven fragrances.</span></span><span class="hoa-ab-mask"><em data-hoa-ab-rise>Seven places.</em></span></h1><p class="hoa-lede hoa-ab-hero__text" data-hoa-ab-line>House of Agha makes eaux de parfum. Each one is built around a single place, and dressed in a bottle of its own.</p><a class="hoa-btn" href="#worlds" data-hoa-ab-line><span>Meet the fragrances</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a></div>
+
+    <div class="hoa-ab-hero__media">
+      <figure class="hoa-ab-hero__main" data-hoa-ab-clip>
+        <div class="hoa-ab-hero__drift" data-hoa-ab-drift><img
+    src="assets/hoa-world-portrait.webp"
+    srcset="assets/hoa-world-portrait-sm.webp 700w, assets/hoa-world-portrait.webp 1200w"
+    sizes="(min-width: 900px) 34vw, 90vw"
+    width="1200" height="2150"
+    alt="A man in a white shirt holds a bottle of Oud Fury in warm evening light"
+    loading="eager" decoding="async" fetchpriority="high"></div>
+      </figure>
+      <figure class="hoa-ab-hero__cutout" data-hoa-ab-float><img
+    src="assets/hoa-product-shamamah.webp"
+    srcset="assets/hoa-product-shamamah-sm.webp 700w, assets/hoa-product-shamamah.webp 1200w"
+    sizes="(min-width: 900px) 16vw, 40vw"
+    width="1200" height="1500"
+    alt="Shamamah Eau de Parfum bottle with a crystal cap"
+    loading="eager" decoding="async"></figure>
     </div>
-  </header>
+  </div>
+</section>
 
-  <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
-    <div class="container">
-      <!-- Banner -->
-      <div style="margin-bottom: var(--space-3xl);">
-        <span class="editorial-label">HERITAGE & PHILOSOPHY</span>
-        <h1 class="headline-hero font-serif" style="font-size: clamp(2.5rem, 6vw, 6rem); margin-top: 12px;">
-          THE HOUSE OF AGHA
-        </h1>
-        <p class="text-soft" style="max-width: 680px; margin-top: 20px; font-size: 1.1rem; line-height: 1.8;">
-          Founded on an uncompromising refusal: to dilute beauty for speed. We create extraits de parfum compounded at 35% oil concentration, macerated in temperature-controlled dark chambers.
-        </p>
-      </div>
 
-      <!-- Timeline Chapters -->
-      <div class="timeline-chapter">
-        <div class="chapter-number">01</div>
-        <div>
-          <span class="editorial-label">PROVENANCE</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 6px;">RAW BOTANICAL EXTRACTION</h3>
-        </div>
-        <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7;">
-          Every formula starts with sustainable botanical harvesting: wild agarwood from Assam, Florentine iris roots, and Madagascar pink pepper harvested at twilight.
-        </p>
-      </div>
+</div>
 
-      <div class="timeline-chapter">
-        <div class="chapter-number">02</div>
-        <div>
-          <span class="editorial-label">MATURATION</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 6px;">90-DAY DARK MACERATION</h3>
-        </div>
-        <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7;">
-          Unlike mass commercial scents, raw AGHA extraits age untouched for 90 days in obsidian vessels, allowing top, heart, and base notes to meld into a seamless sensory composition.
-        </p>
-      </div>
+    <!-- statement · sections/hoa-about-statement.liquid -->
+    <div id="shopify-section-statement" class="shopify-section hoa-ab-section"><section class="hoa-ab-statement">
+  <div class="hoa-wrap">
+    <p class="hoa-ab-statement__text" data-hoa-ab-words>We start with a <em>place</em>: a smoke-lit room, an ice cave, a palace garden. Then we build the scent, the bottle and the photograph around it, so each fragrance feels like <em>somewhere you have been</em>.</p>
+  </div>
+</section>
 
-      <div class="timeline-chapter">
-        <div class="chapter-number">03</div>
-        <div>
-          <span class="editorial-label">ARTISANSHIP</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 6px;">FLACON CRAFTING & SEALING</h3>
-        </div>
-        <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7;">
-          Each heavy-glass bottle is hand-polished, individually numbered, and capped with magnetic obsidian glass to protect the living elixir within from UV degradation.
-        </p>
-      </div>
+
+</div>
+
+    <!-- worlds · sections/hoa-about-worlds.liquid -->
+    <div id="shopify-section-worlds" class="shopify-section hoa-ab-section"><section class="hoa-ab-worlds" id="worlds" data-hoa-ab-worlds>
+  <div class="hoa-ab-worlds__pin" data-hoa-ab-pin>
+    <div class="hoa-wrap hoa-ab-worlds__head">
+      <h2 class="hoa-h2">One house, <em>seven worlds.</em></h2><p class="hoa-lede">Every fragrance has its own setting, colour and bottle. Choose one to see it up close.</p></div>
+
+    <div class="hoa-ab-worlds__viewport">
+      <ol class="hoa-ab-worlds__track" data-hoa-ab-track><li class="hoa-ab-world" style="--hoa-tint: #2b160a;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=oud-fury">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-oud-fury-portrait.webp"
+    srcset="assets/hoa-oud-fury-portrait-sm.webp 700w, assets/hoa-oud-fury-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Oud Fury Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Woody & Smoky</p>
+                <h3 class="hoa-ab-world__name">Oud Fury</h3>
+                <p class="hoa-ab-world__line">Amber smoke, charred wood and a single shaft of evening light.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #0a1a45;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=agha-blue">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-agha-blue-portrait.webp"
+    srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Agha Blue Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Fresh & Aquatic</p>
+                <h3 class="hoa-ab-world__name">Agha Blue</h3>
+                <p class="hoa-ab-world__line">Ice caves, cold stone and the deep blue of a winter night.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #15100d;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=oud-of-dark-paradise">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-dark-paradise-portrait.webp"
+    srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Oud of Dark Paradise Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Woody & Smoky</p>
+                <h3 class="hoa-ab-world__name">Oud of Dark Paradise</h3>
+                <p class="hoa-ab-world__line">Black sand, rising smoke and a room lit only by embers.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #5b3524;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=maha">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-maha-portrait.webp"
+    srcset="assets/hoa-maha-portrait-sm.webp 700w, assets/hoa-maha-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Maha Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Floral & Luminous</p>
+                <h3 class="hoa-ab-world__name">Maha</h3>
+                <p class="hoa-ab-world__line">Blossom, warm sand and late sun through an open window.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #0b3a40;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=sea-smoke">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-sea-smoke-portrait.webp"
+    srcset="assets/hoa-sea-smoke-portrait-sm.webp 700w, assets/hoa-sea-smoke-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Sea Smoke Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Fresh & Aquatic</p>
+                <h3 class="hoa-ab-world__name">Sea Smoke</h3>
+                <p class="hoa-ab-world__line">Clear water, pale stone and salt carried in on the wind.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #2e3320;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=tobacco-enigma">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-tobacco-enigma-portrait.webp"
+    srcset="assets/hoa-tobacco-enigma-portrait-sm.webp 700w, assets/hoa-tobacco-enigma-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Tobacco Enigma Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Aromatic & Green</p>
+                <h3 class="hoa-ab-world__name">Tobacco Enigma</h3>
+                <p class="hoa-ab-world__line">Tobacco leaf, moss and a forest floor after rain.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li><li class="hoa-ab-world" style="--hoa-tint: #3d2f18;" >
+            <a class="hoa-ab-world__link" href="/product.html?p=shamamah">
+              <figure class="hoa-ab-world__media"><img
+    src="assets/hoa-shamamah-portrait.webp"
+    srcset="assets/hoa-shamamah-portrait-sm.webp 700w, assets/hoa-shamamah-portrait.webp 1200w"
+    sizes="(min-width: 900px) 26vw, 72vw"
+    width="1200" height="1607"
+    alt="Shamamah Eau de Parfum in its campaign setting"
+    loading="lazy" decoding="async"></figure>
+              <div class="hoa-ab-world__body">
+                <p class="hoa-ab-world__family">Floral & Luminous</p>
+                <h3 class="hoa-ab-world__name">Shamamah</h3>
+                <p class="hoa-ab-world__line">Jasmine, gilded columns and the hush of a palace garden.</p>
+                <span class="hoa-ab-world__cta">Discover <span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</span>
+              </div>
+            </a>
+          </li></ol>
     </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- method · sections/hoa-about-method.liquid -->
+    <div id="shopify-section-method" class="shopify-section hoa-ab-section"><section class="hoa-ab-method">
+  <div class="hoa-wrap">
+    <h2 class="hoa-h2 hoa-ab-method__title" data-hoa-ab-up>How a fragrance <em>comes together.</em></h2>
+
+    <div class="hoa-ab-bento">
+      <article class="hoa-ab-cell hoa-ab-cell--place" data-hoa-ab-up>
+        <figure class="hoa-ab-cell__media"><img
+    src="assets/hoa-craft-sand.webp"
+    srcset="assets/hoa-craft-sand-sm.webp 1000w, assets/hoa-craft-sand.webp 2000w"
+    sizes="(min-width: 760px) 62vw, 100vw"
+    width="2000" height="1125"
+    alt="Oud of Dark Paradise standing on dark sand in a beam of light"
+    loading="lazy" decoding="async"></figure>
+        <div class="hoa-ab-cell__body">
+          <h3>A place comes first</h3>
+          <p>Black sand, cold stone, a garden in late sun. Each fragrance starts from one setting and stays true to it.</p>
+        </div>
+      </article>
+
+      <article class="hoa-ab-cell hoa-ab-cell--facts" data-hoa-ab-up>
+        <dl class="hoa-ab-facts"><div><dt>Fragrances</dt><dd>7</dd></div><div><dt>Scent families</dt><dd>4</dd></div><div><dt>Eau de Parfum</dt><dd>EDP</dd></div></dl>
+      </article>
+
+      <article class="hoa-ab-cell hoa-ab-cell--materials" data-hoa-ab-up>
+        <figure class="hoa-ab-cell__media"><img
+    src="assets/hoa-ingredients-tobacco.webp"
+    srcset="assets/hoa-ingredients-tobacco-sm.webp 700w, assets/hoa-ingredients-tobacco.webp 969w"
+    sizes="(min-width: 760px) 30vw, 100vw"
+    width="969" height="969"
+    alt="Tobacco Enigma surrounded by moss, bergamot, lemon, cinnamon and jasmine"
+    loading="lazy" decoding="async"></figure>
+        <div class="hoa-ab-cell__body">
+          <h3>Materials from that world</h3>
+          <p>Tobacco leaf and moss, bergamot and jasmine, oud wood and sea salt.</p>
+        </div>
+      </article>
+
+      <article class="hoa-ab-cell hoa-ab-cell--bottle" data-hoa-ab-up>
+        <figure class="hoa-ab-cell__media"><img
+    src="assets/hoa-shamamah-lily.webp"
+    srcset="assets/hoa-shamamah-lily-sm.webp 700w, assets/hoa-shamamah-lily.webp 1086w"
+    sizes="(min-width: 760px) 30vw, 100vw"
+    width="1086" height="1448"
+    alt="Shamamah with its crystal cap among golden lilies"
+    loading="lazy" decoding="async"></figure>
+        <div class="hoa-ab-cell__body">
+          <h3>A bottle of its own</h3>
+          <p>No shared flacon. Each fragrance gets its own glass, cap and colour.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- closing · sections/hoa-about-closing.liquid -->
+    <div id="shopify-section-closing" class="shopify-section hoa-ab-section"><section class="hoa-ab-closing" data-hoa-ab-closing>
+  <figure class="hoa-ab-closing__frame" data-hoa-ab-frame>
+    <div class="hoa-ab-closing__img" data-hoa-ab-zoom><img
+    src="assets/hoa-world-profile.webp"
+    srcset="assets/hoa-world-profile-sm.webp 1000w, assets/hoa-world-profile.webp 2000w"
+    sizes="100vw"
+    width="2000" height="1125"
+    alt="A man holds Oud Fury against an amber backdrop"
+    loading="lazy" decoding="async"></div>
+  </figure>
+  <div class="hoa-wrap hoa-ab-closing__foot">
+    <h2 class="hoa-h2" data-hoa-ab-up>Find the one <em>you carry close.</em></h2><a class="hoa-btn" href="/shop.html" data-hoa-ab-up><span>Shop the collection</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a></div>
+</section>
+
+
+</div>
+
   </main>
 
   <footer class="footer">

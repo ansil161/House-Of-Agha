@@ -1,0 +1,37 @@
+{%- comment -%}
+  House of Agha · About 05 · Closing
+  A framed landscape that opens to full width as it scrolls into view, with the
+  closing line and the shop link underneath it (never on top of the photo).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="hoa-ab-closing" data-hoa-ab-closing>
+  <figure class="hoa-ab-closing__frame" data-hoa-ab-frame>
+    <div class="hoa-ab-closing__img" data-hoa-ab-zoom>
+      {%- render 'hoa-img', name: s.asset, image: s.image, w: 2000, h: 1125, alt: s.alt, sizes: '100vw' -%}
+    </div>
+  </figure>
+  <div class="hoa-wrap hoa-ab-closing__foot">
+    <h2 class="hoa-h2" data-hoa-ab-up>{{ s.heading }}{% if s.heading_serif != blank %} <em>{{ s.heading_serif }}</em>{% endif %}</h2>
+    {%- if s.cta_label != blank -%}
+      <a class="hoa-btn" href="{{ s.cta_url | default: routes.all_products_collection_url }}" data-hoa-ab-up><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: closing",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find the one" },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "you carry close." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop the collection" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Image (landscape)" },
+    { "type": "text", "id": "asset", "label": "Fallback theme asset", "default": "hoa-world-profile" },
+    { "type": "text", "id": "alt", "label": "Alt text", "default": "A man holds Oud Fury against an amber backdrop" }
+  ],
+  "presets": [{ "name": "About: closing" }]
+}
+{% endschema %}

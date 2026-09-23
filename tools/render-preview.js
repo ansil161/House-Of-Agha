@@ -53,8 +53,9 @@ const globals = {
   template: { name: 'index' }
 };
 
-(async () => {
-  const tpl = JSON.parse(fs.readFileSync(path.join(THEME, 'templates/index.json'), 'utf8'));
+// Renders a JSON template's sections the way Shopify does: one wrapper div per section.
+async function renderTemplate(name, templateGlobals) {
+  const tpl = JSON.parse(fs.readFileSync(path.join(THEME, 'templates', name + '.json'), 'utf8'));
   let main = '';
   for (const key of tpl.order) {
     const conf = tpl.sections[key];
@@ -68,10 +69,15 @@ const globals = {
       return { id, type: b.type, settings: Object.assign(defaults(bs.settings), b.settings || {}), shopify_attributes: '' };
     });
     const section = { id: key, settings, blocks };
-    const html = await engine.parseAndRender(src, Object.assign({}, globals, { section }));
+    const html = await engine.parseAndRender(src, Object.assign({}, globals, templateGlobals, { section }));
     const cls = ['shopify-section', schema.class].filter(Boolean).join(' ');
     main += `\n    <!-- ${key} · sections/${conf.type}.liquid -->\n    <div id="shopify-section-${key}" class="${cls}">${html}</div>\n`;
   }
+  return { main, tpl };
+}
+
+(async () => {
+  const { main, tpl } = await renderTemplate('index', {});
   const header = await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/header.liquid'), 'utf8'), globals);
 
   const indexPath = path.join(THEME, 'index.html');
@@ -94,6 +100,40 @@ const globals = {
 
   fs.writeFileSync(indexPath, page);
   console.log('rendered', tpl.order.length, 'sections,', main.length, 'chars');
+
+  // Inner preview pages get the same header as the homepage (as layout/theme.liquid does on the
+  // live theme): swap whatever header they carry for the rendered snippet, plus the stylesheet it needs.
+  const headerHtml = ('  <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->\n  ' + header.trim())
+    .replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url).replace(/^#/, '/#')}"`);
+  const inner = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && f !== 'index.html');
+  for (const f of inner) {
+    const file = path.join(THEME, f);
+    let html = fs.readFileSync(file, 'utf8');
+    const re = /[ \t]*(?:<!-- Navigation Header[^>]*-->\s*)?<header class="header[\s\S]*?<\/header>(?:\s*<nav class="hoa-menu"[\s\S]*?<\/nav>)?/;
+    if (!re.test(html)) { console.warn('no header found in', f); continue; }
+    html = html.replace(re, () => headerHtml);
+    if (!html.includes('assets/hoa-home.css')) {
+      html = html.replace(/(<link rel="stylesheet" href="(\/?)assets\/theme\.css">)/, '$1\n  <link rel="stylesheet" href="$2assets/hoa-home.css">');
+    }
+    fs.writeFileSync(file, html);
+  }
+  console.log('shared header on', inner.length, 'inner pages');
+
+  // Pages built from JSON templates: replace the preview file's <main> with the rendered sections.
+  const pageTemplates = { 'the-house.html': 'page.the-house' };
+  for (const [file, name] of Object.entries(pageTemplates)) {
+    const rendered = await renderTemplate(name, { template: { name: 'page', suffix: name.split('.')[1] } });
+    const pagePath = path.join(THEME, file);
+    let html = fs.readFileSync(pagePath, 'utf8');
+    const start = html.search(/<main[\s>]/);
+    const end = html.indexOf('</main>');
+    if (start < 0 || end < 0) throw new Error(file + ': <main> markers missing');
+    const body = ('<main id="main-content">\n    <!-- Generated from templates/' + name + '.json. Edit the Liquid sections, not this block. -->' + rendered.main + '\n  ')
+      .replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url)}"`);
+    html = html.slice(0, start) + body + html.slice(end);
+    fs.writeFileSync(pagePath, html);
+    console.log('rendered', rendered.tpl.order.length, 'sections into', file);
+  }
 
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.

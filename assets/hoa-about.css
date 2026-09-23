@@ -1,0 +1,256 @@
+/* ==========================================================================
+   HOUSE OF AGHA · ABOUT PAGE (templates/page.the-house.json)
+   Builds on the tokens, type and buttons in hoa-home.css. Light page only:
+   warm paper throughout, one radius (2px) for media, pill buttons.
+   Every section is fully readable without JS; motion lives in hoa-about.js.
+   ========================================================================== */
+
+.hoa-page { background: var(--hoa-paper); color: var(--hoa-ink); }
+.hoa-page main { overflow-x: clip; }
+.hoa-page .hoa-h2 em { padding-bottom: 0.06em; }
+
+/* ---------- 01 Opening ---------- */
+.hoa-ab-hero {
+  padding: calc(var(--hoa-header-h) + clamp(28px, 5vw, 72px)) 0 clamp(64px, 8vw, 120px);
+}
+.hoa-ab-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: end;
+  min-height: calc(100dvh - var(--hoa-header-h) - clamp(28px, 5vw, 72px) - clamp(64px, 8vw, 120px));
+}
+.hoa-ab-hero__copy { display: grid; justify-items: start; gap: clamp(22px, 2.4vw, 34px); padding-bottom: clamp(8px, 2vw, 32px); }
+.hoa-ab-hero__title {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(2.8rem, min(5.8vw, 10.5dvh), 6.6rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  text-transform: none;
+  color: var(--hoa-ink);
+}
+.hoa-ab-mask { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.hoa-ab-mask > * { display: inline-block; }
+.hoa-ab-hero__title em {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--hoa-ink-2);
+}
+.hoa-ab-hero__text { max-width: 38ch; }
+
+.hoa-ab-hero__media { position: relative; justify-self: end; width: fit-content; max-width: 100%; }
+.hoa-ab-hero__main {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  height: min(calc(100dvh - var(--hoa-header-h) - 120px), 680px);
+  max-width: 100%;
+  margin-left: auto;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: #1d1712;
+}
+.hoa-ab-hero__drift { width: 100%; height: 118%; margin-top: -9%; }
+.hoa-ab-hero__drift img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 30%; display: block; }
+.hoa-ab-hero__cutout {
+  position: absolute;
+  left: -26%;
+  bottom: clamp(24px, 4vw, 56px);
+  width: 44%;
+  margin: 0;
+  padding: 10px 10px 0;
+  background: var(--hoa-stone);
+  border-radius: var(--hoa-radius);
+  box-shadow: 0 24px 60px -30px rgba(40, 30, 20, 0.45);
+}
+.hoa-ab-hero__cutout img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+
+/* ---------- 02 Statement ---------- */
+.hoa-ab-statement { padding: clamp(40px, 8vw, 140px) 0 var(--hoa-section); }
+.hoa-ab-statement__text {
+  max-width: 24ch;
+  margin: 0 auto;
+  text-align: center;
+  font-family: var(--hoa-sans);
+  font-size: clamp(1.9rem, 4.1vw, 4rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: var(--hoa-ink);
+}
+.hoa-ab-statement__text em { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.02em; }
+.hoa-ab-statement__text .hoa-ab-w { display: inline; }
+
+/* ---------- 03 Fragrances row ---------- */
+.hoa-ab-worlds { padding-bottom: var(--hoa-section); }
+.hoa-ab-worlds__pin { display: flex; flex-direction: column; justify-content: center; gap: clamp(32px, 4vw, 56px); }
+.hoa-ab-worlds__head { display: grid; gap: 18px; }
+.hoa-ab-worlds__viewport {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.hoa-ab-worlds__viewport::-webkit-scrollbar { display: none; }
+.hoa-ab-worlds__track {
+  display: flex;
+  gap: clamp(16px, 2vw, 28px);
+  width: max-content;
+  margin: 0;
+  padding: 0 var(--hoa-gutter);
+  list-style: none;
+}
+.hoa-ab-world {
+  width: clamp(250px, 23vw, 360px);
+  scroll-snap-align: start;
+  scroll-margin-left: var(--hoa-gutter);
+}
+.hoa-ab-world__link { display: grid; gap: 18px; color: inherit; text-decoration: none; }
+.hoa-ab-world__media {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-tint);
+}
+.hoa-ab-world__media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1.2s var(--hoa-ease);
+}
+.hoa-ab-world__link:hover .hoa-ab-world__media img,
+.hoa-ab-world__link:focus-visible .hoa-ab-world__media img { transform: scale(1.045); }
+.hoa-ab-world__body { display: grid; gap: 8px; }
+.hoa-ab-world__family { margin: 0; font-size: 0.82rem; color: var(--hoa-mute); }
+.hoa-ab-world__name {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 1.9vw, 1.9rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-transform: none;
+  color: var(--hoa-ink);
+}
+.hoa-ab-world__line { margin: 0; font-size: 0.95rem; line-height: 1.55; color: var(--hoa-ink-2); max-width: 32ch; }
+.hoa-ab-world__cta {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 6px;
+  font-size: 0.86rem; font-weight: 500; color: var(--hoa-ink);
+}
+.hoa-ab-world__cta .hoa-btn__icon {
+  position: relative; display: inline-grid; place-items: center; overflow: hidden;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--hoa-ink); color: var(--hoa-paper);
+}
+.hoa-ab-world__cta .hoa-btn__icon svg { width: 12px; height: 12px; transition: transform 0.6s var(--hoa-ease); }
+.hoa-ab-world__cta .hoa-btn__icon svg + svg { position: absolute; transform: translate(-150%, 150%); }
+.hoa-ab-world__link:hover .hoa-btn__icon svg:first-child { transform: translate(150%, -150%); }
+.hoa-ab-world__link:hover .hoa-btn__icon svg + svg { transform: translate(0, 0); }
+
+/* Pinned horizontal pan (class added by hoa-about.js on wide screens) */
+.hoa-ab-worlds.is-panning { padding-bottom: 0; }
+.hoa-ab-worlds.is-panning .hoa-ab-worlds__pin {
+  height: 100dvh;
+  gap: clamp(20px, 4vh, 48px);
+  padding: calc(var(--hoa-header-h) + 3vh) 0 3vh;
+}
+.hoa-ab-worlds.is-panning .hoa-ab-worlds__viewport { overflow: visible; scroll-snap-type: none; }
+/* While pinned the whole row must fit one screen: card width follows viewport height. */
+.hoa-ab-worlds.is-panning .hoa-ab-world { width: clamp(190px, min(23vw, calc((100dvh - 390px) * 0.8)), 360px); }
+@media (max-height: 760px) {
+  .hoa-ab-worlds.is-panning .hoa-ab-world__line { display: none; }
+  .hoa-ab-worlds.is-panning .hoa-ab-worlds__head .hoa-h2 { font-size: clamp(2rem, 7vh, 3.6rem); }
+}
+
+/* ---------- 04 How we work ---------- */
+.hoa-ab-method { padding: var(--hoa-section) 0; }
+.hoa-ab-method__title { margin: 0 0 clamp(36px, 5vw, 72px); max-width: 14ch; }
+.hoa-ab-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+}
+.hoa-ab-cell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-paper-2);
+}
+.hoa-ab-cell--place { grid-column: span 8; }
+.hoa-ab-cell--facts { grid-column: span 4; }
+.hoa-ab-cell--materials { grid-column: span 7; }
+.hoa-ab-cell--bottle { grid-column: span 5; }
+.hoa-ab-cell__media { position: relative; flex: 1 1 auto; min-height: clamp(260px, 30vw, 460px); margin: 0; overflow: hidden; }
+.hoa-ab-cell__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.hoa-ab-cell--materials .hoa-ab-cell__media img { object-position: 50% 40%; }
+.hoa-ab-cell__body { display: grid; gap: 8px; padding: clamp(20px, 2.2vw, 30px); }
+.hoa-ab-cell__body h3 {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--hoa-ink);
+}
+.hoa-ab-cell__body p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2); max-width: 46ch; }
+
+.hoa-ab-cell--facts { background: var(--hoa-stone); justify-content: flex-end; padding: clamp(24px, 2.6vw, 40px); }
+.hoa-ab-facts { display: grid; gap: clamp(20px, 2.4vw, 32px); margin: 0; }
+.hoa-ab-facts > div { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid rgba(20, 18, 16, 0.18); }
+.hoa-ab-facts dt { font-size: 0.86rem; color: var(--hoa-ink-2); }
+.hoa-ab-facts dd {
+  margin: 0;
+  order: -1;
+  font-family: var(--hoa-sans);
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--hoa-ink);
+}
+
+/* ---------- 05 Closing ---------- */
+.hoa-ab-closing { padding: 0 0 var(--hoa-section); }
+.hoa-ab-closing__frame { margin: 0; padding: 0 var(--hoa-gutter); }
+.hoa-ab-closing__img {
+  position: relative;
+  aspect-ratio: 16 / 8;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: #2b160a;
+}
+.hoa-ab-closing__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.hoa-ab-closing__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.hoa-ab-closing__foot .hoa-h2 { margin: 0; max-width: 12ch; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 899px) {
+  .hoa-ab-hero__grid { grid-template-columns: 1fr; min-height: 0; align-items: start; }
+  .hoa-ab-hero__media { justify-self: stretch; width: auto; max-width: none; padding-left: 18%; }
+  .hoa-ab-hero__main { aspect-ratio: 4 / 5; height: auto; width: 100%; max-height: 70dvh; }
+  .hoa-ab-hero__cutout { left: 0; width: 34%; bottom: 10%; }
+}
+@media (max-width: 759px) {
+  .hoa-ab-bento { grid-template-columns: 1fr; }
+  .hoa-ab-cell--place, .hoa-ab-cell--facts, .hoa-ab-cell--materials, .hoa-ab-cell--bottle { grid-column: auto; }
+  .hoa-ab-cell__media { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
+  .hoa-ab-cell--bottle .hoa-ab-cell__media { aspect-ratio: 4 / 5; }
+  .hoa-ab-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .hoa-ab-facts dd { font-size: 2.4rem; }
+  .hoa-ab-closing__img { aspect-ratio: 4 / 5; }
+  .hoa-ab-closing__foot { flex-direction: column; align-items: flex-start; }
+  .hoa-ab-world { width: 74vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-ab-world__media img, .hoa-ab-world__cta svg { transition: none; }
+}
