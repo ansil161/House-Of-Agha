@@ -1,0 +1,29 @@
+{%- comment -%}
+  House of Agha: page head shared by the signed-in account templates
+  (account, order, addresses). Same compact head as the shop page.
+
+  Params:
+    title         heading text before the italic word
+    italic        italic word (serif)
+    crumb         last breadcrumb label
+    crumb_parent  true to add an "Account" breadcrumb link before it
+    current       'orders' or 'addresses': marks the active account link
+{%- endcomment -%}
+<header class="hoa-acct-head">
+  <div class="hoa-acct-head__title-wrap">
+    <p class="hoa-acct-head__crumb">
+      <a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>
+      {%- if crumb_parent -%}<a href="{{ routes.account_url }}">Account</a><span aria-hidden="true">/</span>{%- endif -%}
+      {{ crumb }}
+    </p>
+    <h1 class="hoa-acct-head__title">{{ title }} <em>{{ italic }}</em></h1>
+  </div>
+  <div class="hoa-acct-head__side">
+    <p class="hoa-acct-head__who">Signed in as <span>{{ customer.email }}</span></p>
+    <nav class="hoa-acct-head__nav" aria-label="Account">
+      <a href="{{ routes.account_url }}"{% if current == 'orders' %} aria-current="page"{% endif %}>Orders</a>
+      <a href="{{ routes.account_addresses_url }}"{% if current == 'addresses' %} aria-current="page"{% endif %}>Addresses</a>
+      <a href="{{ routes.account_logout_url }}" data-hoa-logout>Sign out</a>
+    </nav>
+  </div>
+</header>

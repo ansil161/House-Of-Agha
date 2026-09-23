@@ -1,0 +1,42 @@
+{% comment %}
+  ACCOUNT · Set a new password (templates/customers/reset_password.json)
+  Reached from the reset link Shopify emails; posts Shopify's 'reset_customer_password' form.
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-auth">
+  <div class="hoa-auth__main">
+    <div class="hoa-auth__inner">
+      <div class="hoa-auth__panel">
+        <header class="hoa-auth__head">
+          <p class="hoa-auth__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>Account</p>
+          <h1 class="hoa-auth__title">Choose a new <em>password</em></h1>
+          <p class="hoa-auth__lede">{% if customer.email != blank %}For {{ customer.email }}. {% endif %}Use at least 5 characters.</p>
+        </header>
+
+        {%- form 'reset_customer_password', class: 'hoa-form', novalidate: 'novalidate' -%}
+          {%- render 'hoa-form-errors', errors: form.errors, id: 'ResetErrors' -%}
+          {%- render 'hoa-password-pair', errors: form.errors, prefix: 'Reset' -%}
+          <button class="hoa-btn hoa-btn--block" type="submit" data-hoa-submit data-loading-label="Saving">
+            <span data-label>Save password</span>{% render 'hoa-btn-icon' %}
+          </button>
+        {%- endform -%}
+
+        <p class="hoa-auth__alt"><a class="hoa-auth__back" href="{{ routes.account_login_url }}"><span aria-hidden="true">&larr;</span> Back to sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  {%- render 'hoa-auth-media', image: s.image, name: 'hoa-world-hand', alt: 'Oud of Dark Paradise held in hand', title: 'Oud of Dark Paradise', text: 'Eau de Parfum' -%}
+</section>
+
+{% schema %}
+{
+  "name": "HOA Account reset",
+  "tag": "div",
+  "class": "hoa-auth-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Shown beside the form on screens 1024px and wider." }
+  ]
+}
+{% endschema %}

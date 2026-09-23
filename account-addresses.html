@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Addresses | House of Agha</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="assets/theme.css">
+  <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-account.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="assets/theme.js" defer></script>
+  <script src="assets/hoa-account.js" defer></script>
+</head>
+<body class="hoa-account-page">
+
+  <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
+  <header class="header hoa-header" data-hoa-header>
+  <div class="hoa-header__inner">
+    <div class="hoa-header__start">
+      <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="/shop.html">Shop</a></li>
+        <li><a href="/#fragrances">Fragrances</a></li>
+        <li><a href="/the-house.html">The House</a></li>
+      </ul>
+      <button class="hoa-header__menu js-mobile-menu" type="button" aria-expanded="false" aria-controls="hoa-menu">
+        <span class="hoa-header__menu-lines" aria-hidden="true"></span>
+        <span class="hoa-header__menu-label">Menu</span>
+      </button>
+    </div>
+
+    <a href="/" class="header-brand hoa-header__brand" aria-label="House of Agha, home">
+      <small>HOUSE OF</small>AGHA
+    </a>
+
+    <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a href="/discover.html">Discover</a></li>
+      <li class="hoa-header__hide-sm"><a href="/gifts.html">Gifts</a></li><li class="hoa-header__hide-sm"><a href="/account-login.html">Account</a></li><li>
+        <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
+          <span>Bag</span>
+          <span class="cart-count">0</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<nav class="hoa-menu" id="hoa-menu" aria-label="Main">
+  <ul class="hoa-menu__links">
+    <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
+    <li><a href="/#fragrances"><span>02</span>Fragrances</a></li>
+    <li><a href="/discover.html"><span>03</span>Discover <em>your scent</em></a></li>
+    <li><a href="/the-house.html"><span>04</span>The House</a></li>
+    <li><a href="/gifts.html"><span>05</span>Gifts</a></li>
+    <li><a href="/private-access.html"><span>06</span>Private Access</a></li><li><a href="/account-login.html"><span>07</span>Sign <em>in</em></a></li></ul>
+  <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
+</nav>
+
+  <main id="main-content">
+    <!-- Generated from templates/customers/addresses.json. Edit the Liquid sections, not this block. -->
+    <!-- main · sections/hoa-account-addresses.liquid -->
+    <div id="shopify-section-main" class="shopify-section hoa-acct-section">
+
+
+
+<section class="hoa-acct hoa-acct--addresses">
+  <div class="hoa-wrap"><header class="hoa-acct-head">
+  <div class="hoa-acct-head__title-wrap">
+    <p class="hoa-acct-head__crumb">
+      <a href="">Home</a><span aria-hidden="true">/</span><a href="">Account</a><span aria-hidden="true">/</span>Addresses
+    </p>
+    <h1 class="hoa-acct-head__title">Your <em>addresses</em></h1>
+  </div>
+  <div class="hoa-acct-head__side">
+    <p class="hoa-acct-head__who">Signed in as <span>aisha.rahman@example.com</span></p>
+    <nav class="hoa-acct-head__nav" aria-label="Account">
+      <a href="">Orders</a>
+      <a href="" aria-current="page">Addresses</a>
+      <a href="" data-hoa-logout>Sign out</a>
+    </nav>
+  </div>
+</header>
+<div class="hoa-addr">
+      <details class="hoa-addr__add">
+        <summary class="hoa-btn"><span>Add an address</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</summary>
+        <div class="hoa-addr__form">
+          <h2 class="hoa-acct__h2">New address</h2><form method="post" action="/account/addresses" accept-charset="UTF-8" class="hoa-form" novalidate><input type="hidden" name="form_type" value="customer_address"><div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressFirstNameNew">First name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressFirstNameNew"
+      name="address[first_name]" autocomplete="given-name"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressLastNameNew">Last name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressLastNameNew"
+      name="address[last_name]" autocomplete="family-name"></div></div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCompanyNew">Company (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCompanyNew"
+      name="address[company]" autocomplete="organization"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress1New">Address</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress1New"
+      name="address[address1]" autocomplete="address-line1"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress2New">Apartment, suite, etc. (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress2New"
+      name="address[address2]" autocomplete="address-line2"></div></div>
+<div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCityNew">City</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCityNew"
+      name="address[city]" autocomplete="address-level2"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressZipNew">Postal code</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressZipNew"
+      name="address[zip]" autocomplete="postal-code"></div></div>
+</div>
+<div class="hoa-form__pair">
+  <div class="hoa-field">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressCountryNew">Country / region</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressCountryNew" name="address[country]" data-hoa-country="New" data-default="" autocomplete="country">
+        
+      </select>
+    </div>
+  </div>
+  <div class="hoa-field" id="AddressProvinceContainerNew">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressProvinceNew">State / province</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressProvinceNew" name="address[province]" data-default="" autocomplete="address-level1"></select>
+    </div>
+  </div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressPhoneNew">Phone (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="tel"
+      id="AddressPhoneNew"
+      name="address[phone]" autocomplete="tel"></div></div>
+<div class="hoa-check">
+  <input type="checkbox" id="address_default_address_new" name="address[default]" value="1">
+  <label for="address_default_address_new">Use as my default address</label>
+</div>
+<div class="hoa-addr__form-actions">
+              <button class="hoa-btn" type="submit" data-hoa-submit data-loading-label="Saving"><span data-label>Save address</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
+              <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="button" data-hoa-close-details>Cancel</button>
+            </div></form></div>
+      </details><ul class="hoa-addr__list" role="list"><li class="hoa-addr__card">
+                <div class="hoa-addr__top"><span class="hoa-addr__badge">Default</span><address class="hoa-address"><p>Aisha Rahman</p><p>14 Carmichael Road</p><p>Mumbai MH 400026</p><p>India</p></address>
+                </div>
+                <div class="hoa-addr__actions">
+                  <details class="hoa-addr__edit">
+                    <summary>Edit</summary>
+                    <div class="hoa-addr__form">
+                      <h2 class="hoa-acct__h2">Edit address</h2><form method="post" action="/account/addresses/101" accept-charset="UTF-8" class="hoa-form" novalidate><input type="hidden" name="form_type" value="customer_address"><div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressFirstName101">First name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressFirstName101"
+      name="address[first_name]" value="Aisha" autocomplete="given-name"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressLastName101">Last name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressLastName101"
+      name="address[last_name]" value="Rahman" autocomplete="family-name"></div></div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCompany101">Company (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCompany101"
+      name="address[company]" autocomplete="organization"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress1101">Address</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress1101"
+      name="address[address1]" value="14 Carmichael Road" autocomplete="address-line1"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress2101">Apartment, suite, etc. (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress2101"
+      name="address[address2]" autocomplete="address-line2"></div></div>
+<div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCity101">City</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCity101"
+      name="address[city]" value="Mumbai" autocomplete="address-level2"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressZip101">Postal code</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressZip101"
+      name="address[zip]" value="400026" autocomplete="postal-code"></div></div>
+</div>
+<div class="hoa-form__pair">
+  <div class="hoa-field">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressCountry101">Country / region</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressCountry101" name="address[country]" data-hoa-country="101" data-default="India" autocomplete="country">
+        
+      </select>
+    </div>
+  </div>
+  <div class="hoa-field" id="AddressProvinceContainer101">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressProvince101">State / province</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressProvince101" name="address[province]" data-default="" autocomplete="address-level1"></select>
+    </div>
+  </div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressPhone101">Phone (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="tel"
+      id="AddressPhone101"
+      name="address[phone]" autocomplete="tel"></div></div>
+<div class="hoa-check">
+  <input type="checkbox" id="address_default_address_101" name="address[default]" value="1" checked>
+  <label for="address_default_address_101">Use as my default address</label>
+</div>
+<div class="hoa-addr__form-actions">
+                          <button class="hoa-btn" type="submit" data-hoa-submit data-loading-label="Saving"><span data-label>Update address</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
+                          <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="button" data-hoa-close-details>Cancel</button>
+                        </div></form></div>
+                  </details>
+                  <form class="hoa-addr__remove" method="post" action="/account/addresses/101" data-hoa-remove>
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" data-confirm-label="Confirm remove">Remove</button>
+                  </form>
+                </div>
+              </li><li class="hoa-addr__card">
+                <div class="hoa-addr__top"><address class="hoa-address"><p>Aisha Rahman</p><p>Rahman Studio</p><p>3rd Floor, Kala Ghoda Chambers</p><p>Fort</p><p>Mumbai MH 400001</p><p>India</p></address>
+                </div>
+                <div class="hoa-addr__actions">
+                  <details class="hoa-addr__edit">
+                    <summary>Edit</summary>
+                    <div class="hoa-addr__form">
+                      <h2 class="hoa-acct__h2">Edit address</h2><form method="post" action="/account/addresses/102" accept-charset="UTF-8" class="hoa-form" novalidate><input type="hidden" name="form_type" value="customer_address"><div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressFirstName102">First name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressFirstName102"
+      name="address[first_name]" value="Aisha" autocomplete="given-name"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressLastName102">Last name</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressLastName102"
+      name="address[last_name]" value="Rahman" autocomplete="family-name"></div></div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCompany102">Company (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCompany102"
+      name="address[company]" value="Rahman Studio" autocomplete="organization"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress1102">Address</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress1102"
+      name="address[address1]" value="3rd Floor, Kala Ghoda Chambers" autocomplete="address-line1"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressAddress2102">Apartment, suite, etc. (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressAddress2102"
+      name="address[address2]" value="Fort" autocomplete="address-line2"></div></div>
+<div class="hoa-form__pair"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressCity102">City</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressCity102"
+      name="address[city]" value="Mumbai" autocomplete="address-level2"></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressZip102">Postal code</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="text"
+      id="AddressZip102"
+      name="address[zip]" value="400001" autocomplete="postal-code"></div></div>
+</div>
+<div class="hoa-form__pair">
+  <div class="hoa-field">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressCountry102">Country / region</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressCountry102" name="address[country]" data-hoa-country="102" data-default="India" autocomplete="country">
+        
+      </select>
+    </div>
+  </div>
+  <div class="hoa-field" id="AddressProvinceContainer102">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressProvince102">State / province</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressProvince102" name="address[province]" data-default="" autocomplete="address-level1"></select>
+    </div>
+  </div>
+</div><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="AddressPhone102">Phone (optional)</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="tel"
+      id="AddressPhone102"
+      name="address[phone]" autocomplete="tel"></div></div>
+<div class="hoa-check">
+  <input type="checkbox" id="address_default_address_102" name="address[default]" value="1">
+  <label for="address_default_address_102">Use as my default address</label>
+</div>
+<div class="hoa-addr__form-actions">
+                          <button class="hoa-btn" type="submit" data-hoa-submit data-loading-label="Saving"><span data-label>Update address</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
+                          <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="button" data-hoa-close-details>Cancel</button>
+                        </div></form></div>
+                  </details>
+                  <form class="hoa-addr__remove" method="post" action="/account/addresses/102" data-hoa-remove>
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" data-confirm-label="Confirm remove">Remove</button>
+                  </form>
+                </div>
+              </li></ul><p class="hoa-acct__back"><a class="hoa-acct__link" href="/account.html"><span aria-hidden="true">&larr;</span> Back to account</a></p>
+    </div>
+  </div>
+</section>
+
+
+</div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <a href="/" class="footer-brand">AGHA</a>
+          <p class="text-soft" style="font-size: 0.9rem; max-width: 320px; line-height: 1.7; margin-bottom: var(--space-md);">
+            A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
+          </p>
+          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
+        </div>
+
+        <div class="footer-col">
+          <h5>COLLECTIONS</h5>
+          <ul class="footer-links">
+            <li><a href="/shop.html">Shop All Formulations</a></li>
+            <li><a href="/product.html">Spotlight: Oud Royal</a></li>
+            <li><a href="/discover.html">Discovery Set Sampler</a></li>
+            <li><a href="/private-access.html">Private Vault Drops</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>THE HOUSE</h5>
+          <ul class="footer-links">
+            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
+            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
+            <li><a href="/gifts.html">Bespoke Concierge</a></li>
+            <li><a href="/private-access.html">Private Member Access</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>CLIENT CARE</h5>
+          <ul class="footer-links">
+            <li><a href="/contact.html">Concierge Advisory</a></li>
+            <li><a href="/faq.html">Frequently Asked Questions</a></li>
+            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
+            <li><a href="/contact.html">Store Locator</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.15em;">ALL COLLECTIONS ARCHITECTURE</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-out Cart Drawer -->
+  <div class="cart-drawer-overlay js-cart-close"></div>
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <span class="editorial-label">YOUR SELECTION</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
+      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    <div class="cart-drawer-body"></div>
+    <div class="cart-drawer-footer">
+      <button class="btn-primary" style="width: 100%; justify-content: center;">PROCEED TO CHECKOUT →</button>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay js-modal-close"></div>
+  <div class="modal-content-box quick-view-modal">
+    <button class="modal-close-btn js-modal-close">&times;</button>
+    <div class="grid-2" style="align-items: center;">
+      <div style="aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border);">
+        <img src="assets/bestseller_oud_royal.jpg" alt="Quick View" class="qv-image" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div>
+        <span class="editorial-label qv-meta">50 ML · EXTRAIT DE PARFUM</span>
+        <h2 class="qv-title font-serif" style="font-size: 2rem;">OUD ROYAL</h2>
+        <p class="qv-price" style="font-size: 1.2rem; margin: 12px 0;">₹14,500</p>
+        <p class="qv-description text-soft" style="font-size: 0.85rem;">Resinous Cambodian agarwood and wild black rose extract.</p>
+        <button class="btn-primary js-add-to-cart" style="margin-top: 20px; width: 100%; justify-content: center;">ADD TO BAG →</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

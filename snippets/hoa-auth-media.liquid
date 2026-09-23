@@ -1,0 +1,21 @@
+{%- comment -%}
+  House of Agha: the photograph beside the sign-in forms (desktop only; hidden under 1024px).
+
+  Params:
+    image    optional Shopify image from the section settings
+    name     theme asset base name used when no image is chosen
+    alt      alt text
+    title    caption title (serif italic)
+    text     caption line under the title
+{%- endcomment -%}
+<aside class="hoa-auth__media" aria-hidden="true">
+  <div class="hoa-auth__frame">
+    {%- render 'hoa-img', image: image, name: name, w: 1086, h: 1448, alt: alt, sizes: '50vw', loading: 'eager', class: 'hoa-auth__img' -%}
+    {%- if title != blank or text != blank -%}
+      <div class="hoa-auth__caption">
+        {%- if title != blank -%}<p class="hoa-auth__caption-title">{{ title }}</p>{%- endif -%}
+        {%- if text != blank -%}<p class="hoa-auth__caption-text">{{ text }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</aside>

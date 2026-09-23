@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Olfactory Discover Finder — AGHA PERFUMES</title>
-  <meta name="description" content="Discover your personalized scent signature with the AGHA Olfactory Finder.">
+  <title>Reset password | House of Agha</title>
+  <meta name="robots" content="noindex">
   <link rel="stylesheet" href="assets/theme.css">
   <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-account.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="assets/theme.js" defer></script>
+  <script src="assets/hoa-account.js" defer></script>
 </head>
-<body>
+<body class="hoa-account-page">
+
   <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
   <header class="header hoa-header" data-hoa-header>
   <div class="hoa-header__inner">
@@ -53,97 +57,64 @@
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
 </nav>
 
-  <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
-    <div class="container">
-      <div style="text-align: center; max-width: 700px; margin: 0 auto var(--space-2xl) auto;">
-        <span class="editorial-label">INTERACTIVE OLFACTORY FINDER</span>
-        <h1 class="headline-hero font-serif" style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-top: 12px;">
-          DISCOVER YOUR SCENT
-        </h1>
-        <p class="text-soft" style="margin-top: 16px; font-size: 0.95rem;">
-          Every scent interacts uniquely with individual skin lipids. Take our 3-step questionnaire to match your presence with the ideal Extrait de Parfum.
-        </p>
-      </div>
+  <main id="main-content">
+    <!-- Generated from templates/customers/reset_password.json. Edit the Liquid sections, not this block. -->
+    <!-- main · sections/hoa-account-reset.liquid -->
+    <div id="shopify-section-main" class="shopify-section hoa-auth-section"><section class="hoa-auth">
+  <div class="hoa-auth__main">
+    <div class="hoa-auth__inner">
+      <div class="hoa-auth__panel">
+        <header class="hoa-auth__head">
+          <p class="hoa-auth__crumb"><a href="/">Home</a><span aria-hidden="true">/</span>Account</p>
+          <h1 class="hoa-auth__title">Choose a new <em>password</em></h1>
+          <p class="hoa-auth__lede">For aisha.rahman@example.com. Use at least 5 characters.</p>
+        </header><form method="post" action="/account/reset" accept-charset="UTF-8" class="hoa-form" novalidate><input type="hidden" name="form_type" value="reset_customer_password"><div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="ResetPassword">New password</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="password"
+      id="ResetPassword"
+      name="customer[password]" autocomplete="new-password" autocapitalize="off" spellcheck="false" required aria-required="true" autofocus><button class="hoa-field__toggle" type="button" data-hoa-reveal-password aria-controls="ResetPassword" aria-pressed="false" hidden>
+        <span data-show>Show</span><span data-hide>Hide</span>
+        <span class="hoa-visually-hidden"> password</span>
+      </button></div></div>
+<div class="hoa-field">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="ResetPasswordConfirm">Confirm new password</label></div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="password"
+      id="ResetPasswordConfirm"
+      name="customer[password_confirmation]" autocomplete="new-password" autocapitalize="off" spellcheck="false" required aria-required="true"><button class="hoa-field__toggle" type="button" data-hoa-reveal-password aria-controls="ResetPasswordConfirm" aria-pressed="false" hidden>
+        <span data-show>Show</span><span data-hide>Hide</span>
+        <span class="hoa-visually-hidden"> password</span>
+      </button></div></div>
+<button class="hoa-btn hoa-btn--block" type="submit" data-hoa-submit data-loading-label="Saving">
+            <span data-label>Save password</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
-      <div class="scent-quiz-box" style="margin-bottom: var(--space-3xl);">
-        <!-- Step 1 -->
-        <div class="quiz-step active" data-step="1">
-          <span class="editorial-label">QUESTION 01 / 03</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">What mood or aura do you wish to project?</h3>
-          <div class="quiz-options">
-            <div class="quiz-option-btn" data-value="mysterious">
-              <h4 class="font-serif">Dark & Mysterious</h4>
-              <p>Smoky woods, deep resin, velvet leather.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="fresh">
-              <h4 class="font-serif">Fresh & Electric</h4>
-              <p>Crisp citrus, crushed botanicals, white amber.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="sensual">
-              <h4 class="font-serif">Warm & Sensual</h4>
-              <p>Vanilla bourbon, spicy iris, golden amber.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="quiz-step" data-step="2">
-          <span class="editorial-label">QUESTION 02 / 03</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">Select your preferred primary scent note:</h3>
-          <div class="quiz-options">
-            <div class="quiz-option-btn" data-value="oud">
-              <h4 class="font-serif">Rare Oud & Tobacco</h4>
-              <p>Deep, opulent, long-lasting wood extracts.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="iris">
-              <h4 class="font-serif">Powdery Iris & Suede</h4>
-              <p>Refined, elegant, high-fashion floral suede.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="amber">
-              <h4 class="font-serif">Golden Amber & Spices</h4>
-              <p>Intense warmth with pink pepper & cardamom.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="quiz-step" data-step="3">
-          <span class="editorial-label">QUESTION 03 / 03</span>
-          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">When will you wear this fragrance?</h3>
-          <div class="quiz-options">
-            <div class="quiz-option-btn" data-value="night">
-              <h4 class="font-serif">Nocturnal & Evenings</h4>
-              <p>Formal galas, intimate dinners, night presence.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="signature">
-              <h4 class="font-serif">Daily Signature</h4>
-              <p>Unmistakable personal signature everywhere.</p>
-            </div>
-            <div class="quiz-option-btn" data-value="statement">
-              <h4 class="font-serif">Special Occasions</h4>
-              <p>Unforgettable impression for milestone moments.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Result Step -->
-        <div class="quiz-step quiz-result-step" data-step="4">
-          <span class="editorial-label">YOUR OLFACTORY MATCH</span>
-          <h3 class="font-serif" style="font-size: 2.2rem; margin-top: 8px; text-transform: uppercase;">RECOMMENDED: OUD ROYAL EXTRAIT</h3>
-          <p class="text-soft" style="margin-top: 12px; font-size: 0.95rem;">
-            Based on your choices, Oud Royal Extrait matches 98% of your olfactory profile. Compounded with 35% oil concentration for an indelible nocturnal aura.
-          </p>
-          <div style="margin-top: 24px;">
-            <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
-              <span>ADD MATCHED SCENT TO BAG (₹14,500)</span>
-              <span class="btn-arrow">→</span>
-            </button>
-          </div>
-        </div>
+          </button></form><p class="hoa-auth__alt"><a class="hoa-auth__back" href="/account-login.html"><span aria-hidden="true">&larr;</span> Back to sign in</a></p>
       </div>
     </div>
+  </div><aside class="hoa-auth__media" aria-hidden="true">
+  <div class="hoa-auth__frame"><img
+    src="assets/hoa-world-hand.webp"
+    srcset="assets/hoa-world-hand-sm.webp 700w, assets/hoa-world-hand.webp 1086w"
+    sizes="50vw"
+    width="1086" height="1448"
+    alt="Oud of Dark Paradise held in hand"
+    loading="eager" decoding="async" class="hoa-auth__img"><div class="hoa-auth__caption"><p class="hoa-auth__caption-title">Oud of Dark Paradise</p><p class="hoa-auth__caption-text">Eau de Parfum</p></div></div>
+</aside>
+</section>
+
+
+</div>
+
   </main>
 
+  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -188,11 +159,12 @@
 
       <div class="footer-bottom">
         <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
-        <p style="text-transform: uppercase; letter-spacing: 0.15em;">DISCOVER ARCHITECTURE</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.15em;">ALL COLLECTIONS ARCHITECTURE</p>
       </div>
     </div>
   </footer>
 
+  <!-- Slide-out Cart Drawer -->
   <div class="cart-drawer-overlay js-cart-close"></div>
   <div class="cart-drawer">
     <div class="cart-drawer-header">
@@ -205,5 +177,24 @@
       <button class="btn-primary" style="width: 100%; justify-content: center;">PROCEED TO CHECKOUT →</button>
     </div>
   </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay js-modal-close"></div>
+  <div class="modal-content-box quick-view-modal">
+    <button class="modal-close-btn js-modal-close">&times;</button>
+    <div class="grid-2" style="align-items: center;">
+      <div style="aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border);">
+        <img src="assets/bestseller_oud_royal.jpg" alt="Quick View" class="qv-image" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div>
+        <span class="editorial-label qv-meta">50 ML · EXTRAIT DE PARFUM</span>
+        <h2 class="qv-title font-serif" style="font-size: 2rem;">OUD ROYAL</h2>
+        <p class="qv-price" style="font-size: 1.2rem; margin: 12px 0;">₹14,500</p>
+        <p class="qv-description text-soft" style="font-size: 0.85rem;">Resinous Cambodian agarwood and wild black rose extract.</p>
+        <button class="btn-primary js-add-to-cart" style="margin-top: 20px; width: 100%; justify-content: center;">ADD TO BAG →</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -1,0 +1,80 @@
+{% comment %}
+  ACCOUNT · Addresses (templates/customers/addresses.json)
+  Add, edit, remove and set a default address with Shopify's 'customer_address' form.
+  Add/Edit panels are native <details>, so they work without JS. Remove posts
+  _method=delete to the address URL, as Shopify expects; hoa-account.js adds a confirm step.
+{% endcomment %}
+
+{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+
+<section class="hoa-acct hoa-acct--addresses">
+  <div class="hoa-wrap">
+    {%- render 'hoa-account-head', title: 'Your', italic: 'addresses', crumb: 'Addresses', crumb_parent: true, current: 'addresses', customer: customer -%}
+
+    <div class="hoa-addr">
+      <details class="hoa-addr__add"{% if customer.addresses.size == 0 %} open{% endif %}>
+        <summary class="hoa-btn"><span>Add an address</span>{% render 'hoa-btn-icon' %}</summary>
+        <div class="hoa-addr__form">
+          <h2 class="hoa-acct__h2">New address</h2>
+          {%- form 'customer_address', customer.new_address, class: 'hoa-form' -%}
+            {%- render 'hoa-form-errors', errors: form.errors -%}
+            {%- render 'hoa-address-fields', form: form, key: 'New' -%}
+            <div class="hoa-addr__form-actions">
+              <button class="hoa-btn" type="submit" data-hoa-submit data-loading-label="Saving"><span data-label>Save address</span>{% render 'hoa-btn-icon' %}</button>
+              <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="button" data-hoa-close-details>Cancel</button>
+            </div>
+          {%- endform -%}
+        </div>
+      </details>
+
+      {%- paginate customer.addresses by 12 -%}
+        {%- if customer.addresses.size > 0 -%}
+          <ul class="hoa-addr__list" role="list">
+            {%- for address in customer.addresses -%}
+              <li class="hoa-addr__card">
+                <div class="hoa-addr__top">
+                  {%- if address == customer.default_address -%}<span class="hoa-addr__badge">Default</span>{%- endif -%}
+                  <address class="hoa-address">{{ address | format_address }}</address>
+                </div>
+                <div class="hoa-addr__actions">
+                  <details class="hoa-addr__edit">
+                    <summary>Edit</summary>
+                    <div class="hoa-addr__form">
+                      <h2 class="hoa-acct__h2">Edit address</h2>
+                      {%- form 'customer_address', address, class: 'hoa-form' -%}
+                        {%- render 'hoa-form-errors', errors: form.errors -%}
+                        {%- render 'hoa-address-fields', form: form, key: address.id -%}
+                        <div class="hoa-addr__form-actions">
+                          <button class="hoa-btn" type="submit" data-hoa-submit data-loading-label="Saving"><span data-label>Update address</span>{% render 'hoa-btn-icon' %}</button>
+                          <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="button" data-hoa-close-details>Cancel</button>
+                        </div>
+                      {%- endform -%}
+                    </div>
+                  </details>
+                  <form class="hoa-addr__remove" method="post" action="{{ address.url }}" data-hoa-remove>
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" data-confirm-label="Confirm remove">Remove</button>
+                  </form>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+            <nav class="hoa-pagination" aria-label="Address pages">{{ paginate | default_pagination: next: 'Next', previous: 'Previous' }}</nav>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endpaginate -%}
+
+      <p class="hoa-acct__back"><a class="hoa-acct__link" href="{{ routes.account_url }}"><span aria-hidden="true">&larr;</span> Back to account</a></p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Account addresses",
+  "tag": "div",
+  "class": "hoa-acct-section",
+  "settings": []
+}
+{% endschema %}

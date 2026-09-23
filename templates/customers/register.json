@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "hoa-account-register",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -24,6 +24,9 @@
     <ul class="hoa-header__nav hoa-header__nav--right">
       <li class="hoa-header__hide-sm"><a href="/pages/discover">Discover</a></li>
       <li class="hoa-header__hide-sm"><a href="/pages/gifts">Gifts</a></li>
+      {%- if shop.customer_accounts_enabled -%}
+        <li class="hoa-header__hide-sm"><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"{% if template.directory == 'customers' %} aria-current="page"{% endif %}>Account</a></li>
+      {%- endif -%}
       <li>
         <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
           <span>Bag</span>
@@ -42,6 +45,9 @@
     <li><a href="/pages/the-house"><span>04</span>The House</a></li>
     <li><a href="/pages/gifts"><span>05</span>Gifts</a></li>
     <li><a href="/pages/private-access"><span>06</span>Private Access</a></li>
+    {%- if shop.customer_accounts_enabled -%}
+      <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>07</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
+    {%- endif -%}
   </ul>
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
 </nav>

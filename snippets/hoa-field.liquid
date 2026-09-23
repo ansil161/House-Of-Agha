@@ -1,0 +1,57 @@
+{%- comment -%}
+  House of Agha: one form field for the customer account templates.
+  Password fields get a Show/Hide toggle (assets/hoa-account.js); without JS they stay masked.
+
+  Params:
+    id            input id (required)
+    name          input name, e.g. 'customer[email]' (required)
+    label         visible label
+    type          'text' (default), 'email', 'password', 'tel'
+    value         current value
+    autocomplete  autocomplete token
+    required      true to mark as required
+    invalid       true when Shopify returned an error for this field
+    error         error text shown under the field
+    hint          helper text shown under the field
+    aside_url     optional link shown on the label row (e.g. forgot password)
+    aside_label   text for that link
+    autofocus     true to focus on load
+{%- endcomment -%}
+{%- liquid
+  assign _type = type | default: 'text'
+  assign _msg_id = id | append: '-msg'
+-%}
+<div class="hoa-field{% if invalid %} is-invalid{% endif %}">
+  <div class="hoa-field__row">
+    <label class="hoa-field__label" for="{{ id }}">{{ label }}</label>
+    {%- if aside_url != blank -%}
+      <a class="hoa-field__aside" href="{{ aside_url }}">{{ aside_label }}</a>
+    {%- endif -%}
+  </div>
+  <div class="hoa-field__control">
+    <input
+      class="hoa-field__input"
+      type="{{ _type }}"
+      id="{{ id }}"
+      name="{{ name }}"
+      {%- if value != blank %} value="{{ value | escape }}"{% endif %}
+      {%- if autocomplete != blank %} autocomplete="{{ autocomplete }}"{% endif %}
+      {%- if _type == 'email' %} autocapitalize="off" spellcheck="false" inputmode="email"{% endif %}
+      {%- if _type == 'password' %} autocapitalize="off" spellcheck="false"{% endif %}
+      {%- if required %} required aria-required="true"{% endif %}
+      {%- if autofocus %} autofocus{% endif %}
+      {%- if invalid %} aria-invalid="true"{% endif %}
+      {%- if error != blank or hint != blank %} aria-describedby="{{ _msg_id }}"{% endif %}>
+    {%- if _type == 'password' -%}
+      <button class="hoa-field__toggle" type="button" data-hoa-reveal-password aria-controls="{{ id }}" aria-pressed="false" hidden>
+        <span data-show>Show</span><span data-hide>Hide</span>
+        <span class="hoa-visually-hidden"> password</span>
+      </button>
+    {%- endif -%}
+  </div>
+  {%- if error != blank -%}
+    <p class="hoa-field__msg hoa-field__msg--error" id="{{ _msg_id }}">{{ error }}</p>
+  {%- elsif hint != blank -%}
+    <p class="hoa-field__msg" id="{{ _msg_id }}">{{ hint }}</p>
+  {%- endif -%}
+</div>

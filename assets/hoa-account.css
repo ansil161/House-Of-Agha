@@ -1,0 +1,627 @@
+/* ==========================================================================
+   HOUSE OF AGHA · CUSTOMER ACCOUNTS (templates/customers/*)
+   Presentation only: every form posts to Shopify's classic customer accounts.
+   Builds on the tokens, type and .hoa-btn in hoa-home.css. Same language as the
+   shop page: warm paper, hairlines instead of boxes, 2px radius, tabular figures.
+   Motion is limited to one quiet entrance and field focus lines.
+   ========================================================================== */
+
+.hoa-account-page { background: var(--hoa-paper); color: var(--hoa-ink); }
+.hoa-account-page main { overflow-x: clip; }
+
+.hoa-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shared: italic accent word in headings */
+.hoa-auth__title em,
+.hoa-acct-head__title em,
+.hoa-acct__empty-title em {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   SIGN IN · REGISTER · RESET · ACTIVATE (.hoa-auth)
+   Form column + photograph on wide screens, form only below 1024px.
+   ========================================================================== */
+.hoa-auth {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: var(--hoa-header-h);
+}
+.hoa-auth__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 7vw, 96px) var(--hoa-gutter) clamp(64px, 8vw, 112px);
+}
+.hoa-auth__inner { width: 100%; max-width: 440px; }
+
+.hoa-auth__panel { scroll-margin-top: calc(var(--hoa-header-h) + 24px); outline: none; }
+.hoa-auth__panel--recover { display: none; }
+.hoa-auth__panel--recover:target,
+.hoa-auth__panel--recover.is-active { display: block; }
+.hoa-auth__panel--recover:target ~ .hoa-auth__panel--login,
+.hoa-auth__panel--recover.is-active ~ .hoa-auth__panel--login { display: none; }
+/* "Back to sign in" (#login) wins over a server-side open recover panel */
+.hoa-auth:has(#login:target) .hoa-auth__panel--recover { display: none; }
+.hoa-auth:has(#login:target) .hoa-auth__panel--login { display: block; }
+
+.hoa-auth__head { margin-bottom: clamp(28px, 3.4vw, 40px); }
+.hoa-auth__crumb,
+.hoa-acct-head__crumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+  font-size: 0.8rem;
+  color: var(--hoa-mute);
+}
+.hoa-auth__crumb a,
+.hoa-acct-head__crumb a { color: inherit; text-decoration: none; transition: color 0.3s var(--hoa-ease); }
+.hoa-auth__crumb a:hover,
+.hoa-acct-head__crumb a:hover { color: var(--hoa-ink); }
+.hoa-auth__title {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-transform: none;
+  color: var(--hoa-ink);
+  text-wrap: balance;
+}
+.hoa-auth__lede {
+  margin: 16px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--hoa-ink-2);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+
+.hoa-auth__alt {
+  margin: 28px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--hoa-line);
+  font-size: 0.88rem;
+  color: var(--hoa-ink-2);
+}
+.hoa-auth__alt a,
+.hoa-field__aside,
+.hoa-acct__link {
+  color: var(--hoa-ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--hoa-line);
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.3s var(--hoa-ease);
+}
+.hoa-auth__alt a:hover,
+.hoa-field__aside:hover,
+.hoa-acct__link:hover { text-decoration-color: currentColor; }
+.hoa-auth__alt .hoa-auth__back { text-decoration: none; }
+.hoa-auth__back span,
+.hoa-acct__link span { display: inline-block; transition: transform 0.4s var(--hoa-ease); }
+.hoa-auth__back:hover span { transform: translateX(-3px); }
+.hoa-acct__link:hover span { transform: translateX(3px); }
+
+.hoa-auth__guest { margin-top: 20px; font-size: 0.85rem; color: var(--hoa-mute); }
+.hoa-auth__guest p { margin: 0 0 6px; }
+.hoa-auth__text-btn {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font: 500 0.88rem var(--hoa-sans);
+  color: var(--hoa-ink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--hoa-line);
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.3s var(--hoa-ease), color 0.3s var(--hoa-ease);
+}
+.hoa-auth__text-btn:hover { text-decoration-color: currentColor; }
+.hoa-auth__text-btn--quiet { color: var(--hoa-mute); font-weight: 400; }
+.hoa-auth__text-btn--quiet:hover { color: var(--hoa-ink); }
+.hoa-form .hoa-auth__text-btn--quiet { justify-self: center; }
+
+/* Photograph */
+.hoa-auth__media { display: none; }
+
+@media (min-width: 1024px) {
+  .hoa-auth { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hoa-auth__media {
+    display: block;
+    position: relative;
+    padding: 12px 12px 12px 0;
+  }
+  .hoa-auth__frame {
+    position: sticky;
+    top: calc(var(--hoa-header-h) + 12px);
+    height: calc(100vh - var(--hoa-header-h) - 24px);
+    height: calc(100svh - var(--hoa-header-h) - 24px);
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: var(--hoa-radius);
+    background: var(--hoa-stone);
+  }
+  .hoa-auth__img { width: 100%; height: 100%; object-fit: cover; }
+  .hoa-auth__caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 96px 28px 28px;
+    color: var(--hoa-ivory);
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(12, 10, 8, 0) 0%, rgba(12, 10, 8, 0.42) 100%);
+  }
+  .hoa-auth__caption-title { margin: 0; font-family: var(--hoa-serif); font-style: italic; font-size: 1.3rem; letter-spacing: -0.01em; }
+  .hoa-auth__caption-text { margin: 4px 0 0; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8; }
+  .hoa-auth__main { padding-left: clamp(40px, 6vw, 96px); padding-right: clamp(40px, 6vw, 96px); }
+}
+
+/* ==========================================================================
+   FORMS
+   ========================================================================== */
+.hoa-form { display: grid; gap: 22px; }
+.hoa-form__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; }
+
+.hoa-field { display: grid; gap: 4px; min-width: 0; }
+.hoa-field__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.hoa-field__label { font-size: 0.78rem; font-weight: 500; color: var(--hoa-ink-2); letter-spacing: 0.01em; }
+.hoa-field__aside { font-size: 0.78rem; font-weight: 400; color: var(--hoa-mute); }
+.hoa-field__aside:hover { color: var(--hoa-ink); }
+
+.hoa-field__control { position: relative; display: flex; align-items: center; }
+.hoa-field__control::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--hoa-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--hoa-ease);
+  pointer-events: none;
+}
+.hoa-field__control:focus-within::after { transform: scaleX(1); }
+.hoa-field__input {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(20, 18, 16, 0.22);
+  border-radius: 0;
+  background: transparent;
+  font: 400 1rem var(--hoa-sans); /* 16px: stops iOS zooming on focus */
+  color: var(--hoa-ink);
+  outline: none;
+  transition: border-color 0.3s var(--hoa-ease);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.hoa-field__input:hover { border-bottom-color: rgba(20, 18, 16, 0.4); }
+.hoa-field__input:-webkit-autofill,
+.hoa-field__input:-webkit-autofill:hover,
+.hoa-field__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--hoa-ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--hoa-paper) inset;
+  caret-color: var(--hoa-ink);
+}
+.hoa-field__input[type="password"],
+.hoa-field__control:has(.hoa-field__toggle:not([hidden])) .hoa-field__input { padding-right: 56px; }
+
+.hoa-field__toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 0 8px 12px;
+  background: none;
+  border: 0;
+  font: 500 0.72rem var(--hoa-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+  cursor: pointer;
+  transition: color 0.3s var(--hoa-ease);
+}
+.hoa-field__toggle:hover { color: var(--hoa-ink); }
+.hoa-field__toggle [data-hide],
+.hoa-field__toggle[aria-pressed="true"] [data-show] { display: none; }
+.hoa-field__toggle[aria-pressed="true"] [data-hide] { display: inline; }
+
+.hoa-field__control--select::before {
+  content: '';
+  position: absolute;
+  right: 2px; top: 50%;
+  width: 7px; height: 7px;
+  margin-top: -6px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+  pointer-events: none;
+  opacity: 0.6;
+}
+.hoa-field__control--select .hoa-field__input { padding-right: 24px; cursor: pointer; }
+
+.hoa-field__msg { margin: 4px 0 0; font-size: 0.78rem; color: var(--hoa-mute); }
+.hoa-field.is-invalid .hoa-field__input { border-bottom-color: #8A3324; }
+.hoa-field.is-invalid .hoa-field__label,
+.hoa-field__msg--error { color: #8A3324; }
+
+.hoa-check { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: var(--hoa-ink-2); }
+.hoa-check input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  margin: 0;
+  border: 1px solid rgba(20, 18, 16, 0.4);
+  border-radius: var(--hoa-radius);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s var(--hoa-ease), border-color 0.3s var(--hoa-ease);
+}
+.hoa-check input[type="checkbox"]::after {
+  content: '';
+  width: 5px; height: 9px;
+  margin-top: -2px;
+  border-right: 1.5px solid var(--hoa-paper);
+  border-bottom: 1.5px solid var(--hoa-paper);
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.3s var(--hoa-ease);
+}
+.hoa-check input[type="checkbox"]:checked { background: var(--hoa-ink); border-color: var(--hoa-ink); }
+.hoa-check input[type="checkbox"]:checked::after { transform: rotate(45deg) scale(1); }
+.hoa-check label { cursor: pointer; }
+
+/* Messages (Shopify errors, recover success) */
+.hoa-form-msg {
+  padding: 14px 16px;
+  border: 1px solid var(--hoa-line);
+  border-left: 2px solid var(--hoa-brass);
+  border-radius: var(--hoa-radius);
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--hoa-ink-2);
+  outline: none;
+}
+.hoa-form-msg ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.hoa-form-msg--error { border-left-color: #8A3324; color: #6E2A1E; }
+.hoa-form-msg--success { margin-bottom: 22px; }
+
+/* Full-width pill button, label left and icon right */
+.hoa-btn--block { width: 100%; justify-content: space-between; }
+.hoa-form .hoa-btn { margin-top: 10px; }
+.hoa-btn:focus-visible,
+.hoa-field__toggle:focus-visible,
+.hoa-auth__text-btn:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 3px; }
+.hoa-btn[disabled] { cursor: progress; opacity: 0.8; }
+.hoa-btn.is-loading .hoa-btn__icon svg:first-child { animation: hoa-acct-nudge 0.9s var(--hoa-ease-in-out) infinite; }
+@keyframes hoa-acct-nudge { 0%, 100% { transform: none; } 50% { transform: translate(2px, -2px); } }
+
+/* ==========================================================================
+   SIGNED-IN PAGES (account, order, addresses)
+   ========================================================================== */
+.hoa-acct { padding: calc(var(--hoa-header-h) + clamp(28px, 4vw, 56px)) 0 clamp(80px, 10vw, 160px); }
+.hoa-acct-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 28px clamp(32px, 6vw, 120px);
+  padding-bottom: clamp(28px, 3vw, 44px);
+  border-bottom: 1px solid var(--hoa-line);
+}
+.hoa-acct-head__title {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 5.6vw, 5.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  text-transform: none;
+  color: var(--hoa-ink);
+  overflow-wrap: anywhere;
+}
+.hoa-acct-head__side { display: grid; gap: 14px; justify-items: end; padding-bottom: 6px; }
+.hoa-acct-head__who { margin: 0; font-size: 0.85rem; color: var(--hoa-mute); overflow-wrap: anywhere; }
+.hoa-acct-head__who span { color: var(--hoa-ink); }
+.hoa-acct-head__nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.hoa-acct-head__nav a {
+  position: relative;
+  padding: 4px 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--hoa-mute);
+  text-decoration: none;
+  transition: color 0.3s var(--hoa-ease);
+}
+.hoa-acct-head__nav a::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--hoa-ease);
+}
+.hoa-acct-head__nav a:hover,
+.hoa-acct-head__nav a[aria-current="page"] { color: var(--hoa-ink); }
+.hoa-acct-head__nav a:hover::after,
+.hoa-acct-head__nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+.hoa-acct__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: clamp(40px, 6vw, 112px);
+  padding-top: clamp(36px, 4vw, 56px);
+}
+.hoa-acct__h2 {
+  margin: 0 0 20px;
+  font-family: var(--hoa-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--hoa-mute);
+}
+.hoa-acct__h2 sup { margin-left: 6px; font-size: 0.9em; letter-spacing: 0; top: -0.3em; font-variant-numeric: tabular-nums; }
+
+/* Orders table */
+.hoa-orders { width: 100%; border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.hoa-orders th,
+.hoa-orders td { padding: 18px 16px 18px 0; text-align: left; font-weight: 400; vertical-align: middle; border-bottom: 1px solid var(--hoa-line); }
+.hoa-orders thead th { padding-top: 0; padding-bottom: 12px; font-size: 0.75rem; color: var(--hoa-mute); border-bottom-color: rgba(20, 18, 16, 0.22); }
+.hoa-orders tbody tr { transition: background-color 0.3s var(--hoa-ease); }
+.hoa-orders tbody tr:hover { background: rgba(255, 255, 255, 0.45); }
+.hoa-orders .hoa-orders__num { text-align: right; }
+.hoa-orders__id { font-weight: 500; color: var(--hoa-ink); text-decoration: none; }
+.hoa-orders__go { text-align: right; padding-right: 0 !important; white-space: nowrap; }
+.hoa-orders__go a { font-size: 0.82rem; font-weight: 500; color: var(--hoa-ink); text-decoration: none; }
+.hoa-orders__go a span { display: inline-block; margin-left: 4px; transition: transform 0.4s var(--hoa-ease); }
+.hoa-orders tbody tr:hover .hoa-orders__go a span { transform: translateX(3px); }
+
+.hoa-status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.hoa-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--hoa-brass); }
+.hoa-status[data-status="fulfilled"]::before { background: var(--hoa-ink); }
+.hoa-status[data-status="cancelled"],
+.hoa-status[data-status="restocked"] { color: var(--hoa-mute); }
+.hoa-status[data-status="cancelled"]::before,
+.hoa-status[data-status="restocked"]::before { background: transparent; box-shadow: inset 0 0 0 1px currentColor; }
+
+.hoa-pagination { margin-top: 28px; font-size: 0.86rem; }
+.hoa-pagination span { margin-right: 14px; color: var(--hoa-mute); }
+.hoa-pagination a { color: var(--hoa-ink); text-decoration: underline; text-decoration-color: var(--hoa-line); text-underline-offset: 5px; }
+.hoa-pagination .current { color: var(--hoa-ink); font-weight: 500; }
+
+.hoa-acct__empty {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  padding: clamp(32px, 4vw, 48px) 0;
+  border-top: 1px solid var(--hoa-line);
+  border-bottom: 1px solid var(--hoa-line);
+  color: var(--hoa-ink-2);
+  font-size: 0.95rem;
+}
+.hoa-acct__empty p { margin: 0; max-width: 42ch; }
+.hoa-acct__empty-title { font-size: clamp(1.8rem, 2.8vw, 2.4rem) !important; letter-spacing: -0.04em; line-height: 1.05; color: var(--hoa-ink); }
+.hoa-acct__empty .hoa-btn { margin-top: 10px; }
+
+/* Aside */
+.hoa-acct__aside { display: grid; align-content: start; gap: 36px; }
+.hoa-acct__block { padding-bottom: 32px; border-bottom: 1px solid var(--hoa-line); }
+.hoa-dl { display: grid; gap: 16px; margin: 0 0 22px; }
+.hoa-dl dt { font-size: 0.75rem; color: var(--hoa-mute); margin-bottom: 2px; }
+.hoa-dl dd { margin: 0; font-size: 0.95rem; color: var(--hoa-ink); overflow-wrap: anywhere; }
+.hoa-dl address,
+.hoa-address { font-style: normal; line-height: 1.6; font-size: 0.92rem; color: var(--hoa-ink-2); }
+.hoa-acct__link { font-size: 0.86rem; }
+.hoa-acct__actions { display: grid; gap: 16px; justify-items: center; }
+.hoa-acct__signout {
+  font-size: 0.86rem;
+  color: var(--hoa-mute);
+  text-decoration: none;
+  transition: color 0.3s var(--hoa-ease);
+}
+.hoa-acct__signout:hover { color: var(--hoa-ink); }
+
+/* Order detail */
+.hoa-order-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-bottom: 1px solid var(--hoa-line);
+}
+.hoa-order-meta > div { padding: 22px 16px 22px 0; }
+.hoa-order-meta > div + div { padding-left: 20px; border-left: 1px solid var(--hoa-line); }
+.hoa-order-meta dt { font-size: 0.75rem; color: var(--hoa-mute); margin-bottom: 6px; }
+.hoa-order-meta dd { margin: 0; font-size: 0.98rem; font-variant-numeric: tabular-nums; }
+.hoa-order-note { margin-top: 24px; }
+
+.hoa-items { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(20, 18, 16, 0.22); }
+.hoa-item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--hoa-line);
+}
+.hoa-item__media { aspect-ratio: 4 / 5; background: var(--hoa-stone); border-radius: var(--hoa-radius); overflow: hidden; }
+.hoa-item__media img { width: 100%; height: 100%; object-fit: cover; }
+.hoa-item__title { margin: 2px 0 6px; font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; }
+.hoa-item__title a { color: inherit; text-decoration: none; }
+.hoa-item__title a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.hoa-item__sub { margin: 0 0 2px; font-size: 0.85rem; color: var(--hoa-mute); font-variant-numeric: tabular-nums; }
+.hoa-item__ship { margin: 10px 0 0; font-size: 0.82rem; color: var(--hoa-ink-2); }
+.hoa-item__ship a { color: var(--hoa-ink); text-decoration: underline; text-underline-offset: 4px; }
+.hoa-item__price { margin: 2px 0 0; font-size: 0.95rem; text-align: right; font-variant-numeric: tabular-nums; }
+.hoa-item__price s { display: block; font-size: 0.8rem; color: var(--hoa-mute); }
+
+.hoa-totals { display: grid; gap: 10px; margin: 24px 0 0 auto; max-width: 380px; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.hoa-totals > div { display: flex; justify-content: space-between; gap: 24px; }
+.hoa-totals dt { color: var(--hoa-mute); }
+.hoa-totals dd { margin: 0; }
+.hoa-totals__total { margin-top: 6px; padding-top: 14px; border-top: 1px solid rgba(20, 18, 16, 0.22); font-size: 1.05rem; }
+.hoa-totals__total dt { color: var(--hoa-ink); }
+
+/* Addresses */
+.hoa-addr { padding-top: clamp(36px, 4vw, 56px); display: grid; gap: clamp(32px, 4vw, 48px); }
+.hoa-addr summary { list-style: none; }
+.hoa-addr summary::-webkit-details-marker { display: none; }
+.hoa-addr__add > summary { width: max-content; }
+.hoa-addr__add[open] > summary { display: none; }
+.hoa-addr__form {
+  max-width: 640px;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px solid var(--hoa-line);
+  border-radius: var(--hoa-radius);
+  background: rgba(255, 255, 255, 0.35);
+}
+.hoa-addr__form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+.hoa-addr__form-actions .hoa-btn { margin-top: 0; }
+.hoa-addr__list {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  border-top: 1px solid var(--hoa-line);
+  border-left: 1px solid var(--hoa-line);
+}
+.hoa-addr__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  border-right: 1px solid var(--hoa-line);
+  border-bottom: 1px solid var(--hoa-line);
+}
+.hoa-addr__card:has(.hoa-addr__edit[open]) { grid-column: 1 / -1; }
+.hoa-addr__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-addr__badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--hoa-brass); }
+.hoa-addr__actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 22px; }
+.hoa-addr__edit { flex-basis: auto; }
+.hoa-addr__edit[open] { flex-basis: 100%; }
+.hoa-addr__edit[open] > summary,
+.hoa-addr__actions:has(.hoa-addr__edit[open]) .hoa-addr__remove { display: none; }
+.hoa-addr__remove { margin: 0; }
+.hoa-addr__edit > summary,
+.hoa-addr__remove button {
+  display: block;
+  line-height: 1.5;
+  padding: 2px 0;
+  background: none;
+  border: 0;
+  font: 500 0.86rem var(--hoa-sans);
+  color: var(--hoa-ink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--hoa-line);
+  text-underline-offset: 5px;
+  transition: color 0.3s var(--hoa-ease), text-decoration-color 0.3s var(--hoa-ease);
+}
+.hoa-addr__edit > summary:hover,
+.hoa-addr__remove button:hover { text-decoration-color: currentColor; }
+.hoa-addr__remove button { color: var(--hoa-mute); }
+.hoa-addr__remove button.is-confirming { color: #8A3324; text-decoration-color: currentColor; }
+.hoa-acct__back { margin: 0; }
+
+/* ==========================================================================
+   ENTRANCE (one quiet fade-up; nothing on the fields themselves)
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .hoa-auth__panel,
+  .hoa-acct-head,
+  .hoa-acct__grid,
+  .hoa-addr__form { animation: hoa-acct-in 0.9s var(--hoa-ease) both; }
+  .hoa-acct__grid { animation-delay: 0.08s; }
+  .hoa-auth__frame { animation: hoa-acct-fade 1.2s var(--hoa-ease) both; }
+  .hoa-auth__img { animation: hoa-acct-settle 2.4s var(--hoa-ease) both; }
+}
+@keyframes hoa-acct-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+@keyframes hoa-acct-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hoa-acct-settle { from { transform: scale(1.04); } to { transform: none; } }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .hoa-acct__grid { grid-template-columns: minmax(0, 1fr); }
+  .hoa-acct__aside { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 32px 48px; }
+  .hoa-acct__actions { justify-items: stretch; }
+  .hoa-acct--order .hoa-acct__aside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .hoa-auth__main { align-items: flex-start; padding-top: 36px; }
+  .hoa-form__pair { grid-template-columns: minmax(0, 1fr); }
+
+  .hoa-acct-head { grid-template-columns: minmax(0, 1fr); }
+  .hoa-acct-head__side { justify-items: start; }
+  .hoa-acct__aside,
+  .hoa-acct--order .hoa-acct__aside { grid-template-columns: minmax(0, 1fr); }
+
+  /* Orders: each row becomes a compact two-column card */
+  .hoa-orders thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .hoa-orders,
+  .hoa-orders tbody { display: block; }
+  .hoa-orders tbody { border-top: 1px solid rgba(20, 18, 16, 0.22); }
+  .hoa-orders tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--hoa-line);
+  }
+  .hoa-orders th,
+  .hoa-orders td { padding: 0 !important; border: 0; text-align: left; }
+  .hoa-orders th[data-label="Order"] { grid-column: 1; grid-row: 1; font-size: 1rem; }
+  .hoa-orders td[data-label="Total"] { grid-column: 2; grid-row: 1; text-align: right; font-size: 1rem; }
+  .hoa-orders td[data-label="Date"] { grid-column: 1; grid-row: 2; color: var(--hoa-mute); font-size: 0.85rem; }
+  .hoa-orders td[data-label="Payment"] { grid-column: 2; grid-row: 2; text-align: right; color: var(--hoa-mute); font-size: 0.85rem; }
+  .hoa-orders td[data-label="Status"] { grid-column: 1; grid-row: 3; font-size: 0.85rem; }
+  .hoa-orders .hoa-orders__go { grid-column: 2; grid-row: 3; }
+
+  .hoa-order-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hoa-order-meta > div + div { padding-left: 0; border-left: 0; }
+  .hoa-order-meta > div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--hoa-line); }
+  .hoa-order-meta > div:nth-child(n+3) { border-top: 1px solid var(--hoa-line); }
+
+  .hoa-item { grid-template-columns: 72px minmax(0, 1fr); gap: 16px; }
+  .hoa-item__price { grid-column: 2; text-align: left; margin-top: -8px; }
+  .hoa-item__price s { display: inline; margin-right: 8px; }
+  .hoa-totals { max-width: none; }
+
+  .hoa-addr__list { grid-template-columns: minmax(0, 1fr); }
+  .hoa-addr__card { padding: 20px; }
+  .hoa-addr__form { padding: 20px; }
+}

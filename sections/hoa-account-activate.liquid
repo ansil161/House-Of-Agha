@@ -1,0 +1,42 @@
+{% comment %}
+  ACCOUNT · Activate an invited account (templates/customers/activate_account.json)
+  Reached from Shopify's account invitation email; posts 'activate_customer_password'.
+  The Decline button is part of Shopify's form (name="decline").
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-auth">
+  <div class="hoa-auth__main">
+    <div class="hoa-auth__inner">
+      <div class="hoa-auth__panel">
+        <header class="hoa-auth__head">
+          <p class="hoa-auth__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>Account</p>
+          <h1 class="hoa-auth__title">Activate your <em>account</em></h1>
+          <p class="hoa-auth__lede">Choose a password to finish setting up your House of Agha account.</p>
+        </header>
+
+        {%- form 'activate_customer_password', class: 'hoa-form', novalidate: 'novalidate' -%}
+          {%- render 'hoa-form-errors', errors: form.errors, id: 'ActivateErrors' -%}
+          {%- render 'hoa-password-pair', errors: form.errors, prefix: 'Activate' -%}
+          <button class="hoa-btn hoa-btn--block" type="submit" data-hoa-submit data-loading-label="Activating">
+            <span data-label>Activate account</span>{% render 'hoa-btn-icon' %}
+          </button>
+          <button class="hoa-auth__text-btn hoa-auth__text-btn--quiet" type="submit" name="decline" value="Decline" formnovalidate>Decline invitation</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+
+  {%- render 'hoa-auth-media', image: s.image, name: 'hoa-world-hand', alt: 'Oud of Dark Paradise held in hand', title: 'Oud of Dark Paradise', text: 'Eau de Parfum' -%}
+</section>
+
+{% schema %}
+{
+  "name": "HOA Account activate",
+  "tag": "div",
+  "class": "hoa-auth-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Shown beside the form on screens 1024px and wider." }
+  ]
+}
+{% endschema %}

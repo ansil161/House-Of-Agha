@@ -16,6 +16,13 @@ engine.registerFilter('money', (v) => '₹' + Number(v || 0).toLocaleString('en-
 engine.registerFilter('image_url', (v) => v);
 engine.registerFilter('image_tag', (v) => `<img src="${v}" alt="">`);
 engine.registerFilter('placeholder_svg_tag', () => '<svg></svg>');
+engine.registerFilter('shopify_asset_url', () => '');
+engine.registerFilter('script_tag', () => '');
+engine.registerFilter('default_pagination', () => '');
+engine.registerFilter('format_address', (a) => a ? [
+  [a.first_name, a.last_name].filter(Boolean).join(' '), a.company, a.address1, a.address2,
+  [a.city, a.province_code, a.zip].filter(Boolean).join(' '), a.country
+].filter(Boolean).map((l) => `<p>${l}</p>`).join('') : '');
 
 // ---- Shopify tag stubs ----
 engine.registerTag('schema', {
@@ -27,17 +34,54 @@ engine.registerTag('schema', {
   },
   * render() { return ''; }
 });
+// Shopify's {% form %}: the action Shopify would use, plus a `form` object in scope
+// (no errors, fields prefilled from the address for 'customer_address').
+const FORM_ACTIONS = {
+  customer_login: '/account/login', recover_customer_password: '/account/recover', guest_login: '/account/login',
+  create_customer: '/account', reset_customer_password: '/account/reset', activate_customer_password: '/account/activate',
+  customer_address: '/account/addresses', product: '/cart/add'
+};
 engine.registerTag('form', {
   parse(token, remain) {
+    const m = token.args.match(/^\s*'(\w+)'(?:\s*,\s*([\w.]+)(?=\s*(?:,|$)))?/);
+    this.formType = m ? m[1] : 'product';
+    this.formObject = m && m[2] ? m[2] : null;
+    const cls = token.args.match(/class:\s*'([^']*)'/);
+    this.formClass = cls ? cls[1] : '';
     this.tpls = [];
     const stream = this.liquid.parser.parseStream(remain);
     stream.on('tag:endform', () => stream.stop()).on('template', (t) => this.tpls.push(t)).on('end', () => { throw new Error('form not closed'); });
     stream.start();
   },
   * render(ctx, emitter) {
-    emitter.write('<form method="post" action="/cart/add">');
+    const obj = this.formObject ? (yield this.liquid.evalValue(this.formObject, ctx)) : null;
+    const form = Object.assign({ errors: null, 'posted_successfully?': false, password_needed: true }, obj || {});
+    if (this.formType === 'customer_address') {
+      const id = obj && obj.id ? obj.id : 'new';
+      form.id = obj && obj.id;
+      form.set_as_default_checkbox = `<input type="checkbox" id="address_default_address_${id}" name="address[default]" value="1"${obj && obj.default ? ' checked' : ''}>`;
+    }
+    const action = this.formType === 'customer_address' && obj && obj.url ? obj.url : (FORM_ACTIONS[this.formType] || '/');
+    emitter.write(`<form method="post" action="${action}" accept-charset="UTF-8"${this.formClass ? ` class="${this.formClass}"` : ''} novalidate><input type="hidden" name="form_type" value="${this.formType}">`);
+    ctx.push({ form });
     yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter);
+    ctx.pop();
     emitter.write('</form>');
+  }
+});
+
+// Shopify's {% paginate %}: renders its body once, one page.
+engine.registerTag('paginate', {
+  parse(token, remain) {
+    this.tpls = [];
+    const stream = this.liquid.parser.parseStream(remain);
+    stream.on('tag:endpaginate', () => stream.stop()).on('template', (t) => this.tpls.push(t)).on('end', () => { throw new Error('paginate not closed'); });
+    stream.start();
+  },
+  * render(ctx, emitter) {
+    ctx.push({ paginate: { pages: 1, current_page: 1 } });
+    yield this.liquid.renderer.renderTemplates(this.tpls, ctx, emitter);
+    ctx.pop();
   }
 });
 
@@ -48,7 +92,14 @@ const readSchema = (src) => {
 const defaults = (list) => Object.fromEntries((list || []).filter((s) => s.id).map((s) => [s.id, s.default === undefined ? '' : s.default]));
 
 const globals = {
-  routes: { root_url: '/', all_products_collection_url: '/collections/all' },
+  routes: {
+    root_url: '/', all_products_collection_url: '/collections/all',
+    account_url: '/account', account_login_url: '/account/login', account_register_url: '/account/register',
+    account_logout_url: '/account/logout', account_addresses_url: '/account/addresses'
+  },
+  shop: { customer_accounts_enabled: true, checkout: { guest_login: false } },
+  all_country_option_tags: ['India', 'United Arab Emirates', 'United Kingdom', 'United States']
+    .map((c) => `<option value="${c}" data-provinces="[]">${c}</option>`).join(''),
   collections: {}, all_products: {}, cart: { item_count: 0 },
   template: { name: 'index' }
 };
@@ -95,6 +146,10 @@ async function renderTemplate(name, templateGlobals) {
     .replace(/^\/pages\/(the-house|discover|gifts|private-access|contact|faq|shipping-returns)(?=[#?]|$)/, '/$1.html')
     .replace(/^\/collections\/all(?=[#?]|$)/, '/shop.html')
     .replace(/^\/products\/([a-z0-9-]+)(?=[#?]|$)/, '/product.html?p=$1')
+    .replace(/^\/account\/(login|register|addresses|reset|activate)(?=[#?]|$)/, '/account-$1.html')
+    .replace(/^\/account\/orders\/[\w-]+(?=[#?]|$)/, '/account-order.html')
+    .replace(/^\/account\/logout(?=[#?]|$)/, '/account-login.html')
+    .replace(/^\/account(?=[#?]|$)/, '/account.html')
     .replace(/^\/#/, '#');
   page = page.replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url)}"`);
 
@@ -135,6 +190,62 @@ async function renderTemplate(name, templateGlobals) {
     fs.writeFileSync(pagePath, html);
     console.log('rendered', rendered.tpl.order.length, 'sections into', file);
   }
+
+  // Customer account templates (Shopify classic accounts) → account-*.html, built on the shop page's
+  // shell. Signed-in pages use the mock customer below; the forms post nowhere in the static preview.
+  const addr = (o) => Object.assign({ first_name: 'Aisha', last_name: 'Rahman', company: '', address2: '', country: 'India', province_code: 'MH', phone: '' }, o);
+  const home = addr({ id: 101, address1: '14 Carmichael Road', city: 'Mumbai', zip: '400026', default: true, url: '/account/addresses/101' });
+  const work = addr({ id: 102, company: 'Rahman Studio', address1: '3rd Floor, Kala Ghoda Chambers', address2: 'Fort', city: 'Mumbai', zip: '400001', url: '/account/addresses/102' });
+  const shipped = { created_at: '2026-09-13T10:00:00Z', tracking_number: 'BD4418207', tracking_url: 'https://example.com/track', tracking_company: 'Blue Dart' };
+  const item = (handle, title, qty, price) => ({
+    title, quantity: qty, final_price: price, final_line_price: price * qty, original_line_price: price * qty,
+    url: '/products/' + handle, image: `assets/hoa-product-${handle}-sm.webp`, fulfillment: shipped,
+    product: { title, has_only_default_variant: false }, variant: { title: '100 ml' }, properties: {}
+  });
+  const order = {
+    name: '#1042', customer_url: '/account/orders/1042', created_at: '2026-09-12T10:00:00Z',
+    financial_status_label: 'Paid', fulfillment_status: 'fulfilled', fulfillment_status_label: 'Fulfilled', cancelled: false,
+    item_count: 3, total_price: 17640, line_items_subtotal_price: 16800, total_refunded_amount: 0,
+    line_items: [item('oud-fury', 'Oud Fury', 2, 5600), item('agha-blue', 'Agha Blue', 1, 5600)],
+    cart_level_discount_applications: [], shipping_methods: [{ title: 'Express', price: 0 }],
+    tax_lines: [{ title: 'GST', rate_percentage: 5, price: 840 }],
+    shipping_address: home, billing_address: home
+  };
+  const orders = [
+    order,
+    { name: '#1031', customer_url: '/account/orders/1031', created_at: '2026-08-02T10:00:00Z', financial_status_label: 'Paid', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: false, total_price: 5900 },
+    { name: '#1017', customer_url: '/account/orders/1017', created_at: '2026-05-21T10:00:00Z', financial_status_label: 'Refunded', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: true, total_price: 11200 }
+  ];
+  const customer = {
+    first_name: 'Aisha', last_name: 'Rahman', name: 'Aisha Rahman', email: 'aisha.rahman@example.com', phone: '+91 98200 00000',
+    orders, orders_count: orders.length, addresses: [home, work], addresses_count: 2, default_address: home, new_address: {}
+  };
+  const accountPages = {
+    'account-login.html': ['customers/login', 'Sign in', null],
+    'account-register.html': ['customers/register', 'Create account', null],
+    'account-reset.html': ['customers/reset_password', 'Reset password', { email: customer.email }],
+    'account-activate.html': ['customers/activate_account', 'Activate account', null],
+    'account.html': ['customers/account', 'Account', customer],
+    'account-order.html': ['customers/order', 'Order #1042', customer],
+    'account-addresses.html': ['customers/addresses', 'Addresses', customer]
+  };
+  const shell = fs.readFileSync(path.join(THEME, 'shop.html'), 'utf8');
+  for (const [file, [name, title, cust]] of Object.entries(accountPages)) {
+    const rendered = await renderTemplate(name, { template: { name: name.split('/')[1], directory: 'customers' }, customer: cust, order });
+    const body = ('<main id="main-content">\n    <!-- Generated from templates/' + name + '.json. Edit the Liquid sections, not this block. -->' + rendered.main + '\n  ')
+      .replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url)}"`);
+    let html = shell
+      .replace(/<title>[^<]*<\/title>/, `<title>${title} | House of Agha</title>`)
+      .replace(/<meta name="description"[^>]*>/, '<meta name="robots" content="noindex">')
+      .replace('assets/hoa-shop.css', 'assets/hoa-account.css')
+      .replace('assets/hoa-shop.js', 'assets/hoa-account.js')
+      .replace('<body class="hoa-shop-page">', '<body class="hoa-account-page">');
+    const start = html.search(/<main[\s>]/);
+    const end = html.indexOf('</main>');
+    html = html.slice(0, start) + body + html.slice(end);
+    fs.writeFileSync(path.join(THEME, file), html);
+  }
+  console.log('rendered', Object.keys(accountPages).length, 'account pages');
 
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.

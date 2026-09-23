@@ -1,0 +1,23 @@
+{%- comment -%}
+  House of Agha: Shopify form errors for the customer account templates.
+  Shopify returns one 'form' error for failed logins and one error per field elsewhere.
+
+  Params:
+    errors   form.errors (required)
+    id       id for the message box, so fields can reference it
+{%- endcomment -%}
+{%- if errors -%}
+  <div class="hoa-form-msg hoa-form-msg--error" role="alert"{% if id != blank %} id="{{ id }}"{% endif %} tabindex="-1" data-hoa-focus>
+    <ul>
+      {%- for field in errors -%}
+        <li>
+          {%- if field == 'form' -%}
+            {{ errors.messages[field] }}
+          {%- else -%}
+            {{ errors.translated_fields[field] | capitalize }} {{ errors.messages[field] }}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

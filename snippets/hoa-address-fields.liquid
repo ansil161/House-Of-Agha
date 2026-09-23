@@ -1,0 +1,55 @@
+{%- comment -%}
+  House of Agha: the fields of Shopify's 'customer_address' form (add and edit).
+  Country/province lists come from Shopify (all_country_option_tags + shopify_common.js).
+
+  Params:
+    form   the Shopify form object
+    key    id suffix: 'New' or the address id
+{%- endcomment -%}
+{%- liquid
+  assign k = key
+  assign default_id = 'address_default_address_new'
+  if key != 'New'
+    assign default_id = 'address_default_address_' | append: key
+  endif
+  assign id_first = 'AddressFirstName' | append: k
+  assign id_last = 'AddressLastName' | append: k
+  assign id_company = 'AddressCompany' | append: k
+  assign id_a1 = 'AddressAddress1' | append: k
+  assign id_a2 = 'AddressAddress2' | append: k
+  assign id_city = 'AddressCity' | append: k
+  assign id_zip = 'AddressZip' | append: k
+  assign id_phone = 'AddressPhone' | append: k
+-%}
+<div class="hoa-form__pair">
+  {%- render 'hoa-field', id: id_first, name: 'address[first_name]', label: 'First name', value: form.first_name, autocomplete: 'given-name' -%}
+  {%- render 'hoa-field', id: id_last, name: 'address[last_name]', label: 'Last name', value: form.last_name, autocomplete: 'family-name' -%}
+</div>
+{%- render 'hoa-field', id: id_company, name: 'address[company]', label: 'Company (optional)', value: form.company, autocomplete: 'organization' -%}
+{%- render 'hoa-field', id: id_a1, name: 'address[address1]', label: 'Address', value: form.address1, autocomplete: 'address-line1' -%}
+{%- render 'hoa-field', id: id_a2, name: 'address[address2]', label: 'Apartment, suite, etc. (optional)', value: form.address2, autocomplete: 'address-line2' -%}
+<div class="hoa-form__pair">
+  {%- render 'hoa-field', id: id_city, name: 'address[city]', label: 'City', value: form.city, autocomplete: 'address-level2' -%}
+  {%- render 'hoa-field', id: id_zip, name: 'address[zip]', label: 'Postal code', value: form.zip, autocomplete: 'postal-code' -%}
+</div>
+<div class="hoa-form__pair">
+  <div class="hoa-field">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressCountry{{ k }}">Country / region</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressCountry{{ k }}" name="address[country]" data-hoa-country="{{ k }}" data-default="{{ form.country }}" autocomplete="country">
+        {{ all_country_option_tags }}
+      </select>
+    </div>
+  </div>
+  <div class="hoa-field" id="AddressProvinceContainer{{ k }}">
+    <div class="hoa-field__row"><label class="hoa-field__label" for="AddressProvince{{ k }}">State / province</label></div>
+    <div class="hoa-field__control hoa-field__control--select">
+      <select class="hoa-field__input" id="AddressProvince{{ k }}" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1"></select>
+    </div>
+  </div>
+</div>
+{%- render 'hoa-field', id: id_phone, name: 'address[phone]', type: 'tel', label: 'Phone (optional)', value: form.phone, autocomplete: 'tel' -%}
+<div class="hoa-check">
+  {{ form.set_as_default_checkbox }}
+  <label for="{{ default_id }}">Use as my default address</label>
+</div>

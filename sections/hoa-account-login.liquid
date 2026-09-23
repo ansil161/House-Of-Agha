@@ -1,0 +1,127 @@
+{% comment %}
+  ACCOUNT · Sign in (templates/customers/login.json)
+  Shopify classic customer accounts: the forms post to Shopify ('customer_login',
+  'recover_customer_password', 'guest_login'); nothing here handles credentials.
+  Two panels share the page. The forgot-password panel shows on /account/login#recover
+  (CSS :target, no JS needed) or when Shopify returns an error for it; the success
+  message after a reset request appears on the sign-in panel, as in Shopify's reference theme.
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+
+{%- capture recover_form -%}
+  {%- form 'recover_customer_password', class: 'hoa-form', novalidate: 'novalidate' -%}
+    {%- assign recover_success = form.posted_successfully? -%}
+    {%- if form.errors -%}{%- assign recover_open = true -%}{%- endif -%}
+    {%- render 'hoa-form-errors', errors: form.errors, id: 'RecoverErrors' -%}
+    {%- render 'hoa-field',
+      id: 'RecoverEmail',
+      name: 'email',
+      type: 'email',
+      label: 'Email',
+      autocomplete: 'email',
+      required: true,
+      invalid: form.errors
+    -%}
+    <button class="hoa-btn hoa-btn--block" type="submit" data-hoa-submit data-loading-label="Sending">
+      <span data-label>Send reset link</span>{% render 'hoa-btn-icon' %}
+    </button>
+  {%- endform -%}
+{%- endcapture -%}
+
+<section class="hoa-auth">
+  <div class="hoa-auth__main">
+    <div class="hoa-auth__inner">
+
+      <div class="hoa-auth__panel hoa-auth__panel--recover{% if recover_open %} is-active{% endif %}" id="recover" tabindex="-1">
+        <header class="hoa-auth__head">
+          <p class="hoa-auth__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>Account</p>
+          <h1 class="hoa-auth__title">Reset your <em>password</em></h1>
+          <p class="hoa-auth__lede">Enter the email on your account and we will send you a link to choose a new password.</p>
+        </header>
+        {{ recover_form }}
+        <p class="hoa-auth__alt"><a class="hoa-auth__back" href="#login" data-hoa-to-login><span aria-hidden="true">&larr;</span> Back to sign in</a></p>
+      </div>
+
+      <div class="hoa-auth__panel hoa-auth__panel--login" id="login" tabindex="-1">
+        <header class="hoa-auth__head">
+          <p class="hoa-auth__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>Account</p>
+          <h1 class="hoa-auth__title">{{ s.heading }} <em>{{ s.heading_italic }}</em></h1>
+          {%- if s.text != blank -%}<p class="hoa-auth__lede">{{ s.text }}</p>{%- endif -%}
+        </header>
+
+        {%- if recover_success == true -%}
+          <div class="hoa-form-msg hoa-form-msg--success" role="status" tabindex="-1" data-hoa-focus>
+            We have sent a link to reset your password. Check your inbox, it can take a few minutes.
+          </div>
+        {%- endif -%}
+
+        {%- form 'customer_login', class: 'hoa-form', novalidate: 'novalidate' -%}
+          {%- render 'hoa-form-errors', errors: form.errors, id: 'LoginErrors' -%}
+          {%- render 'hoa-field',
+            id: 'CustomerEmail',
+            name: 'customer[email]',
+            type: 'email',
+            label: 'Email',
+            autocomplete: 'email',
+            required: true,
+            invalid: form.errors
+          -%}
+          {%- if form.password_needed -%}
+            {%- render 'hoa-field',
+              id: 'CustomerPassword',
+              name: 'customer[password]',
+              type: 'password',
+              label: 'Password',
+              autocomplete: 'current-password',
+              required: true,
+              invalid: form.errors,
+              aside_url: '#recover',
+              aside_label: 'Forgot password?'
+            -%}
+          {%- endif -%}
+          <button class="hoa-btn hoa-btn--block" type="submit" data-hoa-submit data-loading-label="Signing in">
+            <span data-label>Sign in</span>{% render 'hoa-btn-icon' %}
+          </button>
+        {%- endform -%}
+
+        <p class="hoa-auth__alt">New to House of Agha? <a href="{{ routes.account_register_url }}">Create an account</a></p>
+
+        {%- if shop.checkout.guest_login -%}
+          <div class="hoa-auth__guest">
+            {%- form 'guest_login' -%}
+              <p>Checking out? You can also continue without an account.</p>
+              <button class="hoa-auth__text-btn" type="submit">Continue as guest <span aria-hidden="true">&rarr;</span></button>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+
+  {%- render 'hoa-auth-media',
+    image: s.image,
+    name: 'hoa-world-hand',
+    alt: 'Oud of Dark Paradise held in hand',
+    title: s.caption_title,
+    text: s.caption_text
+  -%}
+</section>
+
+{% schema %}
+{
+  "name": "HOA Account sign in",
+  "tag": "div",
+  "class": "hoa-auth-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Welcome" },
+    { "type": "text", "id": "heading_italic", "label": "Heading, italic word", "default": "back" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Sign in to follow your orders and keep your details ready for next time." },
+    { "type": "header", "content": "Photograph" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Shown beside the form on screens 1024px and wider. Defaults to the theme photograph." },
+    { "type": "text", "id": "caption_title", "label": "Caption", "default": "Oud of Dark Paradise" },
+    { "type": "text", "id": "caption_text", "label": "Caption line", "default": "Eau de Parfum" }
+  ]
+}
+{% endschema %}

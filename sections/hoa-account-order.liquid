@@ -1,0 +1,124 @@
+{% comment %}
+  ACCOUNT · Order detail (templates/customers/order.json)
+  Reads Shopify's native `order` object: status, items, fulfilment tracking, totals, addresses.
+{% endcomment %}
+
+<section class="hoa-acct hoa-acct--order">
+  <div class="hoa-wrap">
+    {%- render 'hoa-account-head', title: 'Order', italic: order.name, crumb: order.name, crumb_parent: true, customer: customer -%}
+
+    {%- liquid
+      if order.cancelled
+        assign status = 'cancelled'
+        assign status_label = 'Cancelled'
+      else
+        assign status = order.fulfillment_status | default: 'unfulfilled'
+        assign status_label = order.fulfillment_status_label | default: 'Unfulfilled'
+      endif
+    -%}
+    <dl class="hoa-order-meta">
+      <div><dt>Placed</dt><dd><time datetime="{{ order.created_at | date: '%Y-%m-%d' }}">{{ order.created_at | date: '%B %-d, %Y' }}</time></dd></div>
+      <div><dt>Payment</dt><dd>{{ order.financial_status_label }}</dd></div>
+      <div><dt>Status</dt><dd><span class="hoa-status" data-status="{{ status }}">{{ status_label }}</span></dd></div>
+      <div><dt>Total</dt><dd>{{ order.total_price | money }}</dd></div>
+    </dl>
+
+    {%- if order.cancelled -%}
+      <div class="hoa-form-msg hoa-order-note" role="status">
+        This order was cancelled on {{ order.cancelled_at | date: '%B %-d, %Y' }}{% if order.cancel_reason_label != blank %}: {{ order.cancel_reason_label | downcase }}{% endif %}.
+      </div>
+    {%- endif -%}
+
+    <div class="hoa-acct__grid">
+      <div class="hoa-acct__main">
+        <h2 class="hoa-acct__h2">Items<sup>{{ order.item_count }}</sup></h2>
+        <ul class="hoa-items" role="list">
+          {%- for line_item in order.line_items -%}
+            <li class="hoa-item">
+              <div class="hoa-item__media">
+                {%- if line_item.image -%}
+                  {{ line_item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: line_item.title, width: 120, height: 150 }}
+                {%- endif -%}
+              </div>
+              <div class="hoa-item__body">
+                <p class="hoa-item__title">
+                  {%- if line_item.url != blank -%}<a href="{{ line_item.url }}">{{ line_item.product.title | default: line_item.title }}</a>{%- else -%}{{ line_item.title }}{%- endif -%}
+                </p>
+                {%- unless line_item.product.has_only_default_variant or line_item.variant.title == blank -%}
+                  <p class="hoa-item__sub">{{ line_item.variant.title }}</p>
+                {%- endunless -%}
+                {%- for property in line_item.properties -%}
+                  {%- assign first_char = property.first | slice: 0 -%}
+                  {%- if property.last != blank and first_char != '_' -%}
+                    <p class="hoa-item__sub">{{ property.first }}: {{ property.last }}</p>
+                  {%- endif -%}
+                {%- endfor -%}
+                <p class="hoa-item__sub">Qty {{ line_item.quantity }} · {{ line_item.final_price | money }}</p>
+                {%- if line_item.fulfillment -%}
+                  <p class="hoa-item__ship">
+                    Shipped {{ line_item.fulfillment.created_at | date: '%b %-d, %Y' }}
+                    {%- if line_item.fulfillment.tracking_number != blank -%}
+                      · {% if line_item.fulfillment.tracking_url != blank %}<a href="{{ line_item.fulfillment.tracking_url }}" target="_blank" rel="noopener">Track{% if line_item.fulfillment.tracking_company != blank %} with {{ line_item.fulfillment.tracking_company }}{% endif %}</a>{% else %}{{ line_item.fulfillment.tracking_company }} {{ line_item.fulfillment.tracking_number }}{% endif %}
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+              </div>
+              <p class="hoa-item__price">
+                {%- if line_item.original_line_price != line_item.final_line_price -%}<s>{{ line_item.original_line_price | money }}</s>{%- endif -%}
+                {{ line_item.final_line_price | money }}
+              </p>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <dl class="hoa-totals">
+          <div><dt>Subtotal</dt><dd>{{ order.line_items_subtotal_price | money }}</dd></div>
+          {%- for discount in order.cart_level_discount_applications -%}
+            <div><dt>Discount{% if discount.title != blank %} · {{ discount.title }}{% endif %}</dt><dd>&minus;{{ discount.total_allocated_amount | money }}</dd></div>
+          {%- endfor -%}
+          {%- for shipping_method in order.shipping_methods -%}
+            <div><dt>Shipping · {{ shipping_method.title }}</dt><dd>{{ shipping_method.price | money }}</dd></div>
+          {%- endfor -%}
+          {%- for tax_line in order.tax_lines -%}
+            <div><dt>{{ tax_line.title }} {{ tax_line.rate_percentage }}%</dt><dd>{{ tax_line.price | money }}</dd></div>
+          {%- endfor -%}
+          {%- if order.total_duties -%}
+            <div><dt>Duties</dt><dd>{{ order.total_duties | money }}</dd></div>
+          {%- endif -%}
+          <div class="hoa-totals__total"><dt>Total</dt><dd>{{ order.total_price | money }}</dd></div>
+          {%- if order.total_refunded_amount > 0 -%}
+            <div><dt>Refunded</dt><dd>&minus;{{ order.total_refunded_amount | money }}</dd></div>
+          {%- endif -%}
+        </dl>
+      </div>
+
+      <aside class="hoa-acct__aside">
+        {%- if order.shipping_address -%}
+          <div class="hoa-acct__block">
+            <h2 class="hoa-acct__h2">Shipping address</h2>
+            <address class="hoa-address">{{ order.shipping_address | format_address }}</address>
+          </div>
+        {%- endif -%}
+        {%- if order.billing_address -%}
+          <div class="hoa-acct__block">
+            <h2 class="hoa-acct__h2">Billing address</h2>
+            <address class="hoa-address">{{ order.billing_address | format_address }}</address>
+          </div>
+        {%- endif -%}
+        <div class="hoa-acct__actions">
+          <a class="hoa-btn hoa-btn--block" href="{{ routes.all_products_collection_url }}"><span>Continue shopping</span>{% render 'hoa-btn-icon' %}</a>
+          <a class="hoa-acct__signout" href="{{ routes.account_url }}"><span aria-hidden="true">&larr;</span> All orders</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Account order",
+  "tag": "div",
+  "class": "hoa-acct-section",
+  "settings": []
+}
+{% endschema %}
