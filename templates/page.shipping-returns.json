@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "shipping_returns_main": {
+      "type": "agha-shipping-returns",
+      "settings": {
+        "title": "SHIPPING & RETURNS POLICY.",
+        "subtitle": "Every AGHA Extraits de Parfum order is packaged in climate-balanced obsidian casing and dispatched via express tracked courier worldwide."
+      }
+    }
+  },
+  "order": [
+    "shipping_returns_main"
+  ]
+}

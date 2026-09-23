@@ -1,0 +1,285 @@
+{% comment %}
+  01 — AGHA CINEMATIC HERO
+  A scroll-driven fragrance film: darkness → atmosphere → ingredient →
+  material → bottle → brand → fragrance → discovery → THE HOUSE.
+
+  Visual assets were generated with Google Flow (Nano Banana 2 stills,
+  Veo 3.1 clips) from the authentic AGHA Oud Royal bottle photograph.
+  Files live flat in /assets as agha-hero-*.{webp,jpg,webm,mp4}
+  (Shopify does not allow sub-folders inside /assets). See AGHA-HERO-ASSETS.md.
+
+  Animation: assets/agha-hero.js (one master GSAP timeline, scrubbed).
+  Styles:    assets/agha-hero.css
+{% endcomment %}
+
+{{ 'agha-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  assign atmosphere_jpg = 'agha-hero-atmosphere.jpg' | asset_url
+  assign atmosphere_webp = 'agha-hero-atmosphere.webp' | asset_url
+  assign ingredient_jpg = 'agha-hero-ingredient.jpg' | asset_url
+  assign ingredient_webp = 'agha-hero-ingredient.webp' | asset_url
+  assign material_jpg = 'agha-hero-material.jpg' | asset_url
+  assign material_webp = 'agha-hero-material.webp' | asset_url
+  assign macro_jpg = 'agha-hero-bottle-macro.jpg' | asset_url
+  assign macro_webp = 'agha-hero-bottle-macro.webp' | asset_url
+  assign reveal_jpg = 'agha-hero-bottle-reveal.jpg' | asset_url
+  assign reveal_webp = 'agha-hero-bottle-reveal.webp' | asset_url
+  assign campaign_jpg = 'agha-hero-bottle-campaign.jpg' | asset_url
+  assign campaign_webp = 'agha-hero-bottle-campaign.webp' | asset_url
+  assign closing_jpg = 'agha-hero-closing.jpg' | asset_url
+  assign closing_webp = 'agha-hero-closing.webp' | asset_url
+
+  assign m_atmosphere_jpg = 'agha-hero-mobile-atmosphere.jpg' | asset_url
+  assign m_atmosphere_webp = 'agha-hero-mobile-atmosphere.webp' | asset_url
+  assign m_ingredient_jpg = 'agha-hero-mobile-ingredient.jpg' | asset_url
+  assign m_ingredient_webp = 'agha-hero-mobile-ingredient.webp' | asset_url
+  assign m_bottle_jpg = 'agha-hero-mobile-bottle.jpg' | asset_url
+  assign m_bottle_webp = 'agha-hero-mobile-bottle.webp' | asset_url
+
+  assign v_atmosphere_webm = 'agha-hero-atmosphere.webm' | asset_url
+  assign v_atmosphere_mp4 = 'agha-hero-atmosphere.mp4' | asset_url
+  assign v_ingredient_webm = 'agha-hero-ingredient.webm' | asset_url
+  assign v_ingredient_mp4 = 'agha-hero-ingredient.mp4' | asset_url
+  assign v_material_webm = 'agha-hero-material.webm' | asset_url
+  assign v_material_mp4 = 'agha-hero-material.mp4' | asset_url
+  assign v_macro_webm = 'agha-hero-bottle-macro.webm' | asset_url
+  assign v_macro_mp4 = 'agha-hero-bottle-macro.mp4' | asset_url
+  assign v_reveal_webm = 'agha-hero-bottle-reveal.webm' | asset_url
+  assign v_reveal_mp4 = 'agha-hero-bottle-reveal.mp4' | asset_url
+  assign v_campaign_webm = 'agha-hero-bottle-campaign.webm' | asset_url
+  assign v_campaign_mp4 = 'agha-hero-bottle-campaign.mp4' | asset_url
+  assign v_closing_webm = 'agha-hero-closing.webm' | asset_url
+  assign v_closing_mp4 = 'agha-hero-closing.mp4' | asset_url
+
+  if s.image_campaign != blank
+    assign campaign_jpg = s.image_campaign | image_url: width: 1600
+    assign campaign_webp = s.image_campaign | image_url: width: 1600
+  endif
+  if s.image_reveal != blank
+    assign reveal_jpg = s.image_reveal | image_url: width: 1600
+    assign reveal_webp = s.image_reveal | image_url: width: 1600
+  endif
+  if s.image_mobile_bottle != blank
+    assign m_bottle_jpg = s.image_mobile_bottle | image_url: width: 1080
+    assign m_bottle_webp = s.image_mobile_bottle | image_url: width: 1080
+  endif
+
+  assign cta_url = s.cta_url
+  if cta_url == blank and s.product != blank
+    assign cta_url = s.product.url
+  endif
+  if cta_url == blank
+    assign cta_url = '/collections/all'
+  endif
+
+  assign fragrance_name = s.fragrance_name
+  if fragrance_name == blank and s.product != blank
+    assign fragrance_name = s.product.title
+  endif
+-%}
+
+{%- comment -%} Preload only the opening frame; everything else streams in by scene. {%- endcomment -%}
+<link rel="preload" as="image" href="{{ atmosphere_webp }}" type="image/webp" media="(min-width: 768px)">
+<link rel="preload" as="image" href="{{ m_atmosphere_webp }}" type="image/webp" media="(max-width: 767px)">
+
+<section
+  class="agha-hero is-static"
+  id="agha-hero-{{ section.id }}"
+  data-agha-hero
+  data-section-id="{{ section.id }}"
+  data-mobile-video="{{ s.mobile_video }}"
+  data-campaign-video="{{ s.campaign_video }}"
+  style="--agha-hero-desktop-length: {{ s.scroll_length }}vh;"
+  aria-label="{{ s.headline | strip_html | escape }}"
+>
+  <div class="agha-hero__stage">
+
+    {%- comment -%} SCENE 01–02 · ATMOSPHERE {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--atmosphere" aria-hidden="true">
+      <picture>
+        <source media="(max-width: 767px)" type="image/webp" srcset="{{ m_atmosphere_webp }}">
+        <source media="(max-width: 767px)" srcset="{{ m_atmosphere_jpg }}">
+        <source type="image/webp" srcset="{{ atmosphere_webp }}">
+        <img src="{{ atmosphere_jpg }}" alt="" width="1376" height="768" fetchpriority="high" decoding="async">
+      </picture>
+      <video muted playsinline loop preload="none" poster="{{ atmosphere_jpg }}" tabindex="-1"
+        data-src-webm="{{ v_atmosphere_webm }}" data-src-mp4="{{ v_atmosphere_mp4 }}"></video>
+    </div>
+
+    {%- comment -%} SCENE 03 · INGREDIENT — oud wood, saffron, black rose {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--ingredient">
+      <picture>
+        <source media="(max-width: 767px)" type="image/webp" srcset="{{ m_ingredient_webp }}">
+        <source media="(max-width: 767px)" srcset="{{ m_ingredient_jpg }}">
+        <source type="image/webp" srcset="{{ ingredient_webp }}">
+        <img src="{{ ingredient_jpg }}" alt="{{ s.alt_ingredient | escape }}" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline loop preload="none" tabindex="-1" aria-hidden="true"
+        data-src-webm="{{ v_ingredient_webm }}" data-src-mp4="{{ v_ingredient_mp4 }}"></video>
+    </div>
+
+    {%- comment -%} SCENE 04 · MATERIAL — wood grain into glass {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--material">
+      <picture>
+        <source type="image/webp" srcset="{{ material_webp }}">
+        <img src="{{ material_jpg }}" alt="{{ s.alt_material | escape }}" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+        data-src-webm="{{ v_material_webm }}" data-src-mp4="{{ v_material_mp4 }}"></video>
+    </div>
+
+    {%- comment -%} SCENE 04b · BOTTLE SURFACE — the label in macro {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--macro">
+      <picture>
+        <source type="image/webp" srcset="{{ macro_webp }}">
+        <img src="{{ macro_jpg }}" alt="{{ s.alt_macro | escape }}" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+        data-src-webm="{{ v_macro_webm }}" data-src-mp4="{{ v_macro_mp4 }}"></video>
+    </div>
+
+    {%- comment -%} SCENE 05 · BOTTLE REVEAL {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--reveal">
+      <picture>
+        <source media="(max-width: 767px)" type="image/webp" srcset="{{ m_bottle_webp }}">
+        <source media="(max-width: 767px)" srcset="{{ m_bottle_jpg }}">
+        <source type="image/webp" srcset="{{ reveal_webp }}">
+        <img src="{{ reveal_jpg }}" alt="{{ s.alt_bottle | escape }}" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+        data-src-webm="{{ v_reveal_webm }}" data-src-mp4="{{ v_reveal_mp4 }}"></video>
+    </div>
+
+    {%- comment -%} SCENE 06–07 · CAMPAIGN {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--campaign">
+      <picture>
+        <source media="(max-width: 767px)" type="image/webp" srcset="{{ m_bottle_webp }}">
+        <source media="(max-width: 767px)" srcset="{{ m_bottle_jpg }}">
+        <source type="image/webp" srcset="{{ campaign_webp }}">
+        <img src="{{ campaign_jpg }}" alt="{{ s.alt_bottle | escape }}" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      {%- if s.campaign_video -%}
+      <video muted playsinline loop preload="none" tabindex="-1" aria-hidden="true"
+        data-src-webm="{{ v_campaign_webm }}" data-src-mp4="{{ v_campaign_mp4 }}"></video>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} SCENE 08 · CLOSING — the bridge into THE HOUSE {%- endcomment -%}
+    <div class="agha-hero__layer agha-hero__layer--closing" aria-hidden="true">
+      <picture>
+        <source type="image/webp" srcset="{{ closing_webp }}">
+        <img src="{{ closing_jpg }}" alt="" width="1376" height="768" loading="lazy" decoding="async">
+      </picture>
+      <video muted playsinline preload="none" tabindex="-1"
+        data-src-webm="{{ v_closing_webm }}" data-src-mp4="{{ v_closing_mp4 }}"></video>
+    </div>
+
+    <div class="agha-hero__vignette" aria-hidden="true"></div>
+    <div class="agha-hero__grain" aria-hidden="true"></div>
+    <div class="agha-hero__iris" aria-hidden="true"></div>
+
+    {%- comment -%} TYPOGRAPHY {%- endcomment -%}
+    <div class="agha-hero__copy">
+
+      <div class="agha-hero__block agha-hero__block--philosophy">
+        <span class="agha-hero__label">{{ s.philosophy_label }}</span>
+        <p class="agha-hero__philosophy">{{ s.philosophy }}</p>
+      </div>
+
+      <div class="agha-hero__block agha-hero__block--brand">
+        <div class="agha-hero__brand">{{ s.brand_name }}</div>
+        <h1 class="agha-hero__headline">
+          {%- assign lines = s.headline | newline_to_br | split: '<br />' -%}
+          {%- for line in lines -%}
+            <span class="agha-hero__line"><span>{{ line | strip }}</span></span>
+          {%- endfor -%}
+        </h1>
+        {%- if s.description != blank -%}
+          <p class="agha-hero__lede">{{ s.description }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="agha-hero__block agha-hero__block--fragrance">
+        <span class="agha-hero__label">{{ s.fragrance_label }}</span>
+        <p class="agha-hero__name">{{ fragrance_name }}</p>
+        <p class="agha-hero__notes">
+          {%- assign notes = s.fragrance_notes | split: ',' -%}
+          {%- for note in notes -%}<span>{{ note | strip }}</span>{%- endfor -%}
+        </p>
+        {%- if s.fragrance_meta != blank -%}<p class="agha-hero__meta">{{ s.fragrance_meta }}</p>{%- endif -%}
+        {%- if s.fragrance_description != blank -%}<p class="agha-hero__description">{{ s.fragrance_description }}</p>{%- endif -%}
+      </div>
+
+      <div class="agha-hero__block agha-hero__block--cta">
+        <a class="agha-hero__cta" href="{{ cta_url }}">
+          <span>{{ s.cta_label }}</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        {%- if s.next_label != blank -%}<span class="agha-hero__next">{{ s.next_label }}</span>{%- endif -%}
+      </div>
+
+    </div>
+
+    {%- comment -%} CHROME {%- endcomment -%}
+    <div class="agha-hero__hint" aria-hidden="true">
+      <span class="agha-hero__hint-line"></span>
+      <span>{{ s.scroll_hint }}</span>
+    </div>
+    <div class="agha-hero__rail" aria-hidden="true"><span class="agha-hero__rail-fill"></span></div>
+    <div class="agha-hero__scene" aria-hidden="true">01 · Darkness</div>
+
+  </div>
+</section>
+
+<script src="{{ 'agha-hero.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Agha Cinematic Hero",
+  "tag": "section",
+  "class": "agha-hero-section",
+  "limit": 1,
+  "settings": [
+    { "type": "header", "content": "Copy" },
+    { "type": "text", "id": "brand_name", "label": "Brand name", "default": "AGHA" },
+    { "type": "textarea", "id": "headline", "label": "Primary brand statement (one line per row)", "default": "THE SCENT IS\nTHE LUXURY." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Unapologetic extraits de parfum crafted from rare botanical extracts, aged Cambodian oud, and wild iris. Designed for those who leave an indelible presence." },
+    { "type": "text", "id": "philosophy_label", "label": "Philosophy label", "default": "The house philosophy" },
+    { "type": "text", "id": "philosophy", "label": "Philosophy statement", "default": "Made for those who notice." },
+
+    { "type": "header", "content": "Fragrance" },
+    { "type": "product", "id": "product", "label": "Featured product" },
+    { "type": "text", "id": "fragrance_label", "label": "Fragrance label", "default": "No. 01 — Extrait de Parfum" },
+    { "type": "text", "id": "fragrance_name", "label": "Fragrance name (falls back to product title)", "default": "Oud Royal" },
+    { "type": "text", "id": "fragrance_notes", "label": "Olfactive family (comma separated)", "default": "Woody, Amber, Spicy" },
+    { "type": "text", "id": "fragrance_meta", "label": "Meta line", "default": "35% oil concentration · 14+ hours on skin" },
+    { "type": "textarea", "id": "fragrance_description", "label": "Short description", "default": "Aged Cambodian oud, saffron threads and wild black rose, macerated for ninety days." },
+
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Discover the fragrance" },
+    { "type": "url", "id": "cta_url", "label": "CTA link (falls back to the featured product)" },
+    { "type": "text", "id": "next_label", "label": "Transition label", "default": "Continue into the House" },
+    { "type": "text", "id": "scroll_hint", "label": "Scroll hint", "default": "Scroll to enter" },
+
+    { "type": "header", "content": "Imagery (optional overrides for the Google Flow assets)" },
+    { "type": "image_picker", "id": "image_reveal", "label": "Bottle reveal (16:9)" },
+    { "type": "image_picker", "id": "image_campaign", "label": "Campaign hero (16:9)" },
+    { "type": "image_picker", "id": "image_mobile_bottle", "label": "Mobile bottle (9:16)" },
+    { "type": "text", "id": "alt_ingredient", "label": "Alt: ingredient shot", "default": "Saffron threads and a black rose petal on aged agarwood" },
+    { "type": "text", "id": "alt_material", "label": "Alt: material shot", "default": "Agarwood grain reflected in the black glass of the Agha bottle" },
+    { "type": "text", "id": "alt_macro", "label": "Alt: bottle macro", "default": "Close-up of the gold AGHA Oud Royal label on black glass" },
+    { "type": "text", "id": "alt_bottle", "label": "Alt: bottle", "default": "AGHA Oud Royal Extrait de Parfum bottle on a black stone plinth" },
+
+    { "type": "header", "content": "Motion" },
+    { "type": "range", "id": "scroll_length", "label": "Film length (viewport heights)", "min": 400, "max": 1200, "step": 50, "default": 800, "unit": "vh" },
+    { "type": "checkbox", "id": "mobile_video", "label": "Play video clips on mobile (stills only when off)", "default": false },
+    { "type": "checkbox", "id": "campaign_video", "label": "Use the orbit clip on the campaign scene", "default": false }
+  ],
+  "presets": [
+    { "name": "Agha Cinematic Hero", "category": "Hero" }
+  ]
+}
+{% endschema %}

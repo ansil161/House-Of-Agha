@@ -1,0 +1,68 @@
+{% comment %}
+  AGHA PDP — 02 FEATURE CARDS
+  Icon cards under the hero. A longevity card is added automatically when the product has a
+  custom.longevity metafield; everything else is a block.
+{% endcomment %}
+{%- assign mf_longevity = product.metafields.custom.longevity.value -%}
+{%- if section.blocks.size > 0 or mf_longevity != blank -%}
+<section class="pdp pdp-section pdp-features" data-pdp-features>
+  <div class="container">
+    <div class="pdp-features__grid">
+      {%- for block in section.blocks -%}
+        <div class="pdp-feature" data-pdp-card {{ block.shopify_attributes }}>
+          <span class="pdp-feature__icon">{% render 'agha-pdp-icon', icon: block.settings.icon %}</span>
+          {%- if block.settings.value != blank -%}<p class="pdp-feature__value">{{ block.settings.value }}</p>{%- endif -%}
+          <p class="pdp-feature__title">{{ block.settings.title }}</p>
+          {%- if block.settings.text != blank -%}<p class="pdp-feature__text">{{ block.settings.text }}</p>{%- endif -%}
+        </div>
+        {%- if forloop.first and mf_longevity != blank -%}
+          <div class="pdp-feature" data-pdp-card>
+            <span class="pdp-feature__icon">{% render 'agha-pdp-icon', icon: 'time' %}</span>
+            <p class="pdp-feature__value">{{ mf_longevity }}</p>
+            <p class="pdp-feature__title">{{ section.settings.longevity_title }}</p>
+            {%- if section.settings.longevity_text != blank -%}<p class="pdp-feature__text">{{ section.settings.longevity_text }}</p>{%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · Feature cards",
+  "settings": [
+    { "type": "text", "id": "longevity_title", "label": "Longevity card title", "default": "Lasting on skin" },
+    { "type": "text", "id": "longevity_text", "label": "Longevity card text", "default": "And for days on wool and cashmere." }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "drop",
+          "options": [
+            { "value": "drop", "label": "Drop" },
+            { "value": "time", "label": "Clock" },
+            { "value": "hourglass", "label": "Hourglass" },
+            { "value": "sample", "label": "Sample vial" },
+            { "value": "delivery", "label": "Delivery" },
+            { "value": "seal", "label": "Seal" },
+            { "value": "secure", "label": "Lock" },
+            { "value": "return", "label": "Returns" }
+          ]
+        },
+        { "type": "text", "id": "value", "label": "Value", "default": "35%" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Perfume oil" },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

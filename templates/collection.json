@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "shop_hero": {
+      "type": "agha-shop-hero",
+      "settings": {}
+    },
+    "collection_grid": {
+      "type": "agha-collection-grid",
+      "settings": {}
+    }
+  },
+  "order": [
+    "shop_hero",
+    "collection_grid"
+  ]
+}

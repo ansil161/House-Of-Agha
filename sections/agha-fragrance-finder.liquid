@@ -1,0 +1,101 @@
+{% comment %}
+  AGHA INTERACTIVE FRAGRANCE FINDER
+{% endcomment %}
+
+<section class="section-padding border-bottom-thin" id="interactive-finder">
+  <div class="container">
+    <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-2xl) auto;" class="gsap-reveal">
+      <span class="editorial-label">02 — INTERACTIVE CONSULTATION</span>
+      <h2 class="headline-section font-serif" style="margin-top: 12px;">THE SENSORY JOURNEY</h2>
+    </div>
+
+    <div class="scent-quiz-box gsap-reveal">
+      <!-- Step 1 -->
+      <div class="quiz-step active" data-step="1">
+        <span class="editorial-label">QUESTION 01 / 03 · AURA & PRESENCE</span>
+        <h3 class="font-serif" style="font-size: 2rem; margin-top: 8px;">What energy do you want your scent to project?</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="mysterious">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Dark & Mysterious</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Smoky woods, deep resin, velvet suede.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="fresh">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Quiet & Refined</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Florentine iris, white amber, crisp violet.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="sensual">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Warm & Enveloping</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Bourbon vanilla, Baltic amber, pink pepper.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="quiz-step" data-step="2">
+        <span class="editorial-label">QUESTION 02 / 03 · MATERIALITY</span>
+        <h3 class="font-serif" style="font-size: 2rem; margin-top: 8px;">Which texture or botanical extract draws you in?</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="oud">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Aged Agarwood & Tobacco</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Deep, opulent, lingering resinous woods.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="iris">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Powdery Iris & Soft Leather</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">High-fashion suede floral elegance.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="rose">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Nocturnal Rose & Spices</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Wild Damask rose steeped in patchouli.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="quiz-step" data-step="3">
+        <span class="editorial-label">QUESTION 03 / 03 · ENVIRONMENT</span>
+        <h3 class="font-serif" style="font-size: 2rem; margin-top: 8px;">When will this fragrance accompany you?</h3>
+        
+        <div class="quiz-options">
+          <div class="quiz-option-btn" data-value="night">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Nocturnal & Intimate Evenings</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Late galas, intimate dinners, dim lighting.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="signature">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Daily Signature Presence</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Unmistakable identity wherever you go.</p>
+          </div>
+          <div class="quiz-option-btn" data-value="statement">
+            <h4 class="font-serif" style="font-size: 1.4rem;">Special Occasions & Milestones</h4>
+            <p style="font-size: 0.85rem; margin-top: 6px; color: var(--color-muted);">Unforgettable impression for key events.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Step -->
+      <div class="quiz-step quiz-result-step" data-step="4">
+        <span class="editorial-label">YOUR BESPOKE OLFACTORY MATCH</span>
+        <h3 class="font-serif" style="font-size: 2.4rem; margin-top: 8px; text-transform: uppercase;">RECOMMENDED: OUD ROYAL EXTRAIT</h3>
+        <p class="text-soft" style="margin-top: 16px; font-size: 1rem; line-height: 1.7; max-width: 600px;">
+          Based on your choices, Oud Royal Extrait matches 98% of your olfactory profile. Formulated with 35% oil concentration for an indelible nocturnal aura.
+        </p>
+
+        <div style="margin-top: 32px; display: flex; gap: 16px; align-items: center;">
+          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
+            <span>CLAIM MATCHED FLACON (₹14,500)</span>
+            <span class="btn-arrow">→</span>
+          </button>
+          <a href="/products/oud-royal" class="btn-secondary">VIEW FULL STORY →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha Fragrance Finder",
+  "settings": []
+}
+{% endschema %}

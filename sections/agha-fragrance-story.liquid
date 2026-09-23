@@ -1,0 +1,75 @@
+{% comment %}
+  AGHA FRAGRANCE STORY & PYRAMID SECTION
+{% endcomment %}
+
+<section class="section-padding border-bottom-thin" id="composition-story">
+  <div class="container">
+    <!-- Story Narrative Header -->
+    <div style="max-width: 800px; margin-bottom: var(--space-3xl);" class="gsap-reveal">
+      <span class="editorial-label">02 — THE COMPOSITION NARRATIVE</span>
+      <h2 class="headline-section font-serif" style="margin-top: 12px;">AN ENCOUNTER BETWEEN SMOKE AND ROSE</h2>
+      <p class="text-soft" style="font-size: 1.15rem; line-height: 1.8; margin-top: 24px;">
+        Oud Royal was born from an nocturnal exploration of old-growth resinous woods. As dusk settles, warm cardamoms and crushed saffron open the experience, before yielding to wild black damask roses steeped in incense mist.
+      </p>
+    </div>
+
+    <!-- Visual Fragrance Pyramid -->
+    <div class="grid-2 gsap-reveal" style="align-items: center;">
+      <div>
+        <span class="editorial-label">OLFACTORY ARCHITECTURE</span>
+        <h3 class="font-serif" style="font-size: 2.2rem; margin-top: 8px;">THE FRAGRANCE PYRAMID</h3>
+
+        <div class="pyramid-wrapper">
+          <div class="pyramid-block">
+            <div class="pyramid-header">
+              <span class="pyramid-level-name">TOP NOTES · INITIAL IMPRESSION (0–30 MINS)</span>
+              <span style="font-size: 0.7rem; color: var(--color-muted);">ELECTRIC</span>
+            </div>
+            <div class="pyramid-notes-list">
+              Pink Pepper, Crushed Green Cardamom, Saffron Threads
+            </div>
+          </div>
+
+          <div class="pyramid-block">
+            <div class="pyramid-header">
+              <span class="pyramid-level-name">HEART NOTES · THE SOUL (30 MINS – 4 HOURS)</span>
+              <span style="font-size: 0.7rem; color: var(--color-muted);">ATMOSPHERIC</span>
+            </div>
+            <div class="pyramid-notes-list">
+              Wild Damask Rose, Tuscan Iris Root, Incense Mist
+            </div>
+          </div>
+
+          <div class="pyramid-block">
+            <div class="pyramid-header">
+              <span class="pyramid-level-name">BASE NOTES · INDELIBLE TRAIL (4–14+ HOURS)</span>
+              <span style="font-size: 0.7rem; color: var(--color-muted);">RESINOUS</span>
+            </div>
+            <div class="pyramid-notes-list">
+              Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materiality Craft Showcase -->
+      <div class="gsap-clip-reveal" style="aspect-ratio: 4/5; border: 1px solid var(--color-border); overflow: hidden; position: relative;">
+        <img src="{{ 'hero_perfume_bottle.jpg' | asset_url }}" alt="Raw Ingredients Craft" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);">
+        <div style="position: absolute; bottom: 30px; left: 30px; right: 30px; background: rgba(8,8,8,0.85); backdrop-filter: blur(8px); padding: 24px; border: 1px solid var(--color-border);">
+          <span class="editorial-label">PROVENANCE</span>
+          <h4 class="font-serif" style="font-size: 1.3rem; margin-top: 6px;">50-YEAR-OLD CAMBODIAN AGARWOOD</h4>
+          <p class="text-muted" style="font-size: 0.8rem; margin-top: 8px;">
+            Sourced exclusively from sustainable reserves in Assam & Kampot. Naturally resinous without chemical acceleration.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha Fragrance Story",
+  "settings": []
+}
+{% endschema %}

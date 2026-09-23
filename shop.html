@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Collections — AGHA PERFUMES</title>
+  <meta name="description" content="Explore all extraits de parfum, signature fragrances, and discovery sets by AGHA Perfumes.">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="assets/theme.js" defer></script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="header scrolled">
+    <div class="container header-container">
+      <a href="/" class="header-brand">AGHA</a>
+      <nav>
+        <ul class="header-nav">
+          <li><a href="/shop.html" class="active">Shop</a></li>
+          <li><a href="/discover.html">Discover</a></li>
+          <li><a href="/the-house.html">The House</a></li>
+          <li><a href="/gifts.html">Gifts</a></li>
+          <li><a href="/private-access.html">Private Access</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="header-action-btn js-cart-toggle">
+          <span>Bag</span>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
+    <div class="container">
+      <!-- Collection Banner Header -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <span class="editorial-label">CURATED COLLECTION</span>
+        <h1 class="headline-hero font-serif" style="font-size: clamp(2.5rem, 5vw, 5rem); margin-top: 12px;">
+          EXTRAITS DE PARFUM
+        </h1>
+        <p class="text-soft" style="max-width: 600px; margin-top: 16px; font-size: 0.95rem;">
+          Uncompromising 35% oil concentration extraits macerated for 90 days in dark chambers. Crafted to linger on skin and fabric for over 12 hours.
+        </p>
+      </div>
+
+      <!-- Controls & Tabs Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--color-border); padding-bottom: 16px;">
+        <div class="collection-tabs-nav">
+          <a href="#" class="collection-tab-link active">ALL SCENTS (08)</a>
+          <a href="#" class="collection-tab-link">WOODY & OUD</a>
+          <a href="#" class="collection-tab-link">FLORAL SUEDE</a>
+          <a href="#" class="collection-tab-link">AMBER RESINS</a>
+          <a href="#" class="collection-tab-link">DISCOVERY SETS</a>
+        </div>
+
+        <button class="btn-secondary js-filter-toggle" style="padding: 10px 20px; font-size: 0.7rem;">
+          <span>FILTER & SORT</span>
+          <span>+</span>
+        </button>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="grid-4">
+        <!-- Product 1 -->
+        <div class="product-card" data-product-id="shop-1" data-title="OUD ROYAL" data-price="₹14,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-family="WOODY & OUD">
+          <div class="product-card-media">
+            <img src="assets/bestseller_oud_royal.jpg" alt="Oud Royal">
+            <div class="product-card-quick-add">
+              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div>
+              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
+              <h3 class="product-title"><a href="/product.html?p=oud-royal">OUD ROYAL</a></h3>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              <span class="product-price">₹14,500</span>
+              <button class="btn-secondary js-add-to-cart" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-product-id="shop-2" data-title="VELVET IRIS" data-price="₹13,200" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-family="FLORAL SUEDE">
+          <div class="product-card-media">
+            <img src="assets/hero_perfume_bottle.jpg" alt="Velvet Iris" style="filter: grayscale(70%);">
+            <div class="product-card-quick-add">
+              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div>
+              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
+              <h3 class="product-title"><a href="/product.html?p=velvet-iris">VELVET IRIS</a></h3>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              <span class="product-price">₹13,200</span>
+              <button class="btn-secondary js-add-to-cart" data-title="VELVET IRIS" data-price="₹13,200" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-product-id="shop-3" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-family="WOODY & OUD">
+          <div class="product-card-media">
+            <img src="assets/bestseller_oud_royal.jpg" alt="Santal Nocturne" style="filter: contrast(1.2);">
+            <div class="product-card-quick-add">
+              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div>
+              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
+              <h3 class="product-title"><a href="/product.html?p=santal-nocturne">SANTAL NOCTURNE</a></h3>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              <span class="product-price">₹15,000</span>
+              <button class="btn-secondary js-add-to-cart" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card" data-product-id="shop-4" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-family="AMBER RESINS">
+          <div class="product-card-media">
+            <img src="assets/hero_perfume_bottle.jpg" alt="Amber Absolute">
+            <div class="product-card-quick-add">
+              <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
+            </div>
+          </div>
+          <div class="product-card-body">
+            <div>
+              <span class="product-meta">EXTRAIT DE PARFUM · 35%</span>
+              <h3 class="product-title"><a href="/product.html?p=amber-absolute">AMBER ABSOLUTE</a></h3>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              <span class="product-price">₹16,500</span>
+              <button class="btn-secondary js-add-to-cart" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Filter Slide-out Drawer -->
+  <div class="filter-drawer-overlay"></div>
+  <div class="filter-drawer">
+    <div class="cart-drawer-header">
+      <span class="editorial-label">REFINE SELECTION</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FILTER FRAGRANCES</h3>
+      <button class="js-filter-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    <div style="padding: var(--space-lg); flex-grow: 1; overflow-y: auto;">
+      <div class="filter-group">
+        <h4 class="filter-group-title">OLFACTORY FAMILY</h4>
+        <div class="filter-options-list">
+          <button class="filter-chip">WOODY & OUD</button>
+          <button class="filter-chip">FLORAL SUEDE</button>
+          <button class="filter-chip">AMBER RESINS</button>
+          <button class="filter-chip">NOCTURNAL SMOKE</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h4 class="filter-group-title">VOLUME</h4>
+        <div class="filter-options-list">
+          <button class="filter-chip">30 ML</button>
+          <button class="filter-chip">50 ML</button>
+          <button class="filter-chip">100 ML</button>
+          <button class="filter-chip">DISCOVERY (5X5ML)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <a href="/" class="footer-brand">AGHA</a>
+          <p class="text-soft" style="font-size: 0.9rem; max-width: 320px; line-height: 1.7; margin-bottom: var(--space-md);">
+            A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
+          </p>
+          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
+        </div>
+
+        <div class="footer-col">
+          <h5>COLLECTIONS</h5>
+          <ul class="footer-links">
+            <li><a href="/shop.html">Shop All Formulations</a></li>
+            <li><a href="/product.html">Spotlight: Oud Royal</a></li>
+            <li><a href="/discover.html">Discovery Set Sampler</a></li>
+            <li><a href="/private-access.html">Private Vault Drops</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>THE HOUSE</h5>
+          <ul class="footer-links">
+            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
+            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
+            <li><a href="/gifts.html">Bespoke Concierge</a></li>
+            <li><a href="/private-access.html">Private Member Access</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>CLIENT CARE</h5>
+          <ul class="footer-links">
+            <li><a href="/contact.html">Concierge Advisory</a></li>
+            <li><a href="/faq.html">Frequently Asked Questions</a></li>
+            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
+            <li><a href="/contact.html">Store Locator</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.15em;">ALL COLLECTIONS ARCHITECTURE</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-out Cart Drawer -->
+  <div class="cart-drawer-overlay js-cart-close"></div>
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <span class="editorial-label">YOUR SELECTION</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
+      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    <div class="cart-drawer-body"></div>
+    <div class="cart-drawer-footer">
+      <button class="btn-primary" style="width: 100%; justify-content: center;">PROCEED TO CHECKOUT →</button>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay js-modal-close"></div>
+  <div class="modal-content-box quick-view-modal">
+    <button class="modal-close-btn js-modal-close">&times;</button>
+    <div class="grid-2" style="align-items: center;">
+      <div style="aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border);">
+        <img src="assets/bestseller_oud_royal.jpg" alt="Quick View" class="qv-image" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div>
+        <span class="editorial-label qv-meta">50 ML · EXTRAIT DE PARFUM</span>
+        <h2 class="qv-title font-serif" style="font-size: 2rem;">OUD ROYAL</h2>
+        <p class="qv-price" style="font-size: 1.2rem; margin: 12px 0;">₹14,500</p>
+        <p class="qv-description text-soft" style="font-size: 0.85rem;">Resinous Cambodian agarwood and wild black rose extract.</p>
+        <button class="btn-primary js-add-to-cart" style="margin-top: 20px; width: 100%; justify-content: center;">ADD TO BAG →</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

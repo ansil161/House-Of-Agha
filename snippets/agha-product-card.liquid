@@ -1,0 +1,76 @@
+{% comment %}
+  Agha editorial product card — used by sections/agha-collection.liquid.
+
+  Pass a Shopify product:      {% render 'agha-product-card', product: product, index: forloop.index %}
+  Or static fallback values:   {% render 'agha-product-card', title: 'OUD ROYAL', price: '₹14,500', image: 'bestseller_oud_royal.jpg', meta: 'Extrait de parfum', url: '/products/oud-royal', index: 1 %}
+
+  With a real product the add control is a native Shopify product form (posts to /cart/add),
+  or a link to the product page when the customer has to choose a size first.
+  The static fallback keeps the preview cart (js-add-to-cart in assets/theme.js).
+{% endcomment %}
+
+{%- liquid
+  if product != blank
+    assign card_title = product.title
+    assign card_url = product.url
+    assign card_variant = product.selected_or_first_available_variant
+    assign card_meta = product.metafields.custom.family.value | default: product.type | default: 'Extrait de parfum'
+    if product.price_varies
+      assign card_price = product.price_min | money | prepend: 'From '
+    else
+      assign card_price = product.price | money
+    endif
+    assign card_image = product.featured_media.preview_image
+  else
+    assign card_title = title
+    assign card_url = url | default: '/collections/all'
+    assign card_meta = meta | default: 'Extrait de parfum'
+    assign card_price = price
+  endif
+
+  assign loading = 'lazy'
+  if index == 1
+    assign loading = 'eager'
+  endif
+-%}
+
+<article class="agha-card" style="--i: {{ index | default: 1 }};"
+  {%- if product == blank %} data-product-id="{{ card_title | handleize }}" data-title="{{ card_title | escape }}" data-price="{{ card_price | escape }}" data-image="assets/{{ image }}"{% endif %}>
+  <a href="{{ card_url }}" class="agha-card__media" aria-label="{{ card_title | escape }}">
+    {%- if product != blank and card_image != blank -%}
+      {{ card_image | image_url: width: 900 | image_tag:
+        loading: loading,
+        widths: '360, 540, 720, 900',
+        sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 45vw, 72vw',
+        alt: card_title
+      }}
+    {%- elsif product != blank -%}
+      {{ 'product-1' | placeholder_svg_tag: 'agha-card__placeholder' }}
+    {%- else -%}
+      <img src="{{ image | asset_url }}" alt="{{ card_title | escape }}" loading="{{ loading }}" width="900" height="1200">
+    {%- endif -%}
+  </a>
+
+  <div class="agha-card__body">
+    <span class="agha-card__meta">{{ card_meta }}</span>
+    <h3 class="agha-card__title"><a href="{{ card_url }}">{{ card_title }}</a></h3>
+    <div class="agha-card__row">
+      <span class="agha-card__price">{{ card_price }}</span>
+
+      {%- if product != blank -%}
+        {%- if product.has_only_default_variant and card_variant.available -%}
+          {%- form 'product', product, class: 'agha-card__form' -%}
+            <input type="hidden" name="id" value="{{ card_variant.id }}">
+            <button type="submit" name="add" class="agha-card__action">Add to bag</button>
+          {%- endform -%}
+        {%- elsif product.available -%}
+          <a href="{{ card_url }}" class="agha-card__action">Select size</a>
+        {%- else -%}
+          <span class="agha-card__action is-muted">Sold out</span>
+        {%- endif -%}
+      {%- else -%}
+        <button type="button" class="agha-card__action js-add-to-cart" data-title="{{ card_title | escape }}" data-price="{{ card_price | escape }}" data-image="assets/{{ image }}" data-size="50 ML">Add to bag</button>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

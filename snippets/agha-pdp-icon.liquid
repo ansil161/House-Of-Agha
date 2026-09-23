@@ -1,0 +1,23 @@
+{% comment %}
+  Line icon set for the PDP (1.5px stroke). Usage: {% render 'agha-pdp-icon', icon: 'delivery' %}
+  Kept in sync with the ICONS map in assets/pdp-preview.js.
+{% endcomment %}
+{%- capture paths -%}
+  {%- case icon -%}
+    {%- when 'drop' -%}<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>
+    {%- when 'time' -%}<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    {%- when 'hourglass' -%}<path d="M6 3h12M6 21h12M7 3v2a5 5 0 0 0 10 0V3M7 21v-2a5 5 0 0 1 10 0v2"/>
+    {%- when 'sample' -%}<path d="M10 2h4v3h-4zM9 5h6v2l1 2v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V9l1-2z"/><path d="M8 13h8"/>
+    {%- when 'delivery' -%}<path d="M2 6h12v10H2zM14 10h4l3 3v3h-7"/><circle cx="6" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/>
+    {%- when 'secure' -%}<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+    {%- when 'return' -%}<path d="M4 9h11a5 5 0 0 1 0 10H8"/><path d="M8 5 4 9l4 4"/>
+    {%- when 'seal' -%}<circle cx="12" cy="10" r="6"/><path d="m9.5 10 1.8 1.8L15 8.2M8.5 15l-1.5 7 5-2.5 5 2.5-1.5-7"/>
+    {%- when 'bag' -%}<path d="M5 8h14l-1 13H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+    {%- when 'pin' -%}<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>
+    {%- when 'heart' -%}<path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9z"/>
+    {%- when 'expand' -%}<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>
+    {%- when 'prev' -%}<path d="m15 6-6 6 6 6"/>
+    {%- when 'next' -%}<path d="m9 6 6 6-6 6"/>
+  {%- endcase -%}
+{%- endcapture -%}
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">{{ paths }}</svg>

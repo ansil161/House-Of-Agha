@@ -1,0 +1,82 @@
+<div class="agha-shipping-returns-section section-padding">
+  <div class="container">
+    <div style="max-width: 850px; margin-bottom: var(--space-3xl);" class="gsap-reveal">
+      <span class="editorial-label">01 — LOGISTICS & GUARANTEES</span>
+      <h1 class="headline-hero font-serif" style="margin-top: 16px; font-size: clamp(3rem, 6vw, 6rem);">
+        {{ section.settings.title | default: "SHIPPING & RETURNS POLICY." }}
+      </h1>
+      <p class="text-soft" style="margin-top: 28px; max-width: 620px; font-size: 1.1rem; line-height: 1.8;">
+        {{ section.settings.subtitle | default: "Every AGHA Extraits de Parfum order is packaged in climate-balanced obsidian casing and dispatched via express tracked courier worldwide." }}
+      </p>
+    </div>
+
+    <div class="grid-2 gsap-reveal" style="gap: var(--space-3xl);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-2xl);">
+        <div>
+          <span class="editorial-label">GLOBAL FULFILLMENT</span>
+          <h2 class="font-serif" style="font-size: 2.2rem; margin-top: 8px;">EXPRESS DELIVERY</h2>
+        </div>
+
+        <div style="border-top: 1px solid var(--color-border); padding-top: 24px;">
+          <h3 class="font-serif" style="font-size: 1.4rem;">COMPLIMENTARY DOMESTIC EXPRESS</h3>
+          <p class="text-soft" style="font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+            We offer complimentary express shipping on all domestic orders over $150. Orders placed before 14:00 CET are dispatched same-day with 1–2 business day delivery guarantee.
+          </p>
+        </div>
+
+        <div style="border-top: 1px solid var(--color-border); padding-top: 24px;">
+          <h3 class="font-serif" style="font-size: 1.4rem;">DUTIES & TAXES INCLUDED</h3>
+          <p class="text-soft" style="font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+            International delivery is operated via DHL Express across 80+ countries. All import duties, taxes, and customs clearance charges are pre-calculated at checkout.
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-2xl);">
+        <div>
+          <span class="editorial-label">CLIENT SATISFACTION</span>
+          <h2 class="font-serif" style="font-size: 2.2rem; margin-top: 8px;">SAMPLE & RETURN RISK-FREE</h2>
+        </div>
+
+        <div style="border-top: 1px solid var(--color-border); padding-top: 24px;">
+          <h3 class="font-serif" style="font-size: 1.4rem;">THE COMPLIMENTARY SAMPLER PROMISE</h3>
+          <p class="text-soft" style="font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+            Every full bottle order includes a matching 2ml sample vial. Test the vial before unsealing the full bottle. If the scent does not suit your skin, return the unopened full bottle for a full refund.
+          </p>
+        </div>
+
+        <div style="border-top: 1px solid var(--color-border); padding-top: 24px;">
+          <h3 class="font-serif" style="font-size: 1.4rem;">30-DAY HASSLE-FREE RETURNS</h3>
+          <p class="text-soft" style="font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+            Unopened, sealed items in original packaging may be returned within 30 days of receipt with our pre-paid courier label.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AGHA Shipping Policy",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page Title",
+      "default": "SHIPPING & RETURNS POLICY."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Every AGHA Extraits de Parfum order is packaged in climate-balanced obsidian casing and dispatched via express tracked courier worldwide."
+    }
+  ],
+  "presets": [
+    {
+      "name": "AGHA Shipping Policy"
+    }
+  ]
+}
+{% endschema %}

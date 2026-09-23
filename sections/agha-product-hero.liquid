@@ -1,0 +1,82 @@
+{% comment %}
+  AGHA PRODUCT DETAIL HERO (PDP)
+{% endcomment %}
+
+<section class="section-padding border-bottom-thin" style="padding-top: 160px;">
+  <div class="container">
+    <div class="grid-asymmetric-right" style="align-items: flex-start; gap: var(--space-2xl);">
+      <!-- Left: Dominant Campaign Media Gallery -->
+      <div>
+        <div style="aspect-ratio: 4/5; overflow: hidden; border: 1px solid var(--color-border); position: relative;" class="gsap-clip-reveal">
+          <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Oud Royal Extrait Flacon" style="width: 100%; height: 100%; object-fit: cover;">
+          <div style="position: absolute; top: 20px; left: 20px;" class="tag-pill">35% OIL CONCENTRATION</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+          <div style="aspect-ratio: 1; border: 1px solid var(--color-border); overflow: hidden; cursor: pointer;">
+            <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Oud Royal Detail 1" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="aspect-ratio: 1; border: 1px solid var(--color-border); overflow: hidden; cursor: pointer;">
+            <img src="{{ 'hero_perfume_bottle.jpg' | asset_url }}" alt="Oud Royal Detail 2" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);">
+          </div>
+          <div style="aspect-ratio: 1; border: 1px solid var(--color-border); overflow: hidden; cursor: pointer;">
+            <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="Oud Royal Box Packaging" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Editorial Specifications & Purchase Module -->
+      <div style="display: flex; flex-direction: column; gap: var(--space-lg);" class="gsap-reveal">
+        <div>
+          <span class="editorial-label">EXTRAIT DE PARFUM · NOCTURNE COLLECTION</span>
+          <h1 class="headline-section font-serif" style="font-size: clamp(2.8rem, 4vw, 4rem); margin-top: 8px;">OUD ROYAL</h1>
+          <p class="text-muted" style="font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 4px;">
+            SMOKY · RESINOUS · INDELIBLE
+          </p>
+        </div>
+
+        <p class="text-soft" style="font-size: 1.05rem; line-height: 1.8;">
+          An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black damask rose, and sueded tanned leather. Formulated at an uncompromised 35% oil concentration for a 14+ hour skin presence.
+        </p>
+
+        <!-- Volume Variant Selector -->
+        <div>
+          <label class="editorial-label" style="margin-bottom: 12px; display: block;">SELECT FLACON VOLUME</label>
+          <div class="size-selector-group" style="display: flex; gap: 12px;">
+            <button class="btn-secondary size-selector-btn" data-size="30 ML" data-price="₹9,800">30 ML · ₹9,800</button>
+            <button class="btn-primary size-selector-btn" data-size="50 ML" data-price="₹14,500">50 ML · ₹14,500</button>
+            <button class="btn-secondary size-selector-btn" data-size="100 ML" data-price="₹24,000">100 ML · ₹24,000</button>
+          </div>
+        </div>
+
+        <!-- Pricing & Action Bar -->
+        <div class="pdp-hero-actions" style="border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">PRICE (INCL. BESPOKE WRAP)</span>
+            <span class="pdp-price-target font-serif" style="font-size: 1.8rem; font-weight: 500;">₹14,500</span>
+          </div>
+
+          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML" style="padding: 18px 36px;">
+            <span>ADD TO BAG</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+
+        <!-- Editorial Guarantees -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 0.8rem; color: var(--color-muted);">
+          <div>✓ Complimentary Concierge Shipping</div>
+          <div>✓ Includes 5ml Trial Sample</div>
+          <div>✓ Macerated for 90 Days</div>
+          <div>✓ Magnetic Obsidian Cap</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha Product Hero",
+  "settings": []
+}
+{% endschema %}

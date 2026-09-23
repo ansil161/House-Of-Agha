@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "house_hero": {
+      "type": "agha-house-hero",
+      "settings": {}
+    },
+    "house_origin": {
+      "type": "agha-house-origin",
+      "settings": {}
+    },
+    "house_craft": {
+      "type": "agha-house-craft",
+      "settings": {}
+    }
+  },
+  "order": [
+    "house_hero",
+    "house_origin",
+    "house_craft"
+  ]
+}

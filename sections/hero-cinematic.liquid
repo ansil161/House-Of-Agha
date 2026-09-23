@@ -1,15 +1,15 @@
 {% comment %}
-  01 — CINEMATIC HERO
+  01 — CINEMATIC WHITE HERO SECTION
 {% endcomment %}
 
 <section class="hero-wrapper" id="hero">
   <img src="{{ 'hero_perfume_bottle.jpg' | asset_url }}" alt="AGHA Perfume Campaign" class="hero-bg-media">
   <div class="hero-overlay-gradient"></div>
 
-  <div class="hero-content-layer">
+  <div class="container hero-content-layer">
     <div class="hero-top-bar">
       <div class="hero-editorial-tag">
-        <span class="editorial-label">AUTUMN / WINTER COLLECTION</span>
+        <span class="editorial-label">AUTUMN / WINTER ARCHIVE</span>
       </div>
       <div class="tag-pill">EXTRAIT DE PARFUM · 35% CONCENTRATION</div>
     </div>
@@ -19,16 +19,16 @@
         <span>THE SCENT IS</span>
         <span>THE LUXURY.</span>
       </h1>
-      <p class="subheadline text-soft" style="margin-top: 24px; max-width: 520px;">
+      <p class="subheadline text-soft" style="margin-top: 24px; max-width: 520px; font-size: 1.1rem; line-height: 1.8;">
         Unapologetic extraits de parfum crafted from rare botanical extracts, aged Cambodian oud, and wild iris. Designed for those who leave an indelible presence.
       </p>
 
       <div class="hero-actions-group" style="margin-top: 36px; display: flex; gap: 16px; opacity: 0;">
-        <a href="#signature" class="btn-primary">
-          <span>EXPLORE SIGNATURES</span>
+        <a href="/collections/all" class="btn-primary">
+          <span>EXPLORE COLLECTION</span>
           <span class="btn-arrow">→</span>
         </a>
-        <a href="#discover" class="btn-secondary">
+        <a href="/pages/discover" class="btn-secondary">
           <span>DISCOVER YOUR SCENT</span>
         </a>
       </div>
@@ -45,3 +45,10 @@
     </div>
   </div>
 </section>
+
+{% schema %}
+{
+  "name": "Hero Cinematic White",
+  "settings": []
+}
+{% endschema %}

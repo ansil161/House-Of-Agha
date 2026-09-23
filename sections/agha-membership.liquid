@@ -1,0 +1,98 @@
+{% comment %}
+  AGHA MEMBERSHIP VAULT PILLARS & SIGNUP
+{% endcomment %}
+
+<section class="section-padding" id="private-membership">
+  <div class="container">
+    <!-- Vault Pillars -->
+    <div style="margin-bottom: var(--space-2xl);" class="gsap-reveal">
+      <span class="editorial-label">02 — VAULT PRIVILEGES</span>
+      <h2 class="headline-section font-serif" style="margin-top: 12px;">MEMBER PRIVILEGES</h2>
+    </div>
+
+    <div class="grid-4 gsap-reveal" style="margin-bottom: var(--space-3xl);">
+      <div style="border: 1px solid var(--color-border); padding: var(--space-xl); background: var(--color-near-black);">
+        <span class="editorial-label">01 · RESERVE DROPS</span>
+        <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 8px;">UNLISTED MACERATES</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">Access to ultra-limited 50-bottle compounding runs not listed on the public storefront.</p>
+      </div>
+
+      <div style="border: 1px solid var(--color-border); padding: var(--space-xl); background: var(--color-near-black);">
+        <span class="editorial-label">02 · ARTISANAL ENGRAVING</span>
+        <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 8px;">BESPOKE MONOGRAMS</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">Complimentary laser engraving of initials on magnetic obsidian glass caps.</p>
+      </div>
+
+      <div style="border: 1px solid var(--color-border); padding: var(--space-xl); background: var(--color-near-black);">
+        <span class="editorial-label">03 · PRIVATE DISCOVERIES</span>
+        <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 8px;">PRE-RELEASE ATOMIZERS</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">Receive 5ml lab samples of developing extraits before official release.</p>
+      </div>
+
+      <div style="border: 1px solid var(--color-border); padding: var(--space-xl); background: var(--color-near-black);">
+        <span class="editorial-label">04 · CONCIERGE ADVISORY</span>
+        <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 8px;">DIRECT NOSE ACCESS</h3>
+        <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">One-on-one olfactory consultations with our master perfumers in Paris or London.</p>
+      </div>
+    </div>
+
+    <!-- Minimal Access Key Invitation Form -->
+    <div style="border: 1px solid var(--color-border); padding: var(--space-3xl); background: var(--color-near-black); max-width: 850px; margin: 0 auto;" class="gsap-reveal">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+        <span class="editorial-label">REQUEST PRIVATE ACCESS KEY</span>
+        <h3 class="font-serif" style="font-size: 2.5rem; margin-top: 8px; text-transform: uppercase;">JOIN THE VAULT</h3>
+        <p class="text-soft" style="font-size: 0.9rem; margin-top: 12px;">
+          Access is granted selectively to ensure compounding batch availability.
+        </p>
+      </div>
+
+      <form style="margin-top: 36px; display: flex; flex-direction: column; gap: 24px;" onsubmit="event.preventDefault(); AghaStore.showToast('Your private access key request has been logged.');">
+        <div class="grid-2">
+          <div>
+            <label class="editorial-label" style="display: block; margin-bottom: 6px;">FULL NAME</label>
+            <input type="text" placeholder="E.G. JULIEN S." class="vault-input" required>
+          </div>
+          <div>
+            <label class="editorial-label" style="display: block; margin-bottom: 6px;">EMAIL ADDRESS</label>
+            <input type="email" placeholder="E.G. PATRON@AGHA.COM" class="vault-input" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="editorial-label" style="display: block; margin-bottom: 6px;">PRIMARY OLFACTORY PREFERENCE</label>
+          <select class="vault-input" style="background: var(--color-near-black);">
+            <option value="oud">AGED CAMBODIAN OUD & SMOKE</option>
+            <option value="iris">FLORENTINE IRIS & WHITE SUEDE</option>
+            <option value="amber">BALTIC AMBER & SPICES</option>
+            <option value="all">ALL EXTRAIT FORMULATIONS</option>
+          </select>
+        </div>
+
+        <div style="margin-top: 12px; text-align: center;">
+          <button type="submit" class="btn-primary" style="padding: 18px 48px;">
+            <span>REQUEST ACCESS KEY</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+
+        <div style="text-align: center; font-size: 0.7rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px;">
+          ALREADY HAVE AN ACCESS KEY? <a href="#" onclick="AghaStore.showToast('Access Key portal sign-in active.');" style="color: var(--color-white); text-decoration: underline;">SIGN IN HERE →</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Closing Minimal Statement -->
+    <div style="text-align: center; margin-top: var(--space-3xl);" class="gsap-reveal">
+      <p class="quote-serif" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">
+        “Some fragrances are discovered. Others become yours.”
+      </p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha Membership",
+  "settings": []
+}
+{% endschema %}

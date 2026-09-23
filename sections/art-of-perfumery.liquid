@@ -1,38 +1,66 @@
 {% comment %}
   05 — THE ART OF PERFUMERY
+  Image-led editorial: one house still (saffron, black rose and agarwood — the Oud
+  Royal materials) beside the three craft steps. Copy unchanged from the original.
 {% endcomment %}
 
-<section class="section-padding border-top-thin" id="art">
+{%- assign s = section.settings -%}
+
+<section class="agha-art section-padding border-top-thin" id="art">
   <div class="container">
-    <div style="margin-bottom: var(--space-2xl);" class="gsap-reveal">
-      <span class="editorial-label">05 — CRAFT & ORIGIN</span>
-      <h2 class="headline-section font-serif" style="margin-top: 12px;">THE ART OF PERFUMERY</h2>
-    </div>
-
-    <div class="art-steps-grid gsap-reveal">
-      <div class="art-step-card">
-        <span class="art-step-num">01</span>
-        <h3 class="font-serif" style="font-size: 1.5rem;">BOTANICAL EXTRACTION</h3>
-        <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-          We harvest rare flowers and resins at peak potency—wild iris from Florence, pink pepper from Madagascar, and wild agarwood from Assam. Cold-pressed to retain fragile olfactory notes.
-        </p>
+    <header class="agha-section-head gsap-reveal">
+      <div>
+        <span class="editorial-label">05 — CRAFT & ORIGIN</span>
+        <h2 class="headline-section font-serif">THE ART OF PERFUMERY</h2>
       </div>
+    </header>
 
-      <div class="art-step-card">
-        <span class="art-step-num">02</span>
-        <h3 class="font-serif" style="font-size: 1.5rem;">90-DAY MACERATION</h3>
-        <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-          Unpolished raw extraits age in dark obsidian vessels for 90 days. This controlled maturation allows top, heart, and base notes to fuse into a seamless sensory composition.
-        </p>
-      </div>
+    <div class="agha-art__grid">
+      <figure class="agha-art__media gsap-clip-reveal">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: s.image.alt | default: 'Saffron threads and a black rose petal on aged agarwood' }}
+        {%- else -%}
+          <picture>
+            <source media="(max-width: 767px)" srcset="{{ 'agha-hero-mobile-ingredient.webp' | asset_url }}" type="image/webp">
+            <source srcset="{{ 'agha-hero-ingredient.webp' | asset_url }}" type="image/webp">
+            <img src="{{ 'agha-hero-ingredient.jpg' | asset_url }}" alt="Saffron threads and a black rose petal on aged agarwood" loading="lazy" width="1376" height="768">
+          </picture>
+        {%- endif -%}
+      </figure>
 
-      <div class="art-step-card">
-        <span class="art-step-num">03</span>
-        <h3 class="font-serif" style="font-size: 1.5rem;">FLACON ARTISANSHIP</h3>
-        <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-          Each heavy-glass bottle is hand-polished, individually numbered, and capped with solid magnetic obsidian glass to protect the living elixir within from UV degradation.
-        </p>
-      </div>
+      <ol class="agha-art__steps gsap-reveal">
+        <li class="agha-art__step">
+          <span class="art-step-num">01</span>
+          <div>
+            <h3 class="font-serif">BOTANICAL EXTRACTION</h3>
+            <p class="text-soft">We harvest rare flowers and resins at peak potency—wild iris from Florence, pink pepper from Madagascar, and wild agarwood from Assam. Cold-pressed to retain fragile olfactory notes.</p>
+          </div>
+        </li>
+        <li class="agha-art__step">
+          <span class="art-step-num">02</span>
+          <div>
+            <h3 class="font-serif">90-DAY MACERATION</h3>
+            <p class="text-soft">Unpolished raw extraits age in dark obsidian vessels for 90 days. This controlled maturation allows top, heart, and base notes to fuse into a seamless sensory composition.</p>
+          </div>
+        </li>
+        <li class="agha-art__step">
+          <span class="art-step-num">03</span>
+          <div>
+            <h3 class="font-serif">FLACON ARTISANSHIP</h3>
+            <p class="text-soft">Each heavy-glass bottle is hand-polished, individually numbered, and capped with solid magnetic obsidian glass to protect the living elixir within from UV degradation.</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </div>
 </section>
+
+{% schema %}
+{
+  "name": "Agha Art of Perfumery",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image (falls back to the house ingredient still)" }
+  ],
+  "presets": [{ "name": "Agha Art of Perfumery" }]
+}
+{% endschema %}

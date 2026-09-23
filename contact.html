@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BESPOKE CONCIERGE & CONTACT — AGHA PERFUMES</title>
+  <meta name="description" content="Connect with our olfactory concierge and master nose advisory in Paris, London, and Mumbai.">
+  
+  <link rel="stylesheet" href="assets/theme.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <script src="assets/theme.js" defer></script>
+  <script src="assets/hero-scroll.js" defer></script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="/" class="header-brand">AGHA</a>
+
+      <nav>
+        <ul class="header-nav">
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/discover.html">Discover</a></li>
+          <li><a href="/the-house.html">The House</a></li>
+          <li><a href="/gifts.html">Gifts</a></li>
+          <li><a href="/private-access.html">Private Access</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="header-action-btn js-cart-toggle" aria-label="Open Cart Bag">
+          <span>Bag</span>
+          <span class="cart-count">0</span>
+        </button>
+
+        <button class="mobile-menu-toggle js-mobile-menu" aria-label="Toggle Mobile Navigation">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="3" y1="8" x2="21" y2="8"></line>
+            <line x1="3" y1="16" x2="21" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 01 — HERO -->
+    <section class="section-padding border-bottom-thin" style="padding-top: 160px; padding-bottom: var(--space-3xl);">
+      <div class="container">
+        <div style="max-width: 850px;" class="gsap-reveal">
+          <span class="editorial-label">01 — CLIENT CARE & ADVISORY</span>
+          <h1 class="headline-hero font-serif" style="margin-top: 16px; font-size: clamp(3rem, 6vw, 6rem);">
+            CONNECT WITH<br>
+            THE CONCIERGE.
+          </h1>
+          <p class="text-soft" style="margin-top: 28px; max-width: 600px; font-size: 1.1rem; line-height: 1.8;">
+            Whether requesting bespoke bottle engraving, private vault access guidance, or an olfactory consultation with our master noses, our concierge team is at your disposal.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — ATELIERS & INQUIRY FORM -->
+    <section class="section-padding" id="contact-advisory">
+      <div class="container">
+        <div class="grid-2 gsap-reveal" style="gap: var(--space-3xl); align-items: flex-start;">
+          <!-- Left: Atelier Locations -->
+          <div>
+            <span class="editorial-label">GLOBAL ATELIERS</span>
+            <h2 class="font-serif" style="font-size: 2.2rem; margin-top: 8px;">OUR SALONS</h2>
+
+            <div style="display: flex; flex-direction: column; gap: var(--space-xl); margin-top: var(--space-xl);">
+              <div style="border-left: 2px solid var(--color-black); padding-left: 24px;">
+                <span class="editorial-label">PARIS ATELIER</span>
+                <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 4px;">18 RUE DU FAUBOURG SAINT-HONORÉ</h3>
+                <p class="text-muted" style="font-size: 0.85rem; margin-top: 6px;">75008 PARIS, FRANCE · BY PRIVATE APPOINTMENT ONLY</p>
+                <p class="text-muted" style="font-size: 0.85rem;">PARIS@AGHAPERFUMES.COM · +33 1 42 68 00 00</p>
+              </div>
+
+              <div style="border-left: 2px solid var(--color-black); padding-left: 24px;">
+                <span class="editorial-label">LONDON SALON</span>
+                <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 4px;">42 MOUNT STREET, MAYFAIR</h3>
+                <p class="text-muted" style="font-size: 0.85rem; margin-top: 6px;">LONDON W1K 2RX, UNITED KINGDOM</p>
+                <p class="text-muted" style="font-size: 0.85rem;">MAYFAIR@AGHAPERFUMES.COM · +44 20 7493 0000</p>
+              </div>
+
+              <div style="border-left: 2px solid var(--color-black); padding-left: 24px;">
+                <span class="editorial-label">MUMBAI PRIVATE VAULT</span>
+                <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 4px;">THE TAJ MAHAL PALACE, COLABA</h3>
+                <p class="text-muted" style="font-size: 0.85rem; margin-top: 6px;">MUMBAI 400 001, INDIA</p>
+                <p class="text-muted" style="font-size: 0.85rem;">CONCIERGE@AGHAPERFUMES.COM · +91 22 6665 3300</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Concierge Form -->
+          <div style="border: 1px solid var(--color-border); padding: var(--space-2xl); background: var(--color-bg-secondary);">
+            <span class="editorial-label">DIRECT CONCIERGE INQUIRY</span>
+            <h2 class="font-serif" style="font-size: 2rem; margin-top: 8px;">SEND A MESSAGE</h2>
+
+            <form style="margin-top: 24px; display: flex; flex-direction: column; gap: 20px;" onsubmit="event.preventDefault(); AghaStore.showToast('Your message has been sent to our concierge team.');">
+              <div>
+                <label class="editorial-label" style="display: block; margin-bottom: 6px;">FULL NAME</label>
+                <input type="text" placeholder="ENTER YOUR NAME" class="vault-input" style="background: var(--color-white); padding: 14px 16px; border: 1px solid var(--color-border);" required>
+              </div>
+
+              <div>
+                <label class="editorial-label" style="display: block; margin-bottom: 6px;">EMAIL ADDRESS</label>
+                <input type="email" placeholder="ENTER YOUR EMAIL" class="vault-input" style="background: var(--color-white); padding: 14px 16px; border: 1px solid var(--color-border);" required>
+              </div>
+
+              <div>
+                <label class="editorial-label" style="display: block; margin-bottom: 6px;">INQUIRY TYPE</label>
+                <select class="vault-input" style="background: var(--color-white); padding: 14px 16px; border: 1px solid var(--color-border);">
+                  <option value="bespoke">BESPOKE ENGRAVING & GIFTING</option>
+                  <option value="consultation">OLFACTORY CONSULTATION APPOINTMENT</option>
+                  <option value="order">ORDER & CONCIERGE SHIPPING STATUS</option>
+                  <option value="vault">PRIVATE ACCESS KEY APPLICATION</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="editorial-label" style="display: block; margin-bottom: 6px;">MESSAGE / REQUEST</label>
+                <textarea rows="4" placeholder="HOW MAY OUR CONCIERGE ASSIST YOU?" class="vault-input" style="background: var(--color-white); padding: 14px 16px; border: 1px solid var(--color-border); resize: none;" required></textarea>
+              </div>
+
+              <div style="margin-top: 8px;">
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                  <span>SUBMIT INQUIRY TO CONCIERGE</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="/" class="header-brand" style="display: inline-block; margin-bottom: 16px; color: #FFFFFF;">AGHA</a>
+          <p class="text-soft" style="max-width: 320px; font-size: 0.85rem; margin-bottom: 24px; color: #E7E7E5;">
+            A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
+          </p>
+          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
+        </div>
+
+        <div class="footer-col">
+          <h5>COLLECTIONS</h5>
+          <ul class="footer-links">
+            <li><a href="/shop.html">Shop All Formulations</a></li>
+            <li><a href="/product.html">Spotlight: Oud Royal</a></li>
+            <li><a href="/discover.html">Discovery Set Sampler</a></li>
+            <li><a href="/private-access.html">Private Vault Drops</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>THE HOUSE</h5>
+          <ul class="footer-links">
+            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
+            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
+            <li><a href="/gifts.html">Bespoke Concierge</a></li>
+            <li><a href="/private-access.html">Private Member Access</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>CLIENT CARE</h5>
+          <ul class="footer-links">
+            <li><a href="/contact.html">Concierge Advisory</a></li>
+            <li><a href="/faq.html">Frequently Asked Questions</a></li>
+            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
+            <li><a href="/contact.html">Store Locator</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.15em;">CONCIERGE CLIENT CARE</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Drawers & Modals -->
+  <div class="cart-drawer-overlay js-cart-close"></div>
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <span class="editorial-label">YOUR SELECTION</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
+      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    <div class="cart-drawer-body"></div>
+    <div class="cart-drawer-footer">
+      <button class="btn-primary" style="width: 100%; justify-content: center;">
+        <span>PROCEED TO CHECKOUT</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

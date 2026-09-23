@@ -1,59 +1,122 @@
 {% comment %}
   03 — SIGNATURE FRAGRANCES
+  Campaign-style spotlight of one signature extrait.
+  Reads the "Signature product" setting (falls back to the product with the handle
+  oud-royal). Notes come from the custom.top_notes / heart_notes / base_notes
+  metafields already used on the product page. The static copy only renders when
+  no product exists (local preview / fresh store).
 {% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign p = s.product
+  if p == blank
+    assign p = all_products['oud-royal']
+  endif
+  assign collection_url = s.collection_url | default: routes.all_products_collection_url
+
+  if p != blank
+    assign sig_title = p.title
+    assign sig_tagline = p.metafields.custom.scent_tags.value | join: ' · ' | default: p.metafields.custom.family.value | default: p.type
+    assign sig_text = p.metafields.custom.short_description.value | default: p.description | strip_html | truncatewords: 32
+    assign sig_top = p.metafields.custom.top_notes.value
+    assign sig_heart = p.metafields.custom.heart_notes.value
+    assign sig_base = p.metafields.custom.base_notes.value
+    assign sig_variant = p.selected_or_first_available_variant
+    if p.price_varies
+      assign sig_price = p.price_min | money | prepend: 'From '
+    else
+      assign sig_price = p.price | money
+    endif
+  else
+    assign sig_title = 'OUD ROYAL'
+    assign sig_tagline = 'Smoky · Resinous · Indelible'
+    assign sig_text = 'An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black rose, and warm tanned leather.'
+    assign sig_top = 'Pink Pepper, Crushed Cardamom, Saffron Threads'
+    assign sig_heart = 'Wild Black Rose, Tuscan Iris, Incense Mist'
+    assign sig_base = 'Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather'
+    assign sig_price = '50 ML · ₹14,500'
+  endif
+-%}
 
 <section class="section-padding border-top-thin" id="signature">
   <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+    <header class="agha-section-head gsap-reveal">
       <div>
-        <span class="editorial-label">03 — SIGNATURE COLLECTION</span>
-        <h2 class="headline-section font-serif" style="margin-top: 12px;">CULT SIGNATURES</h2>
+        <span class="editorial-label">{{ s.label }}</span>
+        <h2 class="headline-section font-serif">{{ s.heading }}</h2>
       </div>
-      <div class="tag-pill">EXTRAIT DE PARFUM SPOTLIGHT</div>
-    </div>
+      <a href="{{ collection_url }}" class="agha-link">{{ s.cta_label }}</a>
+    </header>
 
-    <div class="fragrance-spotlight-card gsap-reveal" data-product-id="sig-1" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg">
-      <div class="fragrance-image-col">
-        <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Oud Royal Extrait">
-      </div>
+    <div class="fragrance-spotlight-card gsap-reveal"
+      {%- if p == blank %} data-product-id="sig-1" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg"{% endif %}>
+      <a class="fragrance-image-col" href="{% if p != blank %}{{ p.url }}{% else %}/products/oud-royal{% endif %}" aria-label="{{ sig_title | escape }}">
+        {%- if p != blank and p.featured_media -%}
+          {{ p.featured_media.preview_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 1024px) 55vw, 100vw', alt: sig_title }}
+        {%- else -%}
+          <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Oud Royal Extrait" loading="lazy" width="1200" height="1500">
+        {%- endif -%}
+      </a>
 
       <div class="fragrance-info-col">
         <div>
-          <span class="editorial-label">SPOTLIGHT FRAGRANCE</span>
-          <h3 class="font-serif" style="font-size: 2.8rem; margin-top: 8px; text-transform: uppercase;">OUD ROYAL</h3>
-          <p class="text-muted" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;">SMOKY · RESINOUS · INDELIBLE</p>
+          <span class="editorial-label">{{ s.spotlight_label }}</span>
+          <h3 class="font-serif" style="font-size: clamp(2rem, 4vw, 2.8rem); margin-top: 8px; text-transform: uppercase;">{{ sig_title }}</h3>
+          {%- if sig_tagline != blank -%}
+            <p class="text-muted" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;">{{ sig_tagline }}</p>
+          {%- endif -%}
         </div>
 
-        <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7; margin-top: 16px;">
-          An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black rose, and warm tanned leather.
-        </p>
+        {%- if sig_text != blank -%}
+          <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7; margin-top: 16px;">{{ sig_text }}</p>
+        {%- endif -%}
 
-        <div class="notes-pyramid">
-          <div class="note-row">
-            <span class="note-category">TOP NOTES</span>
-            <span class="note-value">Pink Pepper, Crushed Cardamom, Saffron Threads</span>
+        {%- if sig_top != blank or sig_heart != blank or sig_base != blank -%}
+          <div class="notes-pyramid">
+            {%- if sig_top != blank -%}<div class="note-row"><span class="note-category">TOP NOTES</span><span class="note-value">{{ sig_top }}</span></div>{%- endif -%}
+            {%- if sig_heart != blank -%}<div class="note-row"><span class="note-category">HEART NOTES</span><span class="note-value">{{ sig_heart }}</span></div>{%- endif -%}
+            {%- if sig_base != blank -%}<div class="note-row"><span class="note-category">BASE NOTES</span><span class="note-value">{{ sig_base }}</span></div>{%- endif -%}
           </div>
-          <div class="note-row">
-            <span class="note-category">HEART NOTES</span>
-            <span class="note-value">Wild Black Rose, Tuscan Iris, Incense Mist</span>
-          </div>
-          <div class="note-row">
-            <span class="note-category">BASE NOTES</span>
-            <span class="note-value">Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather</span>
-          </div>
-        </div>
+        {%- endif -%}
 
-        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        <div class="fragrance-buy-row">
           <div>
-            <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">VOLUME & CONCENTRATION</span>
-            <span style="font-size: 1.1rem; font-weight: 500;">50 ML · ₹14,500</span>
+            <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">VOLUME & PRICE</span>
+            <span style="font-size: 1.1rem; font-weight: 500;">{{ sig_price }}</span>
           </div>
-          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
-            <span>ADD TO BAG</span>
-            <span class="btn-arrow">→</span>
-          </button>
+          {%- if p != blank -%}
+            {%- if p.has_only_default_variant and sig_variant.available -%}
+              {%- form 'product', p -%}
+                <input type="hidden" name="id" value="{{ sig_variant.id }}">
+                <button type="submit" name="add" class="btn-primary"><span>ADD TO BAG</span><span class="btn-arrow">→</span></button>
+              {%- endform -%}
+            {%- else -%}
+              <a href="{{ p.url }}" class="btn-primary"><span>{% if p.available %}SELECT SIZE{% else %}SOLD OUT{% endif %}</span><span class="btn-arrow">→</span></a>
+            {%- endif -%}
+          {%- else -%}
+            <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
+              <span>ADD TO BAG</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          {%- endif -%}
         </div>
       </div>
     </div>
   </div>
 </section>
+
+{% schema %}
+{
+  "name": "Agha Signature Fragrance",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "03 — Signature Collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "CULT SIGNATURES" },
+    { "type": "product", "id": "product", "label": "Signature product", "info": "Falls back to the product with the handle oud-royal." },
+    { "type": "text", "id": "spotlight_label", "label": "Spotlight label", "default": "Spotlight fragrance" },
+    { "type": "text", "id": "cta_label", "label": "Collection link label", "default": "Explore the collection" },
+    { "type": "url", "id": "collection_url", "label": "Collection link" }
+  ],
+  "presets": [{ "name": "Agha Signature Fragrance" }]
+}
+{% endschema %}

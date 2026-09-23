@@ -1,7 +1,7 @@
 {
   "sections": {
     "hero": {
-      "type": "hero-cinematic",
+      "type": "agha-hero",
       "settings": {}
     },
     "the_house": {
@@ -20,29 +20,49 @@
       "type": "art-of-perfumery",
       "settings": {}
     },
-    "best_sellers": {
-      "type": "best-sellers",
-      "settings": {}
+    "collection": {
+      "type": "agha-collection",
+      "settings": {
+        "products_to_show": 4
+      }
     },
-    "reels": {
-      "type": "watch-reels",
-      "settings": {}
-    },
-    "discovery": {
-      "type": "discovery-collection",
-      "settings": {}
-    },
-    "stories": {
-      "type": "customer-stories",
-      "settings": {}
-    },
-    "journal": {
-      "type": "journal",
-      "settings": {}
-    },
-    "private_access": {
-      "type": "private-access",
-      "settings": {}
+    "world": {
+      "type": "agha-world",
+      "blocks": {
+        "story_lead": {
+          "type": "story",
+          "settings": {
+            "quote": "AGHA has accomplished what few modern fragrance houses dare: creating extraits de parfum so concentrated and atmospheric that a single spray stays woven into wool and cashmere for days.",
+            "author": "Vogue International",
+            "detail": "Olfactory Edit"
+          }
+        },
+        "story_2": {
+          "type": "story",
+          "settings": {
+            "quote": "The new dark icon of niche perfumery.",
+            "author": "Harper’s Bazaar"
+          }
+        },
+        "story_3": {
+          "type": "story",
+          "settings": {
+            "quote": "Best nocturnal scent signature of 2026.",
+            "author": "GQ Magazine"
+          }
+        },
+        "story_4": {
+          "type": "story",
+          "settings": {
+            "quote": "Restraint meets unadulterated luxury.",
+            "author": "Elle Luxury"
+          }
+        }
+      },
+      "block_order": ["story_lead", "story_2", "story_3", "story_4"],
+      "settings": {
+        "intro": "Films from the house, and what has been said about it."
+      }
     }
   },
   "order": [
@@ -51,11 +71,7 @@
     "signature",
     "discover",
     "art",
-    "best_sellers",
-    "reels",
-    "discovery",
-    "stories",
-    "journal",
-    "private_access"
+    "collection",
+    "world"
   ]
 }

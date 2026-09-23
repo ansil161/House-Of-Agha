@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "private_hero": {
+      "type": "agha-private-hero",
+      "settings": {}
+    },
+    "membership": {
+      "type": "agha-membership",
+      "settings": {}
+    }
+  },
+  "order": [
+    "private_hero",
+    "membership"
+  ]
+}

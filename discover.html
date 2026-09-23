@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olfactory Discover Finder — AGHA PERFUMES</title>
+  <meta name="description" content="Discover your personalized scent signature with the AGHA Olfactory Finder.">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="assets/theme.js" defer></script>
+</head>
+<body>
+  <header class="header scrolled">
+    <div class="container header-container">
+      <a href="/" class="header-brand">AGHA</a>
+      <nav>
+        <ul class="header-nav">
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/discover.html" class="active">Discover</a></li>
+          <li><a href="/the-house.html">The House</a></li>
+          <li><a href="/gifts.html">Gifts</a></li>
+          <li><a href="/private-access.html">Private Access</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="header-action-btn js-cart-toggle">
+          <span>Bag</span>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding-top: 140px; padding-bottom: var(--space-3xl);">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto var(--space-2xl) auto;">
+        <span class="editorial-label">INTERACTIVE OLFACTORY FINDER</span>
+        <h1 class="headline-hero font-serif" style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-top: 12px;">
+          DISCOVER YOUR SCENT
+        </h1>
+        <p class="text-soft" style="margin-top: 16px; font-size: 0.95rem;">
+          Every scent interacts uniquely with individual skin lipids. Take our 3-step questionnaire to match your presence with the ideal Extrait de Parfum.
+        </p>
+      </div>
+
+      <div class="scent-quiz-box" style="margin-bottom: var(--space-3xl);">
+        <!-- Step 1 -->
+        <div class="quiz-step active" data-step="1">
+          <span class="editorial-label">QUESTION 01 / 03</span>
+          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">What mood or aura do you wish to project?</h3>
+          <div class="quiz-options">
+            <div class="quiz-option-btn" data-value="mysterious">
+              <h4 class="font-serif">Dark & Mysterious</h4>
+              <p>Smoky woods, deep resin, velvet leather.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="fresh">
+              <h4 class="font-serif">Fresh & Electric</h4>
+              <p>Crisp citrus, crushed botanicals, white amber.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="sensual">
+              <h4 class="font-serif">Warm & Sensual</h4>
+              <p>Vanilla bourbon, spicy iris, golden amber.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="quiz-step" data-step="2">
+          <span class="editorial-label">QUESTION 02 / 03</span>
+          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">Select your preferred primary scent note:</h3>
+          <div class="quiz-options">
+            <div class="quiz-option-btn" data-value="oud">
+              <h4 class="font-serif">Rare Oud & Tobacco</h4>
+              <p>Deep, opulent, long-lasting wood extracts.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="iris">
+              <h4 class="font-serif">Powdery Iris & Suede</h4>
+              <p>Refined, elegant, high-fashion floral suede.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="amber">
+              <h4 class="font-serif">Golden Amber & Spices</h4>
+              <p>Intense warmth with pink pepper & cardamom.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="quiz-step" data-step="3">
+          <span class="editorial-label">QUESTION 03 / 03</span>
+          <h3 class="font-serif" style="font-size: 1.8rem; margin-top: 8px;">When will you wear this fragrance?</h3>
+          <div class="quiz-options">
+            <div class="quiz-option-btn" data-value="night">
+              <h4 class="font-serif">Nocturnal & Evenings</h4>
+              <p>Formal galas, intimate dinners, night presence.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="signature">
+              <h4 class="font-serif">Daily Signature</h4>
+              <p>Unmistakable personal signature everywhere.</p>
+            </div>
+            <div class="quiz-option-btn" data-value="statement">
+              <h4 class="font-serif">Special Occasions</h4>
+              <p>Unforgettable impression for milestone moments.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Step -->
+        <div class="quiz-step quiz-result-step" data-step="4">
+          <span class="editorial-label">YOUR OLFACTORY MATCH</span>
+          <h3 class="font-serif" style="font-size: 2.2rem; margin-top: 8px; text-transform: uppercase;">RECOMMENDED: OUD ROYAL EXTRAIT</h3>
+          <p class="text-soft" style="margin-top: 12px; font-size: 0.95rem;">
+            Based on your choices, Oud Royal Extrait matches 98% of your olfactory profile. Compounded with 35% oil concentration for an indelible nocturnal aura.
+          </p>
+          <div style="margin-top: 24px;">
+            <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
+              <span>ADD MATCHED SCENT TO BAG (₹14,500)</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <a href="/" class="footer-brand">AGHA</a>
+          <p class="text-soft" style="font-size: 0.9rem; max-width: 320px; line-height: 1.7; margin-bottom: var(--space-md);">
+            A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
+          </p>
+          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
+        </div>
+
+        <div class="footer-col">
+          <h5>COLLECTIONS</h5>
+          <ul class="footer-links">
+            <li><a href="/shop.html">Shop All Formulations</a></li>
+            <li><a href="/product.html">Spotlight: Oud Royal</a></li>
+            <li><a href="/discover.html">Discovery Set Sampler</a></li>
+            <li><a href="/private-access.html">Private Vault Drops</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>THE HOUSE</h5>
+          <ul class="footer-links">
+            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
+            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
+            <li><a href="/gifts.html">Bespoke Concierge</a></li>
+            <li><a href="/private-access.html">Private Member Access</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>CLIENT CARE</h5>
+          <ul class="footer-links">
+            <li><a href="/contact.html">Concierge Advisory</a></li>
+            <li><a href="/faq.html">Frequently Asked Questions</a></li>
+            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
+            <li><a href="/contact.html">Store Locator</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
+        <p style="text-transform: uppercase; letter-spacing: 0.15em;">DISCOVER ARCHITECTURE</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cart-drawer-overlay js-cart-close"></div>
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <span class="editorial-label">YOUR SELECTION</span>
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
+      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    <div class="cart-drawer-body"></div>
+    <div class="cart-drawer-footer">
+      <button class="btn-primary" style="width: 100%; justify-content: center;">PROCEED TO CHECKOUT →</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% comment %}
+  AGHA PDP — 09 CLOSING BANNER
+  Rounded dark banner with copy on one side and an image on the other.
+{% endcomment %}
+<section class="pdp pdp-finale" data-pdp-finale>
+  <div class="container">
+    <div class="pdp-banner" data-pdp-banner>
+      <div class="pdp-banner__copy" data-pdp-reveal>
+        {%- if section.settings.eyebrow != blank -%}<span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        <h2 class="pdp-banner__title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.text != blank -%}<p class="pdp-banner__text">{{ section.settings.text }}</p>{%- endif -%}
+        {%- if section.settings.link_label != blank -%}
+          <a class="pdp-btn pdp-btn--light" href="{{ section.settings.link | default: routes.all_products_collection_url }}">{{ section.settings.link_label }} →</a>
+        {%- endif -%}
+      </div>
+      <div class="pdp-banner__media" style="--pdp-focal: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;">
+        {%- if section.settings.image -%}
+          {%- assign image_alt = section.settings.image.alt | default: section.settings.heading -%}
+          {{ section.settings.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(min-width: 901px) 50vw, 100vw', loading: 'lazy', alt: image_alt }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  <div class="pdp-dock-spacer" aria-hidden="true"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha PDP · Closing banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The discovery collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Not sure yet? Wear five before you choose." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Five of our extraits in 5 × 5 ml, in a matte black hardboard box lined with crushed velvet." },
+    { "type": "text", "id": "link_label", "label": "Button label", "default": "Explore the set" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "range", "id": "focal_x", "label": "Image focus (horizontal)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "focal_y", "label": "Image focus (vertical)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+{% comment %}
+  AGHA PDP — 05 CRAFT
+  How the product is made, as numbered step cards joined by a progress line.
+{% endcomment %}
+{%- if section.blocks.size > 0 -%}
+<section class="pdp pdp-section pdp-craft" data-pdp-craft>
+  <div class="container">
+    <header class="pdp-heading" data-pdp-reveal>
+      <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+    </header>
+    <div class="pdp-steps-wrap" data-pdp-steps>
+      <span class="pdp-steps__line" aria-hidden="true"><span class="pdp-steps__progress" data-pdp-steps-progress></span></span>
+      <ol class="pdp-steps">
+        {%- for block in section.blocks -%}
+          <li class="pdp-step" data-pdp-step {{ block.shopify_attributes }}>
+            <span class="pdp-step__index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+            <h3 class="pdp-step__title">{{ block.settings.title }}</h3>
+            {%- if block.settings.text != blank -%}<p class="pdp-step__text">{{ block.settings.text }}</p>{%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · Craft",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it's made" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ninety days to a flacon" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Source" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

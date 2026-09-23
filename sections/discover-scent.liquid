@@ -4,13 +4,16 @@
 
 <section class="section-padding border-top-thin" id="discover">
   <div class="container">
-    <div style="text-align: center; max-width: 650px; margin: 0 auto var(--space-2xl) auto;" class="gsap-reveal">
-      <span class="editorial-label">04 — INTERACTIVE FINDER</span>
-      <h2 class="headline-section font-serif" style="margin-top: 12px;">DISCOVER YOUR SCENT</h2>
-      <p class="text-muted" style="margin-top: 12px; font-size: 0.9rem;">
-        Answer three olfactory questions to pinpoint the AGHA Extrait de Parfum tailored to your skin chemistry and presence.
-      </p>
-    </div>
+    <header class="agha-section-head gsap-reveal">
+      <div>
+        <span class="editorial-label">04 — INTERACTIVE FINDER</span>
+        <h2 class="headline-section font-serif">DISCOVER YOUR SCENT</h2>
+        <p class="text-muted agha-section-head__intro">
+          Answer three olfactory questions to pinpoint the AGHA Extrait de Parfum tailored to your skin chemistry and presence.
+        </p>
+      </div>
+      <a href="/pages/discover" class="agha-link">Discover your scent</a>
+    </header>
 
     <div class="scent-quiz-box gsap-reveal">
       <!-- Step 1 -->
@@ -93,3 +96,11 @@
     </div>
   </div>
 </section>
+
+{% schema %}
+{
+  "name": "Agha Discover Your Scent",
+  "settings": [],
+  "presets": [{ "name": "Agha Discover Your Scent" }]
+}
+{% endschema %}

@@ -1,0 +1,432 @@
+{% comment %}
+  AGHA PDP — 01 PRODUCT HERO
+  Gallery + purchase column + sticky dock + lightbox. All product data is live Shopify data;
+  optional copy comes from metafields:
+    custom.family, custom.scent_tags (list of text), custom.short_description,
+    custom.top_notes / custom.heart_notes / custom.base_notes
+  Ratings come from the standard reviews.rating / reviews.rating_count metafields.
+{% endcomment %}
+
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdp-js');
+</script>
+<script src="{{ 'pdp.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign family = product.metafields.custom.family.value | default: product.type
+  assign scent_tags = product.metafields.custom.scent_tags.value
+  assign lede = product.metafields.custom.short_description.value
+  if lede == blank
+    assign lede = product.description | strip_html | truncatewords: 38
+  endif
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign top_notes = product.metafields.custom.top_notes.value
+  assign heart_notes = product.metafields.custom.heart_notes.value
+  assign base_notes = product.metafields.custom.base_notes.value
+  assign single_option = false
+  if product.options.size == 1 and product.has_only_default_variant == false
+    assign single_option = true
+  endif
+  assign media_count = product.media.size
+  assign first_media = product.featured_media
+-%}
+
+<section class="pdp pdp-hero" id="pdp-{{ section.id }}" data-pdp-main data-section-id="{{ section.id }}" data-money-format="{{ shop.money_format | strip_html | escape }}" data-product-url="{{ product.url }}" data-product-title="{{ product.title | escape }}" data-product-handle="{{ product.handle }}">
+  <div class="container">
+    <nav class="pdp-breadcrumb" aria-label="Breadcrumb" data-pdp-hero-item>
+      <a href="{{ routes.root_url }}">Home</a>
+      <span aria-hidden="true">/</span>
+      {%- if collection -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}">Fragrances</a>
+      {%- endif -%}
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="pdp-hero__grid">
+      {%- if media_count > 1 -%}
+        <div class="pdp-rail" aria-label="Product media">
+          {%- for media in product.media -%}
+            <button type="button" class="pdp-thumb{% if forloop.first %} is-active{% endif %}" data-pdp-thumb="{{ forloop.index0 }}" aria-label="Show media {{ forloop.index }} of {{ media_count }}"{% if forloop.first %} aria-current="true"{% endif %}>
+              {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                <span class="pdp-thumb__play" aria-hidden="true">▶</span>
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div aria-hidden="true"></div>
+      {%- endif -%}
+
+      <div class="pdp-media">
+        <div class="pdp-stage" data-pdp-stage>
+          <div class="pdp-stage__inner" data-pdp-stage-inner>
+            <div class="pdp-stage__track" data-pdp-track>
+              {%- for media in product.media -%}
+                <figure class="pdp-slide{% if forloop.first %} is-active{% endif %}" data-pdp-slide="{{ forloop.index0 }}" data-media-type="{{ media.media_type }}">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      {%- liquid
+                        assign loading = 'lazy'
+                        assign priority = 'auto'
+                        if forloop.first
+                          assign loading = 'eager'
+                          assign priority = 'high'
+                        endif
+                        assign media_alt = media.alt | default: product.title
+                        assign full_src = media | image_url: width: 2400
+                      -%}
+                      {{ media | image_url: width: 1800 | image_tag: widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 1101px) 48vw, (min-width: 769px) 50vw, 100vw', loading: loading, fetchpriority: priority, alt: media_alt, data-pdp-full: full_src }}
+                    {%- when 'video' -%}
+                      {{ media | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1200x' }}
+                    {%- when 'external_video' -%}
+                      {{ media | external_video_tag: loading: 'lazy' }}
+                    {%- else -%}
+                      {{ media | media_tag }}
+                  {%- endcase -%}
+                </figure>
+              {%- else -%}
+                <figure class="pdp-slide is-active" data-pdp-slide="0">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </figure>
+              {%- endfor -%}
+            </div>
+          </div>
+
+          {%- if family != blank -%}
+            <div class="pdp-stage__badge"><span class="pdp-chip pdp-chip--dot">{{ family }}</span></div>
+          {%- endif -%}
+          {%- if first_media -%}
+            <button type="button" class="pdp-expand" data-pdp-expand aria-label="View images full screen">{% render 'agha-pdp-icon', icon: 'expand' %}</button>
+          {%- endif -%}
+          {%- if media_count > 1 -%}
+            <div class="pdp-stage__nav">
+              <span class="pdp-counter" aria-hidden="true"><span data-pdp-count>01</span>&nbsp;/&nbsp;{% if media_count < 10 %}0{% endif %}{{ media_count }}</span>
+              <button type="button" data-pdp-media-step="-1" aria-label="Previous image">{% render 'agha-pdp-icon', icon: 'prev' %}</button>
+              <button type="button" data-pdp-media-step="1" aria-label="Next image">{% render 'agha-pdp-icon', icon: 'next' %}</button>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- if media_count > 1 -%}
+          <div class="pdp-dots" aria-hidden="true">
+            {%- for media in product.media -%}
+              <button type="button" tabindex="-1" data-pdp-dot="{{ forloop.index0 }}"{% if forloop.first %} class="is-active"{% endif %}></button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="pdp-info">
+        <div data-pdp-hero-item>
+          {%- if section.settings.eyebrow != blank -%}<span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          <h1 class="pdp-title">{{ product.title }}</h1>
+        </div>
+
+        {%- if rating != blank -%}
+          {%- assign rating_pct = rating.rating | divided_by: rating.scale_max | times: 100 -%}
+          <div class="pdp-rating" data-pdp-hero-item>
+            <span class="pdp-stars" role="img" aria-label="Rated {{ rating.rating | round: 1 }} out of {{ rating.scale_max }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+            <strong>{{ rating.rating | round: 1 }}</strong>
+            <a href="#pdp-reviews">{{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}</a>
+          </div>
+        {%- endif -%}
+
+        {%- if scent_tags != blank -%}
+          <div class="pdp-tags" data-pdp-hero-item>
+            {%- for tag in scent_tags -%}<span class="pdp-chip">{{ tag }}</span>{%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if lede != blank -%}
+          <p class="pdp-lede" data-pdp-hero-item>{{ lede }}</p>
+        {%- endif -%}
+
+        <div class="pdp-price" data-pdp-hero-item>
+          <span class="pdp-price__amount" data-pdp-price>{{ current_variant.price | money }}</span>
+          <s class="pdp-price__compare" data-pdp-compare{% unless current_variant.compare_at_price > current_variant.price %} hidden{% endunless %}>{{ current_variant.compare_at_price | money }}</s>
+          <span class="pdp-price__note">
+            {%- unless product.has_only_default_variant -%}<span data-pdp-variant-title>{{ current_variant.title }}</span>{% if cart.taxes_included %} · {% endif %}{%- endunless -%}
+            {%- if cart.taxes_included %}Inclusive of all taxes{% endif -%}
+          </span>
+        </div>
+
+        {%- form 'product', product, class: 'pdp-form', data-pdp-form: '', data-pdp-hero-item: '', novalidate: 'novalidate' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-pdp-variant-id>
+
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              {%- assign option_index = forloop.index0 -%}
+              <fieldset class="pdp-options" data-pdp-option="{{ option_index }}">
+                <legend class="pdp-options__legend"><span>{{ option.name }}:</span><span data-pdp-option-value>{{ option.selected_value }}</span></legend>
+                <div class="pdp-options__grid">
+                  {%- for value in option.values -%}
+                    {%- liquid
+                      assign tile_variant = null
+                      for v in product.variants
+                        if v.options[option_index] == value
+                          assign tile_variant = v
+                          break
+                        endif
+                      endfor
+                    -%}
+                    <label class="pdp-tile{% if single_option and tile_variant.available == false %} is-unavailable{% endif %}">
+                      <input type="radio" name="{{ section.id }}-option-{{ option.position }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                      <span class="pdp-tile__value">{{ value }}</span>
+                      {%- if single_option and tile_variant -%}
+                        <span class="pdp-tile__price">{% if tile_variant.available %}{{ tile_variant.price | money }}{% else %}Sold out{% endif %}</span>
+                      {%- endif -%}
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          {%- if product.selling_plan_groups.size > 0 -%}
+            <fieldset class="pdp-options">
+              <legend class="pdp-options__legend"><span>Purchase option</span></legend>
+              <div class="pdp-plans">
+                {%- unless product.requires_selling_plan -%}
+                  <label class="pdp-tile">
+                    <input type="radio" name="selling_plan" value="" checked>
+                    <span class="pdp-tile__value">One-time purchase</span>
+                  </label>
+                {%- endunless -%}
+                {%- for group in product.selling_plan_groups -%}
+                  {%- for plan in group.selling_plans -%}
+                    <label class="pdp-tile">
+                      <input type="radio" name="selling_plan" value="{{ plan.id }}"{% if product.requires_selling_plan and forloop.parentloop.first and forloop.first %} checked{% endif %}>
+                      <span class="pdp-tile__value">{{ plan.name }}</span>
+                    </label>
+                  {%- endfor -%}
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endif -%}
+
+          <div class="pdp-buy">
+            <div class="pdp-qty" data-pdp-qty>
+              <button type="button" data-pdp-qty-step="-1" aria-label="Decrease quantity" disabled>−</button>
+              <input type="number" name="quantity" value="1" min="1" max="10" inputmode="numeric" aria-label="Quantity">
+              <button type="button" data-pdp-qty-step="1" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="submit" name="add" class="pdp-btn pdp-add" data-pdp-add{% unless current_variant.available %} disabled{% endunless %}>
+              <span class="pdp-add__label" data-pdp-add-label>{% if current_variant.available %}Add to bag{% else %}Sold out{% endif %}</span>
+              <span class="pdp-add__sep" aria-hidden="true">—</span>
+              <span class="pdp-add__price" data-pdp-add-price>{{ current_variant.price | money }}</span>
+              <span class="pdp-add__progress" aria-hidden="true"></span>
+            </button>
+            {%- if section.settings.show_wishlist -%}
+              <button type="button" class="pdp-icon-btn" data-pdp-wishlist aria-pressed="false" aria-label="Save to wishlist">{% render 'agha-pdp-icon', icon: 'heart' %}</button>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.show_dynamic_checkout -%}
+            <div class="pdp-dynamic-checkout">{{ form | payment_button }}</div>
+          {%- endif -%}
+
+          {%- liquid
+            assign stock_state = 'in'
+            if current_variant.available == false
+              assign stock_state = 'sold-out'
+            elsif current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= section.settings.low_stock_threshold
+              assign stock_state = 'low'
+            endif
+          -%}
+          <p class="pdp-stock" data-pdp-stock data-state="{{ stock_state }}" role="status">
+            {%- case stock_state -%}
+              {%- when 'sold-out' -%}Currently unavailable
+              {%- when 'low' -%}Only {{ current_variant.inventory_quantity }} left
+              {%- else -%}{{ section.settings.in_stock_text }}
+            {%- endcase -%}
+          </p>
+          <p class="pdp-sr" data-pdp-live role="status" aria-live="polite"></p>
+        {%- endform -%}
+
+        {%- if section.settings.show_secure -%}
+          <div class="pdp-secure" data-pdp-hero-item>
+            <span class="pdp-secure__icon">{% render 'agha-pdp-icon', icon: 'secure' %}</span>
+            <div>
+              <p class="pdp-secure__title">{{ section.settings.secure_title }}</p>
+              {%- if section.settings.secure_text != blank -%}<p class="pdp-secure__text">{{ section.settings.secure_text }}</p>{%- endif -%}
+            </div>
+            {%- if shop.enabled_payment_types.size > 0 -%}
+              <ul class="pdp-payments" aria-label="Accepted payment methods">
+                {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="pdp-benefits" data-pdp-hero-item>
+            {%- for block in section.blocks -%}
+              <div class="pdp-benefit" {{ block.shopify_attributes }}>
+                <span class="pdp-benefit__icon">{% render 'agha-pdp-icon', icon: block.settings.icon %}</span>
+                <span class="pdp-benefit__title">{{ block.settings.title }}</span>
+                {%- if block.settings.text != blank -%}<span class="pdp-benefit__text">{{ block.settings.text }}</span>{%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_delivery -%}
+          <div class="pdp-delivery" data-pdp-delivery data-min-days="{{ section.settings.delivery_min_days }}" data-max-days="{{ section.settings.delivery_max_days }}" data-dispatch-days="{{ section.settings.dispatch_days }}" data-cutoff-hour="{{ section.settings.cutoff_hour }}" data-pdp-hero-item>
+            <p class="pdp-delivery__summary">{% render 'agha-pdp-icon', icon: 'time' %}<span data-pdp-delivery-summary>Estimated delivery <strong data-pdp-delivery-range></strong></span></p>
+            <ol class="pdp-delivery__track">
+              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'bag' %}</span><b data-pdp-delivery-date="order"></b>Ordered</li>
+              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'delivery' %}</span><b data-pdp-delivery-date="dispatch"></b>Dispatched</li>
+              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'pin' %}</span><b data-pdp-delivery-date="deliver"></b>Delivered</li>
+            </ol>
+          </div>
+        {%- endif -%}
+
+        <div class="pdp-accordion" data-pdp-hero-item>
+          {%- if product.description != blank -%}
+            <details data-pdp-accordion open>
+              <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
+              <div class="pdp-accordion__body">{{ product.description }}</div>
+            </details>
+          {%- endif -%}
+          {%- if top_notes != blank or heart_notes != blank or base_notes != blank -%}
+            <details data-pdp-accordion>
+              <summary>Fragrance notes<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
+              <div class="pdp-accordion__body">
+                <ul class="pdp-notes-list">
+                  {%- if top_notes != blank -%}<li><b>Top</b><span>{{ top_notes }}</span></li>{%- endif -%}
+                  {%- if heart_notes != blank -%}<li><b>Heart</b><span>{{ heart_notes }}</span></li>{%- endif -%}
+                  {%- if base_notes != blank -%}<li><b>Base</b><span>{{ base_notes }}</span></li>{%- endif -%}
+                </ul>
+              </div>
+            </details>
+          {%- endif -%}
+          {%- if section.settings.how_to_wear != blank -%}
+            <details data-pdp-accordion>
+              <summary>How to wear<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
+              <div class="pdp-accordion__body">{{ section.settings.how_to_wear }}</div>
+            </details>
+          {%- endif -%}
+          {%- if section.settings.shipping_text != blank -%}
+            <details data-pdp-accordion>
+              <summary>Shipping &amp; returns<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
+              <div class="pdp-accordion__body">
+                {{ section.settings.shipping_text }}
+                {%- if shop.shipping_policy or shop.refund_policy -%}
+                  <p>
+                    {%- if shop.shipping_policy -%}<a class="pdp-link" href="{{ shop.shipping_policy.url }}">Shipping policy</a>{%- endif -%}
+                    {%- if shop.shipping_policy and shop.refund_policy %} · {% endif -%}
+                    {%- if shop.refund_policy -%}<a class="pdp-link" href="{{ shop.refund_policy.url }}">Refund policy</a>{%- endif -%}
+                  </p>
+                {%- endif -%}
+              </div>
+            </details>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-pdp-variants>
+    {{ product.variants | json }}
+  </script>
+  <script type="application/json" data-pdp-stock-levels>
+    { {%- for v in product.variants -%}{%- if v.inventory_management == 'shopify' -%}"{{ v.id }}": {{ v.inventory_quantity }}{%- else -%}"{{ v.id }}": null{%- endif -%}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} }
+  </script>
+  <script type="application/json" data-pdp-settings>
+    { "lowStockThreshold": {{ section.settings.low_stock_threshold }}, "inStockText": {{ section.settings.in_stock_text | json }} }
+  </script>
+
+  {%- comment -%} Sticky purchase dock {%- endcomment -%}
+  <div class="pdp-dock" data-pdp-dock aria-hidden="true">
+    <div class="pdp-dock__inner">
+      {%- if first_media -%}
+        {{ first_media.preview_image | image_url: width: 120 | image_tag: class: 'pdp-dock__thumb', loading: 'lazy', alt: '' }}
+      {%- endif -%}
+      <div>
+        <p class="pdp-dock__title">{{ product.title }}</p>
+        {%- unless product.has_only_default_variant -%}<p class="pdp-dock__meta" data-pdp-variant-title>{{ current_variant.title }}</p>{%- endunless -%}
+      </div>
+      <span class="pdp-dock__spacer"></span>
+      <span class="pdp-dock__price" data-pdp-price>{{ current_variant.price | money }}</span>
+      <button type="button" class="pdp-btn pdp-add" data-pdp-dock-add tabindex="-1"{% unless current_variant.available %} disabled{% endunless %}>
+        <span class="pdp-add__label" data-pdp-add-label>{% if current_variant.available %}Add to bag{% else %}Sold out{% endif %}</span>
+        <span class="pdp-add__progress" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} Full-screen viewer {%- endcomment -%}
+  <dialog class="pdp-lightbox" data-pdp-lightbox aria-label="{{ product.title | escape }} images">
+    <div class="pdp-lightbox__bar">
+      <span><span data-pdp-lightbox-count>01</span> / {% if media_count < 10 %}0{% endif %}{{ media_count }}</span>
+      <button type="button" data-pdp-lightbox-close>Close ✕</button>
+    </div>
+    <div class="pdp-lightbox__stage" data-pdp-lightbox-stage></div>
+    {%- if media_count > 1 -%}
+      <div class="pdp-lightbox__nav">
+        <button type="button" data-pdp-lightbox-step="-1">← Previous</button>
+        <button type="button" data-pdp-lightbox-step="1">Next →</button>
+      </div>
+    {%- endif -%}
+  </dialog>
+</section>
+
+{% schema %}
+{
+  "name": "Agha PDP · Product",
+  "class": "pdp-shopify-section",
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "delivery",
+          "options": [
+            { "value": "delivery", "label": "Delivery" },
+            { "value": "sample", "label": "Sample vial" },
+            { "value": "hourglass", "label": "Hourglass" },
+            { "value": "time", "label": "Clock" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "secure", "label": "Lock" },
+            { "value": "return", "label": "Returns" },
+            { "value": "seal", "label": "Seal" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Complimentary shipping" },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow above the title", "default": "Extrait de parfum · 35%" },
+    { "type": "checkbox", "id": "show_wishlist", "label": "Show wishlist button", "info": "Saves to the shopper's browser.", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show dynamic checkout buttons", "default": true },
+    { "type": "text", "id": "in_stock_text", "label": "In-stock message", "default": "In stock · ready to dispatch" },
+    { "type": "range", "id": "low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 20, "step": 1, "default": 5 },
+    { "type": "header", "content": "Secure checkout card" },
+    { "type": "checkbox", "id": "show_secure", "label": "Show card", "default": true },
+    { "type": "text", "id": "secure_title", "label": "Title", "default": "Secure checkout" },
+    { "type": "text", "id": "secure_text", "label": "Text", "default": "Payments are processed securely by Shopify." },
+    { "type": "header", "content": "Delivery estimate" },
+    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
+    { "type": "range", "id": "dispatch_days", "label": "Business days to dispatch", "min": 0, "max": 5, "step": 1, "default": 1 },
+    { "type": "range", "id": "delivery_min_days", "label": "Minimum business days to deliver", "min": 1, "max": 15, "step": 1, "default": 3 },
+    { "type": "range", "id": "delivery_max_days", "label": "Maximum business days to deliver", "min": 1, "max": 20, "step": 1, "default": 6 },
+    { "type": "range", "id": "cutoff_hour", "label": "Same-day dispatch cutoff (hour, 0 = off)", "info": "Shows an 'Order within …' countdown until this hour.", "min": 0, "max": 23, "step": 1, "default": 0 },
+    { "type": "header", "content": "Details" },
+    { "type": "richtext", "id": "how_to_wear", "label": "How to wear" },
+    { "type": "richtext", "id": "shipping_text", "label": "Shipping & returns" }
+  ]
+}
+{% endschema %}

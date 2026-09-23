@@ -1,0 +1,88 @@
+{% comment %}
+  AGHA PDP — 06 REVIEWS
+  Score from the standard reviews.rating / reviews.rating_count metafields (written by review
+  apps). Review content comes from an app block (Judge.me, Okendo, Shopify Product Reviews…)
+  and/or hand-picked "Featured review" blocks containing real customer quotes.
+{% endcomment %}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+-%}
+<section class="pdp pdp-section pdp-reviews" id="pdp-reviews" data-pdp-reviews>
+  <div class="container">
+    <header class="pdp-heading pdp-heading--left" data-pdp-reveal>
+      <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+    </header>
+    <div class="pdp-reviews__grid">
+      <div class="pdp-reviews__summary" data-pdp-reveal>
+        <span class="pdp-eyebrow">Average rating</span>
+        {%- if rating != blank -%}
+          {%- assign rating_pct = rating.rating | divided_by: rating.scale_max | times: 100 -%}
+          <p class="pdp-reviews__score">{{ rating.rating | round: 1 }}</p>
+          <span class="pdp-stars" role="img" aria-label="Rated {{ rating.rating | round: 1 }} out of {{ rating.scale_max }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+          <p class="pdp-reviews__count">Based on {{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}</p>
+        {%- else -%}
+          <p class="pdp-reviews__count">No ratings yet</p>
+        {%- endif -%}
+      </div>
+
+      <div class="pdp-reviews__list">
+        {%- assign has_content = false -%}
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'review' -%}
+              {%- if block.settings.body != blank -%}
+                {%- assign has_content = true -%}
+                {%- assign stars_pct = block.settings.rating | times: 20 -%}
+                <article class="pdp-review" data-pdp-review {{ block.shopify_attributes }}>
+                  <span class="pdp-stars" role="img" aria-label="Rated {{ block.settings.rating }} out of 5"><span class="pdp-stars__fill" style="width: {{ stars_pct }}%"></span></span>
+                  <p class="pdp-review__body">{{ block.settings.body }}</p>
+                  <div class="pdp-review__meta">
+                    <span class="pdp-review__avatar" aria-hidden="true">{{ block.settings.author | slice: 0 }}</span>
+                    <p class="pdp-review__who">{{ block.settings.author }}<span>
+                      {{- block.settings.location -}}
+                      {%- if block.settings.date != blank -%}{% if block.settings.location != blank %} · {% endif %}{{ block.settings.date }}{%- endif -%}
+                      {%- if block.settings.verified %} · <span class="pdp-review__verified">Verified purchase</span>{%- endif -%}
+                    </span></p>
+                  </div>
+                </article>
+              {%- endif -%}
+            {%- when '@app' -%}
+              {%- assign has_content = true -%}
+              <div class="pdp-reviews__app">{% render block %}</div>
+          {%- endcase -%}
+        {%- endfor -%}
+        {%- unless has_content -%}
+          <p class="pdp-reviews__empty">No reviews yet. {{ section.settings.empty_text }}</p>
+        {%- endunless -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha PDP · Reviews",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What patrons say" },
+    { "type": "text", "id": "empty_text", "label": "Empty state text", "default": "Be the first to tell us how it wears on you." }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "review",
+      "name": "Featured review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "body", "label": "Review (a real customer quote)" },
+        { "type": "text", "id": "author", "label": "Name" },
+        { "type": "text", "id": "location", "label": "Location" },
+        { "type": "text", "id": "date", "label": "Date" },
+        { "type": "checkbox", "id": "verified", "label": "Verified purchase", "default": true }
+      ]
+    }
+  ]
+}
+{% endschema %}

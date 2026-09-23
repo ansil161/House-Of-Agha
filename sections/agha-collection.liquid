@@ -1,0 +1,129 @@
+{% comment %}
+  06 — THE COLLECTION
+  Merges the former best-sellers.liquid and discovery-collection.liquid into one
+  shopping moment: a short edit of best sellers, then a smaller Discovery Set feature.
+
+  Products come from Shopify: the "Best sellers" collection setting, else a collection
+  with the handle "best-sellers". The static cards below only render when neither
+  exists (local preview / fresh store). The Discovery feature reads the "Discovery set"
+  product setting and falls back to the existing static copy.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign source = s.collection
+  if source == blank
+    assign source = collections['best-sellers']
+  endif
+  assign has_products = false
+  if source != blank and source.products_count > 0
+    assign has_products = true
+  endif
+
+  assign all_url = s.view_all_url | default: routes.all_products_collection_url
+  assign disc = s.discovery_product
+-%}
+
+<section class="agha-collection section-padding border-top-thin" id="collection" aria-labelledby="collection-{{ section.id }}-title">
+  <div class="container">
+
+    <header class="agha-section-head gsap-reveal">
+      <div>
+        <span class="editorial-label">{{ s.label }}</span>
+        <h2 class="headline-section font-serif" id="collection-{{ section.id }}-title">{{ s.heading }}</h2>
+      </div>
+      <a href="{{ all_url }}" class="agha-link">{{ s.view_all_label }}</a>
+    </header>
+
+    {%- comment -%} Best sellers {%- endcomment -%}
+    <div class="agha-collection__bestsellers" id="best-sellers">
+      <span class="agha-collection__sublabel gsap-reveal">{{ s.bestsellers_label }}</span>
+      <div class="agha-collection__grid gsap-reveal" data-agha-rail>
+        {%- if has_products -%}
+          {%- for product in source.products limit: s.products_to_show -%}
+            {%- render 'agha-product-card', product: product, index: forloop.index -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- render 'agha-product-card', title: 'OUD ROYAL', price: '₹14,500', image: 'bestseller_oud_royal.jpg', meta: 'Smoky · Resinous · Indelible', url: '/products/oud-royal', index: 1 -%}
+          {%- render 'agha-product-card', title: 'VELVET IRIS', price: '₹13,200', image: 'hero_perfume_bottle.jpg', meta: 'Powdery · Luminous · Soft', url: '/products/velvet-iris', index: 2 -%}
+          {%- render 'agha-product-card', title: 'SANTAL NOCTURNE', price: '₹15,000', image: 'bestseller_oud_royal.jpg', meta: 'Creamy · Smoked · Close', url: '/products/santal-nocturne', index: 3 -%}
+          {%- render 'agha-product-card', title: 'AMBER ABSOLUTE', price: '₹16,500', image: 'hero_perfume_bottle.jpg', meta: 'Golden · Resinous · Warm', url: '/products/amber-absolute', index: 4 -%}
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} Discovery Collection — secondary entry point {%- endcomment -%}
+    {%- liquid
+      if disc != blank
+        assign disc_title = disc.title
+        assign disc_url = disc.url
+        assign disc_price = disc.price | money
+        assign disc_variant = disc.selected_or_first_available_variant
+      else
+        assign disc_title = 'The Discovery Collection'
+        assign disc_url = s.discovery_url | default: '/pages/discover'
+        assign disc_price = '₹4,500'
+      endif
+    -%}
+    <div class="agha-discovery gsap-reveal" id="discovery">
+      <a href="{{ disc_url }}" class="agha-discovery__media" tabindex="-1" aria-hidden="true">
+        {%- if s.discovery_image != blank -%}
+          {{ s.discovery_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200', sizes: '(min-width: 768px) 45vw, 100vw', alt: disc_title }}
+        {%- elsif disc != blank and disc.featured_media -%}
+          {{ disc.featured_media.preview_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 720, 960, 1200', sizes: '(min-width: 768px) 45vw, 100vw', alt: disc_title }}
+        {%- else -%}
+          <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="{{ disc_title | escape }}" loading="lazy" width="1200" height="900">
+        {%- endif -%}
+      </a>
+
+      <div class="agha-discovery__body">
+        <span class="editorial-label">{{ s.discovery_label }}</span>
+        <h3 class="agha-discovery__title font-serif">{{ disc_title }}</h3>
+        <div class="agha-discovery__text">{{ s.discovery_text }}</div>
+
+        <div class="agha-discovery__actions">
+          <span class="agha-discovery__price">{{ disc_price }}</span>
+          {%- if disc != blank and disc.has_only_default_variant and disc_variant.available -%}
+            {%- form 'product', disc, class: 'agha-card__form' -%}
+              <input type="hidden" name="id" value="{{ disc_variant.id }}">
+              <button type="submit" name="add" class="btn-primary"><span>{{ s.discovery_cta }}</span><span class="btn-arrow">→</span></button>
+            {%- endform -%}
+          {%- elsif disc != blank -%}
+            <a href="{{ disc_url }}" class="btn-primary"><span>{{ s.discovery_cta }}</span><span class="btn-arrow">→</span></a>
+          {%- else -%}
+            <button type="button" class="btn-primary js-add-to-cart" data-title="THE DISCOVERY COLLECTION (5X5ML)" data-price="₹4,500" data-image="assets/discovery_box.jpg" data-size="5 X 5ML"><span>{{ s.discovery_cta }}</span><span class="btn-arrow">→</span></button>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha The Collection",
+  "tag": "div",
+  "class": "agha-collection-section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label", "default": "06 — The Collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "THE COLLECTION" },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "Explore all fragrances" },
+    { "type": "url", "id": "view_all_url", "label": "View all link" },
+
+    { "type": "header", "content": "Best sellers" },
+    { "type": "text", "id": "bestsellers_label", "label": "Sub-label", "default": "Best sellers" },
+    { "type": "collection", "id": "collection", "label": "Best sellers collection", "info": "Falls back to a collection with the handle best-sellers." },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 4, "step": 1, "default": 4 },
+
+    { "type": "header", "content": "Discovery Collection" },
+    { "type": "product", "id": "discovery_product", "label": "Discovery set product" },
+    { "type": "image_picker", "id": "discovery_image", "label": "Image (falls back to the product image)" },
+    { "type": "text", "id": "discovery_label", "label": "Label", "default": "Discover the House" },
+    { "type": "richtext", "id": "discovery_text", "label": "Text", "default": "<p>Five of our extraits de parfum in 5 ml atomisers, to wear before choosing a full flacon.</p>" },
+    { "type": "text", "id": "discovery_cta", "label": "Button label", "default": "Explore the set" },
+    { "type": "url", "id": "discovery_url", "label": "Link when no product is selected" }
+  ],
+  "presets": [{ "name": "Agha The Collection" }]
+}
+{% endschema %}

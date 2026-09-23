@@ -2,6 +2,79 @@
    AGHA PERFUMES — THEME JS (Cart, Quick View, Scent Finder Quiz, Modals)
    ========================================================================== */
 
+// Local product catalogue for the static preview. On Shopify, the same fields come from
+// product data + metafields (custom.tagline, custom.family, custom.top_notes, …).
+const AGHA_PRODUCTS = {
+  'oud-royal': {
+    title: 'OUD ROYAL',
+    family: 'Woody & Oud',
+    tagline: 'Smoky · Resinous · Indelible',
+    images: ['/assets/bestseller_oud_royal.jpg', '/assets/discovery_box.jpg'],
+    description: 'An imposing, atmospheric composition constructed around 50-year-old wild Cambodian agarwood, cardamoms harvested at dusk in Kerala, wild Tuscan iris, and dark sueded leather.',
+    sizes: { '30 ML': 9800, '50 ML': 14500, '100 ML': 24000 },
+    notes: {
+      top: 'Pink Pepper, Crushed Cardamom, Saffron Threads',
+      heart: 'Wild Black Rose, Tuscan Iris, Incense Mist',
+      base: 'Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather'
+    },
+    keyMaterial: {
+      name: '50-year-old Cambodian agarwood',
+      text: 'Sourced exclusively from sustainable reserves in Assam & Kampot. Naturally resinous without chemical acceleration.'
+    },
+    story: {
+      heading: 'An encounter between smoke and rose',
+      body: 'Oud Royal was born from a nocturnal exploration of old-growth resinous woods. As dusk settles, warm cardamoms and crushed saffron open the experience, before yielding to wild black damask roses steeped in incense mist.'
+    },
+    mood: 'Nocturnal',
+    sillage: 'Wide',
+    longevity: '14+ hours',
+    reviews: [
+      { rating: 5, author: 'Henrique V.', location: 'Paris', verified: true, body: 'Oud Royal is unlike anything from commercial perfume counters. When I put this on, strangers stop me in dark hotel lobbies to ask what scent is floating behind me.' }
+    ]
+  },
+  'velvet-iris': {
+    title: 'VELVET IRIS',
+    family: 'Floral Suede',
+    tagline: 'Powdery · Luminous · Soft',
+    images: ['/assets/hero_perfume_bottle.jpg'],
+    description: 'An ethereal suede iris fused with white amber and Florentine violet leaves. Powdery, luminous and quietly persistent.',
+    sizes: { '30 ML': 8900, '50 ML': 13200, '100 ML': 21800 },
+    notes: {
+      top: 'Bergamot, Pink Pepper, Violet Leaf',
+      heart: 'Florentine Orris Butter, Suede Accord, Heliotrope',
+      base: 'White Amber, Musk, Cashmeran'
+    }
+  },
+  'santal-nocturne': {
+    title: 'SANTAL NOCTURNE',
+    family: 'Woody & Oud',
+    tagline: 'Creamy · Smoked · Close',
+    images: ['/assets/bestseller_oud_royal.jpg'],
+    description: 'Australian sandalwood, smoked papyrus, and bourbon vanilla extract. A creamy, after-dark wood that settles close to the skin.',
+    sizes: { '30 ML': 10200, '50 ML': 15000, '100 ML': 24800 },
+    notes: {
+      top: 'Cardamom, Black Pepper, Fig Leaf',
+      heart: 'Smoked Papyrus, Cedarwood, Orris',
+      base: 'Australian Sandalwood, Bourbon Vanilla, Tonka Bean'
+    }
+  },
+  'amber-absolute': {
+    title: 'AMBER ABSOLUTE',
+    family: 'Amber Resins',
+    tagline: 'Golden · Resinous · Warm',
+    images: ['/assets/hero_perfume_bottle.jpg'],
+    description: 'Golden Baltic resin, benzoin tear drops, and crushed Madagascar clove. A warm, glowing amber built for cold evenings.',
+    sizes: { '30 ML': 11200, '50 ML': 16500, '100 ML': 27200 },
+    notes: {
+      top: 'Madagascar Clove, Cinnamon Bark, Mandarin',
+      heart: 'Labdanum, Benzoin Siam, Olibanum',
+      base: 'Baltic Amber, Vanilla Absolute, Patchouli'
+    }
+  }
+};
+
+const slugify = (text) => (text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 const AghaStore = {
   cart: [],
 
@@ -71,6 +144,125 @@ const AghaStore = {
 
     // Interactive Quiz Setup
     this.initScentQuiz();
+
+    // Inner Page Controls
+    this.initFilterDrawer();
+    this.initProductCardLinks();
+    this.initPDPVariantSelector();
+    this.initStickyBar();
+    this.initGiftFinder();
+  },
+
+  initFilterDrawer() {
+    const filterBtn = document.querySelector('.js-filter-toggle');
+    const drawer = document.querySelector('.filter-drawer');
+    const overlay = document.querySelector('.filter-drawer-overlay');
+    const closeBtns = document.querySelectorAll('.js-filter-close');
+
+    if (filterBtn && drawer && overlay) {
+      filterBtn.addEventListener('click', () => {
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+      });
+      closeBtns.forEach(btn => btn.addEventListener('click', () => {
+        drawer.classList.remove('active');
+        overlay.classList.remove('active');
+      }));
+      overlay.addEventListener('click', () => {
+        drawer.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
+
+    // Filter chip clicks
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('active');
+        const activeFilters = Array.from(document.querySelectorAll('.filter-chip.active')).map(c => c.textContent.trim());
+        this.filterProducts(activeFilters);
+      });
+    });
+  },
+
+  filterProducts(filters) {
+    const cards = document.querySelectorAll('[data-product-id]');
+    if (filters.length === 0) {
+      cards.forEach(c => c.style.display = '');
+      return;
+    }
+    cards.forEach(card => {
+      const family = (card.dataset.family || '').toUpperCase();
+      const meta = (card.dataset.meta || '').toUpperCase();
+      const title = (card.dataset.title || '').toUpperCase();
+      const match = filters.some(f => family.includes(f) || meta.includes(f) || title.includes(f));
+      card.style.display = match ? '' : 'none';
+    });
+  },
+
+  // Clicking a product card (outside its buttons) opens that product's detail page
+  initProductCardLinks() {
+    document.querySelectorAll('.product-card, .fragrance-spotlight-card').forEach(card => {
+      const slug = slugify(card.dataset.title);
+      if (!AGHA_PRODUCTS[slug]) return;
+      card.classList.add('is-linked');
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button, a')) return;
+        window.location.href = `/product.html?p=${slug}`;
+      });
+    });
+  },
+
+  initPDPVariantSelector() {
+    document.querySelectorAll('.size-selector-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.closest('.size-selector-group');
+        if (group) {
+          group.querySelectorAll('.size-selector-btn').forEach(b => {
+            b.classList.remove('btn-primary');
+            b.classList.add('btn-secondary');
+          });
+          btn.classList.remove('btn-secondary');
+          btn.classList.add('btn-primary');
+          const size = btn.dataset.size || '50 ML';
+          const price = btn.dataset.price || '₹14,500';
+          const targetPriceEl = document.querySelector('.pdp-price-target');
+          if (targetPriceEl) targetPriceEl.textContent = price;
+          document.querySelectorAll('.pdp-hero-actions .js-add-to-cart, .pdp-sticky-bar .js-add-to-cart').forEach(cartBtn => {
+            cartBtn.dataset.size = size;
+            cartBtn.dataset.price = price;
+          });
+          document.querySelectorAll('[data-pdp="cta"]').forEach(el => { el.textContent = `ADD TO BAG — ${price}`; });
+          document.querySelectorAll('[data-pdp="sticky-meta"]').forEach(el => { el.textContent = `${size} · 35% CONCENTRATION`; });
+        }
+      });
+    });
+  },
+
+  initStickyBar() {
+    const stickyBar = document.querySelector('.pdp-sticky-bar');
+    const heroBar = document.querySelector('.pdp-hero-actions');
+    if (!stickyBar || !heroBar) return;
+
+    window.addEventListener('scroll', () => {
+      const rect = heroBar.getBoundingClientRect();
+      if (rect.bottom < 0) {
+        stickyBar.classList.add('visible');
+      } else {
+        stickyBar.classList.remove('visible');
+      }
+    });
+  },
+
+  initGiftFinder() {
+    document.querySelectorAll('.gift-concierge-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const group = card.closest('.gift-concierge-grid');
+        if (group) {
+          group.querySelectorAll('.gift-concierge-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+        }
+      });
+    });
   },
 
   toggleCartDrawer(forceState) {

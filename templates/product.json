@@ -1,0 +1,251 @@
+{
+  "sections": {
+    "main": {
+      "type": "agha-pdp-main",
+      "blocks": {
+        "shipping": {
+          "type": "assurance",
+          "settings": {
+            "icon": "delivery",
+            "title": "Complimentary shipping",
+            "text": "On every flacon, wrapped in matte black hardboard."
+          }
+        },
+        "sample": {
+          "type": "assurance",
+          "settings": {
+            "icon": "sample",
+            "title": "5 ml sample included",
+            "text": "Try it on skin before you open the flacon."
+          }
+        },
+        "maceration": {
+          "type": "assurance",
+          "settings": {
+            "icon": "time",
+            "title": "90-day maceration",
+            "text": "Every batch rests before it is bottled."
+          }
+        },
+        "secure": {
+          "type": "assurance",
+          "settings": {
+            "icon": "secure",
+            "title": "Secure checkout",
+            "text": "Encrypted payment through Shopify."
+          }
+        }
+      },
+      "block_order": [
+        "shipping",
+        "sample",
+        "maceration",
+        "secure"
+      ],
+      "settings": {
+        "caption_left": "Extrait de parfum",
+        "caption_right": "35% oil concentration",
+        "show_dynamic_checkout": true,
+        "show_delivery": true
+      }
+    },
+    "story": {
+      "type": "agha-pdp-story",
+      "settings": {
+        "label": "02 — The composition",
+        "caption_left": "Plate I — The flacon",
+        "focal_y": 55
+      }
+    },
+    "details": {
+      "type": "agha-pdp-details",
+      "blocks": {
+        "concentration": {
+          "type": "spec",
+          "settings": {
+            "term": "Concentration",
+            "value": "Extrait de parfum · 35%",
+            "note": "Where most houses dilute to 12–15%, every AGHA extrait is compounded at 35% oil."
+          }
+        },
+        "maceration": {
+          "type": "spec",
+          "settings": {
+            "term": "Maceration",
+            "value": "90 days",
+            "note": "Rested in temperature-stabilised vaults before bottling."
+          }
+        },
+        "flacon": {
+          "type": "spec",
+          "settings": {
+            "term": "Flacon",
+            "value": "Individually numbered",
+            "note": "Laser-engraved with its batch code and compounding date."
+          }
+        },
+        "packaging": {
+          "type": "spec",
+          "settings": {
+            "term": "Packaging",
+            "value": "Matte black hardboard",
+            "note": "Hand-wrapped, with a 5 ml sample inside."
+          }
+        }
+      },
+      "block_order": [
+        "concentration",
+        "maceration",
+        "flacon",
+        "packaging"
+      ],
+      "settings": {
+        "label": "03 — Details",
+        "heading": "The flacon"
+      }
+    },
+    "composition": {
+      "type": "agha-pdp-composition",
+      "settings": {
+        "label": "04 — Materials",
+        "heading": "How it unfolds"
+      }
+    },
+    "craft": {
+      "type": "agha-pdp-craft",
+      "blocks": {
+        "source": {
+          "type": "step",
+          "settings": {
+            "title": "Source",
+            "text": "Wild Cambodian agarwood from Assam, Florentine iris root aged for three years, and Madagascan pink pepper — harvested by hand."
+          }
+        },
+        "compound": {
+          "type": "step",
+          "settings": {
+            "title": "Compound",
+            "text": "Each extrait is compounded at an uncompromised 35% oil concentration, where traditional houses dilute to 12–15%."
+          }
+        },
+        "macerate": {
+          "type": "step",
+          "settings": {
+            "title": "Macerate",
+            "text": "The unpolished mixture matures inside temperature-stabilised obsidian vaults for 90 days, so the molecules bind without harsh alcohol top notes."
+          }
+        },
+        "finish": {
+          "type": "step",
+          "settings": {
+            "title": "Finish",
+            "text": "Each flacon is laser-engraved with its batch code and compounding date, then hand-wrapped in matte black hardboard."
+          }
+        }
+      },
+      "block_order": [
+        "source",
+        "compound",
+        "macerate",
+        "finish"
+      ],
+      "settings": {
+        "label": "05 — The making",
+        "heading": "Ninety days to a flacon",
+        "caption": "Plate II — The discovery collection"
+      }
+    },
+    "experience": {
+      "type": "agha-pdp-experience",
+      "blocks": {
+        "intensity": {
+          "type": "metric",
+          "settings": {
+            "label": "Intensity",
+            "value": "35% extrait",
+            "text": "Unusually high concentration requiring only 1–2 atomised sprays."
+          }
+        }
+      },
+      "block_order": [
+        "intensity"
+      ],
+      "settings": {
+        "label": "06 — On skin",
+        "heading": "How it wears",
+        "focal_x": 0
+      }
+    },
+    "reviews": {
+      "type": "agha-pdp-reviews",
+      "settings": {}
+    },
+    "faq": {
+      "type": "agha-pdp-faq",
+      "blocks": {
+        "sprays": {
+          "type": "question",
+          "settings": {
+            "question": "How many sprays should I use?",
+            "answer": "<p>One to two sprays is enough. At 35% concentration an extrait is considerably denser than an eau de parfum — apply to pulse points or clothing rather than layering.</p>"
+          }
+        },
+        "size": {
+          "type": "question",
+          "settings": {
+            "question": "Which size should I choose?",
+            "answer": "<p>If you haven't worn AGHA before, the Discovery Collection holds five of our extraits in 5 × 5 ml so you can wear each one for a few days before committing to a full flacon.</p>"
+          }
+        },
+        "box": {
+          "type": "question",
+          "settings": {
+            "question": "What arrives in the box?",
+            "answer": "<p>The numbered flacon, hand-wrapped in matte black hardboard, with a complimentary 5 ml sample.</p>"
+          }
+        },
+        "maceration": {
+          "type": "question",
+          "settings": {
+            "question": "Why is every batch rested for 90 days?",
+            "answer": "<p>Maceration lets the raw materials bind. Resting each batch in temperature-stabilised vaults removes the sharp alcohol edge you notice in the first minutes of many perfumes.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "sprays",
+        "size",
+        "box",
+        "maceration"
+      ],
+      "settings": {
+        "label": "08 — Questions",
+        "heading": "Before you choose"
+      }
+    },
+    "related": {
+      "type": "agha-pdp-related",
+      "settings": {
+        "label": "09 — Explore the house",
+        "heading": "Other expressions",
+        "limit": 3
+      }
+    },
+    "finale": {
+      "type": "agha-pdp-finale",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "story",
+    "details",
+    "composition",
+    "craft",
+    "experience",
+    "reviews",
+    "faq",
+    "related",
+    "finale"
+  ]
+}

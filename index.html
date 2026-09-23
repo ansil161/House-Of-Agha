@@ -8,30 +8,34 @@
   
   <!-- CSS Assets -->
   <link rel="stylesheet" href="assets/theme.css">
+  <link rel="stylesheet" href="assets/agha-hero.css">
+  <link rel="preload" as="image" href="assets/agha-hero-atmosphere.webp" type="image/webp" media="(min-width: 768px)">
+  <link rel="preload" as="image" href="assets/agha-hero-mobile-atmosphere.webp" type="image/webp" media="(max-width: 767px)">
 
   <!-- GSAP Animation Engine -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
   <!-- Theme JS -->
   <script src="assets/theme.js" defer></script>
   <script src="assets/hero-scroll.js" defer></script>
+  <script src="assets/agha-hero.js" defer></script>
+  <script src="assets/agha-world.js" defer></script>
 </head>
 <body>
 
   <!-- Navigation Header -->
   <header class="header">
     <div class="container header-container">
-      <a href="#" class="header-brand">AGHA</a>
+      <a href="/" class="header-brand">AGHA</a>
 
       <nav>
         <ul class="header-nav">
-          <li><a href="#the-house">The House</a></li>
-          <li><a href="#signature">Signatures</a></li>
-          <li><a href="#discover">Olfactory Finder</a></li>
-          <li><a href="#art">Art of Perfumery</a></li>
-          <li><a href="#best-sellers">Bestsellers</a></li>
-          <li><a href="#journal">Journal</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/discover.html">Discover</a></li>
+          <li><a href="/the-house.html">The House</a></li>
+          <li><a href="/gifts.html">Gifts</a></li>
+          <li><a href="/private-access.html">Private Access</a></li>
         </ul>
       </nav>
 
@@ -53,148 +57,222 @@
 
   <main id="main-content">
 
-    <!-- 01 — CINEMATIC HERO -->
-    <section class="hero-wrapper" id="hero">
-      <img src="assets/hero_perfume_bottle.jpg" alt="AGHA Perfume Campaign" class="hero-bg-media">
-      <div class="hero-overlay-gradient"></div>
+    <!-- 01 — AGHA CINEMATIC HERO (scroll-driven fragrance film · sections/agha-hero.liquid) -->
+    <section class="agha-hero is-static" id="agha-hero" data-agha-hero data-mobile-video="false" data-campaign-video="false" style="--agha-hero-desktop-length: 800vh;" aria-label="The scent is the luxury.">
+      <div class="agha-hero__stage">
 
-      <div class="hero-content-layer">
-        <div class="hero-top-bar">
-          <div class="hero-editorial-tag">
-            <span class="editorial-label">AUTUMN / WINTER COLLECTION</span>
-          </div>
-          <div class="tag-pill">EXTRAIT DE PARFUM · 35% CONCENTRATION</div>
+        <!-- SCENE 01–02 · ATMOSPHERE -->
+        <div class="agha-hero__layer agha-hero__layer--atmosphere" aria-hidden="true">
+          <picture>
+            <source media="(max-width: 767px)" type="image/webp" srcset="assets/agha-hero-mobile-atmosphere.webp">
+            <source media="(max-width: 767px)" srcset="assets/agha-hero-mobile-atmosphere.jpg">
+            <source type="image/webp" srcset="assets/agha-hero-atmosphere.webp">
+            <img src="assets/agha-hero-atmosphere.jpg" alt="" width="1376" height="768" fetchpriority="high" decoding="async">
+          </picture>
+          <video muted playsinline loop preload="none" poster="assets/agha-hero-atmosphere.jpg" tabindex="-1"
+            data-src-webm="assets/agha-hero-atmosphere.webm" data-src-mp4="assets/agha-hero-atmosphere.mp4"></video>
         </div>
 
-        <div class="hero-body">
-          <h1 class="headline-hero hero-headline">
-            <span>THE SCENT IS</span>
-            <span>THE LUXURY.</span>
-          </h1>
-          <p class="subheadline text-soft" style="margin-top: 24px; max-width: 520px;">
-            Unapologetic extraits de parfum crafted from rare botanical extracts, aged Cambodian oud, and wild iris. Designed for those who leave an indelible presence.
-          </p>
+        <!-- SCENE 03 · INGREDIENT — oud wood, saffron, black rose -->
+        <div class="agha-hero__layer agha-hero__layer--ingredient">
+          <picture>
+            <source media="(max-width: 767px)" type="image/webp" srcset="assets/agha-hero-mobile-ingredient.webp">
+            <source media="(max-width: 767px)" srcset="assets/agha-hero-mobile-ingredient.jpg">
+            <source type="image/webp" srcset="assets/agha-hero-ingredient.webp">
+            <img src="assets/agha-hero-ingredient.jpg" alt="Saffron threads and a black rose petal on aged agarwood" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+          <video muted playsinline loop preload="none" tabindex="-1" aria-hidden="true"
+            data-src-webm="assets/agha-hero-ingredient.webm" data-src-mp4="assets/agha-hero-ingredient.mp4"></video>
+        </div>
 
-          <div class="hero-actions-group" style="margin-top: 36px; display: flex; gap: 16px; opacity: 0;">
-            <a href="#signature" class="btn-primary">
-              <span>EXPLORE SIGNATURES</span>
-              <span class="btn-arrow">→</span>
+        <!-- SCENE 04 · MATERIAL — wood grain into glass -->
+        <div class="agha-hero__layer agha-hero__layer--material">
+          <picture>
+            <source type="image/webp" srcset="assets/agha-hero-material.webp">
+            <img src="assets/agha-hero-material.jpg" alt="Agarwood grain reflected in the black glass of the Agha bottle" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+          <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+            data-src-webm="assets/agha-hero-material.webm" data-src-mp4="assets/agha-hero-material.mp4"></video>
+        </div>
+
+        <!-- SCENE 04b · BOTTLE SURFACE — the label in macro -->
+        <div class="agha-hero__layer agha-hero__layer--macro">
+          <picture>
+            <source type="image/webp" srcset="assets/agha-hero-bottle-macro.webp">
+            <img src="assets/agha-hero-bottle-macro.jpg" alt="Close-up of the gold AGHA Oud Royal label on black glass" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+          <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+            data-src-webm="assets/agha-hero-bottle-macro.webm" data-src-mp4="assets/agha-hero-bottle-macro.mp4"></video>
+        </div>
+
+        <!-- SCENE 05 · BOTTLE REVEAL -->
+        <div class="agha-hero__layer agha-hero__layer--reveal">
+          <picture>
+            <source media="(max-width: 767px)" type="image/webp" srcset="assets/agha-hero-mobile-bottle.webp">
+            <source media="(max-width: 767px)" srcset="assets/agha-hero-mobile-bottle.jpg">
+            <source type="image/webp" srcset="assets/agha-hero-bottle-reveal.webp">
+            <img src="assets/agha-hero-bottle-reveal.jpg" alt="AGHA Oud Royal Extrait de Parfum bottle on a black stone plinth" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+          <video muted playsinline preload="none" tabindex="-1" aria-hidden="true"
+            data-src-webm="assets/agha-hero-bottle-reveal.webm" data-src-mp4="assets/agha-hero-bottle-reveal.mp4"></video>
+        </div>
+
+        <!-- SCENE 06–07 · CAMPAIGN -->
+        <div class="agha-hero__layer agha-hero__layer--campaign">
+          <picture>
+            <source media="(max-width: 767px)" type="image/webp" srcset="assets/agha-hero-mobile-bottle.webp">
+            <source media="(max-width: 767px)" srcset="assets/agha-hero-mobile-bottle.jpg">
+            <source type="image/webp" srcset="assets/agha-hero-bottle-campaign.webp">
+            <img src="assets/agha-hero-bottle-campaign.jpg" alt="AGHA Oud Royal Extrait de Parfum bottle on a black stone plinth" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+        </div>
+
+        <!-- SCENE 08 · CLOSING — the bridge into THE HOUSE -->
+        <div class="agha-hero__layer agha-hero__layer--closing" aria-hidden="true">
+          <picture>
+            <source type="image/webp" srcset="assets/agha-hero-closing.webp">
+            <img src="assets/agha-hero-closing.jpg" alt="" width="1376" height="768" loading="lazy" decoding="async">
+          </picture>
+          <video muted playsinline preload="none" tabindex="-1"
+            data-src-webm="assets/agha-hero-closing.webm" data-src-mp4="assets/agha-hero-closing.mp4"></video>
+        </div>
+
+        <div class="agha-hero__vignette" aria-hidden="true"></div>
+        <div class="agha-hero__grain" aria-hidden="true"></div>
+        <div class="agha-hero__iris" aria-hidden="true"></div>
+
+        <!-- TYPOGRAPHY -->
+        <div class="agha-hero__copy">
+
+          <div class="agha-hero__block agha-hero__block--philosophy">
+            <span class="agha-hero__label">The house philosophy</span>
+            <p class="agha-hero__philosophy">Made for those who notice.</p>
+          </div>
+
+          <div class="agha-hero__block agha-hero__block--brand">
+            <div class="agha-hero__brand">AGHA</div>
+            <h1 class="agha-hero__headline">
+              <span class="agha-hero__line"><span>THE SCENT IS</span></span>
+              <span class="agha-hero__line"><span>THE LUXURY.</span></span>
+            </h1>
+            <p class="agha-hero__lede">Unapologetic extraits de parfum crafted from rare botanical extracts, aged Cambodian oud, and wild iris. Designed for those who leave an indelible presence.</p>
+          </div>
+
+          <div class="agha-hero__block agha-hero__block--fragrance">
+            <span class="agha-hero__label">No. 01 — Extrait de Parfum</span>
+            <p class="agha-hero__name">Oud Royal</p>
+            <p class="agha-hero__notes"><span>Woody</span><span>Amber</span><span>Spicy</span></p>
+            <p class="agha-hero__meta">35% oil concentration · 14+ hours on skin</p>
+            <p class="agha-hero__description">Aged Cambodian oud, saffron threads and wild black rose, macerated for ninety days.</p>
+          </div>
+
+          <div class="agha-hero__block agha-hero__block--cta">
+            <a class="agha-hero__cta" href="/product.html?p=oud-royal">
+              <span>Discover the fragrance</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
             </a>
-            <a href="#discover" class="btn-secondary">
-              <span>DISCOVER YOUR SCENT</span>
-            </a>
+            <span class="agha-hero__next">Continue into the House</span>
           </div>
+
         </div>
 
-        <div class="hero-footer-bar" style="opacity: 0;">
-          <div class="hero-scroll-indicator">
-            <div class="scroll-line"><div class="scroll-line-fill"></div></div>
-            <span>SCROLL TO ENTER THE HOUSE</span>
-          </div>
-          <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: var(--color-muted);">
-            AGHA PARFUMS · NO. 01–08
-          </div>
+        <!-- CHROME -->
+        <div class="agha-hero__hint" aria-hidden="true">
+          <span class="agha-hero__hint-line"></span>
+          <span>Scroll to enter</span>
         </div>
+        <div class="agha-hero__rail" aria-hidden="true"><span class="agha-hero__rail-fill"></span></div>
+        <div class="agha-hero__scene" aria-hidden="true">01 · Darkness</div>
+
       </div>
     </section>
 
-    <!-- 02 — THE HOUSE -->
-    <section class="section-padding border-top-thin" id="the-house">
+    <!-- 02 — THE HOUSE (DARK ACCENT RHYTHM SECTION) -->
+    <section class="section-padding dark-accent-section" id="the-house">
       <div class="container">
         <div class="grid-asymmetric-left gsap-reveal">
           <div>
             <span class="editorial-label">02 — THE HOUSE MANIFESTO</span>
-            <h2 class="headline-section font-serif" style="margin-top: 16px;">
+            <h2 class="headline-section font-serif" style="margin-top: 16px; color: var(--color-white);">
               LESS MARKETING.<br>
               MORE CONCENTRATION.
             </h2>
-            <p class="text-soft" style="margin-top: 24px; font-size: 1.05rem; line-height: 1.8;">
+            <p class="text-soft" style="margin-top: 24px; font-size: 1.05rem; line-height: 1.8; color: #E7E7E5;">
               AGHA was founded on a simple refusal: to compromise scent integrity for mass production. Where traditional fragrance houses dilute extracts to 12–15% alcohol solutions, we compound our extraits de parfum at an uncompromised 35% oil concentration.
             </p>
-            <p class="text-muted" style="margin-top: 16px; font-size: 0.9rem;">
-              Every formula is macerated for 90 days in temperature-controlled dark chambers, allowing natural botanicals to deepen into complex, atmospheric signatures that evolve over 12+ hours on skin.
+            <p class="text-muted" style="margin-top: 16px; font-size: 0.9rem; color: #9A9A9A;">
+              Every formula is macerated for 90 days in temperature-controlled dark chambers, allowing natural botanicals to deepen into complex, atmospheric signatures that evolve over 14+ hours on skin.
             </p>
 
             <div style="margin-top: 32px;">
-              <a href="#art" class="btn-secondary">
+              <a href="/the-house.html" class="btn-primary" style="background: #FFFFFF; color: #080808; border-color: #FFFFFF;">
                 <span>OUR CRAFT PHILOSOPHY</span>
                 <span class="btn-arrow">→</span>
               </a>
             </div>
           </div>
 
-          <div class="gsap-clip-reveal" style="aspect-ratio: 4/5; overflow: hidden; border: 1px solid var(--color-border);">
+          <div class="gsap-clip-reveal" style="aspect-ratio: 4/5; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
             <img src="assets/hero_perfume_bottle.jpg" alt="Agha Perfumery House" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.1);">
           </div>
         </div>
 
         <!-- Editorial Proof Statistics -->
-        <div class="house-stats-grid gsap-reveal">
+        <div class="house-stats-grid gsap-reveal" style="border-color: rgba(255,255,255,0.15);">
           <div class="stat-item">
-            <span class="stat-number">35%</span>
-            <span class="stat-label">PURE OIL CONCENTRATION</span>
+            <span class="stat-number" style="color: #FFFFFF;">35%</span>
+            <span class="stat-label" style="color: #9A9A9A;">PURE OIL CONCENTRATION</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">12–14</span>
-            <span class="stat-label">HOURS LONGEVITY ON SKIN</span>
+            <span class="stat-number" style="color: #FFFFFF;">14+</span>
+            <span class="stat-label" style="color: #9A9A9A;">HOURS LONGEVITY ON SKIN</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">90 DAYS</span>
-            <span class="stat-label">MACERATION PERIOD</span>
+            <span class="stat-number" style="color: #FFFFFF;">90 DAYS</span>
+            <span class="stat-label" style="color: #9A9A9A;">OBSIDIAN MACERATION</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">0%</span>
-            <span class="stat-label">SYNTHETIC FILLERS</span>
+            <span class="stat-number" style="color: #FFFFFF;">0%</span>
+            <span class="stat-label" style="color: #9A9A9A;">SYNTHETIC FILLERS</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 03 — SIGNATURE FRAGRANCES -->
+    <!-- 03 — SIGNATURE FRAGRANCES (sections/signature-fragrances.liquid) -->
     <section class="section-padding border-top-thin" id="signature">
       <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+        <header class="agha-section-head gsap-reveal">
           <div>
-            <span class="editorial-label">03 — SIGNATURE COLLECTION</span>
-            <h2 class="headline-section font-serif" style="margin-top: 12px;">CULT SIGNATURES</h2>
+            <span class="editorial-label">03 — Signature Collection</span>
+            <h2 class="headline-section font-serif">CULT SIGNATURES</h2>
           </div>
-          <div class="tag-pill">EXTRAIT DE PARFUM SPOTLIGHT</div>
-        </div>
+          <a href="/shop.html" class="agha-link">Explore the collection</a>
+        </header>
 
         <div class="fragrance-spotlight-card gsap-reveal" data-product-id="sig-1" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg">
-          <div class="fragrance-image-col">
-            <img src="assets/bestseller_oud_royal.jpg" alt="Oud Royal Extrait">
-          </div>
+          <a class="fragrance-image-col" href="/product.html?p=oud-royal" aria-label="OUD ROYAL">
+            <img src="assets/bestseller_oud_royal.jpg" alt="Oud Royal Extrait" loading="lazy" width="1200" height="1500">
+          </a>
 
           <div class="fragrance-info-col">
             <div>
-              <span class="editorial-label">SPOTLIGHT FRAGRANCE</span>
-              <h3 class="font-serif" style="font-size: 2.8rem; margin-top: 8px; text-transform: uppercase;">OUD ROYAL</h3>
-              <p class="text-muted" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;">SMOKY · RESINOUS · INDELIBLE</p>
+              <span class="editorial-label">Spotlight fragrance</span>
+              <h3 class="font-serif" style="font-size: clamp(2rem, 4vw, 2.8rem); margin-top: 8px; text-transform: uppercase;">OUD ROYAL</h3>
+              <p class="text-muted" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;">Smoky · Resinous · Indelible</p>
             </div>
 
-            <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7; margin-top: 16px;">
-              An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black rose, and warm tanned leather.
-            </p>
+            <p class="text-soft" style="font-size: 0.95rem; line-height: 1.7; margin-top: 16px;">An imposing, atmospheric composition constructed around wild Cambodian agarwood, cardamoms harvested at dusk, black rose, and warm tanned leather.</p>
 
             <div class="notes-pyramid">
-              <div class="note-row">
-                <span class="note-category">TOP NOTES</span>
-                <span class="note-value">Pink Pepper, Crushed Cardamom, Saffron Threads</span>
-              </div>
-              <div class="note-row">
-                <span class="note-category">HEART NOTES</span>
-                <span class="note-value">Wild Black Rose, Tuscan Iris, Incense Mist</span>
-              </div>
-              <div class="note-row">
-                <span class="note-category">BASE NOTES</span>
-                <span class="note-value">Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather</span>
-              </div>
+              <div class="note-row"><span class="note-category">TOP NOTES</span><span class="note-value">Pink Pepper, Crushed Cardamom, Saffron Threads</span></div>
+              <div class="note-row"><span class="note-category">HEART NOTES</span><span class="note-value">Wild Black Rose, Tuscan Iris, Incense Mist</span></div>
+              <div class="note-row"><span class="note-category">BASE NOTES</span><span class="note-value">Aged Cambodian Oud, Birch Tar, Dark Amber, Sueded Leather</span></div>
             </div>
 
-            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 20px;">
+            <div class="fragrance-buy-row">
               <div>
-                <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">VOLUME & CONCENTRATION</span>
+                <span style="font-size: 0.72rem; color: var(--color-muted); display: block;">VOLUME & PRICE</span>
                 <span style="font-size: 1.1rem; font-weight: 500;">50 ML · ₹14,500</span>
               </div>
               <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL EXTRAIT" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">
@@ -207,16 +285,19 @@
       </div>
     </section>
 
-    <!-- 04 — DISCOVER YOUR SCENT (QUIZ) -->
-    <section class="section-padding border-top-thin" id="discover">
+    <!-- 04 — DISCOVER YOUR SCENT (OFF-WHITE SECONDARY CANVAS) -->
+    <section class="section-padding bg-secondary border-top-thin" id="discover">
       <div class="container">
-        <div style="text-align: center; max-width: 650px; margin: 0 auto var(--space-2xl) auto;" class="gsap-reveal">
-          <span class="editorial-label">04 — INTERACTIVE FINDER</span>
-          <h2 class="headline-section font-serif" style="margin-top: 12px;">DISCOVER YOUR SCENT</h2>
-          <p class="text-muted" style="margin-top: 12px; font-size: 0.9rem;">
-            Answer three olfactory questions to pinpoint the AGHA Extrait de Parfum tailored to your skin chemistry and presence.
-          </p>
-        </div>
+        <header class="agha-section-head gsap-reveal">
+          <div>
+            <span class="editorial-label">04 — INTERACTIVE FINDER</span>
+            <h2 class="headline-section font-serif">DISCOVER YOUR SCENT</h2>
+            <p class="text-muted agha-section-head__intro">
+              Answer three olfactory questions to pinpoint the AGHA Extrait de Parfum tailored to your skin chemistry and presence.
+            </p>
+          </div>
+          <a href="/discover.html" class="agha-link">Discover your scent</a>
+        </header>
 
         <div class="scent-quiz-box gsap-reveal">
           <!-- Step 1 -->
@@ -300,337 +381,160 @@
       </div>
     </section>
 
-    <!-- 05 — THE ART OF PERFUMERY -->
-    <section class="section-padding border-top-thin" id="art">
+    <!-- 05 — THE ART OF PERFUMERY (sections/art-of-perfumery.liquid) -->
+    <section class="agha-art section-padding border-top-thin" id="art">
       <div class="container">
-        <div style="margin-bottom: var(--space-2xl);" class="gsap-reveal">
-          <span class="editorial-label">05 — CRAFT & ORIGIN</span>
-          <h2 class="headline-section font-serif" style="margin-top: 12px;">THE ART OF PERFUMERY</h2>
-        </div>
-
-        <div class="art-steps-grid gsap-reveal">
-          <div class="art-step-card">
-            <span class="art-step-num">01</span>
-            <h3 class="font-serif" style="font-size: 1.5rem;">BOTANICAL EXTRACTION</h3>
-            <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-              We harvest rare flowers and resins at peak potency—wild iris from Florence, pink pepper from Madagascar, and wild agarwood from Assam. Cold-pressed to retain fragile olfactory notes.
-            </p>
-          </div>
-
-          <div class="art-step-card">
-            <span class="art-step-num">02</span>
-            <h3 class="font-serif" style="font-size: 1.5rem;">90-DAY MACERATION</h3>
-            <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-              Unpolished raw extraits age in dark obsidian vessels for 90 days. This controlled maturation allows top, heart, and base notes to fuse into a seamless sensory composition.
-            </p>
-          </div>
-
-          <div class="art-step-card">
-            <span class="art-step-num">03</span>
-            <h3 class="font-serif" style="font-size: 1.5rem;">FLACON ARTISANSHIP</h3>
-            <p class="text-soft" style="font-size: 0.88rem; line-height: 1.7;">
-              Each heavy-glass bottle is hand-polished, individually numbered, and capped with solid magnetic obsidian glass to protect the living elixir within from UV degradation.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 06 — BEST SELLERS -->
-    <section class="section-padding border-top-thin" id="best-sellers">
-      <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+        <header class="agha-section-head gsap-reveal">
           <div>
-            <span class="editorial-label">06 — CURATED SELECTION</span>
-            <h2 class="headline-section font-serif" style="margin-top: 12px;">BESTSELLERS</h2>
+            <span class="editorial-label">05 — CRAFT & ORIGIN</span>
+            <h2 class="headline-section font-serif">THE ART OF PERFUMERY</h2>
           </div>
-          <a href="#signature" class="btn-secondary">VIEW ALL FRAGRANCES →</a>
-        </div>
+        </header>
 
-        <div class="grid-4 gsap-reveal">
-          <!-- Product 1 -->
-          <div class="product-card" data-product-id="p1" data-title="OUD ROYAL" data-price="₹14,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-description="A resinous composition built around aged Cambodian oud, pink pepper, black rose, and dark leather.">
-            <div class="product-card-media">
-              <img src="assets/bestseller_oud_royal.jpg" alt="Oud Royal">
-              <div class="product-card-quick-add">
-                <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-              </div>
-            </div>
-            <div class="product-card-body">
-              <div>
-                <span class="product-meta">EXTRAIT DE PARFUM</span>
-                <h3 class="product-title">OUD ROYAL</h3>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                <span class="product-price">₹14,500</span>
-                <button class="btn-secondary js-add-to-cart" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-              </div>
-            </div>
-          </div>
+        <div class="agha-art__grid">
+          <figure class="agha-art__media gsap-clip-reveal">
+            <picture>
+              <source media="(max-width: 767px)" srcset="assets/agha-hero-mobile-ingredient.webp" type="image/webp">
+              <source srcset="assets/agha-hero-ingredient.webp" type="image/webp">
+              <img src="assets/agha-hero-ingredient.jpg" alt="Saffron threads and a black rose petal on aged agarwood" loading="lazy" width="1376" height="768">
+            </picture>
+          </figure>
 
-          <!-- Product 2 -->
-          <div class="product-card" data-product-id="p2" data-title="VELVET IRIS" data-price="₹13,200" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-description="An ethereal suede iris fused with white amber and Florentine violet leaves.">
-            <div class="product-card-media">
-              <img src="assets/hero_perfume_bottle.jpg" alt="Velvet Iris" style="filter: grayscale(80%);">
-              <div class="product-card-quick-add">
-                <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-              </div>
-            </div>
-            <div class="product-card-body">
+          <ol class="agha-art__steps gsap-reveal">
+            <li class="agha-art__step">
+              <span class="art-step-num">01</span>
               <div>
-                <span class="product-meta">EXTRAIT DE PARFUM</span>
-                <h3 class="product-title">VELVET IRIS</h3>
+                <h3 class="font-serif">BOTANICAL EXTRACTION</h3>
+                <p class="text-soft">We harvest rare flowers and resins at peak potency—wild iris from Florence, pink pepper from Madagascar, and wild agarwood from Assam. Cold-pressed to retain fragile olfactory notes.</p>
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                <span class="product-price">₹13,200</span>
-                <button class="btn-secondary js-add-to-cart" data-title="VELVET IRIS" data-price="₹13,200" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 3 -->
-          <div class="product-card" data-product-id="p3" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/bestseller_oud_royal.jpg" data-description="Australian sandalwood, smoked papyrus, and bourbon vanilla extract.">
-            <div class="product-card-media">
-              <img src="assets/bestseller_oud_royal.jpg" alt="Santal Nocturne" style="filter: contrast(1.2);">
-              <div class="product-card-quick-add">
-                <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-              </div>
-            </div>
-            <div class="product-card-body">
+            </li>
+            <li class="agha-art__step">
+              <span class="art-step-num">02</span>
               <div>
-                <span class="product-meta">EXTRAIT DE PARFUM</span>
-                <h3 class="product-title">SANTAL NOCTURNE</h3>
+                <h3 class="font-serif">90-DAY MACERATION</h3>
+                <p class="text-soft">Unpolished raw extraits age in dark obsidian vessels for 90 days. This controlled maturation allows top, heart, and base notes to fuse into a seamless sensory composition.</p>
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                <span class="product-price">₹15,000</span>
-                <button class="btn-secondary js-add-to-cart" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-image="assets/bestseller_oud_royal.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product 4 -->
-          <div class="product-card" data-product-id="p4" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-meta="50 ML · EXTRAIT DE PARFUM" data-image="assets/hero_perfume_bottle.jpg" data-description="Golden Baltic resin, benzoin tear drops, and crushed Madagascar clove.">
-            <div class="product-card-media">
-              <img src="assets/hero_perfume_bottle.jpg" alt="Amber Absolute">
-              <div class="product-card-quick-add">
-                <button class="btn-primary js-quick-view" style="padding: 10px 20px; font-size: 0.65rem;">QUICK VIEW</button>
-              </div>
-            </div>
-            <div class="product-card-body">
+            </li>
+            <li class="agha-art__step">
+              <span class="art-step-num">03</span>
               <div>
-                <span class="product-meta">EXTRAIT DE PARFUM</span>
-                <h3 class="product-title">AMBER ABSOLUTE</h3>
+                <h3 class="font-serif">FLACON ARTISANSHIP</h3>
+                <p class="text-soft">Each heavy-glass bottle is hand-polished, individually numbered, and capped with solid magnetic obsidian glass to protect the living elixir within from UV degradation.</p>
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                <span class="product-price">₹16,500</span>
-                <button class="btn-secondary js-add-to-cart" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-image="assets/hero_perfume_bottle.jpg" style="padding: 8px 14px; font-size: 0.65rem;">+ BAG</button>
-              </div>
-            </div>
-          </div>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
 
-    <!-- 07 — WATCH OUR REELS -->
-    <section class="section-padding border-top-thin" id="reels">
+    <!-- 06 — THE COLLECTION (sections/agha-collection.liquid · best sellers + discovery collection) -->
+    <section class="agha-collection section-padding border-top-thin" id="collection" aria-labelledby="collection-title">
       <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+        <header class="agha-section-head gsap-reveal">
           <div>
-            <span class="editorial-label">07 — CINEMATIC REELS</span>
-            <h2 class="headline-section font-serif" style="margin-top: 12px;">WATCH OUR REELS</h2>
+            <span class="editorial-label">06 — The Collection</span>
+            <h2 class="headline-section font-serif" id="collection-title">THE COLLECTION</h2>
           </div>
-          <div class="tag-pill">MOTION CINEMA</div>
-        </div>
+          <a href="/shop.html" class="agha-link">Explore all fragrances</a>
+        </header>
 
-        <div class="reels-scroll-container gsap-reveal">
-          <!-- Reel 1 -->
-          <div class="reel-card js-quick-view">
-            <img src="assets/hero_perfume_bottle.jpg" alt="Reel 1 Campaign">
-            <div class="reel-play-icon">▶</div>
-            <div class="reel-caption">
-              <span class="editorial-label">FILM 01</span>
-              <h4 class="font-serif" style="font-size: 1.1rem; color: var(--color-white);">THE COMPOUNDING RITUAL</h4>
-            </div>
-          </div>
-
-          <!-- Reel 2 -->
-          <div class="reel-card js-quick-view">
-            <img src="assets/bestseller_oud_royal.jpg" alt="Reel 2 Campaign">
-            <div class="reel-play-icon">▶</div>
-            <div class="reel-caption">
-              <span class="editorial-label">FILM 02</span>
-              <h4 class="font-serif" style="font-size: 1.1rem; color: var(--color-white);">BOTANICAL MACERATION</h4>
-            </div>
-          </div>
-
-          <!-- Reel 3 -->
-          <div class="reel-card js-quick-view">
-            <img src="assets/discovery_box.jpg" alt="Reel 3 Campaign">
-            <div class="reel-play-icon">▶</div>
-            <div class="reel-caption">
-              <span class="editorial-label">FILM 03</span>
-              <h4 class="font-serif" style="font-size: 1.1rem; color: var(--color-white);">UNBOXING THE DISCOVERY SET</h4>
-            </div>
-          </div>
-
-          <!-- Reel 4 -->
-          <div class="reel-card js-quick-view">
-            <img src="assets/hero_perfume_bottle.jpg" alt="Reel 4 Campaign" style="filter: grayscale(100%);">
-            <div class="reel-play-icon">▶</div>
-            <div class="reel-caption">
-              <span class="editorial-label">FILM 04</span>
-              <h4 class="font-serif" style="font-size: 1.1rem; color: var(--color-white);">THE NOCTURNAL SILHOUETTE</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 08 — DISCOVERY COLLECTION -->
-    <section class="section-padding border-top-thin" id="discovery">
-      <div class="container">
-        <div class="discovery-card-box gsap-reveal" data-product-id="disc-set" data-title="THE DISCOVERY COLLECTION" data-price="₹4,500" data-image="assets/discovery_box.jpg">
-          <div style="aspect-ratio: 4/3; overflow: hidden; border-right: 1px solid var(--color-border);">
-            <img src="assets/discovery_box.jpg" alt="AGHA Discovery Collection" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-
-          <div style="padding: var(--space-2xl); display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <span class="editorial-label">08 — SAMPLER EXPERIENCE</span>
-              <h2 class="font-serif" style="font-size: 2.5rem; margin-top: 12px; text-transform: uppercase;">THE DISCOVERY COLLECTION</h2>
-              <p class="text-soft" style="margin-top: 16px; font-size: 0.95rem; line-height: 1.7;">
-                Experience five of our iconic extraits de parfum (5 x 5ml) before committing to a full-size flacon. Encased in a matte black hardboard gift box lined with crushed velvet.
-              </p>
-              <ul style="list-style: none; margin-top: 20px; font-size: 0.85rem; color: var(--color-muted); display: flex; flex-direction: column; gap: 8px;">
-                <li>✓ Includes 5 x 5ml spray atomizers (Oud Royal, Velvet Iris, Santal Nocturne, Amber Absolute, Rose Noir)</li>
-                <li>✓ Includes a ₹4,500 complimentary voucher toward your full 50ml flacon</li>
-                <li>✓ Complimentary bespoke gift wrap & concierge delivery</li>
-              </ul>
-            </div>
-
-            <div style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: 20px;">
-              <div>
-                <span style="font-size: 0.7rem; color: var(--color-muted); text-transform: uppercase;">SPECIAL EDITION</span>
-                <span style="font-size: 1.3rem; font-weight: 500; display: block; font-family: var(--font-serif);">₹4,500</span>
+        <div class="agha-collection__bestsellers" id="best-sellers">
+          <span class="agha-collection__sublabel gsap-reveal">Best sellers</span>
+          <div class="agha-collection__grid gsap-reveal">
+            <article class="agha-card" data-product-id="oud-royal" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg">
+              <a href="/product.html?p=oud-royal" class="agha-card__media" aria-label="OUD ROYAL"><img src="assets/bestseller_oud_royal.jpg" alt="OUD ROYAL" loading="lazy" width="900" height="1200"></a>
+              <div class="agha-card__body">
+                <span class="agha-card__meta">Smoky · Resinous · Indelible</span>
+                <h3 class="agha-card__title"><a href="/product.html?p=oud-royal">OUD ROYAL</a></h3>
+                <div class="agha-card__row"><span class="agha-card__price">₹14,500</span><button type="button" class="agha-card__action js-add-to-cart" data-title="OUD ROYAL" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">Add to bag</button></div>
               </div>
+            </article>
+            <article class="agha-card" data-product-id="velvet-iris" data-title="VELVET IRIS" data-price="₹13,200" data-image="assets/hero_perfume_bottle.jpg">
+              <a href="/product.html?p=velvet-iris" class="agha-card__media" aria-label="VELVET IRIS"><img src="assets/hero_perfume_bottle.jpg" alt="VELVET IRIS" loading="lazy" width="900" height="1200"></a>
+              <div class="agha-card__body">
+                <span class="agha-card__meta">Powdery · Luminous · Soft</span>
+                <h3 class="agha-card__title"><a href="/product.html?p=velvet-iris">VELVET IRIS</a></h3>
+                <div class="agha-card__row"><span class="agha-card__price">₹13,200</span><button type="button" class="agha-card__action js-add-to-cart" data-title="VELVET IRIS" data-price="₹13,200" data-image="assets/hero_perfume_bottle.jpg" data-size="50 ML">Add to bag</button></div>
+              </div>
+            </article>
+            <article class="agha-card" data-product-id="santal-nocturne" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-image="assets/bestseller_oud_royal.jpg">
+              <a href="/product.html?p=santal-nocturne" class="agha-card__media" aria-label="SANTAL NOCTURNE"><img src="assets/bestseller_oud_royal.jpg" alt="SANTAL NOCTURNE" loading="lazy" width="900" height="1200"></a>
+              <div class="agha-card__body">
+                <span class="agha-card__meta">Creamy · Smoked · Close</span>
+                <h3 class="agha-card__title"><a href="/product.html?p=santal-nocturne">SANTAL NOCTURNE</a></h3>
+                <div class="agha-card__row"><span class="agha-card__price">₹15,000</span><button type="button" class="agha-card__action js-add-to-cart" data-title="SANTAL NOCTURNE" data-price="₹15,000" data-image="assets/bestseller_oud_royal.jpg" data-size="50 ML">Add to bag</button></div>
+              </div>
+            </article>
+            <article class="agha-card" data-product-id="amber-absolute" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-image="assets/hero_perfume_bottle.jpg">
+              <a href="/product.html?p=amber-absolute" class="agha-card__media" aria-label="AMBER ABSOLUTE"><img src="assets/hero_perfume_bottle.jpg" alt="AMBER ABSOLUTE" loading="lazy" width="900" height="1200"></a>
+              <div class="agha-card__body">
+                <span class="agha-card__meta">Golden · Resinous · Warm</span>
+                <h3 class="agha-card__title"><a href="/product.html?p=amber-absolute">AMBER ABSOLUTE</a></h3>
+                <div class="agha-card__row"><span class="agha-card__price">₹16,500</span><button type="button" class="agha-card__action js-add-to-cart" data-title="AMBER ABSOLUTE" data-price="₹16,500" data-image="assets/hero_perfume_bottle.jpg" data-size="50 ML">Add to bag</button></div>
+              </div>
+            </article>
+          </div>
+        </div>
 
-              <button class="btn-primary js-add-to-cart" data-title="THE DISCOVERY COLLECTION (5X5ML)" data-price="₹4,500" data-image="assets/discovery_box.jpg" data-size="5 X 5ML">
-                <span>CLAIM DISCOVERY SET</span>
-                <span class="btn-arrow">→</span>
-              </button>
+        <div class="agha-discovery gsap-reveal" id="discovery">
+          <a href="/discover.html" class="agha-discovery__media" tabindex="-1" aria-hidden="true">
+            <img src="assets/discovery_box.jpg" alt="The Discovery Collection" loading="lazy" width="1200" height="900">
+          </a>
+          <div class="agha-discovery__body">
+            <span class="editorial-label">Discover the House</span>
+            <h3 class="agha-discovery__title font-serif">The Discovery Collection</h3>
+            <div class="agha-discovery__text"><p>Five of our extraits de parfum in 5 ml atomisers, to wear before choosing a full flacon.</p></div>
+            <div class="agha-discovery__actions">
+              <span class="agha-discovery__price">₹4,500</span>
+              <button type="button" class="btn-primary js-add-to-cart" data-title="THE DISCOVERY COLLECTION (5X5ML)" data-price="₹4,500" data-image="assets/discovery_box.jpg" data-size="5 X 5ML"><span>Explore the set</span><span class="btn-arrow">→</span></button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 09 — CUSTOMER STORIES -->
-    <section class="section-padding border-top-thin" id="stories">
+    <!-- 07 — THE WORLD OF AGHA (sections/agha-world.liquid · reels + customer stories) -->
+    <section class="agha-world section-padding border-top-thin" id="world" data-agha-world aria-labelledby="world-title">
       <div class="container">
-        <div style="text-align: center; margin-bottom: var(--space-xl);" class="gsap-reveal">
-          <span class="editorial-label">09 — PRESS & PATRON STORIES</span>
-          <h2 class="headline-section font-serif" style="margin-top: 12px;">CRITICAL ACCOLADES</h2>
-        </div>
-
-        <div class="press-quote-box gsap-reveal">
-          <p class="quote-serif">
-            “AGHA has accomplished what few modern fragrance houses dare: creating extraits de parfum so concentrated and atmospheric that a single spray stays woven into wool and cashmere for days.”
-          </p>
-          <div class="quote-author">VOGUE INTERNATIONAL · OLFACTORY EDIT</div>
-
-          <div style="display: flex; justify-content: center; gap: 40px; margin-top: var(--space-2xl); border-top: 1px solid var(--color-border); padding-top: var(--space-xl);" class="gsap-reveal">
-            <div style="text-align: center;">
-              <h4 class="font-serif" style="font-size: 1.2rem; color: var(--color-white);">HARPER’S BAZAAR</h4>
-              <p class="text-muted" style="font-size: 0.72rem; margin-top: 4px;">"The new dark icon of niche perfumery."</p>
-            </div>
-            <div style="text-align: center;">
-              <h4 class="font-serif" style="font-size: 1.2rem; color: var(--color-white);">GQ MAGAZINE</h4>
-              <p class="text-muted" style="font-size: 0.72rem; margin-top: 4px;">"Best nocturnal scent signature of 2026."</p>
-            </div>
-            <div style="text-align: center;">
-              <h4 class="font-serif" style="font-size: 1.2rem; color: var(--color-white);">ELLE LUXURY</h4>
-              <p class="text-muted" style="font-size: 0.72rem; margin-top: 4px;">"Restraint meets unadulterated luxury."</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10 — JOURNAL -->
-    <section class="section-padding border-top-thin" id="journal">
-      <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-xl);" class="gsap-reveal">
+        <header class="agha-section-head gsap-reveal">
           <div>
-            <span class="editorial-label">10 — THE JOURNAL</span>
-            <h2 class="headline-section font-serif" style="margin-top: 12px;">OLFACTORY CHRONICLES</h2>
+            <span class="editorial-label">07 — The World of Agha</span>
+            <h2 class="headline-section font-serif" id="world-title">THE WORLD OF AGHA</h2>
           </div>
-          <a href="#" class="btn-secondary">READ ALL ARTICLES →</a>
+          <p class="agha-world__intro">Films from the house, and what has been said about it.</p>
+        </header>
+
+        <div class="agha-world__reels gsap-reveal" id="reels">
+          <figure class="agha-reel agha-reel--feature">
+            <div class="agha-reel__frame">
+              <video class="agha-reel__video" muted loop playsinline preload="none" data-agha-reel poster="assets/agha-hero-bottle-reveal.jpg" data-src="assets/agha-hero-bottle-reveal.mp4"></video>
+            </div>
+            <figcaption class="agha-reel__caption"><span>Film 01</span>Oud Royal, revealed</figcaption>
+          </figure>
+          <figure class="agha-reel">
+            <div class="agha-reel__frame">
+              <video class="agha-reel__video" muted loop playsinline preload="none" data-agha-reel poster="assets/agha-hero-ingredient.jpg" data-src="assets/agha-hero-ingredient.mp4"></video>
+            </div>
+            <figcaption class="agha-reel__caption"><span>Film 02</span>Saffron, black rose, agarwood</figcaption>
+          </figure>
+          <figure class="agha-reel">
+            <div class="agha-reel__frame">
+              <video class="agha-reel__video" muted loop playsinline preload="none" data-agha-reel poster="assets/agha-hero-bottle-macro.jpg" data-src="assets/agha-hero-bottle-macro.mp4"></video>
+            </div>
+            <figcaption class="agha-reel__caption"><span>Film 03</span>The label, up close</figcaption>
+          </figure>
         </div>
 
-        <div class="grid-3 gsap-reveal">
-          <article class="journal-card">
-            <div class="journal-card-image">
-              <img src="assets/hero_perfume_bottle.jpg" alt="Journal 1">
-            </div>
-            <div>
-              <span class="editorial-label">ESSAY · ISSUE 04</span>
-              <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 8px;">THE ARCHITECTURE OF WEARING SCENT IN WINTER</h3>
-              <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px; line-height: 1.6;">
-                Why heavy molecular resins react to cold air currents and wool fibers differently than lightweight summer florals.
-              </p>
-            </div>
-          </article>
-
-          <article class="journal-card">
-            <div class="journal-card-image">
-              <img src="assets/bestseller_oud_royal.jpg" alt="Journal 2">
-            </div>
-            <div>
-              <span class="editorial-label">MASTERCLASS · ISSUE 03</span>
-              <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 8px;">THE BOTANICAL PROVENANCE OF ASSAM OUD</h3>
-              <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px; line-height: 1.6;">
-                Inside the sustainable agro-forestry reserves of Assam where 50-year-old Aquilaria trees produce rare agarwood resin.
-              </p>
-            </div>
-          </article>
-
-          <article class="journal-card">
-            <div class="journal-card-image">
-              <img src="assets/discovery_box.jpg" alt="Journal 3">
-            </div>
-            <div>
-              <span class="editorial-label">INTERVIEW · ISSUE 02</span>
-              <h3 class="font-serif" style="font-size: 1.4rem; margin-top: 8px;">THE ART OF MACERATION: A DIALOGUE WITH OUR MASTER NOSE</h3>
-              <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px; line-height: 1.6;">
-                Exploring why resting raw fragrance compounds in cold dark rooms for 90 days unlocks sensory depth.
-              </p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11 — PRIVATE ACCESS -->
-    <section class="section-padding border-top-thin" id="private-access">
-      <div class="container">
-        <div class="private-access-box gsap-reveal">
-          <span class="editorial-label">11 — PRIVATE VAULT ACCESS</span>
-          <h2 class="font-serif" style="font-size: clamp(2.2rem, 4vw, 3.5rem); margin-top: 12px; text-transform: uppercase;">ENTER THE AGHA PRIVATE VAULT</h2>
-          <p class="text-soft" style="max-width: 580px; margin: 16px auto 0 auto; font-size: 0.95rem; line-height: 1.7;">
-            Receive private invitations to limited batch reserve compounding, bespoke engraving events, and unlisted extrait releases.
-          </p>
-
-          <form class="newsletter-form" onsubmit="event.preventDefault(); AghaStore.showToast('Your private access key has been requested.');">
-            <input type="email" placeholder="ENTER YOUR EMAIL ADDRESS" class="newsletter-input" required>
-            <button type="submit" class="btn-primary" style="white-space: nowrap;">
-              <span>REQUEST ACCESS</span>
-              <span class="btn-arrow">→</span>
-            </button>
-          </form>
-
-          <div style="margin-top: 24px; font-size: 0.7rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.2em;">
-            STRICT PRIVACY GUARANTEED · NO SPAM · UNSUBSCRIBE ANYTIME
-          </div>
+        <div class="agha-world__stories" id="stories">
+          <blockquote class="agha-story agha-story--lead gsap-reveal">
+            <p class="agha-story__quote font-serif">“AGHA has accomplished what few modern fragrance houses dare: creating extraits de parfum so concentrated and atmospheric that a single spray stays woven into wool and cashmere for days.”</p>
+            <cite class="agha-story__cite">Vogue International · Olfactory Edit</cite>
+          </blockquote>
+          <ul class="agha-world__more gsap-reveal">
+            <li class="agha-story"><cite class="agha-story__name font-serif">Harper’s Bazaar</cite><p class="agha-story__line">“The new dark icon of niche perfumery.”</p></li>
+            <li class="agha-story"><cite class="agha-story__name font-serif">GQ Magazine</cite><p class="agha-story__line">“Best nocturnal scent signature of 2026.”</p></li>
+            <li class="agha-story"><cite class="agha-story__name font-serif">Elle Luxury</cite><p class="agha-story__line">“Restraint meets unadulterated luxury.”</p></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -642,40 +546,40 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
-          <a href="#" class="header-brand" style="display: inline-block; margin-bottom: 16px;">AGHA</a>
-          <p class="text-soft" style="max-width: 320px; font-size: 0.85rem; margin-bottom: 24px;">
+          <a href="/" class="header-brand" style="display: inline-block; margin-bottom: 16px; color: #FFFFFF;">AGHA</a>
+          <p class="text-soft" style="max-width: 320px; font-size: 0.85rem; margin-bottom: 24px; color: #E7E7E5;">
             A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
           </p>
-          <div class="tag-pill">PARIS · LONDON · MUMBAI</div>
+          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
         </div>
 
         <div class="footer-col">
           <h5>COLLECTIONS</h5>
           <ul class="footer-links">
-            <li><a href="#signature">Extraits De Parfum</a></li>
-            <li><a href="#best-sellers">Bestseller Signatures</a></li>
-            <li><a href="#discovery">Discovery Sampler Box</a></li>
-            <li><a href="#private-access">Bespoke Private Vault</a></li>
+            <li><a href="/shop.html">Shop All Formulations</a></li>
+            <li><a href="/product.html?p=oud-royal">Spotlight: Oud Royal</a></li>
+            <li><a href="/discover.html">Discovery Set Sampler</a></li>
+            <li><a href="/private-access.html">Private Vault Drops</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h5>THE HOUSE</h5>
           <ul class="footer-links">
-            <li><a href="#the-house">Our Manifesto</a></li>
-            <li><a href="#art">Artisanal Extraction</a></li>
-            <li><a href="#journal">Olfactory Masterclasses</a></li>
-            <li><a href="#stories">Press & Accolades</a></li>
+            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
+            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
+            <li><a href="/gifts.html">Bespoke Concierge</a></li>
+            <li><a href="/private-access.html">Private Member Access</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h5>CLIENT CARE</h5>
           <ul class="footer-links">
-            <li><a href="#">Complimentary Shipping</a></li>
-            <li><a href="#">Bespoke Engraving</a></li>
-            <li><a href="#">Concierge Advisory</a></li>
-            <li><a href="#">Store Locator</a></li>
+            <li><a href="/contact.html">Concierge Advisory</a></li>
+            <li><a href="/faq.html">Frequently Asked Questions</a></li>
+            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
+            <li><a href="/contact.html">Store Locator</a></li>
           </ul>
         </div>
       </div>
@@ -694,7 +598,7 @@
     <div class="cart-drawer-header">
       <span class="editorial-label">YOUR SELECTION</span>
       <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
-      <button class="js-cart-close" style="background: none; border: none; color: var(--color-white); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
     </div>
 
     <div class="cart-drawer-body">
@@ -705,11 +609,11 @@
       <div style="border-top: 1px solid var(--color-border); padding-top: 16px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--color-muted); margin-bottom: 6px;">
           <span>COMPLIMENTARY SHIPPING</span>
-          <span style="color: var(--color-white);">ELIGIBLE</span>
+          <span style="color: var(--color-black);">ELIGIBLE</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-family: var(--font-serif);">
           <span>ESTIMATED TOTAL</span>
-          <span class="cart-total-price">₹14,500</span>
+          <span class="cart-total-price">₹0</span>
         </div>
       </div>
 
@@ -727,7 +631,7 @@
     <button class="modal-close-btn js-modal-close">&times;</button>
 
     <div class="grid-2" style="align-items: center;">
-      <div style="aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border); background-color: var(--color-black);">
+      <div style="aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--color-border); background-color: var(--color-bg-secondary);">
         <img src="assets/bestseller_oud_royal.jpg" alt="Fragrance Quick View" class="qv-image" style="width: 100%; height: 100%; object-fit: cover;">
       </div>
 

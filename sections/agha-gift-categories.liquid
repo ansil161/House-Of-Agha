@@ -1,0 +1,85 @@
+{% comment %}
+  AGHA GIFT CATEGORIES SECTION
+{% endcomment %}
+
+<section class="section-padding border-bottom-thin" id="gift-curation">
+  <div class="container">
+    <div style="margin-bottom: var(--space-2xl);" class="gsap-reveal">
+      <span class="editorial-label">02 — GIFT CURATION</span>
+      <h2 class="headline-section font-serif" style="margin-top: 12px;">CURATED GIFT EDITIONS</h2>
+    </div>
+
+    <div class="grid-4 gsap-reveal">
+      <!-- Category 1 -->
+      <div style="border: 1px solid var(--color-border); padding: var(--space-lg); background: var(--color-near-black); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="aspect-ratio: 1; overflow: hidden; border: 1px solid var(--color-border); margin-bottom: 20px;">
+            <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="Discovery Sampler Box" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span class="editorial-label">THE SAMPLER</span>
+          <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 6px;">DISCOVERY SET</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">5 x 5ml extraits in velvet-lined box + full bottle voucher.</p>
+        </div>
+        <div style="margin-top: 20px;">
+          <span style="font-size: 1.1rem; font-weight: 500; display: block; margin-bottom: 10px;">₹4,500</span>
+          <button class="btn-primary js-add-to-cart" data-title="DISCOVERY SAMPLER SET" data-price="₹4,500" data-image="assets/discovery_box.jpg" style="width: 100%; justify-content: center; font-size: 0.65rem;">ADD GIFT TO BAG</button>
+        </div>
+      </div>
+
+      <!-- Category 2 -->
+      <div style="border: 1px solid var(--color-border); padding: var(--space-lg); background: var(--color-near-black); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="aspect-ratio: 1; overflow: hidden; border: 1px solid var(--color-border); margin-bottom: 20px;">
+            <img src="{{ 'bestseller_oud_royal.jpg' | asset_url }}" alt="Full Flacon Gift" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span class="editorial-label">BESPOKE FLACON</span>
+          <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 6px;">OUD ROYAL 50ML</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">Full signature flacon + complimentary engraved initials.</p>
+        </div>
+        <div style="margin-top: 20px;">
+          <span style="font-size: 1.1rem; font-weight: 500; display: block; margin-bottom: 10px;">₹14,500</span>
+          <button class="btn-primary js-add-to-cart" data-title="OUD ROYAL GIFT EDITION" data-price="₹14,500" data-image="assets/bestseller_oud_royal.jpg" style="width: 100%; justify-content: center; font-size: 0.65rem;">ADD GIFT TO BAG</button>
+        </div>
+      </div>
+
+      <!-- Category 3 -->
+      <div style="border: 1px solid var(--color-border); padding: var(--space-lg); background: var(--color-near-black); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="aspect-ratio: 1; overflow: hidden; border: 1px solid var(--color-border); margin-bottom: 20px;">
+            <img src="{{ 'hero_perfume_bottle.jpg' | asset_url }}" alt="Duo Collection" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);">
+          </div>
+          <span class="editorial-label">DUO EDITION</span>
+          <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 6px;">NOCTURNAL DUO</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">2 x 50ml flacons (Oud Royal + Velvet Iris) in dual vault case.</p>
+        </div>
+        <div style="margin-top: 20px;">
+          <span style="font-size: 1.1rem; font-weight: 500; display: block; margin-bottom: 10px;">₹26,000</span>
+          <button class="btn-primary js-add-to-cart" data-title="NOCTURNAL DUO GIFT BOX" data-price="₹26,000" data-image="assets/hero_perfume_bottle.jpg" style="width: 100%; justify-content: center; font-size: 0.65rem;">ADD GIFT TO BAG</button>
+        </div>
+      </div>
+
+      <!-- Category 4 -->
+      <div style="border: 1px solid var(--color-border); padding: var(--space-lg); background: var(--color-near-black); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="aspect-ratio: 1; overflow: hidden; border: 1px solid var(--color-border); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #111;">
+            <div style="font-family: var(--font-serif); font-size: 2.2rem; letter-spacing: 0.1em; color: var(--color-white);">AGHA</div>
+          </div>
+          <span class="editorial-label">DIGITAL VOUCHER</span>
+          <h3 class="font-serif" style="font-size: 1.6rem; margin-top: 6px;">PRIVATE GIFT CARD</h3>
+          <p class="text-muted" style="font-size: 0.85rem; margin-top: 8px;">Instant digital voucher sent with private access key.</p>
+        </div>
+        <div style="margin-top: 20px;">
+          <span style="font-size: 1.1rem; font-weight: 500; display: block; margin-bottom: 10px;">FROM ₹5,000</span>
+          <button class="btn-secondary" onclick="AghaStore.showToast('Select voucher amount in checkout');" style="width: 100%; justify-content: center; font-size: 0.65rem;">SELECT VOUCHER</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Agha Gift Categories",
+  "settings": []
+}
+{% endschema %}
