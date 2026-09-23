@@ -22,8 +22,6 @@
     </a>
 
     <ul class="hoa-header__nav hoa-header__nav--right">
-      <li class="hoa-header__hide-sm"><a href="/pages/discover">Discover</a></li>
-      <li class="hoa-header__hide-sm"><a href="/pages/gifts">Gifts</a></li>
       {%- if shop.customer_accounts_enabled -%}
         <li class="hoa-header__hide-sm"><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"{% if template.directory == 'customers' %} aria-current="page"{% endif %}>Account</a></li>
       {%- endif -%}
@@ -41,12 +39,10 @@
   <ul class="hoa-menu__links">
     <li><a href="{{ routes.all_products_collection_url }}"><span>01</span>Shop <em>all</em></a></li>
     <li><a href="{{ routes.root_url }}#fragrances"><span>02</span>Fragrances</a></li>
-    <li><a href="/pages/discover"><span>03</span>Discover <em>your scent</em></a></li>
-    <li><a href="/pages/the-house"><span>04</span>The House</a></li>
-    <li><a href="/pages/gifts"><span>05</span>Gifts</a></li>
-    <li><a href="/pages/private-access"><span>06</span>Private Access</a></li>
+    <li><a href="/pages/the-house"><span>03</span>The House</a></li>
+    <li><a href="/pages/private-access"><span>04</span>Private Access</a></li>
     {%- if shop.customer_accounts_enabled -%}
-      <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>07</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
+      <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>05</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
     {%- endif -%}
   </ul>
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>

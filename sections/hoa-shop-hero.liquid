@@ -1,7 +1,7 @@
 {% comment %}
   SHOP · Page head
   Product-first: a compact head instead of a hero. Title with the live fragrance count
-  on the left, one line of copy and two quiet shortcuts (finder, gifts) on the right.
+  on the left, one line of copy and up to two optional text links on the right.
   The catalogue starts directly below, inside the first screen.
   The count is filled in by hoa-shop.js from the catalogue.
 {% endcomment %}
@@ -15,14 +15,16 @@
     </div>
     <div class="hoa-shop-head__side">
       {%- if s.text != blank -%}<p class="hoa-shop-head__text">{{ s.text }}</p>{%- endif -%}
+      {%- if s.link_1_label != blank or s.link_2_label != blank -%}
       <ul class="hoa-shop-head__links">
         {%- if s.link_1_label != blank -%}
-          <li><a href="{{ s.link_1_url | default: '/pages/discover' }}">{{ s.link_1_label }}<span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="{{ s.link_1_url | default: routes.all_products_collection_url }}">{{ s.link_1_label }}<span aria-hidden="true">&rarr;</span></a></li>
         {%- endif -%}
         {%- if s.link_2_label != blank -%}
-          <li><a href="{{ s.link_2_url | default: '/pages/gifts' }}">{{ s.link_2_label }}<span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="{{ s.link_2_url | default: routes.all_products_collection_url }}">{{ s.link_2_label }}<span aria-hidden="true">&rarr;</span></a></li>
         {%- endif -%}
       </ul>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -36,9 +38,9 @@
     { "type": "text", "id": "eyebrow", "label": "Breadcrumb label", "default": "Shop" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "All fragrances" },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family." },
-    { "type": "text", "id": "link_1_label", "label": "First link", "default": "Find your scent" },
+    { "type": "text", "id": "link_1_label", "label": "First link" },
     { "type": "url", "id": "link_1_url", "label": "First link URL" },
-    { "type": "text", "id": "link_2_label", "label": "Second link", "default": "Gifts" },
+    { "type": "text", "id": "link_2_label", "label": "Second link" },
     { "type": "url", "id": "link_2_url", "label": "Second link URL" }
   ],
   "presets": [{ "name": "HOA Shop head" }]

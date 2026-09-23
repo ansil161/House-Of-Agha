@@ -29,12 +29,8 @@ const server = http.createServer((req, res) => {
     url = 'shop.html';
   } else if (url.startsWith('/products/') || url === '/product' || url === '/product.html') {
     url = 'product.html';
-  } else if (url === '/pages/discover' || url === '/discover' || url === '/discover.html') {
-    url = 'discover.html';
   } else if (url === '/pages/the-house' || url === '/pages/about' || url === '/the-house' || url === '/the-house.html') {
     url = 'the-house.html';
-  } else if (url === '/pages/gifts' || url === '/gifts' || url === '/gifts.html') {
-    url = 'gifts.html';
   } else if (url === '/pages/private-access' || url === '/private-access' || url === '/private-access.html') {
     url = 'private-access.html';
   } else if (url === '/pages/contact' || url === '/contact' || url === '/contact.html') {

@@ -7,15 +7,10 @@
     "catalog": {
       "type": "hoa-shop-catalog",
       "settings": {}
-    },
-    "guide": {
-      "type": "hoa-shop-guide",
-      "settings": {}
     }
   },
   "order": [
     "shop_hero",
-    "catalog",
-    "guide"
+    "catalog"
   ]
 }

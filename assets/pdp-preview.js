@@ -405,6 +405,70 @@
     </div>
   </section>` : '';
 
+  /* ------------------------------------------------- The fragrance (three acts) */
+  // Mirrors sections/agha-pdp-the-fragrance.liquid. Same sources, preview names:
+  //   notes.top / notes.heart / notes.base → custom.top_notes / heart_notes / base_notes
+  //   claims (array)                       → custom.claims + "claim:" product tags
+  //   family                               → custom.family
+  // Renders nothing without data, like the Liquid.
+  //
+  // TEMPORARY LOCAL-DEV FALLBACK — Shopify is not connected yet, so the real handles below
+  // have no metafields to read. DEV_FRAGRANCE_MOCK is placeholder content only, isolated here
+  // so it is easy to delete once real notes/claims exist. It is used ONLY when a product has
+  // no real data (AGHA_PRODUCTS[handle].notes / .claims, standing in for Shopify metafields);
+  // real data always wins, and handles not listed here still render nothing without data.
+  const DEV_FRAGRANCE_MOCK = {
+    'oud-fury': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    'agha-blue': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    maha: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    'oud-royal': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] }
+  };
+  const tfMock = DEV_FRAGRANCE_MOCK[handle];
+  // "Shopify data" here is AGHA_PRODUCTS[handle].notes / .claims — real data always takes priority.
+  const tfTop = notes.top || (tfMock && tfMock.topNotes.join(', ')) || '';
+  const tfHeart = notes.heart || (tfMock && tfMock.heartNotes.join(', ')) || '';
+  const tfBase = notes.base || (tfMock && tfMock.baseNotes.join(', ')) || '';
+  const tfClaimsData = (product.claims && product.claims.length) ? product.claims : (tfMock ? tfMock.claims : []);
+
+  const tfActs = [
+    ['top', 'left', 'I', 'Top notes', 'The opening', tfTop],
+    ['heart', 'right', 'II', 'Heart notes', 'The heart', tfHeart],
+    ['base', 'left', 'III', 'Base notes', 'The trail', tfBase]
+  ].filter((a) => a[5]).map(([slot, side, numeral, label, cue, list]) => `
+          <li class="pdp-tf__act pdp-tf__act--${slot} pdp-tf__act--${side}" data-pdp-tf-act data-side="${side}">
+            <span class="pdp-tf__numeral" aria-hidden="true">${numeral}<span class="pdp-tf__rule"></span></span>
+            <div class="pdp-tf__act-body">
+              <h3 class="pdp-tf__label"><span class="pdp-sr">Act ${numeral}, </span>${label}</h3>
+              <p class="pdp-tf__cue">${cue}</p>
+              <ul class="pdp-tf__notes">${list.split(',').map((n) => n.trim()).filter(Boolean).map((n) => `<li>${esc(n)}</li>`).join('')}</ul>
+            </div>
+          </li>`);
+  const tfClaims = [...new Set((tfClaimsData || []).map((c) => String(c).trim()).filter(Boolean))];
+  const theFragrance = (tfActs.length || tfClaims.length) ? `
+  <section class="pdp pdp-section pdp-tf" data-pdp-tf aria-labelledby="tf-title">
+    <div class="container">
+      <header class="pdp-tf__head" data-pdp-reveal>
+        <span class="pdp-eyebrow">${esc(niceTitle)}</span>
+        <h2 class="pdp-tf__title" id="tf-title">The Fragrance</h2>
+        <p class="pdp-tf__sub">An olfactory journey in three acts.</p>
+      </header>
+      ${tfActs.length ? `
+      <div class="pdp-tf__stage">
+        <figure class="pdp-tf__visual" data-pdp-tf-visual>
+          <span class="pdp-tf__frame"><img src="${images[0]}" alt="${esc(niceTitle)}" loading="lazy" width="1200" height="1590"></span>
+        </figure>
+        <p class="pdp-tf__caption" data-pdp-tf-act data-side="right">
+          <span class="pdp-tf__caption-name">${esc(niceTitle)}</span>
+          ${product.family ? `<span class="pdp-tf__caption-family">${esc(product.family)}</span>` : ''}
+        </p>
+        <ol class="pdp-tf__acts">${tfActs.join('')}
+        </ol>
+      </div>` : ''}
+      ${tfClaims.length ? `
+      <ul class="pdp-tf__claims" aria-label="Product attributes">${tfClaims.map((c) => `<li class="pdp-tf__claim" data-pdp-tf-claim>${esc(c)}</li>`).join('')}</ul>` : ''}
+    </div>
+  </section>` : '';
+
   /* ------------------------------------------------------------- 06 Reviews */
   const reviewsSection = `
   <section class="pdp pdp-section pdp-reviews" id="pdp-reviews" data-pdp-reviews>
@@ -496,7 +560,7 @@
           <span class="pdp-eyebrow">The discovery collection</span>
           <h2 class="pdp-banner__title">Not sure yet? Wear five before you choose.</h2>
           <p class="pdp-banner__text">Five of our extraits in 5 × 5 ml, in a matte black hardboard box lined with crushed velvet.</p>
-          <a class="pdp-btn pdp-btn--light" href="/discover.html">Explore the set →</a>
+          <a class="pdp-btn pdp-btn--light" href="/shop.html">Explore the set →</a>
         </div>
         <div class="pdp-banner__media" style="--pdp-focal: 50% 50%;">
           <img src="/assets/discovery_box.jpg" alt="The AGHA discovery collection, five numbered vials in a black box" loading="lazy">
@@ -506,6 +570,6 @@
     <div class="pdp-dock-spacer" aria-hidden="true"></div>
   </section>`;
 
-  root.innerHTML = hero + featuresSection + collage + story + craft + fragranceNotes + reviewsSection + faq + related + finale;
+  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + reviewsSection + faq + related + finale;
   window.AghaPDP?.init();
 })();

@@ -1,0 +1,190 @@
+{% comment %}
+  AGHA PDP — THE FRAGRANCE (notes in three acts, with product claims)
+  The product bottle is the anchor in the centre; the three acts of the fragrance descend
+  around it in a zig-zag, the way a scent unfolds over time:
+    Act I   Top notes ..... left, level with the top of the bottle
+    Act II  Heart notes ... right, level with its middle
+    Act III Base notes .... left, level with its foot
+  The product name and family sit opposite Act I. Claims run underneath as one quiet row.
+  Mobile: bottle first, then Act I, II, III, then the claims.
+
+  Data — every value comes from the current product; nothing perfume-specific is written here:
+    Top / heart / base .. custom.top_notes / custom.heart_notes / custom.base_notes
+                          (comma-separated text, or a list of single-line text)
+    Claims .............. custom.claims (list of single-line text, or comma-separated text),
+                          plus any product tag written as "claim:Vegan", "claim:Paraben free" …
+    Family .............. custom.family, else product.type
+  An act without notes is left out and a claim that is not in the data is never shown.
+  The section renders nothing when the product has no notes and no claims.
+
+  Motion: assets/pdp.js (heading, then the bottle, then the acts in order, then the claims).
+  Static without JS.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign mf = product.metafields.custom
+  assign image = s.image | default: product.featured_image
+  assign family = mf.family.value | default: product.type
+
+  comment
+    Notes: accept both list metafields and comma-separated text.
+  endcomment
+  assign act_count = 0
+  for key in (1..3)
+    case key
+      when 1
+        assign field = mf.top_notes
+      when 2
+        assign field = mf.heart_notes
+      when 3
+        assign field = mf.base_notes
+    endcase
+    if field.value != blank
+      assign act_count = act_count | plus: 1
+    endif
+  endfor
+
+  comment
+    Claims: metafield first, then "claim:" tags; duplicates removed, blanks dropped.
+  endcomment
+  assign claim_str = ''
+  if mf.claims.value != blank
+    if mf.claims.type contains 'list'
+      assign claim_str = mf.claims.value | join: '|'
+    else
+      assign claim_str = mf.claims.value | replace: ',', '|'
+    endif
+  endif
+  for t in product.tags
+    assign tl = t | downcase
+    if tl contains 'claim:'
+      assign c = t | split: ':' | last | strip
+      assign claim_str = claim_str | append: '|' | append: c
+    endif
+  endfor
+  assign claims_raw = claim_str | split: '|'
+  assign claim_list = ''
+  for c in claims_raw
+    assign cs = c | strip
+    if cs != blank
+      assign claim_list = claim_list | append: cs | append: '|'
+    endif
+  endfor
+  assign claims = claim_list | split: '|' | uniq
+-%}
+
+{%- if act_count > 0 or claims.size > 0 -%}
+<section class="pdp pdp-section pdp-tf" data-pdp-tf aria-labelledby="tf-{{ section.id }}-title">
+  <div class="container">
+    <header class="pdp-tf__head" data-pdp-reveal>
+      {%- if s.show_eyebrow -%}<span class="pdp-eyebrow">{{ product.title }}</span>{%- endif -%}
+      <h2 class="pdp-tf__title" id="tf-{{ section.id }}-title">{{ s.heading }}</h2>
+      {%- if s.subheading != blank -%}<p class="pdp-tf__sub">{{ s.subheading }}</p>{%- endif -%}
+    </header>
+
+    {%- if act_count > 0 -%}
+      <div class="pdp-tf__stage">
+        <figure class="pdp-tf__visual" data-pdp-tf-visual>
+          <span class="pdp-tf__frame">
+            {%- if image -%}
+              {%- assign image_alt = image.alt | default: product.title -%}
+              {{ image | image_url: width: 1200 | image_tag: widths: '500, 700, 900, 1200', sizes: '(min-width: 1101px) 30vw, (min-width: 769px) 36vw, 80vw', loading: 'lazy', alt: image_alt }}
+            {%- endif -%}
+          </span>
+        </figure>
+
+        {%- if s.show_caption -%}
+          <p class="pdp-tf__caption" data-pdp-tf-act data-side="right">
+            <span class="pdp-tf__caption-name">{{ product.title }}</span>
+            {%- if family != blank -%}<span class="pdp-tf__caption-family">{{ family }}</span>{%- endif -%}
+          </p>
+        {%- endif -%}
+
+        <ol class="pdp-tf__acts">
+          {%- for key in (1..3) -%}
+            {%- liquid
+              case key
+                when 1
+                  assign field = mf.top_notes
+                  assign numeral = 'I'
+                  assign label = s.top_label
+                  assign cue = s.top_cue
+                  assign slot = 'top'
+                  assign side = 'left'
+                when 2
+                  assign field = mf.heart_notes
+                  assign numeral = 'II'
+                  assign label = s.heart_label
+                  assign cue = s.heart_cue
+                  assign slot = 'heart'
+                  assign side = 'right'
+                when 3
+                  assign field = mf.base_notes
+                  assign numeral = 'III'
+                  assign label = s.base_label
+                  assign cue = s.base_cue
+                  assign slot = 'base'
+                  assign side = 'left'
+              endcase
+              if field.type contains 'list'
+                assign notes = field.value
+              else
+                assign notes = field.value | split: ','
+              endif
+            -%}
+            {%- if field.value != blank -%}
+              <li class="pdp-tf__act pdp-tf__act--{{ slot }} pdp-tf__act--{{ side }}" data-pdp-tf-act data-side="{{ side }}">
+                <span class="pdp-tf__numeral" aria-hidden="true">{{ numeral }}<span class="pdp-tf__rule"></span></span>
+                <div class="pdp-tf__act-body">
+                  <h3 class="pdp-tf__label"><span class="pdp-sr">Act {{ numeral }}, </span>{{ label }}</h3>
+                  {%- if cue != blank -%}<p class="pdp-tf__cue">{{ cue }}</p>{%- endif -%}
+                  <ul class="pdp-tf__notes">
+                    {%- for n in notes -%}
+                      {%- assign ns = n | strip -%}
+                      {%- if ns != blank -%}<li>{{ ns }}</li>{%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ol>
+      </div>
+    {%- endif -%}
+
+    {%- if claims.size > 0 -%}
+      <ul class="pdp-tf__claims" aria-label="{{ s.claims_label | escape }}">
+        {%- for c in claims -%}
+          <li class="pdp-tf__claim" data-pdp-tf-claim>{{ c }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · The fragrance",
+  "class": "pdp-tf-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_eyebrow", "label": "Show product name above the heading", "default": true },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Fragrance" },
+    { "type": "text", "id": "subheading", "label": "Supporting line", "default": "An olfactory journey in three acts." },
+    { "type": "image_picker", "id": "image", "label": "Bottle image", "info": "Defaults to the product's featured image. A studio shot on white blends into the panel." },
+    { "type": "checkbox", "id": "show_caption", "label": "Show product name and family beside the bottle", "default": true },
+    { "type": "paragraph", "content": "Notes come from the product metafields custom.top_notes, custom.heart_notes and custom.base_notes. Claims come from custom.claims (list of single-line text) or product tags written as claim:Vegan. Anything without data is hidden." },
+    { "type": "header", "content": "Acts" },
+    { "type": "text", "id": "top_label", "label": "Act I label", "default": "Top notes" },
+    { "type": "text", "id": "top_cue", "label": "Act I line", "default": "The opening" },
+    { "type": "text", "id": "heart_label", "label": "Act II label", "default": "Heart notes" },
+    { "type": "text", "id": "heart_cue", "label": "Act II line", "default": "The heart" },
+    { "type": "text", "id": "base_label", "label": "Act III label", "default": "Base notes" },
+    { "type": "text", "id": "base_cue", "label": "Act III line", "default": "The trail" },
+    { "type": "header", "content": "Claims" },
+    { "type": "text", "id": "claims_label", "label": "Claims list name (screen readers)", "default": "Product attributes" }
+  ],
+  "presets": [{ "name": "Agha PDP · The fragrance" }]
+}
+{% endschema %}

@@ -598,6 +598,38 @@
         if (rules.length) tl.to(rules, { scaleX: 1, duration: 0.9, stagger: 0.14, ease: 'power2.inOut' }, 0.75);
       });
 
+      /* The fragrance — heading (above, via data-pdp-reveal), then the bottle settles in,
+         then Act I, II, III in order while their hairlines draw towards it, then the claims */
+      $$('[data-pdp-tf]', scope).forEach((sec) => {
+        const visual = $('[data-pdp-tf-visual]', sec);
+        const visualImg = visual && $('img', visual);
+        const acts = $$('[data-pdp-tf-act]', sec);
+        const claims = $$('[data-pdp-tf-claim]', sec);
+        const wide = window.matchMedia('(min-width: 769px)').matches;
+        const rules = wide ? $$('.pdp-tf__rule', sec) : [];
+
+        if (visual) gsap.set(visual, { autoAlpha: 0, y: 24 });
+        if (visualImg) gsap.set(visualImg, { scale: 1.06 });
+        acts.forEach((a) => gsap.set(a, { autoAlpha: 0, x: wide ? (a.dataset.side === 'left' ? -16 : 16) : 0, y: wide ? 0 : 16 }));
+        if (rules.length) gsap.set(rules, { scaleX: 0 });
+
+        if (visual || acts.length) {
+          const tl = gsap.timeline({ scrollTrigger: { trigger: $('.pdp-tf__stage', sec) || sec, start: 'top 78%', once: true } });
+          if (visual) tl.to(visual, { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power2.out', clearProps: 'transform' }, 0);
+          if (visualImg) tl.to(visualImg, { scale: 1, duration: 1.6, ease: 'power2.out', clearProps: 'transform' }, 0);
+          if (acts.length) tl.to(acts, { autoAlpha: 1, x: 0, y: 0, duration: 1.1, stagger: 0.18, ease, clearProps: 'transform' }, 0.45);
+          if (rules.length) tl.to(rules, { scaleX: 1, duration: 0.9, stagger: 0.18, ease: 'power2.inOut' }, 0.75);
+        }
+
+        if (claims.length) {
+          gsap.set(claims, { autoAlpha: 0, y: 10 });
+          gsap.to(claims, {
+            autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.06, ease, clearProps: 'transform',
+            scrollTrigger: { trigger: claims[0].parentElement, start: 'top 92%', once: true }
+          });
+        }
+      });
+
       /* Craft — steps rise in turn while the progress line draws across */
       const steps = $('[data-pdp-steps]', scope);
       if (steps) {
@@ -660,7 +692,7 @@
       motionCtx.revert();
       motionCtx = null;
       // Tweens that never started don't restore their pre-state on revert; clear it explicitly
-      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule', { clearProps: 'transform,opacity,visibility' });
+      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-visual] img, [data-pdp-tf-act], [data-pdp-tf-claim], .pdp-tf__rule', { clearProps: 'transform,opacity,visibility' });
     }
     cleanups.splice(0).forEach((fn) => fn());
   }

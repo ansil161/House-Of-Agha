@@ -125,7 +125,7 @@
         if disc != blank
           assign disc_url = disc.url
         else
-          assign disc_url = s.discovery_url | default: '/pages/discover'
+          assign disc_url = s.discovery_url | default: routes.all_products_collection_url
         endif
       -%}
       <article class="hoa-card hoa-card--feature" data-family="all" data-hoa-card id="discovery">

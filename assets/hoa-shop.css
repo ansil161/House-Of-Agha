@@ -163,7 +163,6 @@
 .hoa-pc a:focus-visible,
 .hoa-pc__btn:focus-visible,
 .hoa-shop-cat__clear:focus-visible,
-.hoa-shop-guide__card:focus-visible,
 .hoa-shop-interlude a:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 3px; }
 
 /* ---------- Status line ---------- */
@@ -315,28 +314,6 @@
 .hoa-shop-empty__title { margin: 0; font-size: clamp(1.5rem, 2.4vw, 2.2rem); letter-spacing: -0.035em; }
 .hoa-shop-empty__text { margin: 0 0 10px; color: var(--hoa-ink-2); }
 
-/* ---------- Help choosing ---------- */
-.hoa-shop-guide { padding: clamp(64px, 8vw, 120px) 0 clamp(80px, 10vw, 160px); border-top: 1px solid var(--hoa-line); }
-.hoa-shop-guide__head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
-  align-items: end;
-  gap: 16px clamp(32px, 6vw, 120px);
-  margin-bottom: clamp(28px, 3.4vw, 48px);
-}
-.hoa-shop-guide__title { margin: 0; font-family: var(--hoa-sans); font-weight: 400; font-size: clamp(2rem, 3.6vw, 3.4rem); line-height: 1; letter-spacing: -0.05em; text-transform: none; }
-.hoa-shop-guide__text { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2); }
-.hoa-shop-guide__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 18px); }
-.hoa-shop-guide__card { display: grid; gap: 8px; color: var(--hoa-ink); text-decoration: none; }
-.hoa-shop-guide__media { position: relative; display: block; aspect-ratio: 16 / 11; overflow: hidden; border-radius: var(--hoa-radius); background: var(--hoa-stone); margin-bottom: 10px; }
-.hoa-shop-guide__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); transition: transform 1.2s var(--hoa-ease); }
-.hoa-shop-guide__card:hover .hoa-shop-guide__media img { transform: scale(1.03); }
-.hoa-shop-guide__row { display: flex; justify-content: space-between; align-items: baseline; }
-.hoa-shop-guide__label { font-size: clamp(1.3rem, 1.8vw, 1.7rem); letter-spacing: -0.04em; }
-.hoa-shop-guide__arrow { transition: transform 0.4s var(--hoa-ease); }
-.hoa-shop-guide__card:hover .hoa-shop-guide__arrow { transform: translateX(4px); }
-.hoa-shop-guide__note { font-size: 0.86rem; color: var(--hoa-mute); }
-
 /* ---------- Tablet ---------- */
 @media (max-width: 1099px) {
   .hoa-shop-bar__inner { flex-wrap: wrap; row-gap: 0; }
@@ -350,7 +327,6 @@
 /* ---------- Mobile ---------- */
 @media (max-width: 767px) {
   .hoa-shop-head__grid,
-  .hoa-shop-guide__head { grid-template-columns: 1fr; }
   .hoa-shop-head__title { font-size: clamp(2.5rem, 12vw, 3.4rem); }
 
   /* A tall toolbar would eat the screen; on phones it scrolls with the page */
@@ -377,7 +353,6 @@
   .hoa-shop-grid[data-view='list'] .hoa-pc__meta { font-size: 0.76rem; }
   .hoa-shop-grid[data-view='list'] .hoa-pc__action { justify-self: end; margin: 0; }
 
-  .hoa-shop-guide__cards { grid-template-columns: 1fr; gap: 32px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

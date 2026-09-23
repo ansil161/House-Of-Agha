@@ -143,7 +143,7 @@ async function renderTemplate(name, templateGlobals) {
   // preview, point them at the .html files so it also works under a plain static server
   // (e.g. the IDE's Live Server on :5500), not only under server.js on :3000.
   const toPreview = (url) => url
-    .replace(/^\/pages\/(the-house|discover|gifts|private-access|contact|faq|shipping-returns)(?=[#?]|$)/, '/$1.html')
+    .replace(/^\/pages\/(the-house|private-access|contact|faq|shipping-returns)(?=[#?]|$)/, '/$1.html')
     .replace(/^\/collections\/all(?=[#?]|$)/, '/shop.html')
     .replace(/^\/products\/([a-z0-9-]+)(?=[#?]|$)/, '/product.html?p=$1')
     .replace(/^\/account\/(login|register|addresses|reset|activate)(?=[#?]|$)/, '/account-$1.html')
@@ -252,7 +252,7 @@ async function renderTemplate(name, templateGlobals) {
   const redirects = {
     'collections/all': '/shop.html', 'collections': '/shop.html', 'pages/about': '/the-house.html'
   };
-  ['the-house', 'discover', 'gifts', 'private-access', 'contact', 'faq', 'shipping-returns']
+  ['the-house', 'private-access', 'contact', 'faq', 'shipping-returns']
     .forEach((p) => { redirects['pages/' + p] = `/${p}.html`; });
   const handles = new Set();
   fs.readdirSync(THEME).filter((f) => f.endsWith('.html')).forEach((f) => {

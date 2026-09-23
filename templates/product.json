@@ -238,11 +238,16 @@
     "fragrance_notes": {
       "type": "agha-pdp-fragrance-notes",
       "settings": {}
+    },
+    "the_fragrance": {
+      "type": "agha-pdp-the-fragrance",
+      "settings": {}
     }
   },
   "order": [
     "main",
     "story",
+    "the_fragrance",
     "details",
     "composition",
     "craft",
