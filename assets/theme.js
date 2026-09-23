@@ -151,6 +151,31 @@ const AghaStore = {
     this.initPDPVariantSelector();
     this.initStickyBar();
     this.initGiftFinder();
+    this.initMobileMenu();
+  },
+
+  // Full-screen menu for small screens (snippets/header.liquid → #hoa-menu)
+  initMobileMenu() {
+    const toggles = document.querySelectorAll('.js-mobile-menu');
+    const menu = document.getElementById('hoa-menu');
+    if (!toggles.length || !menu) return;
+    const root = document.documentElement;
+    const label = document.querySelector('.hoa-header__menu-label');
+    const set = (open) => {
+      root.classList.toggle('hoa-menu-open', open);
+      toggles.forEach(b => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+      if (label) label.textContent = open ? 'Close' : 'Menu';
+      if (open) {
+        const first = menu.querySelector('a');
+        if (first) first.focus({ preventScroll: true });
+      }
+    };
+    toggles.forEach(b => b.addEventListener('click', () => set(!root.classList.contains('hoa-menu-open'))));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root.classList.contains('hoa-menu-open')) set(false);
+    });
+    window.addEventListener('resize', () => { if (window.innerWidth > 960) set(false); });
   },
 
   initFilterDrawer() {

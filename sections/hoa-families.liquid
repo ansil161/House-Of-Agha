@@ -1,0 +1,70 @@
+{% comment %}
+  04 — DISCOVER YOUR SCENT
+  Four ways into the House: image tiles by scent family, each with a glass label and
+  the fragrances it holds. The full questionnaire lives on /pages/discover.
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-families" id="discover" data-hoa-families>
+  <div class="hoa-wrap">
+    <header class="hoa-section-head">
+      <div>
+        <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
+        <h2 class="hoa-h2" data-hoa-reveal>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      </div>
+      <div class="hoa-section-head__side" data-hoa-reveal>
+        <p class="hoa-lede">{{ s.text }}</p>
+        <a class="hoa-btn" href="{{ s.cta_url | default: '/pages/discover' }}"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+      </div>
+    </header>
+
+    <div class="hoa-families__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign b_alt = b.alt | default: b.title
+        -%}
+        <a class="hoa-family" href="{{ b.url | default: routes.all_products_collection_url }}" data-hoa-reveal style="transition-delay: {{ forloop.index0 | times: 90 }}ms" {{ block.shopify_attributes }}>
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1600, alt: b_alt, sizes: '(min-width: 961px) 25vw, 76vw' -%}
+          <span class="hoa-family__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <span class="hoa-family__body">
+            {%- if b.names != blank -%}<span class="hoa-family__names">{{ b.names }}</span>{%- endif -%}
+            <span class="hoa-family__pill">{{ b.title }}<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Discover Your Scent",
+  "tag": "div",
+  "class": "hoa-families-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Discover your scent" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Four ways" },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "into the House." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Start from the world you are drawn to, or answer a few questions and let the House suggest a fragrance for you." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Take the scent finder" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "family",
+      "name": "Scent family",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Family" },
+        { "type": "text", "id": "names", "label": "Fragrances in this family" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "image_picker", "id": "image", "label": "Image (3:4)" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Discover Your Scent" }]
+}
+{% endschema %}

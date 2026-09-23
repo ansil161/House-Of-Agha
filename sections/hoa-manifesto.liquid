@@ -1,0 +1,61 @@
+{% comment %}
+  02 — THE HOUSE
+  A single statement that sharpens word by word as it scrolls into view, a giant
+  quiet wordmark behind it, and three campaign details drifting at different speeds.
+  Wrap words in *asterisks* in the statement to set them in the serif italic.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign statement = s.statement | escape
+  assign parts = statement | split: '*'
+-%}
+<section class="hoa-manifesto" id="the-house" data-hoa-manifesto>
+  <div class="hoa-manifesto__mark" aria-hidden="true" data-hoa-speed="0.12">{{ s.mark }}</div>
+
+  <div class="hoa-wrap">
+    <div class="hoa-manifesto__eyebrow"><p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p></div>
+    <p class="hoa-manifesto__text" data-hoa-words>
+      {%- for part in parts -%}
+        {%- assign odd = forloop.index0 | modulo: 2 -%}
+        {%- if odd == 1 %}<em>{{ part }}</em>{% else %}{{ part }}{% endif -%}
+      {%- endfor -%}
+    </p>
+    <div class="hoa-manifesto__row" data-hoa-reveal>
+      <p class="hoa-lede">{{ s.body }}</p>
+      <a class="hoa-link" href="{{ s.link_url | default: '/pages/the-house' }}">{{ s.link_label }}</a>
+    </div>
+  </div>
+
+  <div class="hoa-manifesto__floats">
+    <figure class="hoa-manifesto__float hoa-manifesto__float--a hoa-frame" data-hoa-speed="-0.22">
+      {%- render 'hoa-img', name: 'hoa-shamamah-lily', image: s.image_one, w: 1086, h: 1448, alt: 'Shamamah by House of Agha, held in a dried lily', sizes: '(min-width: 961px) 16vw, 50vw' -%}
+    </figure>
+    <figure class="hoa-manifesto__float hoa-manifesto__float--b hoa-frame" data-hoa-speed="0.18">
+      {%- render 'hoa-img', name: 'hoa-ingredients-tobacco', image: s.image_two, w: 969, h: 969, alt: 'Tobacco Enigma among bergamot, cinnamon, honey and jasmine', sizes: '(min-width: 961px) 13vw, 50vw' -%}
+    </figure>
+    <figure class="hoa-manifesto__float hoa-manifesto__float--c hoa-frame" data-hoa-speed="-0.1">
+      {%- render 'hoa-img', name: 'hoa-oud-fury-smoke', image: s.image_three, w: 2000, h: 1125, alt: 'Oud Fury in amber smoke', sizes: '18vw' -%}
+    </figure>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA The House",
+  "tag": "div",
+  "class": "hoa-manifesto-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The House" },
+    { "type": "textarea", "id": "statement", "label": "Statement", "info": "Wrap words in *asterisks* to set them in serif italic.", "default": "Every Agha fragrance begins as a *place*: a smoke-lit room, an ice cave, a garden after rain. It ends as something you *carry close*." },
+    { "type": "textarea", "id": "body", "label": "Supporting line", "default": "House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light." },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "The story of the House" },
+    { "type": "url", "id": "link_url", "label": "Link" },
+    { "type": "text", "id": "mark", "label": "Background wordmark", "default": "Agha" },
+    { "type": "image_picker", "id": "image_one", "label": "Detail image 1 (portrait)" },
+    { "type": "image_picker", "id": "image_two", "label": "Detail image 2 (square)" },
+    { "type": "image_picker", "id": "image_three", "label": "Detail image 3 (landscape)" }
+  ],
+  "presets": [{ "name": "HOA The House" }]
+}
+{% endschema %}

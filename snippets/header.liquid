@@ -1,29 +1,48 @@
-<header class="header">
-  <div class="container header-container">
-    <a href="#" class="header-brand">AGHA</a>
-
-    <nav>
-      <ul class="header-nav">
-        <li><a href="/shop.html">Shop</a></li>
-        <li><a href="/discover.html">Discover</a></li>
-        <li><a href="/the-house.html">The House</a></li>
-        <li><a href="/gifts.html">Gifts</a></li>
-        <li><a href="/private-access.html">Private Access</a></li>
+{%- comment -%}
+  House of Agha header: split navigation, centred wordmark.
+  Keeps the hooks theme.js relies on: .header, .js-cart-toggle, .cart-count, .js-mobile-menu.
+  On the homepage assets/hoa-home.js makes it transparent over the hero and light over dark sections.
+{%- endcomment -%}
+<header class="header hoa-header" data-hoa-header>
+  <div class="hoa-header__inner">
+    <div class="hoa-header__start">
+      <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
+        <li><a href="{{ routes.root_url }}#fragrances">Fragrances</a></li>
+        <li><a href="/pages/the-house">The House</a></li>
       </ul>
-    </nav>
-
-    <div class="header-actions">
-      <button class="header-action-btn js-cart-toggle" aria-label="Open Cart Bag">
-        <span>Bag</span>
-        <span class="cart-count">0</span>
-      </button>
-
-      <button class="mobile-menu-toggle js-mobile-menu" aria-label="Toggle Mobile Navigation">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <line x1="3" y1="8" x2="21" y2="8"></line>
-          <line x1="3" y1="16" x2="21" y2="16"></line>
-        </svg>
+      <button class="hoa-header__menu js-mobile-menu" type="button" aria-expanded="false" aria-controls="hoa-menu">
+        <span class="hoa-header__menu-lines" aria-hidden="true"></span>
+        <span class="hoa-header__menu-label">Menu</span>
       </button>
     </div>
+
+    <a href="{{ routes.root_url }}" class="header-brand hoa-header__brand" aria-label="House of Agha, home">
+      <small>HOUSE OF</small>AGHA
+    </a>
+
+    <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a href="/pages/discover">Discover</a></li>
+      <li class="hoa-header__hide-sm"><a href="/pages/gifts">Gifts</a></li>
+      <li>
+        <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
+          <span>Bag</span>
+          <span class="cart-count">{{ cart.item_count | default: 0 }}</span>
+        </button>
+      </li>
+    </ul>
   </div>
 </header>
+
+<nav class="hoa-menu" id="hoa-menu" aria-label="Main">
+  <ul class="hoa-menu__links">
+    <li><a href="{{ routes.all_products_collection_url }}"><span>01</span>Shop <em>all</em></a></li>
+    <li><a href="{{ routes.root_url }}#fragrances"><span>02</span>Fragrances</a></li>
+    <li><a href="/pages/discover"><span>03</span>Discover <em>your scent</em></a></li>
+    <li><a href="/pages/the-house"><span>04</span>The House</a></li>
+    <li><a href="/pages/gifts"><span>05</span>Gifts</a></li>
+    <li><a href="/pages/private-access"><span>06</span>Private Access</a></li>
+  </ul>
+  <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
+</nav>
+

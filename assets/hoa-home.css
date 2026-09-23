@@ -1,0 +1,1172 @@
+/* ==========================================================================
+   HOUSE OF AGHA — HOMEPAGE DESIGN SYSTEM
+   Editorial luxury: warm paper, near-black ink, one brass accent.
+   Type: Plus Jakarta Sans (tight display) paired with Bodoni Moda italic.
+   Motion lives in assets/hoa-home.js; this file is fully usable without it.
+   ========================================================================== */
+
+:root {
+  --hoa-paper: #F6F3EE;
+  --hoa-paper-2: #EFEBE4;
+  --hoa-stone: #E4DED5;
+  --hoa-ink: #141210;
+  --hoa-ink-2: #3B3631;
+  --hoa-mute: #857D72;
+  --hoa-line: rgba(20, 18, 16, 0.12);
+  --hoa-night: #0C0A08;
+  --hoa-ivory: #F6F1E7;
+  --hoa-brass: #B08D57;
+
+  --hoa-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --hoa-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
+
+  --hoa-gutter: clamp(20px, 4vw, 56px);
+  --hoa-max: 1520px;
+  --hoa-section: clamp(96px, 13vw, 200px);
+  --hoa-radius: 2px;
+
+  --hoa-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hoa-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --hoa-header-h: 76px;
+}
+
+/* ---------- Page base (homepage only: layout adds .hoa-home to <body>) ---------- */
+.hoa-home { background: var(--hoa-paper); color: var(--hoa-ink); }
+.hoa-home main { overflow-x: clip; }
+html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+.hoa-wrap {
+  width: 100%;
+  max-width: var(--hoa-max);
+  margin: 0 auto;
+  padding: 0 var(--hoa-gutter);
+}
+
+/* ---------- Type ---------- */
+.hoa-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--hoa-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--hoa-brass);
+}
+.hoa-h2 {
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.4vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  color: inherit;
+  text-transform: none;
+}
+.hoa-h2 em,
+.hoa-serif {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.hoa-lede {
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.65;
+  color: var(--hoa-ink-2);
+  max-width: 42ch;
+}
+
+/* ---------- Buttons & links ---------- */
+.hoa-btn {
+  --hoa-btn-bg: var(--hoa-ink);
+  --hoa-btn-fg: var(--hoa-paper);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 8px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--hoa-btn-bg);
+  background: var(--hoa-btn-bg);
+  color: var(--hoa-btn-fg);
+  font-family: var(--hoa-sans);
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease), border-color 0.5s var(--hoa-ease);
+  white-space: nowrap;
+}
+.hoa-btn__icon {
+  position: relative;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--hoa-btn-fg);
+  color: var(--hoa-btn-bg);
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.hoa-btn__icon svg { width: 14px; height: 14px; transition: transform 0.6s var(--hoa-ease); }
+.hoa-btn__icon svg + svg { position: absolute; transform: translate(-150%, 150%); }
+.hoa-btn:hover .hoa-btn__icon svg:first-child { transform: translate(150%, -150%); }
+.hoa-btn:hover .hoa-btn__icon svg + svg { transform: translate(0, 0); }
+.hoa-btn--light { --hoa-btn-bg: var(--hoa-ivory); --hoa-btn-fg: var(--hoa-ink); }
+.hoa-btn--glass {
+  --hoa-btn-bg: rgba(246, 241, 231, 0.14);
+  --hoa-btn-fg: var(--hoa-ivory);
+  border-color: rgba(246, 241, 231, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.hoa-btn--glass .hoa-btn__icon { background: var(--hoa-ivory); color: var(--hoa-ink); }
+.hoa-btn--small { padding: 5px 5px 5px 16px; font-size: 0.78rem; gap: 10px; }
+.hoa-btn--small .hoa-btn__icon { width: 26px; height: 26px; }
+
+.hoa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: 4px;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 1px no-repeat;
+  transition: background-size 0.6s var(--hoa-ease);
+}
+.hoa-link:hover { background-size: 0% 1px; background-position: right bottom; }
+
+/* ---------- Shared media frames ---------- */
+.hoa-frame { position: relative; overflow: hidden; border-radius: var(--hoa-radius); background: var(--hoa-stone); }
+.hoa-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Reveal defaults (JS animates; CSS keeps content visible without JS) */
+.hoa-js [data-hoa-reveal] { opacity: 0; transform: translate3d(0, 28px, 0); }
+.hoa-js .hoa-is-in[data-hoa-reveal],
+.hoa-js [data-hoa-reveal].hoa-is-in { opacity: 1; transform: none; transition: opacity 1.1s var(--hoa-ease), transform 1.1s var(--hoa-ease); }
+
+/* ==========================================================================
+   HEADER (split navigation, centred wordmark, transparent over the hero)
+   ========================================================================== */
+.hoa-header.header {
+  padding: 0;
+  height: var(--hoa-header-h);
+  background: rgba(246, 243, 238, 0.86);
+  backdrop-filter: saturate(140%) blur(16px);
+  -webkit-backdrop-filter: saturate(140%) blur(16px);
+  border-bottom: 1px solid var(--hoa-line);
+  color: var(--hoa-ink);
+  transition: background-color 0.6s var(--hoa-ease), color 0.6s var(--hoa-ease), border-color 0.6s var(--hoa-ease), transform 0.6s var(--hoa-ease);
+}
+.hoa-header.header.scrolled { padding: 0; background: rgba(246, 243, 238, 0.92); }
+.hoa-header__inner {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  max-width: var(--hoa-max);
+  margin: 0 auto;
+  padding: 0 var(--hoa-gutter);
+}
+.hoa-header__start { display: flex; align-items: center; }
+.hoa-header__nav { display: flex; align-items: center; gap: clamp(18px, 2.2vw, 34px); list-style: none; margin: 0; }
+.hoa-header__nav--right { justify-content: flex-end; }
+.hoa-header__nav a,
+.hoa-header .header-action-btn {
+  font-family: var(--hoa-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.86;
+  transition: opacity 0.3s ease;
+}
+.hoa-header__nav a:hover { opacity: 1; }
+.hoa-header .header-action-btn { display: inline-flex; gap: 6px; opacity: 1; }
+.hoa-header .cart-count {
+  background: var(--hoa-ink);
+  color: var(--hoa-paper);
+  width: auto; min-width: 20px; height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  transition: background-color 0.6s var(--hoa-ease), color 0.6s var(--hoa-ease);
+}
+.hoa-header.is-transparent .cart-count,
+.hoa-header.is-dark .cart-count,
+.hoa-menu-open .hoa-header .cart-count { background: var(--hoa-ivory); color: var(--hoa-ink); }
+
+.hoa-header__brand.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  color: inherit;
+  font-family: var(--hoa-serif);
+  font-size: 1.6rem;
+  letter-spacing: 0.34em;
+  margin-right: -0.34em;
+  text-decoration: none;
+}
+.hoa-header__brand small {
+  font-family: var(--hoa-sans);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  margin: 0 -0.42em 6px 0;
+  opacity: 0.7;
+}
+.hoa-header__menu {
+  display: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: 500 0.8rem var(--hoa-sans);
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.hoa-header__menu-lines { position: relative; width: 22px; height: 10px; display: inline-block; }
+.hoa-header__menu-lines::before,
+.hoa-header__menu-lines::after {
+  content: '';
+  position: absolute; left: 0; right: 0;
+  height: 1.5px; background: currentColor;
+  transition: transform 0.5s var(--hoa-ease), top 0.5s var(--hoa-ease);
+}
+.hoa-header__menu-lines::before { top: 0; }
+.hoa-header__menu-lines::after { top: 8.5px; }
+.hoa-menu-open .hoa-header__menu-lines::before { top: 4.25px; transform: rotate(45deg); }
+.hoa-menu-open .hoa-header__menu-lines::after { top: 4.25px; transform: rotate(-45deg); }
+
+/* Transparent over hero, light-on-dark over dark sections */
+.hoa-header.header.is-transparent {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: var(--hoa-ivory);
+}
+.hoa-header.header.is-dark:not(.is-transparent) {
+  background: rgba(12, 10, 8, 0.78);
+  border-color: rgba(246, 241, 231, 0.1);
+  color: var(--hoa-ivory);
+}
+
+/* Mobile menu sheet */
+.hoa-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--hoa-night);
+  color: var(--hoa-ivory);
+  padding: calc(var(--hoa-header-h) + 32px) var(--hoa-gutter) 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition: clip-path 0.8s var(--hoa-ease-in-out), visibility 0s linear 0.8s;
+}
+.hoa-menu-open .hoa-menu { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path 0.8s var(--hoa-ease-in-out); }
+.hoa-menu-open .hoa-header.header { color: var(--hoa-ivory); background: transparent; border-color: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.hoa-menu__links { list-style: none; margin: 0; padding: 0; }
+.hoa-menu__links a {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  font-family: var(--hoa-sans);
+  font-size: clamp(2.2rem, 9vw, 3.2rem);
+  letter-spacing: -0.04em;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(246, 241, 231, 0.12);
+}
+.hoa-menu__links a span { font-size: 0.72rem; letter-spacing: 0.12em; opacity: 0.5; }
+.hoa-menu__links a em { font-family: var(--hoa-serif); font-style: italic; }
+.hoa-menu__foot { font-size: 0.8rem; opacity: 0.6; }
+
+@media (max-width: 960px) {
+  :root { --hoa-header-h: 64px; }
+  .hoa-header__inner { grid-template-columns: 1fr auto 1fr; }
+  .hoa-header__nav--left, .hoa-header__nav .hoa-header__hide-sm { display: none; }
+  .hoa-header__menu { display: inline-flex; }
+  .hoa-header__brand.header-brand { font-size: 1.3rem; }
+}
+
+/* ==========================================================================
+   01 — HERO
+   ========================================================================== */
+.hoa-hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  background: var(--hoa-night);
+  color: var(--hoa-ivory);
+  isolation: isolate;
+}
+.hoa-hero__media { position: absolute; inset: 0; z-index: -2; }
+.hoa-hero__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 1.6s var(--hoa-ease-in-out);
+}
+.hoa-hero__slide.is-active { opacity: 1; }
+.hoa-hero__slide picture,
+.hoa-hero__slide img { width: 100%; height: 100%; object-fit: cover; }
+.hoa-hero__slide img { transform: scale(1.06); transition: transform 7.5s linear; will-change: transform; }
+.hoa-hero__slide.is-active img { transform: scale(1); }
+.hoa-hero__veil {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(12, 10, 8, 0.55) 0%, rgba(12, 10, 8, 0) 26%, rgba(12, 10, 8, 0) 58%, rgba(12, 10, 8, 0.72) 100%);
+}
+.hoa-hero__content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  padding: calc(var(--hoa-header-h) + 24px) var(--hoa-gutter) clamp(24px, 4vw, 48px);
+  max-width: var(--hoa-max);
+  margin: 0 auto;
+}
+.hoa-hero__eyebrow { align-self: start; color: rgba(246, 241, 231, 0.78); }
+.hoa-hero__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 9.4vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  color: var(--hoa-ivory);
+  text-transform: none;
+}
+.hoa-hero__word { display: block; overflow: hidden; padding: 0.06em 0.06em 0.26em; margin-bottom: -0.14em; }
+.hoa-hero__word > span { display: inline-block; }
+.hoa-hero__word--serif { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.03em; }
+.hoa-hero__foot {
+  align-self: end;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 24px;
+}
+.hoa-hero__lede { color: rgba(246, 241, 231, 0.84); max-width: 30ch; font-size: 0.98rem; line-height: 1.6; }
+.hoa-hero__cta { justify-self: center; }
+.hoa-hero__index {
+  justify-self: end;
+  display: flex;
+  gap: 18px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.hoa-hero__dot {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: rgba(246, 241, 231, 0.55);
+  font: 500 0.7rem var(--hoa-sans);
+  letter-spacing: 0.08em;
+  text-align: left;
+  width: 96px;
+  transition: color 0.4s ease;
+}
+.hoa-hero__dot.is-active,
+.hoa-hero__dot:hover { color: var(--hoa-ivory); }
+.hoa-hero__dot-bar { display: block; height: 1px; margin-top: 10px; background: rgba(246, 241, 231, 0.25); overflow: hidden; }
+.hoa-hero__dot-bar i { display: block; height: 100%; width: 100%; background: var(--hoa-ivory); transform: scaleX(0); transform-origin: left; }
+.hoa-hero__dot.is-done .hoa-hero__dot-bar i { transform: scaleX(1); }
+.hoa-hero__dot-name { display: block; margin-top: 4px; font-family: var(--hoa-serif); font-style: italic; font-size: 0.92rem; letter-spacing: 0; }
+
+@media (max-width: 767px) {
+  .hoa-hero { min-height: 600px; }
+  .hoa-hero__content { grid-template-rows: auto 1fr auto; }
+  .hoa-hero__title {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-self: start;
+    margin-top: 14px;
+    font-size: clamp(3.2rem, 16vw, 5.2rem);
+  }
+  .hoa-hero__veil {
+    background: linear-gradient(180deg, rgba(12, 10, 8, 0.72) 0%, rgba(12, 10, 8, 0.1) 38%, rgba(12, 10, 8, 0) 55%, rgba(12, 10, 8, 0.82) 100%);
+  }
+  .hoa-hero__word--serif { align-self: flex-end; }
+  .hoa-hero__foot { grid-template-columns: 1fr; gap: 18px; }
+  .hoa-hero__cta { justify-self: start; }
+  .hoa-hero__index { justify-self: stretch; gap: 10px; }
+  .hoa-hero__dot { width: auto; flex: 1; }
+  .hoa-hero__dot-name { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* ==========================================================================
+   02 — THE HOUSE (manifesto)
+   ========================================================================== */
+.hoa-manifesto {
+  position: relative;
+  padding: var(--hoa-section) 0;
+  overflow: hidden;
+  background: var(--hoa-paper);
+}
+.hoa-manifesto__mark {
+  position: absolute;
+  left: 50%;
+  bottom: -0.2em;
+  transform: translateX(-50%);
+  font-family: var(--hoa-serif);
+  font-size: clamp(9rem, 34vw, 36rem);
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: var(--hoa-paper-2);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.hoa-manifesto .hoa-wrap { position: relative; z-index: 2; }
+.hoa-manifesto__text {
+  margin: 36px auto 0;
+  max-width: min(21ch, calc(100vw - 2 * (var(--hoa-gutter) + 15vw)));
+  text-align: center;
+  font-family: var(--hoa-sans);
+  font-size: clamp(1.9rem, 4.1vw, 4.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: var(--hoa-ink);
+}
+.hoa-manifesto__text em { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.02em; }
+.hoa-manifesto__eyebrow { display: flex; justify-content: center; }
+.hoa-word { transition: opacity 0.3s linear; }
+.hoa-js .hoa-manifesto__text .hoa-word { opacity: 0.14; }
+.hoa-manifesto__row {
+  margin: clamp(48px, 6vw, 88px) auto 0;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+.hoa-manifesto__row .hoa-lede { margin: 0 auto; }
+.hoa-manifesto__float {
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+}
+.hoa-manifesto__float--a { width: clamp(130px, 12.5vw, 230px); aspect-ratio: 3 / 4; left: var(--hoa-gutter); top: 18%; }
+.hoa-manifesto__float--b { width: clamp(120px, 11vw, 200px); aspect-ratio: 1; right: var(--hoa-gutter); top: 8%; }
+.hoa-manifesto__float--c { width: clamp(160px, 14vw, 270px); aspect-ratio: 16 / 10; right: var(--hoa-gutter); bottom: 14%; }
+
+@media (max-width: 960px) {
+  .hoa-manifesto__float { position: relative; left: auto; right: auto; top: auto; bottom: auto; }
+  .hoa-manifesto__floats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 var(--hoa-gutter);
+    margin-top: 56px;
+    position: relative;
+    z-index: 2;
+  }
+  .hoa-manifesto__float--a { width: 100%; }
+  .hoa-manifesto__float--b { width: 100%; aspect-ratio: 3 / 4; }
+  .hoa-manifesto__float--c { display: none; }
+}
+
+/* ==========================================================================
+   03 — SIGNATURE FRAGRANCES (pinned chapters on desktop, tinted cards on mobile)
+   ========================================================================== */
+.hoa-frag { position: relative; color: var(--hoa-ivory); background: var(--hoa-night); }
+.hoa-frag__stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 640px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(0, 1.05fr) minmax(260px, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'head head head'
+    'index visual info';
+  column-gap: clamp(24px, 4vw, 72px);
+  padding: calc(var(--hoa-header-h) + clamp(20px, 3vw, 40px)) var(--hoa-gutter) clamp(28px, 4vw, 48px);
+  max-width: var(--hoa-max);
+  margin: 0 auto;
+  isolation: isolate;
+}
+.hoa-frag__bg {
+  position: absolute;
+  inset: 0 calc(50% - 50vw);
+  z-index: -1;
+  background: var(--hoa-tint, var(--hoa-night));
+  transition: background-color 1.2s var(--hoa-ease-in-out);
+}
+.hoa-frag__head {
+  grid-area: head;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: clamp(20px, 3vw, 40px);
+}
+.hoa-frag__head .hoa-eyebrow { color: rgba(246, 241, 231, 0.6); }
+.hoa-frag__head .hoa-h2 { font-size: clamp(2.2rem, 4.2vw, 4.4rem); margin-top: 14px; }
+.hoa-frag__index { grid-area: index; list-style: none; margin: 0; padding: 0; align-self: end; }
+.hoa-frag__index button {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 11px 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid rgba(246, 241, 231, 0.14);
+  color: rgba(246, 241, 231, 0.45);
+  font: 400 1rem var(--hoa-sans);
+  letter-spacing: -0.01em;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.5s ease, padding 0.6s var(--hoa-ease);
+}
+.hoa-frag__index li:last-child button { border-bottom: 1px solid rgba(246, 241, 231, 0.14); }
+.hoa-frag__index button span { font-size: 0.68rem; letter-spacing: 0.1em; min-width: 22px; }
+.hoa-frag__index button.is-active { color: var(--hoa-ivory); padding-left: 10px; }
+.hoa-frag__index button:hover { color: var(--hoa-ivory); }
+
+.hoa-frag__items,
+.hoa-frag__item { display: contents; }
+.hoa-frag__visual {
+  grid-area: visual;
+  align-self: stretch;
+  position: relative;
+  margin: 0;
+  min-height: 0;
+  border-radius: var(--hoa-radius);
+  overflow: hidden;
+  opacity: 0;
+  clip-path: inset(100% 0 0 0);
+}
+.hoa-frag__visual img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
+.hoa-frag__item.is-active .hoa-frag__visual { opacity: 1; clip-path: inset(0 0 0 0); z-index: 2; }
+.hoa-frag__item.is-active .hoa-frag__visual img { transform: scale(1); }
+.hoa-frag__item.was-active .hoa-frag__visual { opacity: 1; clip-path: inset(0 0 0 0); z-index: 1; }
+
+.hoa-frag__info {
+  grid-area: info;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--hoa-ease), transform 0.9s var(--hoa-ease), visibility 0s linear 0.7s;
+}
+.hoa-frag__item.is-active .hoa-frag__info { opacity: 1; visibility: visible; transform: none; transition-delay: 0.15s, 0.15s, 0s; }
+.hoa-frag__num { font-size: 0.72rem; letter-spacing: 0.18em; color: rgba(246, 241, 231, 0.6); }
+.hoa-frag__name {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.2vw, 4.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--hoa-ivory);
+  text-transform: none;
+}
+.hoa-frag__line { color: rgba(246, 241, 231, 0.78); font-size: 1rem; line-height: 1.6; max-width: 34ch; }
+.hoa-frag__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(246, 241, 231, 0.16);
+  font-size: 0.82rem;
+  color: rgba(246, 241, 231, 0.7);
+}
+.hoa-frag__meta strong { color: var(--hoa-ivory); font-weight: 500; font-size: 0.95rem; }
+
+/* Pinned mode is enabled by JS on wide screens (class on the section) */
+.hoa-frag:not(.is-pinned) .hoa-frag__stage { height: auto; min-height: 0; }
+
+@media (max-width: 899px) {
+  .hoa-frag { background: var(--hoa-paper); color: var(--hoa-ink); }
+  .hoa-frag__bg, .hoa-frag__index { display: none; }
+  .hoa-frag__stage {
+    display: block;
+    height: auto;
+    min-height: 0;
+    padding: var(--hoa-section) var(--hoa-gutter);
+  }
+  .hoa-frag__head { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+  .hoa-frag__head .hoa-eyebrow { color: var(--hoa-mute); }
+  /* Swipeable run of tinted campaign cards */
+  .hoa-frag__items {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 calc(var(--hoa-gutter) * -1);
+    padding: 0 var(--hoa-gutter) 6px;
+    scroll-padding-left: var(--hoa-gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hoa-frag__items::-webkit-scrollbar { display: none; }
+  .hoa-frag__item {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 min(80%, 360px);
+    scroll-snap-align: start;
+    background: var(--hoa-tint);
+    color: var(--hoa-ivory);
+    border-radius: var(--hoa-radius);
+    overflow: hidden;
+  }
+  .hoa-frag__visual,
+  .hoa-frag__item.is-active .hoa-frag__visual { opacity: 1; clip-path: none; aspect-ratio: 4 / 4.6; flex-shrink: 0; }
+  .hoa-frag__visual img { transform: none; }
+  .hoa-frag__info,
+  .hoa-frag__item.is-active .hoa-frag__info { opacity: 1; visibility: visible; transform: none; padding: 18px 18px 20px; gap: 10px; flex: 1; justify-content: space-between; }
+  .hoa-frag__name { font-size: 2rem; }
+  .hoa-frag__line { font-size: 0.9rem; }
+}
+
+/* ==========================================================================
+   04 — DISCOVER YOUR SCENT (scent families)
+   ========================================================================== */
+.hoa-families { padding: var(--hoa-section) 0; background: var(--hoa-paper); }
+.hoa-section-head {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: end;
+  gap: clamp(24px, 5vw, 96px);
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+.hoa-section-head .hoa-h2 { margin-top: 18px; }
+.hoa-section-head__side { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; justify-self: end; max-width: 400px; }
+.hoa-section-head__side .hoa-lede { margin: 0; }
+
+.hoa-families__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(10px, 1.2vw, 18px); }
+.hoa-family {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4.2;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  color: var(--hoa-ivory);
+  text-decoration: none;
+  background: var(--hoa-stone);
+}
+.hoa-family img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--hoa-ease); }
+.hoa-family:hover img { transform: scale(1.05); }
+.hoa-family::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(12, 10, 8, 0) 45%, rgba(12, 10, 8, 0.62) 100%);
+  pointer-events: none;
+}
+.hoa-family__num { position: absolute; top: 16px; left: 18px; z-index: 1; font-size: 0.7rem; letter-spacing: 0.14em; }
+.hoa-family__body { position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 1; }
+.hoa-family__names {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-size: 1rem;
+  padding: 0 6px 12px;
+  opacity: 0.9;
+  transition: opacity 0.6s var(--hoa-ease), transform 0.6s var(--hoa-ease);
+}
+.hoa-family__pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px 12px 18px;
+  border: 1px solid rgba(246, 241, 231, 0.4);
+  border-radius: 999px;
+  background: rgba(246, 241, 231, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease);
+}
+.hoa-family__pill svg { width: 14px; height: 14px; transition: transform 0.6s var(--hoa-ease); }
+.hoa-family:hover .hoa-family__pill { background: var(--hoa-ivory); color: var(--hoa-ink); }
+.hoa-family:hover .hoa-family__pill svg { transform: rotate(45deg); }
+@media (hover: hover) and (min-width: 961px) {
+  .hoa-family__names { opacity: 0; transform: translateY(10px); }
+  .hoa-family:hover .hoa-family__names { opacity: 0.95; transform: none; }
+}
+
+@media (max-width: 960px) {
+  .hoa-section-head { grid-template-columns: 1fr; }
+  .hoa-section-head__side { justify-self: start; }
+  .hoa-families__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 calc(var(--hoa-gutter) * -1);
+    padding: 0 var(--hoa-gutter);
+    scroll-padding-left: var(--hoa-gutter);
+    scrollbar-width: none;
+  }
+  .hoa-families__grid::-webkit-scrollbar { display: none; }
+  .hoa-family { flex: 0 0 76%; scroll-snap-align: start; }
+}
+
+/* ==========================================================================
+   05 — THE ART OF PERFUMERY (dark, floating gallery)
+   ========================================================================== */
+.hoa-craft {
+  position: relative;
+  background: var(--hoa-night);
+  color: var(--hoa-ivory);
+  overflow: hidden;
+  padding: clamp(140px, 18vw, 280px) 0;
+  min-height: 130vh;
+  display: flex;
+  align-items: center;
+}
+.hoa-craft__center {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+.hoa-craft__center .hoa-eyebrow { color: rgba(246, 241, 231, 0.6); }
+.hoa-craft__center .hoa-h2 { font-size: clamp(2.6rem, 6.4vw, 6.6rem); }
+.hoa-craft__center .hoa-lede { color: rgba(246, 241, 231, 0.72); text-align: center; margin: 0 auto; }
+.hoa-craft__materials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+  margin: 4px 0 8px;
+  padding: 0;
+}
+.hoa-craft__materials li {
+  padding: 7px 14px;
+  border: 1px solid rgba(246, 241, 231, 0.22);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: rgba(246, 241, 231, 0.8);
+}
+.hoa-craft__float { position: absolute; margin: 0; z-index: 1; border-radius: var(--hoa-radius); overflow: hidden; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45); }
+.hoa-craft__float img { width: 100%; height: 100%; object-fit: cover; }
+.hoa-craft__float--1 { width: 19vw; aspect-ratio: 16 / 10; left: 4vw; top: 9%; rotate: -5deg; }
+.hoa-craft__float--2 { width: 13vw; aspect-ratio: 3 / 4; left: 12vw; bottom: 8%; rotate: 4deg; }
+.hoa-craft__float--3 { width: 11vw; aspect-ratio: 1; left: 30vw; top: 4%; rotate: 3deg; opacity: 0.8; }
+.hoa-craft__float--4 { width: 15vw; aspect-ratio: 3 / 4; right: 5vw; top: 12%; rotate: 5deg; }
+.hoa-craft__float--5 { width: 18vw; aspect-ratio: 16 / 10; right: 9vw; bottom: 7%; rotate: -4deg; }
+.hoa-craft__float--6 { width: 10vw; aspect-ratio: 1; right: 31vw; bottom: 3%; rotate: -3deg; opacity: 0.8; }
+
+@media (max-width: 960px) {
+  .hoa-craft { display: block; min-height: 0; padding: var(--hoa-section) 0; }
+  .hoa-craft__floats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 0 var(--hoa-gutter);
+    margin-top: 56px;
+  }
+  .hoa-craft__float { position: relative; inset: auto; width: auto; rotate: 0deg; opacity: 1; box-shadow: none; aspect-ratio: 3 / 4; }
+  .hoa-craft__float--1, .hoa-craft__float--5 { grid-column: span 3; aspect-ratio: 16 / 10; }
+  .hoa-craft__float--3, .hoa-craft__float--6 { display: none; }
+  .hoa-craft__float--2 { grid-column: span 1; }
+  .hoa-craft__float--4 { grid-column: span 2; aspect-ratio: auto; }
+}
+
+/* ==========================================================================
+   06 — THE COLLECTION (tabbed product grid + Discovery feature)
+   ========================================================================== */
+.hoa-collection { padding: var(--hoa-section) 0; background: var(--hoa-paper); }
+.hoa-collection__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: clamp(28px, 3.4vw, 48px);
+}
+.hoa-collection__head .hoa-eyebrow { margin-bottom: 18px; }
+.hoa-tabs { display: flex; flex-wrap: wrap; gap: 0.1em 0.55em; }
+.hoa-tab {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--hoa-sans);
+  font-size: clamp(1.8rem, 3.4vw, 3.3rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  color: rgba(20, 18, 16, 0.26);
+  transition: color 0.5s var(--hoa-ease);
+}
+.hoa-tab:hover { color: rgba(20, 18, 16, 0.6); }
+.hoa-tab[aria-selected='true'] { color: var(--hoa-ink); }
+.hoa-tab sup { font-size: 0.34em; letter-spacing: 0; vertical-align: super; margin-left: 2px; }
+
+.hoa-collection__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(28px, 3vw, 44px) clamp(10px, 1.2vw, 18px);
+}
+.hoa-card { display: flex; flex-direction: column; gap: 14px; }
+.hoa-card.is-hidden { display: none; }
+.hoa-card__visual { position: relative; overflow: hidden; border-radius: var(--hoa-radius); }
+.hoa-card__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-paper-2);
+}
+.hoa-card__img { position: absolute; inset: 0; }
+.hoa-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.hoa-card__img--product img { mix-blend-mode: multiply; object-fit: cover; transition: transform 1.2s var(--hoa-ease); }
+.hoa-card__visual:hover .hoa-card__img--product img { transform: scale(1.03); }
+.hoa-card__img--mood { opacity: 0; transition: opacity 0.8s var(--hoa-ease); }
+.hoa-card__img--mood img { transform: scale(1.08); transition: transform 1.6s var(--hoa-ease); }
+.hoa-card__tag {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(246, 243, 238, 0.86);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--hoa-ink);
+}
+.hoa-card__add {
+  position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2;
+  margin: 0;
+  transform: translateY(calc(100% + 16px));
+  transition: transform 0.7s var(--hoa-ease);
+}
+.hoa-card__add .hoa-btn { width: 100%; justify-content: space-between; }
+@media (hover: hover) {
+  .hoa-card__visual:hover .hoa-card__img--mood { opacity: 1; }
+  .hoa-card__visual:hover .hoa-card__img--mood img { transform: scale(1); }
+  .hoa-card:hover .hoa-card__add,
+  .hoa-card:focus-within .hoa-card__add { transform: none; }
+}
+.hoa-card__row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.hoa-card__title { font-family: var(--hoa-sans); font-size: 1.02rem; font-weight: 500; letter-spacing: -0.015em; text-transform: none; margin: 0; }
+.hoa-card__title a { color: inherit; text-decoration: none; }
+.hoa-card__price { font-size: 0.95rem; color: var(--hoa-ink); white-space: nowrap; }
+.hoa-card__family { margin-top: -10px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hoa-mute); }
+
+.hoa-card--feature { position: relative; }
+.hoa-card--feature .hoa-card__media { background: var(--hoa-night); }
+.hoa-card--feature .hoa-card__media img { opacity: 0.72; transition: transform 1.4s var(--hoa-ease), opacity 0.8s ease; }
+.hoa-card--feature .hoa-card__media:hover img { transform: scale(1.05); opacity: 0.6; }
+.hoa-card__overlay {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  color: var(--hoa-ivory);
+}
+.hoa-card__overlay .hoa-eyebrow { color: rgba(246, 241, 231, 0.75); }
+.hoa-card__overlay h3 {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+  line-height: 1;
+  color: var(--hoa-ivory);
+  text-transform: none;
+  margin: 12px 0 10px;
+}
+.hoa-card__overlay p:not(.hoa-eyebrow) { font-size: 0.88rem; line-height: 1.55; color: rgba(246, 241, 231, 0.8); max-width: 28ch; }
+
+@media (max-width: 1100px) {
+  .hoa-collection__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 767px) {
+  .hoa-collection__head { flex-direction: column; align-items: flex-start; }
+  .hoa-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: calc(100% + var(--hoa-gutter) * 2);
+    margin: 0 calc(var(--hoa-gutter) * -1);
+    padding: 0 var(--hoa-gutter) 4px;
+    scrollbar-width: none;
+  }
+  .hoa-tabs::-webkit-scrollbar { display: none; }
+  .hoa-tab { font-size: 2rem; white-space: nowrap; }
+  .hoa-collection__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 10px; }
+  .hoa-card__row { flex-direction: column; gap: 2px; }
+  .hoa-card__family { margin-top: -8px; }
+  .hoa-card__add { transform: none; left: 8px; right: 8px; bottom: 8px; }
+  .hoa-card__add .hoa-btn { padding: 4px 4px 4px 12px; font-size: 0.72rem; }
+  .hoa-card__add .hoa-btn__icon { width: 24px; height: 24px; }
+  .hoa-card--feature { grid-column: span 2; }
+  .hoa-card--feature .hoa-card__media { aspect-ratio: 16 / 12; }
+}
+
+/* ==========================================================================
+   07 — THE WORLD OF AGHA (editorial bento + stories)
+   ========================================================================== */
+.hoa-world { padding: var(--hoa-section) 0; background: var(--hoa-paper); border-top: 1px solid var(--hoa-line); }
+.hoa-world__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: clamp(56px, 6.6vw, 100px);
+  gap: clamp(10px, 1.2vw, 18px);
+}
+.hoa-tile { position: relative; margin: 0; overflow: hidden; border-radius: var(--hoa-radius); background: var(--hoa-stone); }
+.hoa-tile img { position: absolute; left: 0; top: -8%; width: 100%; height: 116%; object-fit: cover; }
+.hoa-tile figcaption {
+  position: absolute; left: 14px; bottom: 12px; z-index: 1;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(246, 243, 238, 0.86);
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--hoa-ink);
+}
+.hoa-tile--1 { grid-column: 1 / 8; grid-row: 1 / 6; }
+.hoa-tile--2 { grid-column: 8 / 13; grid-row: 1 / 8; }
+.hoa-tile--3 { grid-column: 1 / 5; grid-row: 6 / 12; }
+.hoa-tile--4 { grid-column: 5 / 8; grid-row: 6 / 11; }
+.hoa-tile--5 { grid-column: 8 / 13; grid-row: 8 / 12; }
+
+.hoa-world__stories {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(40px, 6vw, 120px);
+  align-items: start;
+  margin-top: clamp(72px, 9vw, 140px);
+}
+.hoa-quote { margin: 0; }
+.hoa-quote p {
+  font-family: var(--hoa-sans);
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  color: var(--hoa-ink);
+}
+.hoa-quote p::before { content: '“'; margin-right: 0.02em; }
+.hoa-quote p::after { content: '”'; margin-left: 0.02em; }
+.hoa-quote cite { display: block; margin-top: 22px; font-style: normal; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-quotes { list-style: none; margin: 0; padding: 0; }
+.hoa-quotes li { padding: 18px 0; border-top: 1px solid var(--hoa-line); }
+.hoa-quotes li:last-child { border-bottom: 1px solid var(--hoa-line); }
+.hoa-quotes cite { display: block; font-style: italic; font-family: var(--hoa-serif); font-size: 1.1rem; }
+.hoa-quotes p { margin-top: 4px; font-size: 0.9rem; color: var(--hoa-ink-2); }
+
+@media (max-width: 960px) {
+  .hoa-world__grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; }
+  .hoa-tile { grid-column: auto !important; grid-row: auto !important; aspect-ratio: 3 / 4; }
+  .hoa-tile--1 { grid-column: 1 / -1 !important; aspect-ratio: 16 / 11; }
+  .hoa-tile--5 { grid-column: 1 / -1 !important; aspect-ratio: 16 / 11; }
+  .hoa-tile img { top: 0; height: 100%; }
+  .hoa-world__stories { grid-template-columns: 1fr; }
+}
+
+/* ---------- Tablet tightening ---------- */
+@media (min-width: 600px) and (max-width: 960px) {
+  .hoa-craft__floats { grid-template-columns: repeat(4, 1fr); }
+  .hoa-craft__float, .hoa-craft__float--1, .hoa-craft__float--5, .hoa-craft__float--4 { grid-column: span 1; aspect-ratio: 3 / 4; }
+  .hoa-craft__float--3, .hoa-craft__float--6 { display: none; }
+  .hoa-world__grid { grid-template-columns: repeat(3, 1fr); }
+  .hoa-tile, .hoa-tile--5 { grid-column: auto !important; aspect-ratio: 4 / 5; }
+  .hoa-tile--1 { grid-column: 1 / -1 !important; aspect-ratio: 16 / 9; }
+  .hoa-tile--5 { display: none; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hoa-hero__slide, .hoa-hero__slide img, .hoa-frag__info, .hoa-frag__bg, .hoa-card__img--mood, .hoa-card__img--mood img { transition: none !important; }
+  .hoa-hero__slide img { transform: none !important; }
+  .hoa-js [data-hoa-reveal] { opacity: 1; transform: none; }
+  .hoa-js .hoa-manifesto__text .hoa-word { opacity: 1; }
+}
+
+/* Lock the page behind the open mobile menu */
+.hoa-menu-open body { overflow: hidden; }
+
+/* ==========================================================================
+   TESTIMONIALS — "Loved by those who wear it."
+   Default = static editorial layout (no JS / reduced motion).
+   .is-animated (added by assets/hoa-testimonials.js) = pinned stage where the
+   cards rise over the giant statement and settle into a composition.
+   ========================================================================== */
+.hoa-voices { position: relative; background: var(--hoa-paper); color: var(--hoa-ink); border-top: 1px solid var(--hoa-line); }
+.hoa-voices__stage {
+  position: relative;
+  max-width: var(--hoa-max);
+  margin: 0 auto;
+  padding: var(--hoa-section) var(--hoa-gutter);
+}
+.hoa-voices__intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  position: relative;
+  z-index: 3;
+}
+.hoa-voices__lede { max-width: 34ch; font-size: 0.92rem; line-height: 1.6; color: var(--hoa-ink-2); text-align: right; }
+
+.hoa-voices__statement {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(28px, 4vw, 56px) 0 clamp(40px, 5vw, 72px);
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(3.4rem, min(12.5vw, 22vh), 14.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  color: var(--hoa-ink);
+  text-transform: none;
+  pointer-events: none;
+  user-select: none;
+}
+.hoa-voices__line { display: block; white-space: nowrap; will-change: transform; }
+.hoa-voices__line--serif { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.035em; padding-left: 0.9em; }
+.hoa-voices__line--3 { align-self: flex-end; }
+
+.hoa-voices__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  position: relative;
+  z-index: 2;
+}
+.hoa-voice { margin: 0; }
+.hoa-voice__card {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(18px, 1.6vw, 24px);
+  background: #FFFDF9;
+  border: 1px solid rgba(20, 18, 16, 0.08);
+  border-radius: var(--hoa-radius);
+  box-shadow: 0 1px 0 rgba(20, 18, 16, 0.03), 0 24px 48px -28px rgba(20, 18, 16, 0.22);
+}
+.hoa-voice__rating { display: flex; gap: 3px; font-size: 0.72rem; line-height: 1; color: var(--hoa-brass); }
+.hoa-voice__rating .is-off { opacity: 0.25; }
+.hoa-voice__quote { margin: 0; flex: 1; }
+.hoa-voice__quote p { font-size: clamp(0.9rem, 0.95vw, 1rem); line-height: 1.55; letter-spacing: -0.005em; color: var(--hoa-ink); }
+.hoa-voice__who { display: flex; align-items: center; gap: 12px; padding-top: 14px; border-top: 1px solid var(--hoa-line); }
+.hoa-voice__avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.hoa-voice__avatar--mono {
+  display: grid;
+  place-items: center;
+  background: var(--hoa-paper-2);
+  border: 1px solid var(--hoa-line);
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--hoa-ink);
+}
+.hoa-voice__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hoa-voice__name { font-style: normal; font-size: 0.86rem; font-weight: 500; }
+.hoa-voice__detail { font-size: 0.74rem; color: var(--hoa-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- Animated stage (desktop + tablet) ---------- */
+.hoa-voices.is-animated .hoa-voices__stage {
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+}
+.hoa-voices.is-animated .hoa-voices__intro {
+  position: absolute;
+  z-index: 1; /* behind the cards, like the statement */
+  top: calc(var(--hoa-header-h) + clamp(20px, 3vw, 40px));
+  left: var(--hoa-gutter);
+  right: var(--hoa-gutter);
+}
+.hoa-voices.is-animated .hoa-voices__statement {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: calc(var(--hoa-header-h) + 40px) var(--hoa-gutter) 32px;
+  justify-content: center;
+  z-index: 1;
+}
+.hoa-voices.is-animated .hoa-voices__cards { position: absolute; inset: 0; display: block; }
+.hoa-voices.is-animated .hoa-voice {
+  position: absolute;
+  left: var(--vx);
+  /* --vy is a fraction of the stage height below the fixed header */
+  top: calc(var(--hoa-header-h) + (100% - var(--hoa-header-h)) * var(--vy));
+  width: var(--vw, clamp(210px, 17vw, 285px));
+  /* centred on (--vx, --vy) by GSAP (xPercent/yPercent: -50) — GSAP 3.12 would clear a CSS translate */
+  will-change: transform, opacity;
+}
+/* Final composition (card centres, as % of the stage). Editorial, not random:
+   two cards frame each line of the statement, one anchors the centre. */
+.hoa-voices.is-animated .hoa-voice--1 { --vx: 17%; --vy: 0.33; }
+.hoa-voices.is-animated .hoa-voice--2 { --vx: 81%; --vy: 0.29; }
+.hoa-voices.is-animated .hoa-voice--3 { --vx: 40%; --vy: 0.57; }
+.hoa-voices.is-animated .hoa-voice--4 { --vx: 64%; --vy: 0.7; }
+.hoa-voices.is-animated .hoa-voice--5 { --vx: 12%; --vy: 0.76; }
+.hoa-voices.is-animated .hoa-voice--6 { --vx: 88%; --vy: 0.68; }
+.hoa-voices.is-animated .hoa-voice--7 { --vx: 52%; --vy: 0.27; }
+
+/* Tablet: smaller cards, same choreography */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .hoa-voices.is-animated .hoa-voice { --vw: clamp(200px, 26vw, 250px); }
+  .hoa-voices.is-animated .hoa-voice__quote p { font-size: 0.86rem; }
+  .hoa-voices.is-animated .hoa-voice--6,
+  .hoa-voices.is-animated .hoa-voice--7 { display: none; }
+  .hoa-voices.is-animated .hoa-voice--1 { --vx: 20%; --vy: 0.34; }
+  .hoa-voices.is-animated .hoa-voice--2 { --vx: 78%; --vy: 0.3; }
+  .hoa-voices.is-animated .hoa-voice--3 { --vx: 42%; --vy: 0.62; }
+  .hoa-voices.is-animated .hoa-voice--4 { --vx: 76%; --vy: 0.72; }
+  .hoa-voices.is-animated .hoa-voice--5 { --vx: 18%; --vy: 0.78; }
+}
+
+/* Mobile: statement at the top, a readable deck of cards below it */
+@media (max-width: 767px) {
+  .hoa-voices__intro { flex-direction: column; gap: 10px; }
+  .hoa-voices__lede { text-align: left; }
+  .hoa-voices__statement { font-size: clamp(3rem, 15.5vw, 5rem); }
+  .hoa-voices__cards { grid-template-columns: 1fr; }
+  .hoa-voices.is-animated .hoa-voices__statement { justify-content: flex-start; padding-top: calc(var(--hoa-header-h) + 104px); }
+  .hoa-voices.is-animated .hoa-voice { --vw: min(86vw, 360px); --vx: 50%; --vy: 0.76; }
+  .hoa-voices.is-animated .hoa-voice:nth-child(n+6) { display: none; }
+}

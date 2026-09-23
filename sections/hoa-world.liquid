@@ -1,0 +1,104 @@
+{% comment %}
+  07 — THE WORLD OF AGHA
+  Agha away from the counter: an editorial bento of campaign moments (each image
+  drifts slightly inside its frame on scroll), followed by what people have said.
+  "tile" blocks: up to five images, in reading order.
+  "story" blocks: the first is set large, the rest as a quiet list. Nothing renders
+  when there are no story blocks.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign tiles = section.blocks | where: 'type', 'tile'
+  assign stories = section.blocks | where: 'type', 'story'
+-%}
+<section class="hoa-world" id="world" data-hoa-world>
+  <div class="hoa-wrap">
+    <header class="hoa-section-head">
+      <div>
+        <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
+        <h2 class="hoa-h2" data-hoa-reveal>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      </div>
+      <div class="hoa-section-head__side" data-hoa-reveal>
+        <p class="hoa-lede">{{ s.text }}</p>
+      </div>
+    </header>
+
+    {%- if tiles.size > 0 -%}
+      <div class="hoa-world__grid" id="reels">
+        {%- for block in tiles limit: 5 -%}
+          {%- assign b = block.settings -%}
+          <figure class="hoa-tile hoa-tile--{{ forloop.index }}" data-hoa-reveal data-hoa-parallax {{ block.shopify_attributes }}>
+            {%- if forloop.index == 1 or forloop.index == 5 -%}
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 961px) 58vw, 100vw' -%}
+            {%- else -%}
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 961px) 34vw, 50vw' -%}
+            {%- endif -%}
+            {%- if b.caption != blank -%}<figcaption>{{ b.caption }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if stories.size > 0 -%}
+      <div class="hoa-world__stories" id="stories">
+        {%- for block in stories -%}
+          {%- if forloop.first -%}
+            <blockquote class="hoa-quote" data-hoa-reveal {{ block.shopify_attributes }}>
+              <p>{{ block.settings.quote }}</p>
+              <cite>{{ block.settings.author }}{% if block.settings.detail != blank %} · {{ block.settings.detail }}{% endif %}</cite>
+            </blockquote>
+            {%- if stories.size > 1 -%}<ul class="hoa-quotes" data-hoa-reveal>{%- endif -%}
+          {%- else -%}
+            <li {{ block.shopify_attributes }}>
+              <cite>{{ block.settings.author }}</cite>
+              <p>“{{ block.settings.quote }}”</p>
+            </li>
+            {%- if forloop.last -%}</ul>{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA World of Agha",
+  "tag": "div",
+  "class": "hoa-world-section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The World of Agha" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Beyond the bottle." },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "Into the day." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "On a drive out of the city, in a quiet room, by the water. How the House lives once it leaves the box." }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Image tile",
+      "limit": 5,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 1200 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 1600 },
+        { "type": "text", "id": "caption", "label": "Caption" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    },
+    {
+      "type": "story",
+      "name": "Story",
+      "limit": 4,
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "author", "label": "Name or publication" },
+        { "type": "text", "id": "detail", "label": "Detail" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA World of Agha" }]
+}
+{% endschema %}

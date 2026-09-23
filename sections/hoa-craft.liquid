@@ -1,0 +1,51 @@
+{% comment %}
+  05 — THE ART OF PERFUMERY
+  The one dark room on the page. A centred statement, the raw materials named as quiet
+  chips, and six material studies from the campaigns drifting past at different
+  speeds (desktop). On mobile the studies settle into a grid under the text.
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-craft" id="art" data-hoa-craft data-header-theme="dark">
+  <div class="hoa-craft__floats" aria-hidden="true">
+    <figure class="hoa-craft__float hoa-craft__float--1" data-hoa-speed="-0.35">{%- render 'hoa-img', name: 'hoa-craft-embers', w: 2000, h: 1125, alt: '', sizes: '(min-width: 961px) 20vw, 100vw' -%}</figure>
+    <figure class="hoa-craft__float hoa-craft__float--2" data-hoa-speed="0.25">{%- render 'hoa-img', name: 'hoa-craft-water', w: 1024, h: 1536, alt: '', sizes: '(min-width: 961px) 14vw, 33vw' -%}</figure>
+    <figure class="hoa-craft__float hoa-craft__float--3" data-hoa-speed="-0.55">{%- render 'hoa-img', name: 'hoa-craft-moss', w: 969, h: 969, alt: '', sizes: '12vw' -%}</figure>
+    <figure class="hoa-craft__float hoa-craft__float--4" data-hoa-speed="-0.2">{%- render 'hoa-img', name: 'hoa-craft-ice', w: 1200, h: 1854, alt: '', sizes: '(min-width: 961px) 16vw, 66vw' -%}</figure>
+    <figure class="hoa-craft__float hoa-craft__float--5" data-hoa-speed="0.4">{%- render 'hoa-img', name: 'hoa-craft-sand', w: 2000, h: 1125, alt: '', sizes: '(min-width: 961px) 19vw, 100vw' -%}</figure>
+    <figure class="hoa-craft__float hoa-craft__float--6" data-hoa-speed="0.6">{%- render 'hoa-img', name: 'hoa-craft-charcoal', w: 1200, h: 1200, alt: '', sizes: '11vw' -%}</figure>
+  </div>
+
+  <div class="hoa-wrap">
+    <div class="hoa-craft__center">
+      <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
+      <h2 class="hoa-h2" data-hoa-reveal>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      <p class="hoa-lede" data-hoa-reveal>{{ s.text }}</p>
+      {%- assign materials = s.materials | split: ',' -%}
+      {%- if materials.size > 0 -%}
+        <ul class="hoa-craft__materials" data-hoa-reveal>
+          {%- for m in materials -%}<li>{{ m | strip }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <a class="hoa-btn hoa-btn--light" href="{{ s.cta_url | default: '/pages/the-house' }}" data-hoa-reveal><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Art of Perfumery",
+  "tag": "div",
+  "class": "hoa-craft-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The art of perfumery" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Composed slowly." },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "Worn closely." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Wood and resin, flower and salt, leaf and smoke. Each Agha fragrance is built around the materials of its own world, and photographed in it." },
+    { "type": "text", "id": "materials", "label": "Materials (comma separated)", "default": "Oud wood, Tobacco leaf, Bergamot, Jasmine, Rose, Sea salt" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Inside the House" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "presets": [{ "name": "HOA Art of Perfumery" }]
+}
+{% endschema %}

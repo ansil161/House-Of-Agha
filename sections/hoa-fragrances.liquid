@@ -1,0 +1,107 @@
+{% comment %}
+  03 — SIGNATURE FRAGRANCES
+  Desktop: the stage pins and each scroll step brings in the next fragrance: its
+  campaign portrait wipes up, its name and line settle, and the whole stage takes on
+  that fragrance's tint. The index on the left jumps straight to any fragrance.
+  Mobile: the same fragrances become a vertical run of tinted campaign cards.
+
+  One "fragrance" block per fragrance. Pick the Shopify product to use its real title,
+  price and URL; the text fields are used when no product is picked.
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-frag" id="fragrances" data-hoa-frag data-header-theme="dark" data-count="{{ section.blocks.size }}">
+  <div class="hoa-frag__stage" data-hoa-frag-stage>
+    <div class="hoa-frag__bg" data-hoa-frag-bg aria-hidden="true"></div>
+
+    <header class="hoa-frag__head">
+      <div>
+        <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
+        <h2 class="hoa-h2">{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      </div>
+      <a class="hoa-link hoa-frag__all" href="{{ s.all_url | default: routes.all_products_collection_url }}">{{ s.all_label }}</a>
+    </header>
+
+    <ol class="hoa-frag__index" aria-label="Fragrances">
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        <li>
+          <button type="button" class="{% if forloop.first %}is-active{% endif %}" data-hoa-frag-go="{{ forloop.index0 }}">
+            <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{% if p != blank %}{{ p.title }}{% else %}{{ block.settings.name }}{% endif %}
+          </button>
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    <div class="hoa-frag__items">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign p = b.product
+        if p != blank
+          assign f_name = p.title
+          assign f_url = p.url
+          if p.price_varies
+            assign f_price = p.price_min | money | prepend: 'From '
+          else
+            assign f_price = p.price | money
+          endif
+        else
+          assign f_name = b.name
+          assign f_url = b.url | default: routes.all_products_collection_url
+          assign f_price = ''
+        endif
+        assign f_alt = b.alt | default: f_name
+      -%}
+      <div class="hoa-frag__item{% if forloop.first %} is-active{% endif %}" style="--hoa-tint: {{ b.tint }};" data-hoa-frag-item data-tint="{{ b.tint }}" {{ block.shopify_attributes }}>
+        <figure class="hoa-frag__visual">
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: f_alt, sizes: '(min-width: 900px) 34vw, 100vw' -%}
+        </figure>
+        <div class="hoa-frag__info">
+          <span class="hoa-frag__num">Nº {{ forloop.index | prepend: '0' | slice: -2, 2 }} — {{ b.label }}</span>
+          <h3 class="hoa-frag__name">{{ f_name }}</h3>
+          {%- if b.line != blank -%}<p class="hoa-frag__line">{{ b.line }}</p>{%- endif -%}
+          <div class="hoa-frag__meta">
+            {%- if f_price != blank -%}<strong>{{ f_price }}</strong>{%- else -%}<span>{{ b.label }}</span>{%- endif -%}
+            <a href="{{ f_url }}" class="hoa-btn hoa-btn--light hoa-btn--small"><span>Discover</span>{% render 'hoa-btn-icon' %}</a>
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Signature Fragrances",
+  "tag": "div",
+  "class": "hoa-frag-section",
+  "max_blocks": 9,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Signature fragrances" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Seven fragrances." },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "Seven worlds." },
+    { "type": "text", "id": "all_label", "label": "Link label", "default": "Shop the collection" },
+    { "type": "url", "id": "all_url", "label": "Link" }
+  ],
+  "blocks": [
+    {
+      "type": "fragrance",
+      "name": "Fragrance",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "name", "label": "Name (when no product is picked)" },
+        { "type": "url", "id": "url", "label": "Link (when no product is picked)" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Eau de Parfum" },
+        { "type": "textarea", "id": "line", "label": "One line about its world" },
+        { "type": "color", "id": "tint", "label": "Stage tint", "default": "#1A1511" },
+        { "type": "image_picker", "id": "image", "label": "Campaign portrait (4:5)" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Signature Fragrances" }]
+}
+{% endschema %}

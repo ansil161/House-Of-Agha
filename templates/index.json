@@ -1,68 +1,346 @@
 {
   "sections": {
     "hero": {
-      "type": "agha-hero",
-      "settings": {}
-    },
-    "the_house": {
-      "type": "the-house",
-      "settings": {}
-    },
-    "signature": {
-      "type": "signature-fragrances",
-      "settings": {}
-    },
-    "discover": {
-      "type": "discover-scent",
-      "settings": {}
-    },
-    "art": {
-      "type": "art-of-perfumery",
-      "settings": {}
-    },
-    "collection": {
-      "type": "agha-collection",
-      "settings": {
-        "products_to_show": 4
-      }
-    },
-    "world": {
-      "type": "agha-world",
+      "type": "hoa-hero",
       "blocks": {
-        "story_lead": {
-          "type": "story",
+        "slide_oud_fury": {
+          "type": "slide",
           "settings": {
-            "quote": "AGHA has accomplished what few modern fragrance houses dare: creating extraits de parfum so concentrated and atmospheric that a single spray stays woven into wool and cashmere for days.",
-            "author": "Vogue International",
-            "detail": "Olfactory Edit"
+            "name": "Oud Fury",
+            "asset": "hoa-hero-oud-fury",
+            "asset_mobile": "hoa-oud-fury-portrait",
+            "alt": "Oud Fury Eau de Parfum on oud wood in a shaft of amber light"
           }
         },
-        "story_2": {
-          "type": "story",
+        "slide_agha_blue": {
+          "type": "slide",
           "settings": {
-            "quote": "The new dark icon of niche perfumery.",
-            "author": "Harper’s Bazaar"
+            "name": "Agha Blue",
+            "asset": "hoa-hero-agha-blue",
+            "asset_mobile": "hoa-agha-blue-portrait",
+            "alt": "Agha Blue Eau de Parfum standing in an ice cave above still water"
           }
         },
-        "story_3": {
-          "type": "story",
+        "slide_dark_paradise": {
+          "type": "slide",
           "settings": {
-            "quote": "Best nocturnal scent signature of 2026.",
-            "author": "GQ Magazine"
-          }
-        },
-        "story_4": {
-          "type": "story",
-          "settings": {
-            "quote": "Restraint meets unadulterated luxury.",
-            "author": "Elle Luxury"
+            "name": "Oud of Dark Paradise",
+            "asset": "hoa-hero-dark-paradise",
+            "asset_mobile": "hoa-dark-paradise-portrait",
+            "alt": "Oud of Dark Paradise on dark rock beneath a beam of smoke-filled light"
           }
         }
       },
-      "block_order": ["story_lead", "story_2", "story_3", "story_4"],
-      "settings": {
-        "intro": "Films from the house, and what has been said about it."
-      }
+      "block_order": [
+        "slide_oud_fury",
+        "slide_agha_blue",
+        "slide_dark_paradise"
+      ],
+      "settings": {}
+    },
+    "the_house": {
+      "type": "hoa-manifesto",
+      "settings": {}
+    },
+    "signature": {
+      "type": "hoa-fragrances",
+      "blocks": {
+        "f_oud_fury": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Oud Fury",
+            "url": "/products/oud-fury",
+            "line": "Amber smoke, charred wood and a single shaft of evening light.",
+            "tint": "#2b160a",
+            "asset": "hoa-oud-fury-portrait"
+          }
+        },
+        "f_agha_blue": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Agha Blue",
+            "url": "/products/agha-blue",
+            "line": "Ice caves, cold stone and the deep blue of a winter night.",
+            "tint": "#0a1a45",
+            "asset": "hoa-agha-blue-portrait"
+          }
+        },
+        "f_dark_paradise": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Oud of Dark Paradise",
+            "url": "/products/oud-of-dark-paradise",
+            "line": "Black sand, rising smoke and a room lit only by embers.",
+            "tint": "#15100d",
+            "asset": "hoa-dark-paradise-portrait"
+          }
+        },
+        "f_maha": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Maha",
+            "url": "/products/maha",
+            "line": "Blossom, warm sand and late sun through an open window.",
+            "tint": "#5b3524",
+            "asset": "hoa-maha-portrait"
+          }
+        },
+        "f_sea_smoke": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Sea Smoke",
+            "url": "/products/sea-smoke",
+            "line": "Clear water, pale stone and salt carried in on the wind.",
+            "tint": "#0b3a40",
+            "asset": "hoa-sea-smoke-portrait"
+          }
+        },
+        "f_tobacco": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Tobacco Enigma",
+            "url": "/products/tobacco-enigma",
+            "line": "Tobacco leaf, moss and a forest floor after rain.",
+            "tint": "#2e3320",
+            "asset": "hoa-tobacco-enigma-portrait"
+          }
+        },
+        "f_shamamah": {
+          "type": "fragrance",
+          "settings": {
+            "name": "Shamamah",
+            "url": "/products/shamamah",
+            "line": "Jasmine, gilded columns and the hush of a palace garden.",
+            "tint": "#3d2f18",
+            "asset": "hoa-shamamah-portrait"
+          }
+        }
+      },
+      "block_order": [
+        "f_oud_fury",
+        "f_agha_blue",
+        "f_dark_paradise",
+        "f_maha",
+        "f_sea_smoke",
+        "f_tobacco",
+        "f_shamamah"
+      ],
+      "settings": {}
+    },
+    "discover": {
+      "type": "hoa-families",
+      "blocks": {
+        "fam_woody": {
+          "type": "family",
+          "settings": {
+            "title": "Woody & Smoky",
+            "names": "Oud Fury · Oud of Dark Paradise",
+            "url": "/collections/all",
+            "asset": "hoa-family-woody",
+            "alt": "Oud Fury among oud wood and amber smoke"
+          }
+        },
+        "fam_fresh": {
+          "type": "family",
+          "settings": {
+            "title": "Fresh & Aquatic",
+            "names": "Agha Blue · Sea Smoke",
+            "url": "/collections/all",
+            "asset": "hoa-family-aquatic",
+            "alt": "Sea Smoke under clear water with shells and fish"
+          }
+        },
+        "fam_floral": {
+          "type": "family",
+          "settings": {
+            "title": "Floral & Luminous",
+            "names": "Maha · Shamamah",
+            "url": "/collections/all",
+            "asset": "hoa-family-floral",
+            "alt": "Maha among lilies and white flowers on silk"
+          }
+        },
+        "fam_aromatic": {
+          "type": "family",
+          "settings": {
+            "title": "Aromatic & Green",
+            "names": "Tobacco Enigma",
+            "url": "/collections/all",
+            "asset": "hoa-family-green",
+            "alt": "Tobacco Enigma on moss in a sunlit forest"
+          }
+        }
+      },
+      "block_order": [
+        "fam_woody",
+        "fam_fresh",
+        "fam_floral",
+        "fam_aromatic"
+      ],
+      "settings": {}
+    },
+    "art": {
+      "type": "hoa-craft",
+      "settings": {}
+    },
+    "collection": {
+      "type": "hoa-collection",
+      "settings": {}
+    },
+    "world": {
+      "type": "hoa-world",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-profile",
+            "w": 2000,
+            "h": 1125,
+            "caption": "Oud Fury",
+            "alt": "A man holds Oud Fury against an amber backdrop"
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-journey",
+            "w": 1200,
+            "h": 1607,
+            "caption": "Maha",
+            "alt": "Maha held out of a car window above spring flowers"
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-hand",
+            "w": 1086,
+            "h": 1448,
+            "caption": "Oud of Dark Paradise",
+            "alt": "A hand in a dark suit holds Oud of Dark Paradise, in black and white"
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-water",
+            "w": 1152,
+            "h": 1536,
+            "caption": "Sea Smoke",
+            "alt": "Sea Smoke held above clear shallow water"
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-poolside",
+            "w": 1200,
+            "h": 1200,
+            "caption": "Sea Smoke",
+            "alt": "Sea Smoke by a pool beside sunglasses and a glass"
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5"
+      ],
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "hoa-testimonials",
+      "blocks": {
+        "voice_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I wore Oud Fury to a winter wedding and three people asked what it was before the first dance.",
+            "name": "Arjun M.",
+            "location": "Mumbai",
+            "fragrance": "Oud Fury",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days.",
+            "name": "Sara K.",
+            "location": "Dubai",
+            "fragrance": "Agha Blue",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Maha is soft without being sweet. My mother borrowed it once and never gave it back.",
+            "name": "Noor A.",
+            "location": "Hyderabad",
+            "fragrance": "Maha",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_4": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Dark Paradise is my evening scent. Smoky, close to the skin, never loud.",
+            "name": "Rehan S.",
+            "location": "London",
+            "fragrance": "Oud of Dark Paradise",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_5": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear.",
+            "name": "Meera P.",
+            "location": "Bengaluru",
+            "fragrance": "Sea Smoke",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_6": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much.",
+            "name": "Kabir D.",
+            "location": "Delhi",
+            "fragrance": "Tobacco Enigma",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_7": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first.",
+            "name": "Layla H.",
+            "location": "Doha",
+            "fragrance": "Shamamah",
+            "rating": 5,
+            "show_rating": true
+          }
+        }
+      },
+      "block_order": [
+        "voice_1",
+        "voice_2",
+        "voice_3",
+        "voice_4",
+        "voice_5",
+        "voice_6",
+        "voice_7"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -72,6 +350,7 @@
     "discover",
     "art",
     "collection",
+    "testimonials",
     "world"
   ]
 }

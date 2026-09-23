@@ -1,0 +1,12 @@
+{
+  "name": "house-of-agha-theme-tools",
+  "private": true,
+  "description": "Local preview tooling for the House of Agha Shopify theme. Not part of the theme upload.",
+  "scripts": {
+    "preview:build": "node tools/render-preview.js",
+    "preview": "node server.js"
+  },
+  "devDependencies": {
+    "liquidjs": "^10.29.0"
+  }
+}

@@ -1,0 +1,44 @@
+{%- comment -%}
+  House of Agha — responsive campaign image.
+  Theme assets ship as two WebP files: <name>.webp (large) and <name>-sm.webp.
+
+  Params:
+    name       asset base name, e.g. 'hoa-hero-oud-fury'
+    w, h       intrinsic size of the large file (prevents layout shift)
+    alt        alt text
+    sizes      sizes attribute (default 100vw)
+    loading    'lazy' (default) or 'eager'
+    priority   true for the LCP image (adds fetchpriority=high)
+    class      class on the <img>
+    image      optional Shopify image object; overrides the theme asset
+{%- endcomment -%}
+{%- liquid
+  assign _sizes = sizes | default: '100vw'
+  assign _loading = loading | default: 'lazy'
+  assign _w = w | default: 1200
+  assign _h = h | default: 1500
+  if _w > 1500
+    assign _sw = 1000
+  else
+    assign _sw = 700
+  endif
+-%}
+{%- if image != blank -%}
+  {{ image | image_url: width: 2000 | image_tag:
+    widths: '500, 800, 1100, 1500, 2000',
+    sizes: _sizes,
+    loading: _loading,
+    alt: alt,
+    class: class
+  }}
+{%- else -%}
+  <img
+    src="{{ name | append: '.webp' | asset_url }}"
+    srcset="{{ name | append: '-sm.webp' | asset_url }} {{ _sw }}w, {{ name | append: '.webp' | asset_url }} {{ _w }}w"
+    sizes="{{ _sizes }}"
+    width="{{ _w }}" height="{{ _h }}"
+    alt="{{ alt | escape }}"
+    loading="{{ _loading }}" decoding="async"
+    {%- if priority %} fetchpriority="high"{% endif %}
+    {%- if class != blank %} class="{{ class }}"{% endif %}>
+{%- endif -%}

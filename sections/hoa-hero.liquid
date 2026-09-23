@@ -1,0 +1,101 @@
+{% comment %}
+  01 — HOUSE OF AGHA · CINEMATIC HERO
+  Full-viewport campaign sequence (one "slide" block per fragrance world) with the
+  house name split around the bottle. Slides crossfade on a slow timer, the words
+  rise in on load, and the frame drifts back as the page scrolls (assets/hoa-home.js).
+  Reduced motion: first slide only, no timer.
+  Imagery: House of Agha campaign photography (Drive → assets/hoa-hero-*.webp).
+{% endcomment %}
+
+{%- assign s = section.settings -%}
+<section class="hoa-hero" id="hoa-hero" data-hoa-hero data-interval="{{ s.interval | times: 1000 }}" aria-roledescription="carousel" aria-label="{{ s.word_one }} {{ s.word_two }}">
+  <div class="hoa-hero__media" data-hoa-hero-media>
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign load = 'lazy'
+        if forloop.first
+          assign load = 'eager'
+        endif
+      -%}
+      <figure class="hoa-hero__slide{% if forloop.first %} is-active{% endif %}" data-hoa-slide {{ block.shopify_attributes }}>
+        <picture>
+          {%- if b.image_mobile != blank -%}
+            <source media="(max-width: 767px)" srcset="{{ b.image_mobile | image_url: width: 1200 }}">
+          {%- elsif b.asset_mobile != blank -%}
+            <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-sm.webp' | asset_url }} 700w, {{ b.asset_mobile | append: '.webp' | asset_url }} 1200w" sizes="100vw">
+          {%- endif -%}
+          {%- if forloop.first -%}
+            {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load, priority: true -%}
+          {%- else -%}
+            {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load -%}
+          {%- endif -%}
+        </picture>
+      </figure>
+    {%- endfor -%}
+  </div>
+  <div class="hoa-hero__veil" aria-hidden="true"></div>
+
+  <div class="hoa-hero__content">
+    <p class="hoa-eyebrow hoa-hero__eyebrow" data-hoa-hero-fade>{{ s.eyebrow }}</p>
+
+    <h1 class="hoa-hero__title">
+      <span class="hoa-hero__word"><span data-hoa-hero-word>{{ s.word_one }}</span></span>
+      <span class="hoa-hero__word hoa-hero__word--serif"><span data-hoa-hero-word>{{ s.word_two }}</span></span>
+    </h1>
+
+    <div class="hoa-hero__foot">
+      <p class="hoa-hero__lede" data-hoa-hero-fade>{{ s.lede }}</p>
+      <a href="{{ s.cta_url | default: '#fragrances' }}" class="hoa-btn hoa-btn--glass hoa-hero__cta" data-hoa-hero-fade>
+        <span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}
+      </a>
+      {%- if section.blocks.size > 1 -%}
+        <ol class="hoa-hero__index" data-hoa-hero-fade>
+          {%- for block in section.blocks -%}
+            <li>
+              <button type="button" class="hoa-hero__dot{% if forloop.first %} is-active{% endif %}" data-hoa-dot="{{ forloop.index0 }}" aria-label="Show {{ block.settings.name }}">
+                {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                <span class="hoa-hero__dot-name">{{ block.settings.name }}</span>
+                <span class="hoa-hero__dot-bar"><i></i></span>
+              </button>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Hero",
+  "tag": "div",
+  "class": "hoa-hero-section",
+  "limit": 1,
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Eau de Parfum · Seven fragrances" },
+    { "type": "text", "id": "word_one", "label": "Headline, left word", "default": "House" },
+    { "type": "text", "id": "word_two", "label": "Headline, right word (serif)", "default": "of Agha" },
+    { "type": "textarea", "id": "lede", "label": "Short line", "default": "Seven fragrances, each one a world of its own." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore the fragrances" },
+    { "type": "url", "id": "cta_url", "label": "Button link (defaults to the fragrances section)" },
+    { "type": "range", "id": "interval", "label": "Seconds per slide", "min": 4, "max": 12, "step": 1, "default": 7 }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Fragrance name" },
+        { "type": "image_picker", "id": "image", "label": "Desktop image (16:9)" },
+        { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (4:5 or taller)" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)", "info": "Base name without extension, e.g. hoa-hero-oud-fury" },
+        { "type": "text", "id": "asset_mobile", "label": "Theme asset, mobile" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Hero" }]
+}
+{% endschema %}

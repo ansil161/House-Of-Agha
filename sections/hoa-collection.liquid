@@ -1,0 +1,182 @@
+{% comment %}
+  06 — THE COLLECTION
+  Best sellers and the Discovery Collection in one shopping moment.
+  Tabs filter by scent family (custom.family metafield, else product type).
+  Cards: studio bottle on warm paper; on hover the campaign image (second product
+  image) fades in and an add-to-bag pill rises. The last tile is the Discovery Set.
+
+  Products: "Collection" setting, else the "best-sellers" collection, else the static
+  House of Agha line-up below (used by the local preview and a fresh store).
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign source = s.collection
+  if source == blank
+    assign source = collections['best-sellers']
+  endif
+  assign use_shopify = false
+  if source != blank and source.products_count > 0
+    assign use_shopify = true
+  endif
+  assign tabs = s.tabs | split: ','
+  assign all_url = s.all_url | default: routes.all_products_collection_url
+
+  comment
+    Static line-up: name | handle | family | asset suffix
+  endcomment
+  assign lineup = 'Oud Fury|oud-fury|Woody|oud-fury;Agha Blue|agha-blue|Fresh|agha-blue;Oud of Dark Paradise|oud-of-dark-paradise|Woody|dark-paradise;Maha|maha|Floral|maha;Sea Smoke|sea-smoke|Fresh|sea-smoke;Tobacco Enigma|tobacco-enigma|Aromatic|tobacco-enigma;Shamamah|shamamah|Floral|shamamah' | split: ';'
+-%}
+
+<section class="hoa-collection" id="collection" data-hoa-collection>
+  <div class="hoa-wrap">
+    <header class="hoa-collection__head">
+      <div>
+        <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
+        <div class="hoa-tabs" role="tablist" aria-label="Filter by scent family" data-hoa-reveal>
+          <button class="hoa-tab" role="tab" type="button" aria-selected="true" data-hoa-filter="all">{{ s.all_tab }}</button>
+          {%- for t in tabs -%}
+            {%- assign tl = t | strip -%}
+            <button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="{{ tl | handleize }}">{{ tl }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+      <a class="hoa-link" href="{{ all_url }}" data-hoa-reveal>{{ s.all_label }}</a>
+    </header>
+
+    <div class="hoa-collection__grid" data-hoa-grid>
+      {%- if use_shopify -%}
+        {%- for product in source.products limit: s.limit -%}
+          {%- liquid
+            assign fam = product.metafields.custom.family.value | default: product.type
+            assign variant = product.selected_or_first_available_variant
+            if product.price_varies
+              assign price = product.price_min | money | prepend: 'From '
+            else
+              assign price = product.price | money
+            endif
+            assign mood = product.media[1].preview_image
+          -%}
+          <article class="hoa-card" data-family="{{ fam | handleize }}" data-hoa-card>
+            <div class="hoa-card__visual">
+            <a class="hoa-card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+              <span class="hoa-card__img hoa-card__img--product">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '400, 600, 900', sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw', loading: 'lazy', alt: product.title }}
+                {%- endif -%}
+              </span>
+              {%- if mood -%}
+                <span class="hoa-card__img hoa-card__img--mood">{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</span>
+              {%- endif -%}
+              {%- if fam != blank -%}<span class="hoa-card__tag">{{ fam }}</span>{%- endif -%}
+            </a>
+            <div class="hoa-card__add">
+              {%- if product.has_only_default_variant and variant.available -%}
+                {%- form 'product', product -%}
+                  <input type="hidden" name="id" value="{{ variant.id }}">
+                  <button type="submit" name="add" class="hoa-btn hoa-btn--small"><span>Add to bag</span>{% render 'hoa-btn-icon' %}</button>
+                {%- endform -%}
+              {%- elsif product.available -%}
+                <a class="hoa-btn hoa-btn--small" href="{{ product.url }}"><span>Choose size</span>{% render 'hoa-btn-icon' %}</a>
+              {%- endif -%}
+            </div>
+            </div>
+            <div class="hoa-card__row">
+              <h3 class="hoa-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+              <span class="hoa-card__price">{% if product.available %}{{ price }}{% else %}Sold out{% endif %}</span>
+            </div>
+            <p class="hoa-card__family">{{ s.product_label }}</p>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for row in lineup -%}
+          {%- liquid
+            assign f = row | split: '|'
+            assign p_asset = 'hoa-product-' | append: f[3]
+            assign m_asset = 'hoa-' | append: f[3] | append: '-portrait'
+            assign p_alt = f[0] | append: ' Eau de Parfum bottle'
+          -%}
+          <article class="hoa-card" data-family="{{ f[2] | handleize }}" data-hoa-card data-product-id="{{ f[1] }}" data-title="{{ f[0] | upcase }}" data-image="{{ 'hoa-product-' | append: f[3] | append: '-sm.webp' | asset_url }}" data-price="">
+            <div class="hoa-card__visual">
+            <a class="hoa-card__media" href="/products/{{ f[1] }}" aria-label="{{ f[0] }}">
+              <span class="hoa-card__img hoa-card__img--product">
+                {%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: p_alt, sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw' -%}
+              </span>
+              <span class="hoa-card__img hoa-card__img--mood">
+                {%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1101px) 25vw, 50vw' -%}
+              </span>
+              <span class="hoa-card__tag">{{ f[2] }}</span>
+            </a>
+            <div class="hoa-card__add">
+              <a class="hoa-btn hoa-btn--small" href="/products/{{ f[1] }}"><span>Discover</span>{% render 'hoa-btn-icon' %}</a>
+            </div>
+            </div>
+            <div class="hoa-card__row">
+              <h3 class="hoa-card__title"><a href="/products/{{ f[1] }}">{{ f[0] }}</a></h3>
+            </div>
+            <p class="hoa-card__family">{{ s.product_label }}</p>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%} Discovery Collection — secondary entry point {%- endcomment -%}
+      {%- liquid
+        assign disc = s.discovery_product
+        if disc != blank
+          assign disc_url = disc.url
+        else
+          assign disc_url = s.discovery_url | default: '/pages/discover'
+        endif
+      -%}
+      <article class="hoa-card hoa-card--feature" data-family="all" data-hoa-card id="discovery">
+        <a class="hoa-card__media" href="{{ disc_url }}">
+          <span class="hoa-card__img">
+            {%- if s.discovery_image != blank -%}
+              {{ s.discovery_image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: s.discovery_title }}
+            {%- elsif disc != blank and disc.featured_media -%}
+              {{ disc.featured_media.preview_image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: disc.title }}
+            {%- else -%}
+              <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="{{ s.discovery_title | escape }}" loading="lazy" width="1200" height="900">
+            {%- endif -%}
+          </span>
+          <div class="hoa-card__overlay">
+            <div>
+              <p class="hoa-eyebrow">{{ s.discovery_eyebrow }}</p>
+              <h3>{% if disc != blank %}{{ disc.title }}{% else %}{{ s.discovery_title }}{% endif %}</h3>
+              <p>{{ s.discovery_text }}</p>
+            </div>
+            <span class="hoa-btn hoa-btn--light hoa-btn--small" style="align-self: flex-start;"><span>{{ s.discovery_cta }}</span>{% render 'hoa-btn-icon' %}</span>
+          </div>
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA The Collection",
+  "tag": "div",
+  "class": "hoa-collection-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Collection" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Falls back to a collection with the handle best-sellers." },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 3, "max": 11, "step": 1, "default": 7 },
+    { "type": "text", "id": "all_tab", "label": "First tab", "default": "All" },
+    { "type": "text", "id": "tabs", "label": "Family tabs (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
+    { "type": "text", "id": "product_label", "label": "Line under each product", "default": "Eau de Parfum" },
+    { "type": "text", "id": "all_label", "label": "Link label", "default": "Shop all fragrances" },
+    { "type": "url", "id": "all_url", "label": "Link" },
+
+    { "type": "header", "content": "Discovery Collection" },
+    { "type": "product", "id": "discovery_product", "label": "Discovery set product" },
+    { "type": "image_picker", "id": "discovery_image", "label": "Image" },
+    { "type": "text", "id": "discovery_eyebrow", "label": "Eyebrow", "default": "Discover the House" },
+    { "type": "text", "id": "discovery_title", "label": "Title (when no product is picked)", "default": "The Discovery Collection" },
+    { "type": "textarea", "id": "discovery_text", "label": "Text", "default": "Wear the House at home before you choose a full bottle." },
+    { "type": "text", "id": "discovery_cta", "label": "Button label", "default": "Explore the set" },
+    { "type": "url", "id": "discovery_url", "label": "Link when no product is picked" }
+  ],
+  "presets": [{ "name": "HOA The Collection" }]
+}
+{% endschema %}

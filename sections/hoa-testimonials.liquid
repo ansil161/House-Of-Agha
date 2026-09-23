@@ -1,0 +1,112 @@
+{% comment %}
+  HOUSE OF AGHA — TESTIMONIALS (scroll-choreographed)
+
+  Structure
+    hoa-testimonials            section (TestimonialsSection)
+    ├── .hoa-voices__intro       eyebrow + line (TestimonialsIntro)
+    └── .hoa-voices__stage       pinned stage (TestimonialsStage)
+        ├── .hoa-voices__statement   giant background statement (BackgroundStatement)
+        └── .hoa-voices__cards       one card per "testimonial" block (TestimonialCards)
+  Data: "testimonial" blocks (TestimonialsData) — edit in the Theme Editor or templates/index.json.
+
+  Motion lives in assets/hoa-testimonials.js (isolated GSAP module: gsap.context,
+  gsap.matchMedia, one master ScrollTrigger timeline per breakpoint, reverted on unload).
+  Without JS, or with prefers-reduced-motion, the same content renders as a static
+  editorial layout: statement above, cards in a grid.
+
+  Statement: three lines; wrap a line in *asterisks* to set it in the serif italic.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign lines = s.statement | newline_to_br | split: '<br />'
+  assign cards = section.blocks | where: 'type', 'testimonial'
+-%}
+<section class="hoa-voices" id="testimonials" data-hoa-voices aria-labelledby="voices-{{ section.id }}-title">
+  <div class="hoa-voices__stage" data-hoa-voices-stage>
+    <div class="hoa-voices__intro" data-hoa-voices-intro>
+      <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
+      {%- if s.intro != blank -%}<p class="hoa-voices__lede">{{ s.intro }}</p>{%- endif -%}
+    </div>
+
+    <h2 class="hoa-voices__statement" id="voices-{{ section.id }}-title" data-hoa-voices-statement>
+      {%- for line in lines -%}
+        {%- assign l = line | strip -%}
+        {%- if l == blank -%}{%- continue -%}{%- endif -%}
+        {%- if l contains '*' -%}
+          <span class="hoa-voices__line hoa-voices__line--{{ forloop.index }} hoa-voices__line--serif" data-hoa-voices-line>{{ l | remove: '*' }}</span>
+        {%- else -%}
+          <span class="hoa-voices__line hoa-voices__line--{{ forloop.index }}" data-hoa-voices-line>{{ l }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </h2>
+
+    <ul class="hoa-voices__cards" role="list">
+      {%- for block in cards -%}
+        {%- liquid
+          assign b = block.settings
+          assign initials = ''
+          assign name_parts = b.name | split: ' '
+          for part in name_parts limit: 2
+            assign first_letter = part | slice: 0
+            assign initials = initials | append: first_letter
+          endfor
+          assign rating = b.rating | default: 5
+        -%}
+        <li class="hoa-voice hoa-voice--{{ forloop.index }}" data-hoa-voice {{ block.shopify_attributes }}>
+          <figure class="hoa-voice__card">
+            {%- if b.show_rating -%}
+              <p class="hoa-voice__rating" aria-label="Rated {{ rating }} out of 5">
+                {%- for i in (1..5) -%}<span{% if i > rating %} class="is-off"{% endif %} aria-hidden="true">★</span>{%- endfor -%}
+              </p>
+            {%- endif -%}
+            <blockquote class="hoa-voice__quote"><p>{{ b.quote }}</p></blockquote>
+            <figcaption class="hoa-voice__who">
+              {%- if b.avatar != blank -%}
+                {{ b.avatar | image_url: width: 96 | image_tag: loading: 'lazy', class: 'hoa-voice__avatar', alt: '' }}
+              {%- else -%}
+                <span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">{{ initials | upcase }}</span>
+              {%- endif -%}
+              <span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">{{ b.name }}</cite>
+                <span class="hoa-voice__detail">{{ b.location }}{% if b.location != blank and b.fragrance != blank %} · {% endif %}{% if b.fragrance != blank %}wears {{ b.fragrance }}{% endif %}</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+<script src="{{ 'hoa-testimonials.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "HOA Testimonials",
+  "tag": "div",
+  "class": "hoa-voices-section",
+  "max_blocks": 7,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "In their words" },
+    { "type": "textarea", "id": "intro", "label": "Intro line", "default": "Notes from the people who wear the House, in their own words." },
+    { "type": "textarea", "id": "statement", "label": "Statement (one line per row)", "info": "Three short lines read best. Wrap a line in *asterisks* for the serif italic.", "default": "Loved by\n*those who*\nwear it." }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "location", "label": "City or title" },
+        { "type": "text", "id": "fragrance", "label": "Fragrance they wear" },
+        { "type": "image_picker", "id": "avatar", "label": "Photo (optional; initials are used otherwise)" },
+        { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Testimonials" }]
+}
+{% endschema %}
