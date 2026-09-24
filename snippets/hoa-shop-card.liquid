@@ -1,0 +1,151 @@
+{%- comment -%}
+  SHOP · Product card (one component for every product on the shop page)
+
+  The card never reads a Shopify product itself for its offer / review / best-seller
+  content: it takes plain values, so the data source can change without touching the
+  markup. Today the section feeds it the mock line-up (sections/hoa-shop-catalog.liquid);
+  the Shopify branch of that section already maps the same values from the product:
+
+    regular_price  <- compare_at_price   (the higher, "was" price; blank = no offer)
+    sale_price     <- price              (what the customer pays)
+    discount %     <- calculated here from the two prices
+    rating / review_count <- a reviews app or metafields (blank = no review row content)
+    best_seller    <- a tag / metafield
+    available      <- product.available
+
+  Params
+    index, handle, url, name, family, wearer ('men' | 'women' | 'unisex'), gift ('true' | 'false')
+    img_main, img_mood   pre-rendered image HTML (mood may be blank)
+    thumb                image URL used by the bag drawer
+    available            true | false
+    sale_price, regular_price   whole rupees as numbers (regular blank or <= sale = no offer)
+    sale_text, regular_text     optional display strings (Shopify passes | money output)
+    rating (0-5), review_count  optional
+    best_seller          true | false
+    product_id           mock line-up id (drives the local add-to-bag button)
+    shopify_product, variant_id   optional; when given the button is a real product form
+{%- endcomment -%}
+{%- liquid
+  assign sale_n = sale_price | plus: 0
+  assign reg_n = regular_price | plus: 0
+  assign has_offer = false
+  assign off_pct = 0
+  if reg_n > sale_n and sale_n > 0
+    assign has_offer = true
+    assign off_pct = reg_n | minus: sale_n | times: 100.0 | divided_by: reg_n | round
+  endif
+
+  comment
+    Whole-rupee display with thousands separator, used only when no ready-made text is passed.
+  endcomment
+  assign now_text = sale_text
+  if now_text == blank
+    assign k = sale_n | divided_by: 1000 | floor
+    assign k_base = k | times: 1000
+    assign rem = sale_n | minus: k_base | round
+    assign rem_s = rem | append: ''
+    if rem < 10
+      assign rem_s = rem_s | prepend: '00'
+    elsif rem < 100
+      assign rem_s = rem_s | prepend: '0'
+    endif
+    if k > 0
+      assign now_text = k | append: ',' | append: rem_s | prepend: '₹'
+    else
+      assign now_text = rem | prepend: '₹'
+    endif
+  endif
+  assign was_text = regular_text
+  if has_offer and was_text == blank
+    assign k = reg_n | divided_by: 1000 | floor
+    assign k_base = k | times: 1000
+    assign rem = reg_n | minus: k_base | round
+    assign rem_s = rem | append: ''
+    if rem < 10
+      assign rem_s = rem_s | prepend: '00'
+    elsif rem < 100
+      assign rem_s = rem_s | prepend: '0'
+    endif
+    if k > 0
+      assign was_text = k | append: ',' | append: rem_s | prepend: '₹'
+    else
+      assign was_text = rem | prepend: '₹'
+    endif
+  endif
+  if has_offer == false
+    assign was_text = ''
+  endif
+
+  assign rating_n = rating | plus: 0
+  assign has_reviews = false
+  if rating_n > 0 and review_count != blank
+    assign has_reviews = true
+    assign fill = rating_n | times: 20
+  endif
+
+  assign about = ''
+  assign fam_lc = family | downcase
+  assign fam_initial = fam_lc | slice: 0
+  assign article = 'A'
+  if 'aeiou' contains fam_initial
+    assign article = 'An'
+  endif
+  assign about = article | append: ' ' | append: fam_lc | append: ' Eau de Parfum from House of Agha.'
+-%}
+<article class="hoa-pc" data-hoa-item data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
+         data-image="{{ thumb }}" data-price="{{ sale_n }}" data-price-text="{{ now_text | escape }}"{% if has_offer %} data-compare-text="{{ was_text | escape }}" data-offer="true"{% endif %}{% if best_seller == 'true' or best_seller == true %} data-best="true"{% endif %}>
+  <div class="hoa-pc__visual">
+    <a class="hoa-pc__media" href="{{ url }}" tabindex="-1" aria-hidden="true">
+      <span class="hoa-pc__img hoa-pc__img--product">{{ img_main }}</span>
+      {%- if img_mood != blank -%}<span class="hoa-pc__img hoa-pc__img--mood">{{ img_mood }}</span>{%- endif -%}
+    </a>
+    {%- if available == false or available == 'false' -%}
+      <p class="hoa-pc__tag">Sold out</p>
+    {%- elsif best_seller == 'true' or best_seller == true -%}
+      <p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>
+    {%- endif -%}
+    <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ name | escape }} to your wishlist" data-hoa-like data-key="{{ handle }}" data-wishlist-toggle data-wishlist-handle="{{ handle }}"{% if variant_id != blank %} data-wishlist-variant="{{ variant_id }}"{% endif %} data-wishlist-title="{{ name | escape }}">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="hoa-pc__info">
+    <p class="hoa-pc__meta"><span class="hoa-pc__chip">{{ family }}</span><span class="hoa-pc__chip">{{ wearer | capitalize }}</span></p>
+    <h3 class="hoa-pc__name"><a href="{{ url }}">{{ name }}</a>{%- if gift == 'true' -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
+    <p class="hoa-pc__rating">
+      {%- if has_reviews -%}
+        <span class="hoa-pc__stars" style="--fill: {{ fill }}%" role="img" aria-label="Rated {{ rating_n }} out of 5"></span>
+        <span class="hoa-pc__count" aria-label="{{ review_count }} reviews">({{ review_count }})</span>
+      {%- endif -%}
+    </p>
+    <p class="hoa-pc__price{% if has_offer %} hoa-pc__price--offer{% endif %}">
+      {%- if available == false or available == 'false' -%}
+        Sold out
+      {%- else -%}
+        <span class="hoa-pc__now">{{ now_text }}</span>
+        {%- if has_offer -%}
+          <s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>{{ was_text }}</s>
+          <span class="hoa-pc__off">{{ off_pct }}% off</span>
+        {%- endif -%}
+      {%- endif -%}
+    </p>
+    <p class="hoa-pc__about">{{ about }}</p>
+    <div class="hoa-pc__action">
+      {%- if shopify_product != blank -%}
+        {%- if available == true or available == 'true' -%}
+          {%- form 'product', shopify_product -%}
+            <input type="hidden" name="id" value="{{ variant_id }}">
+            <button type="submit" name="add" class="hoa-pc__cta" aria-label="Add {{ name | escape }} to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>
+          {%- endform -%}
+        {%- else -%}
+          <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
+        {%- endif -%}
+      {%- else -%}
+        {%- if available == false or available == 'false' -%}
+          <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
+        {%- else -%}
+          <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add {{ name | escape }} to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</article>

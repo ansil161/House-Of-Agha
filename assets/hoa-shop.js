@@ -2,10 +2,10 @@
    HOUSE OF AGHA · SHOP (sections/hoa-shop-*.liquid)
 
    Each piece of motion has one job:
-     Toolbar ......... wearer, scent family and sort filter the grid in place; the
+     Toolbar ......... wearer, scent family, price and sort filter the grid in place; the
                        products that remain rise in with a short stagger (feedback).
                        Grid / list switches the layout. The state is mirrored in the URL
-                       (?for= &family= &sort= &view=) and the layout is remembered.
+                       (?for= &family= &price= &sort= &view=) and the layout is remembered.
      Interlude ....... the campaign photo only shows in the full, featured grid, where
                        it fills the gap it was placed for.
      Reveal .......... the closing section fades up once as it enters.
@@ -24,6 +24,28 @@
   function readView() { try { return localStorage.getItem(VIEW_KEY); } catch (e) { return null; } }
   function saveView(v) { try { localStorage.setItem(VIEW_KEY, v); } catch (e) {} }
 
+
+  // Price range "min-max" (either side may be empty). Compared against data-price, the selling
+  // price in whole rupees, inclusive on both ends. Returns '' for no price filter.
+  function parsePrice(v) {
+    if (!v) return '';
+    var m = /^(\d*)-(\d*)$/.exec(v);
+    if (!m || (m[1] === '' && m[2] === '')) return '';
+    return (m[1] || '0') + '-' + m[2];
+  }
+  function priceBounds(v) {
+    if (!v) return null;
+    var parts = v.split('-');
+    return { min: +parts[0] || 0, max: parts[1] === '' ? Infinity : +parts[1] };
+  }
+  function rupees(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+  function priceText(v) {
+    var b = priceBounds(v);
+    if (!b) return 'Price';
+    if (b.max === Infinity) return 'Above ' + rupees(b.min);
+    if (b.min === 0) return 'Under ' + rupees(b.max + 1);
+    return rupees(b.min) + ' – ' + rupees((b.max + 1) % 500 === 0 ? b.max + 1 : b.max);
+  }
 
   function initCatalog() {
     var sec = document.querySelector('[data-hoa-shop]');
@@ -50,6 +72,15 @@
       interludeAfter = prev ? items.indexOf(prev) + 1 : 0;
     }
 
+    var priceBox = sec.querySelector('[data-hoa-price]');
+    var priceBtn = sec.querySelector('[data-hoa-price-btn]');
+    var pricePanel = sec.querySelector('[data-hoa-price-panel]');
+    var priceLabel = sec.querySelector('[data-hoa-price-label]');
+    var priceOpts = sec.querySelectorAll('[data-hoa-price-opt]');
+    var priceForm = sec.querySelector('[data-hoa-price-form]');
+    var priceMin = sec.querySelector('[data-hoa-price-min]');
+    var priceMax = sec.querySelector('[data-hoa-price-max]');
+
     var wearers = ['men', 'women', 'unisex'];
     var validFamilies = Array.prototype.map.call(tags, function (c) { return c.dataset.hoaFamily; });
     var params = new URLSearchParams(location.search);
@@ -57,6 +88,7 @@
       wearer: wearers.indexOf(params.get('for')) > -1 ? params.get('for') : 'all',
       family: validFamilies.indexOf(params.get('family')) > -1 ? params.get('family') : '',
       gift: gift ? params.get('gift') === '1' : false,
+      price: parsePrice(params.get('price')),
       sort: params.get('sort') || 'featured',
       view: params.get('view') === 'list' || (!params.get('view') && readView() === 'list') ? 'list' : 'grid'
     };
@@ -82,6 +114,7 @@
       if (state.wearer !== 'all') p.set('for', state.wearer); else p.delete('for');
       if (state.family) p.set('family', state.family); else p.delete('family');
       if (state.gift) p.set('gift', '1'); else p.delete('gift');
+      if (state.price) p.set('price', state.price); else p.delete('price');
       if (state.sort !== 'featured') p.set('sort', state.sort); else p.delete('sort');
       if (state.view === 'list') p.set('view', 'list'); else p.delete('view');
       var q = p.toString();
@@ -94,6 +127,11 @@
       if (gift) gift.setAttribute('aria-pressed', String(state.gift));
       views.forEach(function (v) { v.setAttribute('aria-pressed', String(v.dataset.hoaFview === state.view)); });
       if (sort) sort.value = state.sort;
+      priceOpts.forEach(function (o) { o.setAttribute('aria-pressed', String(o.dataset.hoaPriceOpt === state.price)); });
+      if (priceBtn) {
+        priceBtn.classList.toggle('is-active', !!state.price);
+        if (priceLabel) priceLabel.textContent = priceText(state.price);
+      }
       grid.dataset.view = state.view;
 
       var ordered = items.slice().sort(compare[state.sort] || compare.featured);
@@ -102,14 +140,16 @@
         if (interlude && i + 1 === interludeAfter) grid.appendChild(interlude);
       });
 
-      var filtered = state.wearer !== 'all' || !!state.family || state.gift;
+      var bounds = priceBounds(state.price);
+      var filtered = state.wearer !== 'all' || !!state.family || state.gift || !!bounds;
       if (interlude) interlude.hidden = filtered || state.sort !== 'featured';
 
       var visible = 0;
       ordered.forEach(function (it) {
         var on = (state.wearer === 'all' || it.dataset.for === state.wearer) &&
                  (!state.family || it.dataset.family === state.family) &&
-                 (!state.gift || it.dataset.gift === 'true');
+                 (!state.gift || it.dataset.gift === 'true') &&
+                 (!bounds || (+it.dataset.price >= bounds.min && +it.dataset.price <= bounds.max));
         it.hidden = !on;
         it.classList.remove('is-entering');
         if (on) {
@@ -146,7 +186,42 @@
     };
     var onSort = function () { set({ sort: sort.value }); };
     var onGift = function () { set({ gift: !state.gift }); };
-    var onReset = function () { set({ wearer: 'all', family: '', gift: false }); };
+    var onReset = function () { set({ wearer: 'all', family: '', gift: false, price: '' }); if (priceMin) priceMin.value = ''; if (priceMax) priceMax.value = ''; };
+
+    // Price menu: preset ranges apply at once; custom min / max apply on submit.
+    function setPanel(open) {
+      if (!pricePanel) return;
+      pricePanel.hidden = !open;
+      priceBtn.setAttribute('aria-expanded', String(open));
+    }
+    var onPriceBtn = function () { setPanel(pricePanel.hidden); };
+    var onPriceOpt = function (e) {
+      var v = e.currentTarget.dataset.hoaPriceOpt;
+      var b = priceBounds(v);
+      if (priceMin) priceMin.value = b && b.min ? b.min : '';
+      if (priceMax) priceMax.value = b && b.max !== Infinity ? b.max : '';
+      set({ price: v });
+      setPanel(false);
+    };
+    var onPriceForm = function (e) {
+      e.preventDefault();
+      var lo = priceMin.value === '' ? '' : Math.max(0, Math.floor(+priceMin.value));
+      var hi = priceMax.value === '' ? '' : Math.max(0, Math.floor(+priceMax.value));
+      if (lo !== '' && hi !== '' && lo > hi) { var t = lo; lo = hi; hi = t; priceMin.value = lo; priceMax.value = hi; }
+      set({ price: parsePrice(lo + '-' + hi) });
+      setPanel(false);
+    };
+    var onDocDown = function (e) { if (pricePanel && !pricePanel.hidden && !priceBox.contains(e.target)) setPanel(false); };
+    var onKey = function (e) { if (e.key === 'Escape' && pricePanel && !pricePanel.hidden) { setPanel(false); priceBtn.focus(); } };
+    if (priceBtn) {
+      priceBtn.addEventListener('click', onPriceBtn);
+      priceOpts.forEach(function (o) { o.addEventListener('click', onPriceOpt); });
+      priceForm.addEventListener('submit', onPriceForm);
+      document.addEventListener('pointerdown', onDocDown);
+      document.addEventListener('keydown', onKey);
+      var pb = priceBounds(state.price);
+      if (pb) { priceMin.value = pb.min || ''; priceMax.value = pb.max === Infinity ? '' : pb.max; }
+    }
 
     tabs.forEach(function (b) { b.addEventListener('click', onTab); });
     tags.forEach(function (c) { c.addEventListener('click', onTag); });
@@ -164,6 +239,13 @@
       views.forEach(function (v) { v.removeEventListener('click', onView); });
       if (sort) sort.removeEventListener('change', onSort);
       resets.forEach(function (r) { r.removeEventListener('click', onReset); });
+      if (priceBtn) {
+        priceBtn.removeEventListener('click', onPriceBtn);
+        priceOpts.forEach(function (o) { o.removeEventListener('click', onPriceOpt); });
+        priceForm.removeEventListener('submit', onPriceForm);
+        document.removeEventListener('pointerdown', onDocDown);
+        document.removeEventListener('keydown', onKey);
+      }
     });
   }
 

@@ -600,3 +600,151 @@
 @media (max-width: 767px) { .hoa-pc__cta { padding: 9px 18px; font-size: 0.7rem; } }
 
 .hoa-pc__cta.is-added { background: #fff; color: var(--hoa-ink); }
+
+/* ==========================================================================
+   Card details: best-seller badge, reviews, offer price, screen-reader text.
+   Same tray, same image ratio; the price moved from the photo pill to the info
+   block so an offer can show its old price and discount beside it.
+   ========================================================================== */
+.hoa-pc__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Best seller: a small quiet pill, brass lettering on white */
+.hoa-pc__tag--best {
+  padding: 5px 10px;
+  font: 600 0.6rem/1.2 var(--hoa-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a6a37;
+}
+.hoa-pc__tag--best::before { content: ''; width: 5px; height: 5px; align-self: center; border-radius: 50%; background: var(--hoa-brass); }
+
+/* Reviews: five stars filled to the rating (brass over stone), then the count */
+.hoa-pc__rating { display: flex; align-items: center; gap: 6px; min-height: 1.1rem; margin: 2px 0 0; }
+.hoa-pc__stars {
+  --fill: 0%;
+  font-size: 0.8rem; line-height: 1; letter-spacing: 0.08em;
+  background: linear-gradient(90deg, var(--hoa-brass) var(--fill), #d9d2c6 var(--fill));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.hoa-pc__stars::before { content: '\2605\2605\2605\2605\2605'; }
+.hoa-pc__count { font-size: 0.72rem; color: var(--hoa-mute); font-variant-numeric: tabular-nums; }
+
+/* Price: the selling price leads; an offer adds the struck old price and the percentage */
+.hoa-pc__price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 2px 0 0; font-variant-numeric: tabular-nums; white-space: normal; }
+.hoa-pc__now { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; color: var(--hoa-ink); }
+.hoa-pc__was { font-size: 0.8rem; font-weight: 400; color: var(--hoa-mute); text-decoration-thickness: 1px; }
+.hoa-pc__off { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
+.hoa-shop-interlude__cap .hoa-pc__price { display: block; }
+
+/* Add to cart: the label is longer than "Add", keep it compact and centred */
+.hoa-pc__cta span { white-space: nowrap; }
+
+/* List view: the pill is gone there already; reviews sit under the name */
+.hoa-shop-grid[data-view='list'] .hoa-pc__rating { display: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__price { display: flex; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__now { font-size: 0.95rem; }
+@media (max-width: 1099px) { .hoa-shop-grid[data-view='list'] .hoa-pc__price { display: none; } }
+
+@media (max-width: 767px) {
+  .hoa-pc__now { font-size: 0.98rem; }
+  .hoa-pc__was { font-size: 0.74rem; }
+  .hoa-pc__off { font-size: 0.62rem; letter-spacing: 0.06em; }
+  .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.56rem; letter-spacing: 0.1em; }
+  .hoa-pc__cta { padding: 9px 14px; }
+}
+
+/* ---------- Price filter (toolbar) ---------- */
+.hoa-price { position: relative; }
+.hoa-price__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border: 1px solid var(--hoa-line); border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5); color: var(--hoa-ink-2);
+  font: 500 0.84rem var(--hoa-sans); white-space: nowrap; cursor: pointer;
+  transition: border-color 0.3s var(--hoa-ease), background-color 0.3s var(--hoa-ease), color 0.3s var(--hoa-ease);
+}
+.hoa-price__btn svg { width: 10px; height: 6px; transition: transform 0.3s var(--hoa-ease); }
+.hoa-price__btn[aria-expanded='true'] svg { transform: rotate(180deg); }
+.hoa-price__btn:hover { border-color: rgba(20, 18, 16, 0.4); color: var(--hoa-ink); }
+.hoa-price__btn.is-active { border-color: var(--hoa-ink); background: var(--hoa-ink); color: var(--hoa-paper); }
+.hoa-price__btn:focus-visible, .hoa-price__apply:focus-visible, .hoa-price__custom input:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 3px; }
+.hoa-price__panel {
+  position: absolute; z-index: 20; top: calc(100% + 12px); right: 0;
+  width: min(340px, calc(100vw - 2 * var(--hoa-gutter)));
+  padding: 18px; border: 1px solid var(--hoa-line); border-radius: 22px;
+  background: #fff; box-shadow: 0 24px 48px -20px rgba(20, 18, 16, 0.35);
+  animation: hoa-shop-in 0.35s var(--hoa-ease) both;
+}
+.hoa-price__panel[hidden] { display: none; }
+.hoa-price__title { margin: 0 0 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-price__opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.hoa-price__custom { display: flex; align-items: flex-end; gap: 8px; margin: 16px 0 0; padding-top: 16px; border-top: 1px solid var(--hoa-line); }
+.hoa-price__custom label { display: grid; gap: 4px; flex: 1; min-width: 0; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-price__custom input {
+  width: 100%; min-width: 0; padding: 9px 12px; border: 1px solid var(--hoa-line); border-radius: 12px;
+  background: var(--hoa-paper); color: var(--hoa-ink); font: 500 0.86rem var(--hoa-sans); -moz-appearance: textfield;
+}
+.hoa-price__custom input::-webkit-outer-spin-button, .hoa-price__custom input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.hoa-price__dash { padding-bottom: 9px; color: var(--hoa-mute); }
+.hoa-price__apply {
+  padding: 10px 16px; border: 1px solid var(--hoa-ink); border-radius: 999px; background: var(--hoa-ink); color: var(--hoa-paper);
+  font: 600 0.7rem var(--hoa-sans); letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+}
+@media (max-width: 767px) {
+  /* the toolbar is not sticky here, so the panel spans the bar instead of hanging off the button */
+  .hoa-shop-bar { position: relative; }
+  .hoa-price { position: static; }
+  .hoa-price__panel { left: 12px; right: 12px; width: auto; top: calc(100% - 8px); }
+  .hoa-shop-bar__end { gap: 8px; flex-wrap: nowrap; }
+  .hoa-sort .hoa-shop-bar__label { display: none; }
+  .hoa-sort select { max-width: 132px; }
+}
+
+/* ---------- Refinements: filled best-seller badge, cart button on the right ---------- */
+.hoa-pc__tag--best {
+  gap: 6px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #b8955c, #8a6a37);
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  box-shadow: 0 6px 14px -6px rgba(138, 106, 55, 0.7);
+}
+.hoa-pc__tag--best::before {
+  content: '\2605'; width: auto; height: auto; border-radius: 0; background: none;
+  font-size: 0.72rem; line-height: 1; letter-spacing: 0;
+}
+
+/* Grid cards: price and about on the left, the cart button on the right */
+.hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto 1fr;
+  grid-template-areas: 'meta meta' 'name name' 'rating rating' 'price action' 'about action';
+  column-gap: 12px;
+  align-items: start;
+}
+.hoa-shop-grid[data-view='grid'] .hoa-pc__meta { grid-area: meta; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__name { grid-area: name; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__rating { grid-area: rating; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__price { grid-area: price; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__about { grid-area: about; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__action { grid-area: action; align-self: end; justify-content: flex-end; margin: 0; padding: 4px 0 0; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__action form { justify-content: flex-end; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta { padding: 10px 16px; }
+
+@media (max-width: 767px) {
+  /* narrow cards: the cart button becomes a round bag icon on the right */
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta { width: 40px; height: 40px; padding: 0; justify-content: center; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta svg { width: 17px; height: 17px; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost { width: auto; padding: 0 12px; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost span { position: static; width: auto; height: auto; clip-path: none; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__action { padding-top: 0; }
+}
+@media (max-width: 767px) {
+  .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.52rem; letter-spacing: 0.06em; gap: 4px; }
+  .hoa-pc__tag--best::before { font-size: 0.6rem; }
+}

@@ -14,6 +14,7 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.json': 'application/json',
   '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
   '.woff2': 'font/woff2'
