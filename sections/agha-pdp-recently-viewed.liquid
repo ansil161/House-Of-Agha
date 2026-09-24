@@ -1,0 +1,44 @@
+{% comment %}
+  AGHA PDP — RECENTLY VIEWED
+  Empty shell. assets/pdp.js remembers product handles in localStorage ('agha-recent-viewed'),
+  then fetches each one's /products/{handle}.js and fills the grid (never the current product).
+  It stays hidden until there is at least one other product to show.
+  Mock mode only: when the visitor has no real history yet, demo cards are shown from the mock data
+  (the list is embedded below as JSON and used by pdp.js only as a fallback).
+{% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
+<section class="pdp pdp-section pdp-recent" data-pdp-recent data-limit="{{ section.settings.limit }}" data-money-format="{{ shop.money_format | strip_html | escape }}" hidden>
+  <div class="container">
+    <header class="pdp-heading pdp-heading--left">
+      <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+    </header>
+    <div class="pdp-recent__grid" data-pdp-recent-grid></div>
+  </div>
+  {%- if pdp.use_mock and pdp.related.size > 0 -%}
+    <script type="application/json" data-pdp-recent-mock>
+      [
+        {%- assign first = true -%}
+        {%- for item in pdp.related -%}
+          {%- if item.handle != product.handle -%}
+            {%- unless first %}, {% endunless -%}
+            {%- assign first = false -%}
+            { "title": {{ item.title | json }}, "url": {{ routes.root_url | append: 'products/' | append: item.handle | json }}, "image": {{ item.image | asset_url | json }}, "price": {{ item.price | json }} }
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    </script>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Agha PDP · Recently viewed",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Your visit" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Recently viewed" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 6, "step": 1, "default": 4 }
+  ]
+}
+{% endschema %}

@@ -184,11 +184,38 @@
       $$('[data-pdp-add-price]', main).forEach((el) => { el.textContent = price; });
       $$('[data-pdp-variant-title]', main).forEach((el) => { el.textContent = variant ? variant.title : ''; });
 
+      // SKU: the variant's real SKU; only when empty (mock mode) a demo SKU built from the section's prefix
+      const mockPrefix = main.dataset.mockSkuPrefix;
+      const skuText = variant ? (variant.sku || (mockPrefix ? `${mockPrefix}-${variant.position}` : '')) : '';
+      const skuWrap = $('[data-pdp-sku-wrap]', main);
+      if (skuWrap) {
+        skuWrap.hidden = !skuText;
+        const sku = $('[data-pdp-sku]', skuWrap);
+        if (sku) sku.textContent = skuText;
+      }
+
+      // Offer: a real compare-at price wins; only without one does mock mode derive a demo discount (display only)
+      const mockPct = Number(main.dataset.mockDiscount) || 0;
+      let comparePrice = variant ? variant.compare_at_price : 0;
+      let savePct = 0;
+      if (variant && comparePrice > variant.price) {
+        savePct = Math.floor(((comparePrice - variant.price) * 100) / comparePrice);
+      } else if (variant && mockPct > 0 && mockPct < 90) {
+        savePct = mockPct;
+        comparePrice = Math.floor((variant.price * 100) / (100 - mockPct));
+      }
+      const saleOn = Boolean(variant && comparePrice > variant.price);
+      const save = $('[data-pdp-save]', main);
+      if (save) {
+        save.hidden = !saleOn;
+        if (saleOn) save.textContent = `−${savePct}%`;
+      }
+      $$('[data-pdp-offer]', main).forEach((el) => { el.hidden = !saleOn; });
+
       const compare = $('[data-pdp-compare]', main);
       if (compare) {
-        const onSale = variant && variant.compare_at_price > variant.price;
-        compare.hidden = !onSale;
-        if (onSale) compare.textContent = formatMoney(variant.compare_at_price, moneyFormat);
+        compare.hidden = !saleOn;
+        if (saleOn) compare.textContent = formatMoney(comparePrice, moneyFormat);
       }
 
       $$('[data-pdp-add], [data-pdp-dock-add]', main).forEach((btn) => {
@@ -326,17 +353,26 @@
         if (bag) {
           const image = $('[data-pdp-slide] img', main);
           const price = formatMoney(variant.price, main.dataset.moneyFormat);
+          // Offer price exactly as the page shows it (real compare-at from Shopify)
+          const cmpEl = $('[data-pdp-compare]', main);
+          const compare = cmpEl && !cmpEl.hidden ? cmpEl.textContent.trim() : '';
           for (let i = 0; i < quantity; i += 1) {
             bag.cart.push({
               id: `${variant.id}-${Date.now()}-${i}`,
               title: main.dataset.productTitle || variant.name,
               price,
+              compare,
               image: image ? image.currentSrc || image.src : '',
               size: variant.title
             });
           }
           bag.updateCartUI();
           setTimeout(() => bag.toggleCartDrawer(true), 450);
+        }
+        // Back to one bottle once it is in the bag, so the next add starts fresh
+        if (qtyInput) {
+          qtyInput.value = 1;
+          qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
         }
         await wait(1600);
         return true;
@@ -598,36 +634,36 @@
         if (rules.length) tl.to(rules, { scaleX: 1, duration: 0.9, stagger: 0.14, ease: 'power2.inOut' }, 0.75);
       });
 
-      /* The fragrance — heading (above, via data-pdp-reveal), then the bottle settles in,
-         then Act I, II, III in order while their hairlines draw towards it, then the claims */
+      /* The fragrance — heading (above, via data-pdp-reveal), then the bottle scales gently
+         up while the trail lines draw in and the particles fade on, then the notes and
+         claims read in toward it from either side, left column first. Slow and controlled —
+         nothing here should feel cinematic or like elements flying in. */
       $$('[data-pdp-tf]', scope).forEach((sec) => {
         const visual = $('[data-pdp-tf-visual]', sec);
-        const visualImg = visual && $('img', visual);
-        const acts = $$('[data-pdp-tf-act]', sec);
-        const claims = $$('[data-pdp-tf-claim]', sec);
         const wide = window.matchMedia('(min-width: 769px)').matches;
-        const rules = wide ? $$('.pdp-tf__rule', sec) : [];
+        const left = $$('.pdp-tf__col--left [data-pdp-tf-block]', sec);
+        const right = $$('.pdp-tf__col--right [data-pdp-tf-block]', sec);
+        const waves = $$('.pdp-tf__wave path', sec);
+        const particles = $$('.pdp-tf__particle', sec);
+        if (!visual && !left.length && !right.length) return;
 
-        if (visual) gsap.set(visual, { autoAlpha: 0, y: 24 });
-        if (visualImg) gsap.set(visualImg, { scale: 1.06 });
-        acts.forEach((a) => gsap.set(a, { autoAlpha: 0, x: wide ? (a.dataset.side === 'left' ? -16 : 16) : 0, y: wide ? 0 : 16 }));
-        if (rules.length) gsap.set(rules, { scaleX: 0 });
-
-        if (visual || acts.length) {
-          const tl = gsap.timeline({ scrollTrigger: { trigger: $('.pdp-tf__stage', sec) || sec, start: 'top 78%', once: true } });
-          if (visual) tl.to(visual, { autoAlpha: 1, y: 0, duration: 1.2, ease: 'power2.out', clearProps: 'transform' }, 0);
-          if (visualImg) tl.to(visualImg, { scale: 1, duration: 1.6, ease: 'power2.out', clearProps: 'transform' }, 0);
-          if (acts.length) tl.to(acts, { autoAlpha: 1, x: 0, y: 0, duration: 1.1, stagger: 0.18, ease, clearProps: 'transform' }, 0.45);
-          if (rules.length) tl.to(rules, { scaleX: 1, duration: 0.9, stagger: 0.18, ease: 'power2.inOut' }, 0.75);
-        }
-
-        if (claims.length) {
-          gsap.set(claims, { autoAlpha: 0, y: 10 });
-          gsap.to(claims, {
-            autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.06, ease, clearProps: 'transform',
-            scrollTrigger: { trigger: claims[0].parentElement, start: 'top 92%', once: true }
+        if (visual) gsap.set(visual, { autoAlpha: 0, scale: 0.92 });
+        left.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? 16 : 0, y: wide ? 0 : 14 }));
+        right.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? -16 : 0, y: wide ? 0 : 14 }));
+        if (waves.length) {
+          waves.forEach((p) => {
+            const len = p.getTotalLength();
+            gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
           });
         }
+        if (particles.length) gsap.set(particles, { autoAlpha: 0 });
+
+        const tl = gsap.timeline({ scrollTrigger: { trigger: $('.pdp-tf__stage', sec) || sec, start: 'top 78%', once: true } });
+        if (visual) tl.to(visual, { autoAlpha: 1, scale: 1, duration: 1.4, ease: 'power2.out', clearProps: 'transform' }, 0);
+        if (waves.length) tl.to(waves, { strokeDashoffset: 0, duration: 1.8, ease: 'power1.inOut', clearProps: 'strokeDasharray' }, 0.1);
+        if (particles.length) tl.to(particles, { autoAlpha: 1, duration: 1.4, stagger: 0.08, ease: 'power1.out', clearProps: 'visibility' }, 0.4);
+        if (left.length) tl.to(left, { autoAlpha: 1, x: 0, y: 0, duration: 1, stagger: 0.15, ease, clearProps: 'transform' }, 0.3);
+        if (right.length) tl.to(right, { autoAlpha: 1, x: 0, y: 0, duration: 1, stagger: 0.15, ease, clearProps: 'transform' }, 0.45);
       });
 
       /* Craft — steps rise in turn while the progress line draws across */
@@ -667,6 +703,229 @@
     listen(window, 'load', () => ScrollTrigger.refresh(), { once: true });
   }
 
+  /* ------------------------------------------------------------ Image zoom */
+  function initZoom(main) {
+    const stage = $('[data-pdp-stage]', main);
+    if (!stage || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    stage.classList.add('is-zoomable');
+    const off = () => stage.classList.remove('is-zooming');
+    const move = (e) => {
+      const r = stage.getBoundingClientRect();
+      stage.style.setProperty('--pdp-zx', `${((e.clientX - r.left) / r.width) * 100}%`);
+      stage.style.setProperty('--pdp-zy', `${((e.clientY - r.top) / r.height) * 100}%`);
+    };
+    listen(stage, 'click', (e) => {
+      if (reduceMotion.matches || e.target.closest('button, a')) return;
+      if (!e.target.closest('.pdp-slide.is-active') || e.target.tagName !== 'IMG') return;
+      move(e);
+      stage.classList.toggle('is-zooming');
+    });
+    listen(stage, 'mousemove', (e) => { if (stage.classList.contains('is-zooming')) move(e); });
+    listen(stage, 'mouseleave', off);
+    $$('[data-pdp-thumb], [data-pdp-dot], [data-pdp-media-step]', main).forEach((el) => listen(el, 'click', off));
+  }
+
+  /* ------------------------------------------------------------ Write a review */
+  // The form is only in the page for a signed-in customer (Liquid checks Shopify's `customer`);
+  // guests get a login link that returns here with ?review=1, which opens the form.
+  function initReviewForm() {
+    const section = $('[data-pdp-reviews]');
+    const box = section && $('[data-pdp-review-form]', section);
+    const openBtn = section && $('[data-pdp-review-open]', section);
+    if (!box || !openBtn) return;
+    const form = $('form', box);
+    const done = $('[data-pdp-rdone]', box);
+    const status = $('[data-pdp-rstatus]', box);
+    const submit = $('[data-pdp-rsubmit]', box);
+    const submitLabel = $('[data-pdp-rsubmit-label]', box);
+    const titleEl = $('[data-pdp-rtitle]', box);
+    const bodyEl = $('[data-pdp-rbody]', box);
+    const count = $('[data-pdp-rcount]', box);
+    const sub = $('[data-pdp-rsub]', box);
+    const preview = box.hasAttribute('data-preview');
+    const LIMITS = { title: [3, 80], body: [20, 1000] };
+
+    const productName = $('[data-pdp-main]')?.dataset.productTitle || '';
+    if (sub) sub.textContent = `${productName ? productName + ' · ' : ''}Posting as ${box.dataset.customerName || 'you'}`;
+
+    const setError = (key, msg) => {
+      const el = $(`[data-error-for="${key}"]`, box);
+      if (!el) return;
+      el.hidden = !msg;
+      el.textContent = msg || '';
+      const field = key === 'title' ? titleEl : key === 'body' ? bodyEl : null;
+      if (field) field.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    };
+    const clearErrors = () => { ['rating', 'title', 'body'].forEach((k) => setError(k, '')); };
+    const setStatus = (msg, tone) => {
+      status.hidden = !msg;
+      status.textContent = msg || '';
+      status.dataset.tone = tone || '';
+    };
+    const setBusy = (busy) => {
+      submit.disabled = busy;
+      submit.classList.toggle('is-loading', busy);
+      if (busy) submit.setAttribute('aria-busy', 'true'); else submit.removeAttribute('aria-busy');
+      submitLabel.textContent = busy ? 'Sending…' : 'Submit review';
+    };
+
+    const open = ({ scroll = true } = {}) => {
+      done.hidden = true;
+      form.hidden = false;
+      box.hidden = false;
+      box.classList.add('is-open');
+      openBtn.setAttribute('aria-expanded', 'true');
+      if (scroll) box.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'center' });
+      setTimeout(() => { const first = $('input[name="contact[Rating]"]', box); if (first) first.focus({ preventScroll: true }); }, 200);
+    };
+    const close = () => {
+      box.classList.remove('is-open');
+      box.hidden = true;
+      openBtn.setAttribute('aria-expanded', 'false');
+      form.reset();
+      clearErrors();
+      setStatus('');
+      setBusy(false);
+      if (count) count.textContent = '0';
+      openBtn.focus({ preventScroll: true });
+    };
+
+    listen(openBtn, 'click', () => (box.hidden ? open() : close()));
+    listen($('[data-pdp-rcancel]', box), 'click', close);
+    listen($('[data-pdp-rclose]', box), 'click', close);
+    listen(bodyEl, 'input', () => { if (count) count.textContent = String(bodyEl.value.length); setError('body', ''); });
+    listen(titleEl, 'input', () => setError('title', ''));
+    $$('input[name="contact[Rating]"]', box).forEach((r) => listen(r, 'change', () => setError('rating', '')));
+
+    const validate = () => {
+      clearErrors();
+      let firstBad = null;
+      const rating = $('input[name="contact[Rating]"]:checked', box);
+      if (!rating) { setError('rating', 'Please choose a star rating.'); firstBad = firstBad || $('input[name="contact[Rating]"]', box); }
+      const t = titleEl.value.trim();
+      if (t.length < LIMITS.title[0]) { setError('title', t ? 'Please add a little more to your title.' : 'Please add a title.'); firstBad = firstBad || titleEl; }
+      const b = bodyEl.value.trim();
+      if (b.length < LIMITS.body[0]) { setError('body', `Please write at least ${LIMITS.body[0]} characters (${b.length} so far).`); firstBad = firstBad || bodyEl; }
+      if (firstBad) firstBad.focus();
+      return !firstBad;
+    };
+
+    listen(form, 'submit', async (e) => {
+      e.preventDefault();
+      setStatus('');
+      if (!validate()) return;
+      setBusy(true);
+      try {
+        if (preview) {
+          await new Promise((r) => setTimeout(r, 900));
+        } else {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: new FormData(form)
+          });
+          // Shopify may answer with its spam check page; hand over to a normal submit so the shopper can pass it
+          if (/\/challenge/.test(res.url)) { form.submit(); return; }
+          if (!res.ok) throw new Error('send failed');
+        }
+        form.hidden = true;
+        done.hidden = false;
+        done.focus({ preventScroll: true });
+        form.reset();
+        if (count) count.textContent = '0';
+      } catch (error) {
+        setStatus('We could not send your review. Please check your connection and try again.', 'error');
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    // Back from the login page with ?review=1
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('review') === '1') {
+      params.delete('review');
+      const q = params.toString();
+      window.history.replaceState(null, '', window.location.pathname + (q ? `?${q}` : '') + window.location.hash);
+      setTimeout(() => open(), 400);
+    }
+  }
+
+  /* --------------------------------------------------------- Review sorting */
+  function initReviewSort() {
+    const select = $('[data-pdp-review-sort]');
+    if (!select) return;
+    const list = select.closest('.pdp-reviews__list');
+    listen(select, 'change', () => {
+      const cards = $$('[data-pdp-review]', list);
+      const key = (el, attr) => Number(el.dataset[attr]) || 0;
+      cards.sort((a, b) => {
+        if (select.value === 'high') return key(b, 'rating') - key(a, 'rating') || key(a, 'order') - key(b, 'order');
+        if (select.value === 'low') return key(a, 'rating') - key(b, 'rating') || key(a, 'order') - key(b, 'order');
+        return key(a, 'order') - key(b, 'order');
+      });
+      const app = $('.pdp-reviews__app', list);
+      cards.forEach((c) => (app ? list.insertBefore(c, app) : list.appendChild(c)));
+    });
+  }
+
+  /* ----------------------------------------------------------- Meter reveal */
+  function initMeters() {
+    const meters = $$('[data-pdp-meter]');
+    if (!meters.length) return;
+    if (!('IntersectionObserver' in window) || reduceMotion.matches) {
+      meters.forEach((m) => m.classList.add('is-drawn'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-drawn');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+    meters.forEach((m) => io.observe(m));
+    cleanups.push(() => io.disconnect());
+  }
+
+  /* -------------------------------------------------------- Recently viewed */
+  async function initRecentlyViewed() {
+    const section = $('[data-pdp-recent]');
+    const main = $('[data-pdp-main]');
+    if (!main) return;
+    const KEY = 'agha-recent-viewed';
+    const current = main.dataset.productHandle;
+    let handles = [];
+    try { handles = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { handles = []; }
+    if (!Array.isArray(handles)) handles = [];
+    if (current) {
+      const next = [current, ...handles.filter((h) => h !== current)].slice(0, 12);
+      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) { /* storage unavailable */ }
+    }
+    const grid = section && $('[data-pdp-recent-grid]', section);
+    if (!grid || !isShopify) return;
+    const limit = Number(section.dataset.limit) || 4;
+    const wanted = handles.filter((h) => h && h !== current).slice(0, limit);
+    const esc = (str) => String(str ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const card = (p, price) => `<a class="pdp-rel" href="${esc(p.url)}"><div class="pdp-rel__frame">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" width="400" height="400">` : ''}</div><div class="pdp-rel__body"><h3 class="pdp-rel__title">${esc(p.title)}</h3><span class="pdp-rel__price">${esc(price)}</span></div></a>`;
+    // Mock mode only: no real history yet, so show the demo cards embedded by the section
+    const showDemo = () => {
+      const demo = readJSON($('[data-pdp-recent-mock]', section));
+      if (!Array.isArray(demo) || !demo.length) return;
+      grid.innerHTML = demo.slice(0, limit).map((p) => card(p, p.price)).join('');
+      section.hidden = false;
+      revealNow($$('.pdp-rel', grid));
+    };
+    if (!wanted.length) { showDemo(); return; }
+    const results = await Promise.all(wanted.map((h) => fetch(`/products/${encodeURIComponent(h)}.js`).then((r) => (r.ok ? r.json() : null)).catch(() => null)));
+    const items = results.filter(Boolean);
+    if (!items.length) { showDemo(); return; }
+    const format = section.dataset.moneyFormat;
+    grid.innerHTML = items.map((p) => card({ url: p.url, title: p.title, image: p.featured_image }, formatMoney(p.price, format))).join('');
+    section.hidden = false;
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    revealNow($$('.pdp-rel', grid));
+  }
+
   /* ------------------------------------------------------------------- Boot */
   function init() {
     const main = $('[data-pdp-main]');
@@ -681,9 +940,14 @@
       initDock(main);
       initDelivery(main);
       initWishlist(main);
+      initZoom(main);
     }
     initAccordions(document);
     initRecommendations();
+    initReviewSort();
+    initReviewForm();
+    initMeters();
+    initRecentlyViewed();
     initMotion();
   }
 
@@ -692,7 +956,7 @@
       motionCtx.revert();
       motionCtx = null;
       // Tweens that never started don't restore their pre-state on revert; clear it explicitly
-      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-visual] img, [data-pdp-tf-act], [data-pdp-tf-claim], .pdp-tf__rule', { clearProps: 'transform,opacity,visibility' });
+      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-block], .pdp-tf__wave path, .pdp-tf__particle', { clearProps: 'transform,opacity,visibility' });
     }
     cleanups.splice(0).forEach((fn) => fn());
   }

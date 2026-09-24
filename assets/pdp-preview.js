@@ -49,7 +49,7 @@
     title: size,
     options: [size],
     price: price == null ? null : price * 100,
-    compare_at_price: null,
+    compare_at_price: product.compare && product.compare[size] ? product.compare[size] * 100 : null,
     available: true
   }));
   const current = variants.find((v) => v.title === '50 ML') || variants[0];
@@ -128,7 +128,7 @@
 
           <div class="pdp-price" data-pdp-hero-item>
             <span class="pdp-price__amount" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
-            <s class="pdp-price__compare" data-pdp-compare hidden></s>
+            <s class="pdp-price__compare" data-pdp-compare${current.compare_at_price > current.price ? '' : ' hidden'}>${current.compare_at_price > current.price ? money(current.compare_at_price / 100) : ''}</s>
             <span class="pdp-price__note"><span data-pdp-variant-title>${current.title}</span> · Inclusive of all taxes</span>
           </div>
 
@@ -405,12 +405,13 @@
     </div>
   </section>` : '';
 
-  /* ------------------------------------------------- The fragrance (three acts) */
+  /* ------------------------------------------------- The fragrance ("image with benefits") */
   // Mirrors sections/agha-pdp-the-fragrance.liquid. Same sources, preview names:
-  //   notes.top / notes.heart / notes.base → custom.top_notes / heart_notes / base_notes
-  //   claims (array)                       → custom.claims + "claim:" product tags
+  //   notes.top / notes.heart / notes.base → custom.top_notes / heart_notes / base_notes (left column)
+  //   claims (array)                       → custom.claims + "claim:" product tags (right column)
   //   family                               → custom.family
-  // Renders nothing without data, like the Liquid.
+  // A note block without data is left out; a claim is icon + wording only, no invented text
+  // under it. Renders nothing without data, like the Liquid.
   //
   // TEMPORARY LOCAL-DEV FALLBACK — Shopify is not connected yet, so the real handles below
   // have no metafields to read. DEV_FRAGRANCE_MOCK is placeholder content only, isolated here
@@ -430,21 +431,43 @@
   const tfBase = notes.base || (tfMock && tfMock.baseNotes.join(', ')) || '';
   const tfClaimsData = (product.claims && product.claims.length) ? product.claims : (tfMock ? tfMock.claims : []);
 
-  const tfActs = [
-    ['top', 'left', 'I', 'Top notes', 'The opening', tfTop],
-    ['heart', 'right', 'II', 'Heart notes', 'The heart', tfHeart],
-    ['base', 'left', 'III', 'Base notes', 'The trail', tfBase]
-  ].filter((a) => a[5]).map(([slot, side, numeral, label, cue, list]) => `
-          <li class="pdp-tf__act pdp-tf__act--${slot} pdp-tf__act--${side}" data-pdp-tf-act data-side="${side}">
-            <span class="pdp-tf__numeral" aria-hidden="true">${numeral}<span class="pdp-tf__rule"></span></span>
-            <div class="pdp-tf__act-body">
-              <h3 class="pdp-tf__label"><span class="pdp-sr">Act ${numeral}, </span>${label}</h3>
-              <p class="pdp-tf__cue">${cue}</p>
-              <ul class="pdp-tf__notes">${list.split(',').map((n) => n.trim()).filter(Boolean).map((n) => `<li>${esc(n)}</li>`).join('')}</ul>
-            </div>
-          </li>`);
+  const tfBlock = (icon2, title, text, side) => `
+          <li class="pdp-tf__block" data-pdp-tf-block data-side="${side}">
+            <span class="pdp-tf__block-icon">${icon(icon2)}</span>
+            <span class="pdp-tf__block-copy">
+              <span class="pdp-tf__block-title">${esc(title)}</span>
+              ${text ? `<span class="pdp-tf__block-text">${esc(text)}</span>` : ''}
+            </span>
+          </li>`;
+  const tfLeft = [
+    ['leaf', 'Top notes', tfTop],
+    ['flower', 'Heart notes', tfHeart],
+    ['wood', 'Base notes', tfBase]
+  ].filter(([, , text]) => text).map(([ic, title, text]) => tfBlock(ic, title, text, 'left'));
+
+  const CLAIM_ICON = (label) => {
+    const l = label.toLowerCase();
+    if (l.includes('paraben') || l.includes('phthalate')) return 'drop';
+    if (l.includes('cruelty')) return 'heart';
+    if (l.includes('vegan')) return 'leaf';
+    if (l.includes('last')) return 'time';
+    if (l.includes('premium') || l.includes('eau de parfum') || l.includes('extrait')) return 'sparkle';
+    return 'seal';
+  };
   const tfClaims = [...new Set((tfClaimsData || []).map((c) => String(c).trim()).filter(Boolean))];
-  const theFragrance = (tfActs.length || tfClaims.length) ? `
+  const tfRight = tfClaims.map((c) => tfBlock(CLAIM_ICON(c), c, '', 'right'));
+
+  // Decorative only (aria-hidden, no content): a faint scent-trail line on either side of
+  // the bottle and a few slowly drifting particles — mirrors the Liquid's fixed markup.
+  const tfWaves = `
+          <svg class="pdp-tf__wave pdp-tf__wave--left" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M210 16C150 70 168 130 118 168 70 204 96 264 70 316 52 352 60 388 96 408" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 9" stroke-linecap="round"/></svg>
+          <svg class="pdp-tf__wave pdp-tf__wave--right" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M10 16C70 70 52 130 102 168 150 204 124 264 150 316 168 352 160 388 124 408" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 9" stroke-linecap="round"/></svg>`;
+  const tfParticles = [
+    ['12%', '14%', '5px', '0s'], ['86%', '22%', '4px', '1.1s'], ['8%', '52%', '3px', '2.4s'],
+    ['90%', '60%', '5px', '0.6s'], ['20%', '82%', '4px', '1.8s'], ['80%', '86%', '3px', '3s']
+  ].map(([x, y, sz, d]) => `<span class="pdp-tf__particle" style="--x:${x}; --y:${y}; --s:${sz}; --d:${d};"></span>`).join('');
+
+  const theFragrance = (tfLeft.length || tfRight.length) ? `
   <section class="pdp pdp-section pdp-tf" data-pdp-tf aria-labelledby="tf-title">
     <div class="container">
       <header class="pdp-tf__head" data-pdp-reveal>
@@ -452,22 +475,81 @@
         <h2 class="pdp-tf__title" id="tf-title">The Fragrance</h2>
         <p class="pdp-tf__sub">An olfactory journey in three acts.</p>
       </header>
-      ${tfActs.length ? `
       <div class="pdp-tf__stage">
-        <figure class="pdp-tf__visual" data-pdp-tf-visual>
-          <span class="pdp-tf__frame"><img src="${images[0]}" alt="${esc(niceTitle)}" loading="lazy" width="1200" height="1590"></span>
-        </figure>
-        <p class="pdp-tf__caption" data-pdp-tf-act data-side="right">
-          <span class="pdp-tf__caption-name">${esc(niceTitle)}</span>
-          ${product.family ? `<span class="pdp-tf__caption-family">${esc(product.family)}</span>` : ''}
-        </p>
-        <ol class="pdp-tf__acts">${tfActs.join('')}
+        <ol class="pdp-tf__col pdp-tf__col--left">${tfLeft.join('')}
         </ol>
-      </div>` : ''}
-      ${tfClaims.length ? `
-      <ul class="pdp-tf__claims" aria-label="Product attributes">${tfClaims.map((c) => `<li class="pdp-tf__claim" data-pdp-tf-claim>${esc(c)}</li>`).join('')}</ul>` : ''}
+        <div class="pdp-tf__center">
+          <div class="pdp-tf__aura" aria-hidden="true">${tfWaves}${tfParticles}</div>
+          <figure class="pdp-tf__visual" data-pdp-tf-visual>
+            <span class="pdp-tf__float">
+              <span class="pdp-tf__frame"><img src="${images[0]}" alt="${esc(niceTitle)}" loading="lazy" width="1200" height="1590"></span>
+            </span>
+          </figure>
+        </div>
+        <ol class="pdp-tf__col pdp-tf__col--right">${tfRight.join('')}
+        </ol>
+      </div>
+      <p class="pdp-tf__caption" data-pdp-reveal>
+        <span class="pdp-tf__caption-name">${esc(niceTitle)}</span>${product.family ? `<span class="pdp-tf__caption-sep" aria-hidden="true">—</span><span class="pdp-tf__caption-family">${esc(product.family)}</span>` : ''}
+      </p>
     </div>
   </section>` : '';
+
+  // Preview stand-in for Shopify's `customer`: add ?as=customer to the URL to see the signed-in state
+  const previewCustomer = new URLSearchParams(window.location.search).get('as') === 'customer';
+  const reviewReturn = encodeURIComponent(`${window.location.pathname}?p=${handle}&as=customer&review=1`);
+  const reviewForm = previewCustomer ? `
+          <div class="pdp-rform" id="pdp-review-form" data-pdp-review-form data-preview data-customer-name="Preview customer" hidden>
+            <form class="pdp-rform__form" novalidate>
+<div class="pdp-rform__head">
+        <h3 class="pdp-rform__title">Write a review</h3>
+        <p class="pdp-rform__sub" data-pdp-rsub></p>
+      </div>
+
+      <fieldset class="pdp-rform__rating">
+        <legend>Your rating <span aria-hidden="true">*</span></legend>
+        <div class="pdp-rstars" data-pdp-rstars>
+          <input type="radio" id="pdp-r-star-5" name="contact[Rating]" value="5"><label for="pdp-r-star-5" title="5 out of 5"><span class="pdp-sr">5 out of 5</span></label>
+          <input type="radio" id="pdp-r-star-4" name="contact[Rating]" value="4"><label for="pdp-r-star-4" title="4 out of 5"><span class="pdp-sr">4 out of 5</span></label>
+          <input type="radio" id="pdp-r-star-3" name="contact[Rating]" value="3"><label for="pdp-r-star-3" title="3 out of 5"><span class="pdp-sr">3 out of 5</span></label>
+          <input type="radio" id="pdp-r-star-2" name="contact[Rating]" value="2"><label for="pdp-r-star-2" title="2 out of 5"><span class="pdp-sr">2 out of 5</span></label>
+          <input type="radio" id="pdp-r-star-1" name="contact[Rating]" value="1"><label for="pdp-r-star-1" title="1 out of 5"><span class="pdp-sr">1 out of 5</span></label>
+        </div>
+        <p class="pdp-rfield__err" data-error-for="rating" hidden></p>
+      </fieldset>
+
+      <div class="pdp-rfield">
+        <label for="pdp-r-title">Review title <span aria-hidden="true">*</span></label>
+        <input type="text" id="pdp-r-title" name="contact[Review title]" maxlength="80" autocomplete="off" placeholder="Sum it up in a few words" data-pdp-rtitle>
+        <p class="pdp-rfield__err" data-error-for="title" hidden></p>
+      </div>
+
+      <div class="pdp-rfield">
+        <label for="pdp-r-body">Your review <span aria-hidden="true">*</span></label>
+        <textarea id="pdp-r-body" name="contact[body]" rows="5" maxlength="1000" placeholder="How does it wear on you? Opening, longevity, occasions…" data-pdp-rbody></textarea>
+        <div class="pdp-rfield__foot">
+          <p class="pdp-rfield__err" data-error-for="body" hidden></p>
+          <span class="pdp-rfield__count"><span data-pdp-rcount>0</span> / 1000</span>
+        </div>
+      </div>
+
+      <p class="pdp-rform__status" role="status" aria-live="polite" data-pdp-rstatus hidden></p>
+
+      <div class="pdp-rform__actions">
+        <button type="submit" class="pdp-btn" data-pdp-rsubmit><span data-pdp-rsubmit-label>Submit review</span></button>
+        <button type="button" class="pdp-btn pdp-btn--ghost" data-pdp-rcancel>Cancel</button>
+      </div>
+            
+            </form>
+            <div class="pdp-rform__done" data-pdp-rdone hidden tabindex="-1">
+      <h3 class="pdp-rform__title">Thank you</h3>
+      <p>Your review has been sent to our team. It will appear here once it has been approved.</p>
+      <button type="button" class="pdp-btn pdp-btn--ghost" data-pdp-rclose>Close</button>
+    </div>
+          </div>` : '';
+  const reviewButton = previewCustomer
+    ? '<button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" data-pdp-review-open aria-expanded="false" aria-controls="pdp-review-form">Write a review</button>'
+    : `<a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="/account-login.html?return_url=${reviewReturn}" data-pdp-review-login>Write a review</a><p class="pdp-reviews__signin">Sign in to your account to review this fragrance.</p>`;
 
   /* ------------------------------------------------------------- 06 Reviews */
   const reviewsSection = `
@@ -484,8 +566,10 @@
             <p class="pdp-reviews__score">${rating.toFixed(1)}</p>
             ${stars(rating)}
             <p class="pdp-reviews__count">Based on ${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}</p>` : '<p class="pdp-reviews__count">No ratings yet</p>'}
+          ${reviewButton}
         </div>
         <div class="pdp-reviews__list">
+          ${reviewForm}
           ${reviews.length ? reviews.map((r) => `
             <article class="pdp-review" data-pdp-review>
               ${stars(r.rating)}

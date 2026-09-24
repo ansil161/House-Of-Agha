@@ -1,0 +1,269 @@
+{% comment %}
+  AGHA PDP — DATA RESOLVER
+  ---------------------------------------------------------------------------
+  Outputs ONE JSON object holding every value the product page reads. Sections use it like:
+
+    {%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+    {%- assign pdp = pdp_json | parse_json -%}
+
+  Priority for every field:
+    1. REAL SHOPIFY DATA  (product fields and the metafields below)
+    2. MOCK DATA          (snippets/agha-pdp-mock-data.liquid) — only when the theme setting
+                          "Use mock PDP data" (settings.use_mock_pdp_data) is ON
+    3. nothing            (the section hides that field)
+  With the setting OFF, this snippet returns real Shopify data only.
+
+  Never touched here: variants, prices, SKUs, inventory, images, and the Product JSON-LD
+  (snippets/agha-pdp-jsonld.liquid reads Shopify directly and ignores mock data).
+
+  Expected metafields (namespace "custom" unless stated)
+    Identity ...... family, scent_tags (list), short_description, story_heading, story, mood
+    Notes ......... top_notes, heart_notes, base_notes (text "A, B, C" or list),
+                    key_material_name, key_material_text, scent_character, claims
+    Experience .... intensity, intensity_level (1–5), longevity, longevity_level (1–5),
+                    sillage, sillage_level (1–5), day_night, occasions, seasons (text or list),
+                    how_it_wears
+    Details ....... net_volume, weight, dimensions, ingredients, care_instructions
+    How to wear ... spray_where, spray_count, spray_distance, spray_when, how_to_wear
+    Reviews ....... reviews.rating, reviews.rating_count (standard review-app metafields),
+                    custom.rating_breakdown (JSON, e.g. {"5":12,"4":3,"3":0,"2":0,"1":1})
+  Product fields used: vendor (brand), description, type.
+  Section settings (shipping / returns / authenticity / sale message) beat mock data too; the
+  sections apply that step themselves.
+
+  Output notes: *_html values are ready-to-print HTML. Notes are normalised to "A, B, C".
+{% endcomment %}
+{%- liquid
+  assign mf = product.metafields.custom
+  assign mock = '{}' | parse_json
+  assign use_mock = false
+  if settings.use_mock_pdp_data
+    assign use_mock = true
+    capture mock_json
+      render 'agha-pdp-mock-data'
+    endcapture
+    assign mock = mock_json | parse_json
+  endif
+  assign mock_keys = ''
+
+  # Identity
+  assign brand = product.vendor | default: mock.brand
+  assign family = mf.family.value | default: product.type | default: mock.family
+  assign scent_tags = mf.scent_tags.value | default: mock.scent_tags
+  assign scent_character = mf.scent_character.value | default: mock.scent_character
+  assign mood = mf.mood.value | default: mock.mood
+  assign story_heading = mf.story_heading.value | default: mock.story_heading
+  assign story_html = ''
+  if mf.story.value != blank
+    assign story_html = mf.story | metafield_tag
+  else
+    assign story_html = mock.story_html
+  endif
+
+  # Description: real short description, else the real description, else mock
+  assign short_description = mf.short_description.value
+  if short_description == blank and product.description == blank
+    assign short_description = mock.short_description
+  endif
+  assign description_html = product.description | default: mock.description_html
+
+  # Notes, normalised to "A, B, C"
+  assign note_keys = 'top_notes,heart_notes,base_notes' | split: ','
+  for k in note_keys
+    assign fld = mf[k]
+    assign joined = ''
+    if fld.value != blank
+      if fld.type contains 'list'
+        assign joined = fld.value | join: ', '
+      else
+        assign parts = fld.value | split: ','
+        for p in parts
+          assign ps = p | strip
+          if ps != blank
+            if joined == blank
+              assign joined = ps
+            else
+              assign joined = joined | append: ', ' | append: ps
+            endif
+          endif
+        endfor
+      endif
+    else
+      assign joined = mock[k]
+    endif
+    case k
+      when 'top_notes'
+        assign top_notes = joined
+      when 'heart_notes'
+        assign heart_notes = joined
+      when 'base_notes'
+        assign base_notes = joined
+    endcase
+  endfor
+  assign key_material_name = mf.key_material_name.value | default: mock.key_material_name
+  assign key_material_text = mf.key_material_text.value | default: mock.key_material_text
+
+  # Claims: metafield, else "claim:" tags (read by the section), else mock
+  assign claims = ''
+  if mf.claims.value != blank
+    if mf.claims.type contains 'list'
+      assign claims = mf.claims.value
+    else
+      assign claims = mf.claims.value | split: ','
+    endif
+  else
+    assign has_claim_tag = false
+    for t in product.tags
+      assign tl = t | downcase
+      if tl contains 'claim:'
+        assign has_claim_tag = true
+      endif
+    endfor
+    if has_claim_tag == false
+      assign claims = mock.claims
+    endif
+  endif
+
+  # Experience
+  assign intensity = mf.intensity.value | default: mock.intensity
+  assign intensity_level = mf.intensity_level.value | default: mock.intensity_level
+  assign longevity = mf.longevity.value | default: mock.longevity
+  assign longevity_level = mf.longevity_level.value | default: mock.longevity_level
+  assign sillage = mf.sillage.value | default: mock.sillage
+  assign sillage_level = mf.sillage_level.value | default: mock.sillage_level
+  assign day_night = mf.day_night.value | default: mock.day_night
+  assign how_it_wears_html = ''
+  if mf.how_it_wears.value != blank
+    assign how_it_wears_html = mf.how_it_wears | metafield_tag
+  else
+    assign how_it_wears_html = mock.how_it_wears_html
+  endif
+
+  assign list_keys = 'occasions,seasons' | split: ','
+  for k in list_keys
+    assign fld = mf[k]
+    assign items = ''
+    if fld.value != blank
+      if fld.type contains 'list'
+        assign items = fld.value
+      else
+        assign items = fld.value | split: ','
+      endif
+    else
+      assign items = mock[k]
+    endif
+    if k == 'occasions'
+      assign occasions = items
+    else
+      assign seasons = items
+    endif
+  endfor
+
+  # Details
+  assign net_volume = mf.net_volume.value | default: mock.net_volume
+  assign weight = mf.weight.value | default: mock.weight
+  assign dimensions = mf.dimensions.value | default: mock.dimensions
+  assign ingredients_html = ''
+  if mf.ingredients.value != blank
+    assign ingredients_html = mf.ingredients | metafield_tag
+  else
+    assign ingredients_html = mock.ingredients_html
+  endif
+  assign care_html = ''
+  if mf.care_instructions.value != blank
+    assign care_html = mf.care_instructions | metafield_tag
+  else
+    assign care_html = mock.care_html
+  endif
+
+  # How to wear
+  assign spray_where = mf.spray_where.value | default: mock.spray_where
+  assign spray_count = mf.spray_count.value | default: mock.spray_count
+  assign spray_distance = mf.spray_distance.value | default: mock.spray_distance
+  assign spray_when = mf.spray_when.value | default: mock.spray_when
+  assign how_to_wear_html = ''
+  if mf.how_to_wear.value != blank
+    assign how_to_wear_html = mf.how_to_wear | metafield_tag
+  else
+    assign how_to_wear_html = mock.how_to_wear_html
+  endif
+
+  comment
+    Reviews. Real rating metafield wins. Otherwise the demo block is used as a whole (never mixed:
+    a real rating never carries demo breakdown or demo review cards).
+  endcomment
+  assign real_rating = product.metafields.reviews.rating.value
+  assign rev_mock = false
+  assign rev_rating = 0
+  assign rev_scale = 5
+  assign rev_count = 0
+  assign rev_breakdown = mf.rating_breakdown.value
+  assign rev_items = '[]' | parse_json
+  if real_rating != blank
+    assign rev_rating = real_rating.rating | round: 1
+    assign rev_scale = real_rating.scale_max
+    assign rev_count = product.metafields.reviews.rating_count.value | default: 0
+  elsif mock.reviews != blank
+    assign rev_mock = true
+    assign rev_rating = mock.reviews.rating
+    assign rev_count = mock.reviews.count
+    assign rev_breakdown = mock.reviews.breakdown
+    assign rev_items = mock.reviews.items
+  endif
+-%}
+{
+  "use_mock": {{ use_mock | json }},
+  "brand": {{ brand | default: '' | json }},
+  "sku_prefix": {{ mock.sku_prefix | default: '' | json }},
+  "family": {{ family | default: '' | json }},
+  "scent_tags": {{ scent_tags | default: '' | json }},
+  "scent_character": {{ scent_character | default: '' | json }},
+  "mood": {{ mood | default: '' | json }},
+  "story_heading": {{ story_heading | default: '' | json }},
+  "story_html": {{ story_html | default: '' | json }},
+  "short_description": {{ short_description | default: '' | json }},
+  "description_html": {{ description_html | default: '' | json }},
+  "top_notes": {{ top_notes | default: '' | json }},
+  "heart_notes": {{ heart_notes | default: '' | json }},
+  "base_notes": {{ base_notes | default: '' | json }},
+  "key_material_name": {{ key_material_name | default: '' | json }},
+  "key_material_text": {{ key_material_text | default: '' | json }},
+  "claims": {{ claims | default: '' | json }},
+  "intensity": {{ intensity | default: '' | json }},
+  "intensity_level": {{ intensity_level | default: '' | json }},
+  "longevity": {{ longevity | default: '' | json }},
+  "longevity_level": {{ longevity_level | default: '' | json }},
+  "sillage": {{ sillage | default: '' | json }},
+  "sillage_level": {{ sillage_level | default: '' | json }},
+  "day_night": {{ day_night | default: '' | json }},
+  "occasions": {{ occasions | default: '' | json }},
+  "seasons": {{ seasons | default: '' | json }},
+  "how_it_wears_html": {{ how_it_wears_html | default: '' | json }},
+  "net_volume": {{ net_volume | default: '' | json }},
+  "weight": {{ weight | default: '' | json }},
+  "dimensions": {{ dimensions | default: '' | json }},
+  "ingredients_html": {{ ingredients_html | default: '' | json }},
+  "care_html": {{ care_html | default: '' | json }},
+  "spray_where": {{ spray_where | default: '' | json }},
+  "spray_count": {{ spray_count | default: '' | json }},
+  "spray_distance": {{ spray_distance | default: '' | json }},
+  "spray_when": {{ spray_when | default: '' | json }},
+  "how_to_wear_html": {{ how_to_wear_html | default: '' | json }},
+  "discount_percent": {{ mock.discount_percent | default: 0 | json }},
+  "sale_message": {{ mock.sale_message | default: '' | json }},
+  "free_shipping_text": {{ mock.free_shipping_text | default: '' | json }},
+  "shipping_charges_text": {{ mock.shipping_charges_text | default: '' | json }},
+  "returns_text": {{ mock.returns_text | default: '' | json }},
+  "refund_text": {{ mock.refund_text | default: '' | json }},
+  "authenticity_title": {{ mock.authenticity_title | default: '' | json }},
+  "authenticity_text": {{ mock.authenticity_text | default: '' | json }},
+  "reviews": {
+    "mock": {{ rev_mock | json }},
+    "rating": {{ rev_rating | json }},
+    "scale_max": {{ rev_scale | json }},
+    "count": {{ rev_count | json }},
+    "breakdown": {{ rev_breakdown | default: '' | json }},
+    "items": {{ rev_items | default: '' | json }}
+  },
+  "related": {{ mock.related | default: '' | json }}
+}

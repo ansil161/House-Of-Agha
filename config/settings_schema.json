@@ -1,0 +1,26 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "House of Agha",
+    "theme_version": "1.0.0",
+    "theme_author": "AGHA",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Development",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Product page demo data"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_mock_pdp_data",
+        "label": "Use mock PDP data",
+        "default": false,
+        "info": "Development only. When ON, product-page fields that are empty in Shopify are filled from snippets/agha-pdp-mock-data.liquid. Real Shopify data always wins. Turn OFF before going live; the page then shows real data only and hides empty fields."
+      }
+    ]
+  }
+]

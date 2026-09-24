@@ -1,0 +1,15 @@
+{
+  "framework": null,
+  "buildCommand": "",
+  "installCommand": "",
+  "outputDirectory": ".",
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/shop", "destination": "/shop.html" },
+    { "source": "/collections/:handle*", "destination": "/shop.html" },
+    { "source": "/products/:handle*", "destination": "/product.html" },
+    { "source": "/pages/the-house", "destination": "/the-house.html" },
+    { "source": "/pages/contact", "destination": "/contact.html" },
+    { "source": "/pages/faq", "destination": "/faq.html" }
+  ]
+}

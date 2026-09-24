@@ -187,66 +187,33 @@
       "type": "hoa-collection",
       "settings": {}
     },
-    "world": {
-      "type": "hoa-world",
+    "films": {
+      "type": "hoa-reels",
       "blocks": {
-        "tile_1": {
-          "type": "tile",
+        "reel_oud_fury": {
+          "type": "reel",
+          "settings": {}
+        },
+        "reel_agha_blue": {
+          "type": "reel",
+          "settings": {}
+        },
+        "reel_dark_paradise": {
+          "type": "reel",
           "settings": {
-            "asset": "hoa-world-profile",
-            "w": 2000,
-            "h": 1125,
-            "caption": "Oud Fury",
-            "alt": "A man holds Oud Fury against an amber backdrop"
+            "video": "hoa-reel-oud-of-dark-paradise.mp4"
           }
         },
-        "tile_2": {
-          "type": "tile",
-          "settings": {
-            "asset": "hoa-world-journey",
-            "w": 1200,
-            "h": 1607,
-            "caption": "Maha",
-            "alt": "Maha held out of a car window above spring flowers"
-          }
-        },
-        "tile_3": {
-          "type": "tile",
-          "settings": {
-            "asset": "hoa-world-hand",
-            "w": 1086,
-            "h": 1448,
-            "caption": "Oud of Dark Paradise",
-            "alt": "A hand in a dark suit holds Oud of Dark Paradise, in black and white"
-          }
-        },
-        "tile_4": {
-          "type": "tile",
-          "settings": {
-            "asset": "hoa-world-water",
-            "w": 1152,
-            "h": 1536,
-            "caption": "Sea Smoke",
-            "alt": "Sea Smoke held above clear shallow water"
-          }
-        },
-        "tile_5": {
-          "type": "tile",
-          "settings": {
-            "asset": "hoa-world-poolside",
-            "w": 1200,
-            "h": 1200,
-            "caption": "Sea Smoke",
-            "alt": "Sea Smoke by a pool beside sunglasses and a glass"
-          }
+        "reel_maha": {
+          "type": "reel",
+          "settings": {}
         }
       },
       "block_order": [
-        "tile_1",
-        "tile_2",
-        "tile_3",
-        "tile_4",
-        "tile_5"
+        "reel_oud_fury",
+        "reel_agha_blue",
+        "reel_dark_paradise",
+        "reel_maha"
       ],
       "settings": {}
     },
@@ -341,6 +308,69 @@
         "voice_7"
       ],
       "settings": {}
+    },
+    "world": {
+      "type": "hoa-world",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-profile",
+            "w": 2000,
+            "h": 1125,
+            "caption": "Oud Fury",
+            "alt": "A man holds Oud Fury against an amber backdrop"
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-journey",
+            "w": 1200,
+            "h": 1607,
+            "caption": "Maha",
+            "alt": "Maha held out of a car window above spring flowers"
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-hand",
+            "w": 1086,
+            "h": 1448,
+            "caption": "Oud of Dark Paradise",
+            "alt": "A hand in a dark suit holds Oud of Dark Paradise, in black and white"
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-water",
+            "w": 1152,
+            "h": 1536,
+            "caption": "Sea Smoke",
+            "alt": "Sea Smoke held above clear shallow water"
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "asset": "hoa-world-poolside",
+            "w": 1200,
+            "h": 1200,
+            "caption": "Sea Smoke",
+            "alt": "Sea Smoke by a pool beside sunglasses and a glass"
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -350,6 +380,7 @@
     "discover",
     "art",
     "collection",
+    "films",
     "testimonials",
     "world"
   ]

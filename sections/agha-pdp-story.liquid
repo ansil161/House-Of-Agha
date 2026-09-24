@@ -4,13 +4,15 @@
   Falls back to product metafields custom.story_heading / custom.story; the fact pills come from
   custom.family / custom.mood / custom.sillage.
 {% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
-  assign heading = section.settings.heading | default: product.metafields.custom.story_heading.value
-  assign body = section.settings.body | default: product.metafields.custom.story.value
+  assign heading = section.settings.heading | default: pdp.story_heading
+  assign body = section.settings.body | default: pdp.story_html
   assign image = section.settings.image | default: product.featured_image
-  assign mf_family = product.metafields.custom.family.value
-  assign mf_mood = product.metafields.custom.mood.value
-  assign mf_sillage = product.metafields.custom.sillage.value
+  assign mf_family = pdp.family
+  assign mf_mood = pdp.mood
+  assign mf_sillage = pdp.sillage
   assign zoom = section.settings.zoom | divided_by: 100.0
 -%}
 

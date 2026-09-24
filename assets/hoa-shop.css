@@ -9,7 +9,6 @@
 .hoa-shop-page { background: var(--hoa-paper); color: var(--hoa-ink); }
 .hoa-shop-page main { overflow-x: clip; }
 .hoa-shop-page sup,
-.hoa-pc__num,
 .hoa-shop-cat__status { font-variant-numeric: tabular-nums; }
 
 /* ---------- Page head ---------- */
@@ -127,6 +126,14 @@
 .hoa-ftag[aria-pressed='true'] { border-color: var(--hoa-ink); background: var(--hoa-ink); color: var(--hoa-paper); }
 .hoa-ftag:active, .hoa-fview__btn:active { transform: translateY(1px); }
 
+/* Gift: its own group, a family-tag with an icon so it reads as a distinct occasion filter */
+.hoa-shop-bar__group--gift { padding-left: clamp(16px, 2.4vw, 40px); border-left: 1px solid var(--hoa-line); }
+.hoa-ftag--gift { display: inline-flex; align-items: center; gap: 6px; border-color: var(--hoa-brass); color: var(--hoa-ink-2); }
+.hoa-ftag--gift svg { width: 13px; height: 13px; flex: none; }
+.hoa-ftag--gift sup { margin-left: 1px; font-size: 0.64rem; font-weight: 400; opacity: 0.8; }
+.hoa-ftag--gift:hover { border-color: var(--hoa-brass); background: rgba(176, 141, 87, 0.1); color: var(--hoa-ink); }
+.hoa-ftag--gift[aria-pressed='true'] { border-color: var(--hoa-brass); background: var(--hoa-brass); color: var(--hoa-ivory); }
+
 .hoa-sort { display: inline-flex; align-items: center; font-size: 0.84rem; }
 .hoa-sort select {
   appearance: none;
@@ -161,7 +168,9 @@
 .hoa-fview__btn:focus-visible,
 .hoa-sort select:focus-visible,
 .hoa-pc a:focus-visible,
-.hoa-pc__btn:focus-visible,
+.hoa-shop-cat .hoa-btn:focus-visible,
+.hoa-pc__cta:focus-visible,
+.hoa-pc__like:focus-visible,
 .hoa-shop-cat__clear:focus-visible,
 .hoa-shop-interlude a:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 3px; }
 
@@ -192,19 +201,34 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-auto-flow: row dense;
-  gap: clamp(44px, 4.6vw, 72px) clamp(10px, 1.2vw, 18px);
+  gap: clamp(14px, 1.6vw, 24px);
 }
 .hoa-pc[hidden], .hoa-shop-interlude[hidden] { display: none !important; }
-.hoa-pc { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+/* Card: a soft, rounded tray holding an inset rounded photo, then compact info */
+.hoa-pc {
+  --pc-r: clamp(22px, 2.2vw, 30px);
+  --pc-pad: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: var(--pc-pad);
+  border: 1px solid var(--hoa-line);
+  border-radius: var(--pc-r);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 18, 16, 0.04);
+  transition: box-shadow 0.4s var(--hoa-ease), transform 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
+}
 .hoa-pc.is-entering { animation: hoa-shop-in 0.6s var(--hoa-ease) both; animation-delay: calc(var(--i, 0) * 50ms); }
 @keyframes hoa-shop-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
+.hoa-pc__visual { position: relative; }
 .hoa-pc__media {
   position: relative;
   display: block;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: var(--hoa-radius);
+  border-radius: calc(var(--pc-r) - var(--pc-pad));
   background: var(--hoa-paper-2);
 }
 .hoa-pc__img { position: absolute; inset: 0; }
@@ -212,71 +236,141 @@
 .hoa-pc__img--product img { mix-blend-mode: multiply; transform: scale(0.94); transition: transform 0.9s var(--hoa-ease); }
 .hoa-pc__img--mood { opacity: 0; transition: opacity 0.6s var(--hoa-ease); }
 .hoa-pc__img--mood img { transform: scale(1.05); transition: transform 1.2s var(--hoa-ease); }
-.hoa-pc__num {
+/* Price: a small floating pill over the top-left of the photo */
+.hoa-pc__tag {
   position: absolute;
-  top: 14px; left: 16px;
-  font-size: 0.74rem;
-  color: var(--hoa-mute);
-  transition: color 0.4s var(--hoa-ease);
+  top: 10px; left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: calc(100% - 64px);
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--hoa-ink);
+  font: 600 0.78rem/1.2 var(--hoa-sans);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 1px 6px rgba(20, 18, 16, 0.1);
+}
+.hoa-pc__tag s, .hoa-pc__price s { font-weight: 400; font-size: 0.92em; color: var(--hoa-mute); }
+.hoa-pc__tag--sale { background: var(--hoa-ink); color: #fff; }
+.hoa-pc__tag--sale s { color: rgba(255, 255, 255, 0.6); }
+
+/* Wishlist: a circular icon button riding over the top-right corner of the image */
+.hoa-pc__like {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(20, 18, 16, 0.1);
+  color: var(--hoa-ink);
+  cursor: pointer;
+  transition: background-color 0.3s var(--hoa-ease), transform 0.3s var(--hoa-ease-in-out);
+}
+.hoa-pc__like svg { width: 16px; height: 16px; }
+.hoa-pc__like svg path { transition: fill 0.25s var(--hoa-ease), stroke 0.25s var(--hoa-ease); }
+.hoa-pc__like:hover { background: var(--hoa-paper); transform: scale(1.08); }
+.hoa-pc__like:active { transform: scale(0.92); }
+.hoa-pc__like[aria-pressed='true'] svg path { fill: var(--hoa-ink); stroke: var(--hoa-ink); }
+.hoa-pc__like[aria-pressed='true'] { animation: hoa-pc-like-pop 0.4s var(--hoa-ease); }
+@keyframes hoa-pc-like-pop { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+
+.hoa-pc__gift-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--hoa-brass);
+  color: var(--hoa-ivory);
+  font: 500 0.62rem var(--hoa-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
 }
 
-.hoa-pc__info {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: 'name price' 'meta action';
-  align-items: baseline;
-  gap: 6px 16px;
-}
+.hoa-pc__info { display: flex; flex-direction: column; flex: 1; gap: 4px; padding: 0 8px 6px; }
 .hoa-pc__name {
-  grid-area: name;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 9px;
   margin: 0;
   font-family: var(--hoa-sans);
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
   letter-spacing: -0.025em;
   text-transform: none;
 }
 .hoa-pc__name a { color: inherit; text-decoration: none; }
-.hoa-pc__meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 0 8px; margin: 0; font-size: 0.8rem; color: var(--hoa-mute); }
-.hoa-pc__meta span + span::before { content: '·'; margin-right: 8px; }
-.hoa-pc__price { grid-area: price; margin: 0; font-size: 0.86rem; color: var(--hoa-ink-2); white-space: nowrap; }
-.hoa-pc__action { grid-area: action; justify-self: end; }
-.hoa-pc__action form { margin: 0; }
-.hoa-pc__btn {
-  display: inline-flex;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--hoa-ink);
-  font: 500 0.8rem var(--hoa-sans);
-  text-decoration: underline;
-  text-decoration-color: var(--hoa-line);
-  text-underline-offset: 4px;
-  cursor: pointer;
-  transition: text-decoration-color 0.3s var(--hoa-ease), opacity 0.4s var(--hoa-ease), transform 0.4s var(--hoa-ease);
+.hoa-pc__meta { display: flex; flex-wrap: wrap; gap: 0; margin: 0; }
+.hoa-pc__chip { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-pc__chip + .hoa-pc__chip::before { content: '\00b7'; margin: 0 7px; }
+.hoa-pc__price { display: none; margin: 0; font-size: 0.86rem; color: var(--hoa-ink-2); white-space: nowrap; } /* grid shows the price in the pill; list view shows this */
+.hoa-pc__about {
+  position: relative;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--hoa-mute);
+  max-width: 34ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.hoa-pc__btn:hover { text-decoration-color: currentColor; }
-.hoa-pc__btn--solid {
-  padding: 11px 18px;
-  border-radius: var(--hoa-radius);
+.hoa-pc__action { margin-top: auto; padding-top: 10px; }
+.hoa-pc__action form { margin: 0; }
+
+/* Card CTA: a full-width bar, distinct from the site's round-icon pill so it reads
+   as a proper "add to bag" control rather than a marketing link */
+.hoa-pc__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  padding: 8px 14px;
+  border: 1px solid var(--hoa-ink);
+  border-radius: 12px;
   background: var(--hoa-ink);
   color: var(--hoa-paper);
+  font: 600 0.72rem var(--hoa-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s var(--hoa-ease), color 0.3s var(--hoa-ease), transform 0.15s var(--hoa-ease-in-out);
 }
+.hoa-pc__cta svg { width: 11px; height: 11px; flex: none; transition: transform 0.4s var(--hoa-ease); }
+.hoa-pc__cta:hover { background: var(--hoa-ink-2); border-color: var(--hoa-ink-2); }
+.hoa-pc__cta:hover svg { transform: translate(2px, -2px); }
+.hoa-pc__cta:active { transform: scale(0.97); }
+.hoa-pc__cta--ghost { background: transparent; color: var(--hoa-ink); }
+.hoa-pc__cta--ghost:hover { background: var(--hoa-ink); color: var(--hoa-paper); }
 
 @media (hover: hover) {
-  .hoa-pc .hoa-pc__btn { opacity: 0; transform: translateY(4px); }
-  .hoa-pc:hover .hoa-pc__btn,
-  .hoa-pc:focus-within .hoa-pc__btn { opacity: 1; transform: none; }
+  .hoa-pc:hover { box-shadow: 0 18px 32px -22px rgba(20, 18, 16, 0.35); border-color: rgba(20, 18, 16, 0.22); transform: translateY(-3px); }
   .hoa-pc:hover .hoa-pc__img--product img { transform: scale(0.97); }
   .hoa-pc__media:hover .hoa-pc__img--mood { opacity: 1; }
   .hoa-pc__media:hover .hoa-pc__img--mood img { transform: none; }
-  .hoa-pc__media:hover .hoa-pc__num { color: var(--hoa-ivory); }
 }
 
 /* One campaign photo spans two columns; it takes the row height of the tile beside it */
-.hoa-shop-interlude { grid-column: span 2; display: flex; flex-direction: column; gap: 16px; margin: 0; min-width: 0; }
-.hoa-shop-interlude__media { position: relative; flex: 1; min-height: 280px; overflow: hidden; border-radius: var(--hoa-radius); background: var(--hoa-stone); }
+.hoa-shop-interlude { grid-column: span 2; display: flex; flex-direction: column; gap: 14px; margin: 0; min-width: 0; }
+.hoa-shop-interlude__cap { padding: 0 8px; }
+.hoa-shop-interlude__cap .hoa-pc__price { display: block; }
+.hoa-shop-interlude__media { position: relative; flex: 1; min-height: 280px; overflow: hidden; border-radius: clamp(22px, 2.2vw, 30px); background: var(--hoa-stone); }
 .hoa-shop-interlude__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 55%; transition: transform 1.2s var(--hoa-ease); }
 .hoa-shop-interlude__media:hover img { transform: scale(1.02); }
 .hoa-shop-interlude__cap a { display: inline-flex; gap: 6px; color: var(--hoa-ink); font-weight: 500; text-decoration: none; }
@@ -292,17 +386,33 @@
   align-items: center;
   gap: clamp(16px, 2vw, 32px);
   padding: 12px 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
   border-bottom: 1px solid var(--hoa-line);
+  background: transparent;
+  box-shadow: none;
 }
-.hoa-shop-grid[data-view='list'] .hoa-pc__num { display: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__media { border-radius: 12px; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__tag { display: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__price { display: block; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__info { padding: 0; }
+.hoa-shop-grid[data-view='list'] .hoa-pc:hover { box-shadow: none; transform: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__like { display: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__name { display: flex; align-items: baseline; gap: 10px; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__about { display: none; }
 .hoa-shop-grid[data-view='list'] .hoa-pc__info {
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr) 90px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr) auto;
   grid-template-areas: 'name meta price action';
   align-items: center;
+  gap: 6px 16px;
 }
-.hoa-shop-grid[data-view='list'] .hoa-pc__name { font-size: clamp(1.3rem, 2vw, 1.9rem); font-weight: 400; letter-spacing: -0.04em; transition: transform 0.5s var(--hoa-ease); }
-.hoa-shop-grid[data-view='list'] .hoa-pc__meta { font-size: 0.86rem; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__btn { opacity: 1; transform: none; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__name { grid-area: name; font-size: clamp(1.3rem, 2vw, 1.9rem); font-weight: 400; letter-spacing: -0.04em; transition: transform 0.5s var(--hoa-ease); }
+.hoa-shop-grid[data-view='list'] .hoa-pc__meta { grid-area: meta; font-size: 0.86rem; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__price { grid-area: price; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__action { grid-area: action; margin-top: 0; padding-top: 0; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__cta { width: auto; }
 @media (hover: hover) {
   .hoa-shop-grid[data-view='list'] .hoa-pc:hover .hoa-pc__name { transform: translateX(6px); }
   .hoa-shop-grid[data-view='list'] .hoa-pc:hover .hoa-pc__img--mood { opacity: 1; }
@@ -319,6 +429,7 @@
   .hoa-shop-bar__inner { flex-wrap: wrap; row-gap: 0; }
   .hoa-shop-bar__group--for { min-height: 52px; }
   .hoa-shop-bar__group--family { order: 3; flex-basis: 100%; padding: 10px 0; border-left: 0; border-top: 1px solid var(--hoa-line); }
+  .hoa-shop-bar__group--gift { order: 3; padding: 10px clamp(16px, 2.4vw, 40px); border-left: 1px solid var(--hoa-line); border-top: 1px solid var(--hoa-line); }
   .hoa-shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hoa-shop-grid[data-view='list'] .hoa-pc__info { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; grid-template-areas: 'name meta action'; }
   .hoa-shop-grid[data-view='list'] .hoa-pc__price { display: none; }
@@ -333,17 +444,21 @@
   .hoa-shop-bar { position: static; }
   .hoa-shop-bar__group--for { flex-basis: 100%; overflow-x: auto; scrollbar-width: none; }
   .hoa-shop-bar__group--family { order: 2; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--hoa-gutter) * -1); padding: 10px var(--hoa-gutter); flex-basis: auto; width: calc(100% + var(--hoa-gutter) * 2); }
+  .hoa-shop-bar__group--gift { order: 2; flex-basis: auto; padding: 10px 0 10px clamp(12px, 2vw, 20px); border-left: 1px solid var(--hoa-line); border-top: 0; }
   .hoa-shop-bar__group::-webkit-scrollbar { display: none; }
   .hoa-shop-bar__end { order: 3; flex-basis: 100%; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--hoa-line); }
 
-  .hoa-shop-grid { gap: 36px 8px; }
-  .hoa-pc { gap: 12px; }
-  .hoa-pc__info { grid-template-columns: 1fr; grid-template-areas: 'name' 'meta' 'price' 'action'; gap: 3px; }
-  .hoa-pc__name { font-size: 0.98rem; }
-  .hoa-pc__meta { font-size: 0.74rem; }
-  .hoa-pc__price { margin-top: 4px; font-size: 0.8rem; }
-  .hoa-pc__action { justify-self: start; margin-top: 4px; }
-  .hoa-pc__num { top: 10px; left: 12px; font-size: 0.68rem; }
+  .hoa-shop-grid { gap: 12px 8px; }
+  .hoa-pc { --pc-r: 22px; --pc-pad: 6px; gap: 10px; }
+  .hoa-pc__info { gap: 3px; padding: 0 6px 4px; }
+  .hoa-pc__name { font-size: 0.94rem; }
+  .hoa-pc__chip { font-size: 0.62rem; letter-spacing: 0.06em; }
+  .hoa-pc__about { font-size: 0.74rem; max-width: none; }
+  .hoa-pc__action { padding-top: 6px; }
+  .hoa-pc__cta { padding: 7px 12px; font-size: 0.68rem; }
+  .hoa-pc__tag { top: 8px; left: 8px; padding: 5px 10px; font-size: 0.72rem; }
+  .hoa-pc__like { top: 8px; right: 8px; width: 30px; height: 30px; }
+  .hoa-pc__like svg { width: 14px; height: 14px; }
   .hoa-shop-interlude { gap: 12px; }
   .hoa-shop-interlude__media { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
 
@@ -355,7 +470,111 @@
 
 }
 
+/* ==========================================================================
+   Reviews (sections/hoa-shop-reviews.liquid)
+   ========================================================================== */
+.hoa-shop-reviews { padding: 0 0 clamp(80px, 9vw, 140px); border-top: 1px solid var(--hoa-line); }
+.hoa-shop-reviews__head { padding: clamp(56px, 7vw, 96px) 0 clamp(32px, 4vw, 56px); }
+.hoa-shop-reviews__title { margin: 14px 0 0; font-family: var(--hoa-sans); font-weight: 400; font-size: clamp(2rem, 3.6vw, 3.2rem); line-height: 1; letter-spacing: -0.045em; }
+
+.hoa-shop-reviews__grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+
+.hoa-shop-reviews__summary {
+  position: sticky;
+  top: calc(var(--hoa-header-h) + 24px);
+  display: grid;
+  gap: 12px;
+  padding: clamp(24px, 2.6vw, 32px);
+  border: 1px solid var(--hoa-line);
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-paper-2);
+}
+.hoa-shop-reviews__score { margin: 0; font-family: var(--hoa-serif); font-weight: 500; font-size: clamp(3rem, 5vw, 4.2rem); line-height: 1; letter-spacing: -0.02em; }
+.hoa-shop-reviews__score--muted { color: var(--hoa-mute); }
+.hoa-shop-reviews__count { margin: 0; font-size: 0.82rem; color: var(--hoa-mute); }
+
+.hoa-stars { position: relative; display: inline-block; font-size: 1.1rem; letter-spacing: 0.12em; line-height: 1; color: var(--hoa-line); }
+.hoa-stars::before { content: '★★★★★'; }
+.hoa-stars__fill { position: absolute; inset: 0 auto 0 0; overflow: hidden; white-space: nowrap; color: var(--hoa-brass); }
+.hoa-stars__fill::before { content: '★★★★★'; }
+
+.hoa-shop-reviews__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hoa-review {
+  display: grid;
+  gap: 14px;
+  padding: clamp(22px, 2.4vw, 30px);
+  border: 1px solid var(--hoa-line);
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-paper);
+  transition: border-color 0.35s var(--hoa-ease), transform 0.35s var(--hoa-ease);
+}
+.hoa-review:hover { border-color: rgba(20, 18, 16, 0.35); transform: translateY(-2px); }
+.hoa-review .hoa-stars { font-size: 0.9rem; }
+.hoa-review__body { margin: 0; font-family: var(--hoa-serif); font-size: 1.06rem; line-height: 1.5; letter-spacing: -0.005em; color: var(--hoa-ink); }
+.hoa-review__meta { display: flex; align-items: center; gap: 12px; }
+.hoa-review__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--hoa-ink);
+  color: var(--hoa-paper);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.hoa-review__who { display: grid; gap: 1px; }
+.hoa-review__name { font-size: 0.86rem; font-weight: 500; font-style: normal; color: var(--hoa-ink); }
+.hoa-review__detail { font-size: 0.76rem; color: var(--hoa-mute); }
+.hoa-shop-reviews__list:empty::after {
+  content: 'No reviews yet.';
+  grid-column: 1 / -1;
+  padding: 40px 0;
+  color: var(--hoa-mute);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1099px) {
+  .hoa-shop-reviews__grid { grid-template-columns: 1fr; }
+  .hoa-shop-reviews__summary { position: static; display: flex; align-items: center; gap: 18px; }
+  .hoa-shop-reviews__score { font-size: 2.4rem; }
+}
+@media (max-width: 700px) {
+  .hoa-shop-reviews__list { grid-template-columns: 1fr; }
+  .hoa-shop-reviews__summary { flex-wrap: wrap; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hoa-pc.is-entering { animation: none; }
   .hoa-shop-page *, .hoa-shop-page *::after { transition-duration: 0.01ms !important; }
 }
+
+.hoa-pc__cta:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+
+/* Centered, modern add button: a compact black pill with a bag icon, fills up on hover */
+.hoa-pc__action { display: flex; justify-content: center; }
+.hoa-pc__action form { display: flex; justify-content: center; }
+.hoa-pc__cta {
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 6px 14px -8px rgba(20, 18, 16, 0.5);
+}
+.hoa-pc__cta svg { width: 14px; height: 14px; order: -1; }
+.hoa-pc__cta:hover { background: var(--hoa-ink); border-color: var(--hoa-ink); transform: translateY(-1px); box-shadow: 0 10px 18px -10px rgba(20, 18, 16, 0.6); }
+.hoa-pc__cta:hover svg { transform: none; }
+.hoa-pc__cta--ghost { background: var(--hoa-ink); color: var(--hoa-paper); }
+.hoa-pc__cta:disabled { background: var(--hoa-stone); border-color: var(--hoa-stone); color: var(--hoa-mute); box-shadow: none; opacity: 1; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__action { justify-content: flex-end; }
+@media (max-width: 767px) { .hoa-pc__cta { padding: 9px 18px; font-size: 0.7rem; } }
+
+.hoa-pc__cta.is-added { background: #fff; color: var(--hoa-ink); }

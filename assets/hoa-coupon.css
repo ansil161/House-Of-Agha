@@ -1,0 +1,82 @@
+/* HOUSE OF AGHA — welcome coupon popup. Uses the --hoa-* tokens from hoa-home.css. */
+.hoa-coupon { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 20px; pointer-events: none; }
+.hoa-coupon[hidden] { display: none; }
+.hoa-coupon__scrim {
+  position: absolute; inset: 0; pointer-events: auto;
+  background: rgba(12, 10, 8, 0.28);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  opacity: 0; transition: opacity 0.5s var(--hoa-ease);
+}
+.hoa-coupon__card {
+  position: relative; pointer-events: auto; outline: none;
+  display: grid; grid-template-columns: 0.82fr 1.18fr;
+  width: min(820px, 100%); overflow: hidden;
+  background: var(--hoa-paper); color: var(--hoa-ink);
+  border: 1px solid var(--hoa-line); border-radius: var(--hoa-radius);
+  box-shadow: 0 40px 90px -30px rgba(12, 10, 8, 0.55), 0 8px 24px -12px rgba(12, 10, 8, 0.25);
+  opacity: 0; transform: translateY(14px) scale(0.96);
+  transition: opacity 0.5s var(--hoa-ease), transform 0.55s var(--hoa-ease);
+}
+.hoa-coupon.is-open .hoa-coupon__scrim { opacity: 1; }
+.hoa-coupon.is-open .hoa-coupon__card { opacity: 1; transform: none; }
+
+.hoa-coupon__media { position: relative; background: var(--hoa-night); min-height: 100%; }
+.hoa-coupon__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hoa-coupon__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(12, 10, 8, 0.45)); }
+
+.hoa-coupon__body { padding: clamp(32px, 4vw, 52px) clamp(28px, 4vw, 48px); display: flex; flex-direction: column; align-items: flex-start; }
+.hoa-coupon__eyebrow { margin: 0 0 18px; font: 500 0.68rem/1 var(--hoa-sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--hoa-brass); }
+.hoa-coupon__title { margin: 0 0 16px; font: 400 clamp(1.8rem, 3vw, 2.5rem)/1.08 var(--hoa-serif); letter-spacing: -0.01em; color: var(--hoa-ink); }
+.hoa-coupon__title em { display: block; font-style: italic; color: var(--hoa-ink-2); }
+.hoa-coupon__desc { margin: 0 0 28px; max-width: 34ch; font: 400 0.9rem/1.6 var(--hoa-sans); color: var(--hoa-ink-2); }
+
+.hoa-coupon__code {
+  align-self: stretch; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  padding: 16px 20px; margin-bottom: 20px;
+  border: 1px dashed var(--hoa-brass); border-radius: 12px; background: rgba(176, 141, 87, 0.07);
+}
+.hoa-coupon__code-label { font: 500 0.62rem/1 var(--hoa-sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-coupon__code-value { font: 500 clamp(1.4rem, 2.4vw, 1.85rem)/1 var(--hoa-sans); letter-spacing: 0.22em; padding-left: 0.22em; color: var(--hoa-ink); user-select: all; }
+
+.hoa-coupon__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; align-self: stretch; }
+.hoa-coupon__copy {
+  flex: 1 1 auto; min-width: 150px; padding: 15px 26px; cursor: pointer;
+  border: 1px solid var(--hoa-ink); border-radius: 999px; background: var(--hoa-ink); color: var(--hoa-paper);
+  font: 500 0.86rem/1 var(--hoa-sans); letter-spacing: -0.005em;
+  transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease), border-color 0.5s var(--hoa-ease);
+}
+.hoa-coupon__copy:hover { background: transparent; color: var(--hoa-ink); }
+.hoa-coupon__copy.is-copied { background: var(--hoa-brass); border-color: var(--hoa-brass); color: var(--hoa-night); }
+.hoa-coupon__cta {
+  font: 500 0.82rem/1 var(--hoa-sans); color: var(--hoa-ink); text-decoration: none; padding: 6px 0;
+  border-bottom: 1px solid var(--hoa-ink); transition: color 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
+}
+.hoa-coupon__cta:hover { color: var(--hoa-brass); border-color: var(--hoa-brass); }
+.hoa-coupon__live { margin: 0; height: 0; overflow: hidden; }
+
+.hoa-coupon__close {
+  position: absolute; top: 14px; right: 14px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--hoa-line); border-radius: 50%; background: rgba(246, 243, 238, 0.9); color: var(--hoa-ink);
+  transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), transform 0.5s var(--hoa-ease);
+}
+.hoa-coupon__close:hover { background: var(--hoa-ink); color: var(--hoa-paper); transform: rotate(90deg); }
+.hoa-coupon :focus-visible:not(.hoa-coupon__card) { outline: 2px solid var(--hoa-brass); outline-offset: 3px; }
+
+@media (max-width: 767px) {
+  .hoa-coupon { align-items: end; padding: 0; }
+  .hoa-coupon__card {
+    grid-template-columns: 1fr; width: 100%; max-height: 92vh; overflow-y: auto;
+    border-radius: 20px 20px 0 0; border-bottom: 0; transform: translateY(40px) scale(0.98);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .hoa-coupon__media { display: none; }
+  .hoa-coupon__body { padding: 44px 24px 28px; position: relative; }
+  .hoa-coupon__body::before { content: ""; position: absolute; top: 10px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 4px; background: var(--hoa-line); }
+  .hoa-coupon__desc { max-width: none; }
+  .hoa-coupon__actions { flex-direction: column; align-items: stretch; text-align: center; }
+  .hoa-coupon__copy { width: 100%; }
+  .hoa-coupon__cta { align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-coupon__scrim, .hoa-coupon__card { transition-duration: 0.01ms; }
+}

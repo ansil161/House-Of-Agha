@@ -1,0 +1,108 @@
+{% comment %}
+  AGHA PDP — 03 DETAILS (specifications)
+  A quiet definition list plus two text panels. Nothing is written into the section: a row or
+  panel appears only when its data exists.
+    Rows ......... "Specification" blocks (term / value / note), then metafields:
+                   custom.net_volume, custom.weight (else the first variant's weight), custom.dimensions
+    Ingredients .. custom.ingredients   (multi-line or rich text)
+    Care ......... custom.care_instructions (multi-line or rich text)
+  Values come from snippets/agha-pdp-data.liquid: real Shopify data first, demo data only in mock mode.
+  The section renders nothing when the product has none of these.
+{% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
+{%- liquid
+  assign dv = product.selected_or_first_available_variant
+  assign net_volume = pdp.net_volume
+  assign weight = product.metafields.custom.weight.value
+  if weight == blank and dv.weight > 0
+    assign weight = dv.weight | weight_with_unit: dv.weight_unit
+  endif
+  if weight == blank
+    assign weight = pdp.weight
+  endif
+  assign dimensions = pdp.dimensions
+  assign has_rows = false
+  if section.blocks.size > 0 or net_volume != blank or weight != blank or dimensions != blank
+    assign has_rows = true
+  endif
+  assign has_ing = false
+  if pdp.ingredients_html != blank
+    assign has_ing = true
+  endif
+  assign has_care = false
+  if pdp.care_html != blank
+    assign has_care = true
+  endif
+-%}
+{%- if has_rows or has_ing or has_care -%}
+<section class="pdp pdp-section pdp-details" data-pdp-details>
+  <div class="container">
+    <header class="pdp-heading" data-pdp-reveal>
+      {%- if section.settings.label != blank -%}<span class="pdp-eyebrow">{{ section.settings.label }}</span>{%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.intro != blank -%}<p>{{ section.settings.intro }}</p>{%- endif -%}
+    </header>
+    <div class="pdp-details__grid{% unless has_ing or has_care %} pdp-details__grid--single{% endunless %}">
+      {%- if has_rows -%}
+        <dl class="pdp-specs" data-pdp-card>
+          {%- for block in section.blocks -%}
+            {%- if block.settings.term != blank and block.settings.value != blank -%}
+              <div class="pdp-spec" {{ block.shopify_attributes }}>
+                <dt>{{ block.settings.term }}</dt>
+                <dd>{{ block.settings.value }}{%- if block.settings.note != blank -%}<small>{{ block.settings.note }}</small>{%- endif -%}</dd>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if net_volume != blank -%}<div class="pdp-spec"><dt>{{ section.settings.volume_label }}</dt><dd>{{ net_volume }}</dd></div>{%- endif -%}
+          {%- if weight != blank -%}<div class="pdp-spec"><dt>{{ section.settings.weight_label }}</dt><dd>{{ weight }}</dd></div>{%- endif -%}
+          {%- if dimensions != blank -%}<div class="pdp-spec"><dt>{{ section.settings.dimensions_label }}</dt><dd>{{ dimensions }}</dd></div>{%- endif -%}
+        </dl>
+      {%- endif -%}
+      {%- if has_ing or has_care -%}
+        <div class="pdp-details__side">
+          {%- if has_ing -%}
+            <div class="pdp-panel" data-pdp-card>
+              <span class="pdp-eyebrow">{{ section.settings.ingredients_label }}</span>
+              <div class="pdp-panel__body">{{ pdp.ingredients_html }}</div>
+            </div>
+          {%- endif -%}
+          {%- if has_care -%}
+            <div class="pdp-panel" data-pdp-card>
+              <span class="pdp-eyebrow">{{ section.settings.care_label }}</span>
+              <div class="pdp-panel__body">{{ pdp.care_html }}</div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · Details",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Eyebrow", "default": "03 — Details" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The flacon" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "text", "id": "volume_label", "label": "Net volume label", "default": "Net volume" },
+    { "type": "text", "id": "weight_label", "label": "Weight label", "default": "Weight" },
+    { "type": "text", "id": "dimensions_label", "label": "Dimensions label", "default": "Dimensions" },
+    { "type": "text", "id": "ingredients_label", "label": "Ingredients label", "default": "Ingredients" },
+    { "type": "text", "id": "care_label", "label": "Care label", "default": "Care & storage" }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Specification",
+      "settings": [
+        { "type": "text", "id": "term", "label": "Term", "default": "Concentration" },
+        { "type": "text", "id": "value", "label": "Value" },
+        { "type": "text", "id": "note", "label": "Note" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -3,6 +3,8 @@
   Uses Shopify product recommendations. The first render is an empty shell; pdp.js fetches this
   section with ?section_id=…&product_id=… and swaps in the recommended products.
 {% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 <section class="pdp pdp-section pdp-related" data-pdp-related data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent=related">
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
     <div class="container">
@@ -29,6 +31,33 @@
               <span class="pdp-rel__price">{{ item.price | money }}</span>
             </div>
           </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- elsif recommendations.performed and pdp.use_mock and pdp.related.size > 0 -%}
+    {%- comment -%} Mock mode only: Shopify returned no recommendations, so show demo cards (real recommendations replace these). {%- endcomment -%}
+    <div class="container" data-pdp-mock="related">
+      <div class="pdp-related__head">
+        <header class="pdp-heading pdp-heading--left">
+          <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
+          <h2>{{ section.settings.heading }}</h2>
+        </header>
+        <a class="pdp-link" href="{{ routes.all_products_collection_url }}">{{ section.settings.link_label }}</a>
+      </div>
+      <div class="pdp-related__grid">
+        {%- assign shown = 0 -%}
+        {%- for item in pdp.related -%}
+          {%- if item.handle != product.handle and shown < section.settings.limit -%}
+            {%- assign shown = shown | plus: 1 -%}
+            <a class="pdp-rel" href="{{ routes.root_url | append: 'products/' | append: item.handle }}" data-pdp-reveal>
+              <div class="pdp-rel__frame"><img src="{{ item.image | asset_url }}" alt="{{ item.title | escape }}" loading="lazy" width="800" height="800"></div>
+              <div class="pdp-rel__body">
+                {%- if item.family != blank -%}<span class="pdp-rel__meta">{{ item.family }}</span>{%- endif -%}
+                <h3 class="pdp-rel__title">{{ item.title }}</h3>
+                <span class="pdp-rel__price">{{ item.price }}</span>
+              </div>
+            </a>
+          {%- endif -%}
         {%- endfor -%}
       </div>
     </div>

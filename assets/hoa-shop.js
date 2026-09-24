@@ -19,10 +19,16 @@
   var root = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var VIEW_KEY = 'hoa-shop-view';
+  var LIKES_KEY = 'hoa-shop-likes';
   var cleanups = [];
 
   function readView() { try { return localStorage.getItem(VIEW_KEY); } catch (e) { return null; } }
   function saveView(v) { try { localStorage.setItem(VIEW_KEY, v); } catch (e) {} }
+
+  function readLikes() {
+    try { return JSON.parse(localStorage.getItem(LIKES_KEY)) || []; } catch (e) { return []; }
+  }
+  function saveLikes(list) { try { localStorage.setItem(LIKES_KEY, JSON.stringify(list)); } catch (e) {} }
 
   function initCatalog() {
     var sec = document.querySelector('[data-hoa-shop]');
@@ -32,6 +38,7 @@
     var interlude = grid.querySelector('[data-hoa-interlude]');
     var tabs = sec.querySelectorAll('[data-hoa-for]');
     var tags = sec.querySelectorAll('[data-hoa-family]');
+    var gift = sec.querySelector('[data-hoa-gift]');
     var views = sec.querySelectorAll('[data-hoa-fview]');
     var sort = sec.querySelector('[data-hoa-sort]');
     var shown = sec.querySelector('[data-hoa-shown]');
@@ -54,6 +61,7 @@
     var state = {
       wearer: wearers.indexOf(params.get('for')) > -1 ? params.get('for') : 'all',
       family: validFamilies.indexOf(params.get('family')) > -1 ? params.get('family') : '',
+      gift: gift ? params.get('gift') === '1' : false,
       sort: params.get('sort') || 'featured',
       view: params.get('view') === 'list' || (!params.get('view') && readView() === 'list') ? 'list' : 'grid'
     };
@@ -62,6 +70,7 @@
     // Counts per wearer on the tabs, and the total in the page head.
     var count = { all: total };
     wearers.forEach(function (w) { count[w] = items.filter(function (it) { return it.dataset.for === w; }).length; });
+    count.gift = items.filter(function (it) { return it.dataset.gift === 'true'; }).length;
     sec.querySelectorAll('[data-hoa-count]').forEach(function (el) { el.textContent = count[el.dataset.hoaCount] || 0; });
     document.querySelectorAll('[data-hoa-total]').forEach(function (el) { el.textContent = total; });
 
@@ -77,6 +86,7 @@
       var p = new URLSearchParams(location.search);
       if (state.wearer !== 'all') p.set('for', state.wearer); else p.delete('for');
       if (state.family) p.set('family', state.family); else p.delete('family');
+      if (state.gift) p.set('gift', '1'); else p.delete('gift');
       if (state.sort !== 'featured') p.set('sort', state.sort); else p.delete('sort');
       if (state.view === 'list') p.set('view', 'list'); else p.delete('view');
       var q = p.toString();
@@ -86,6 +96,7 @@
     function apply(animate) {
       tabs.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.hoaFor === state.wearer)); });
       tags.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.hoaFamily === state.family)); });
+      if (gift) gift.setAttribute('aria-pressed', String(state.gift));
       views.forEach(function (v) { v.setAttribute('aria-pressed', String(v.dataset.hoaFview === state.view)); });
       if (sort) sort.value = state.sort;
       grid.dataset.view = state.view;
@@ -96,13 +107,14 @@
         if (interlude && i + 1 === interludeAfter) grid.appendChild(interlude);
       });
 
-      var filtered = state.wearer !== 'all' || !!state.family;
+      var filtered = state.wearer !== 'all' || !!state.family || state.gift;
       if (interlude) interlude.hidden = filtered || state.sort !== 'featured';
 
       var visible = 0;
       ordered.forEach(function (it) {
         var on = (state.wearer === 'all' || it.dataset.for === state.wearer) &&
-                 (!state.family || it.dataset.family === state.family);
+                 (!state.family || it.dataset.family === state.family) &&
+                 (!state.gift || it.dataset.gift === 'true');
         it.hidden = !on;
         it.classList.remove('is-entering');
         if (on) {
@@ -138,10 +150,12 @@
       set({ view: v });
     };
     var onSort = function () { set({ sort: sort.value }); };
-    var onReset = function () { set({ wearer: 'all', family: '' }); };
+    var onGift = function () { set({ gift: !state.gift }); };
+    var onReset = function () { set({ wearer: 'all', family: '', gift: false }); };
 
     tabs.forEach(function (b) { b.addEventListener('click', onTab); });
     tags.forEach(function (c) { c.addEventListener('click', onTag); });
+    if (gift) gift.addEventListener('click', onGift);
     views.forEach(function (v) { v.addEventListener('click', onView); });
     if (sort) sort.addEventListener('change', onSort);
     resets.forEach(function (r) { r.addEventListener('click', onReset); });
@@ -151,9 +165,97 @@
     cleanups.push(function () {
       tabs.forEach(function (b) { b.removeEventListener('click', onTab); });
       tags.forEach(function (c) { c.removeEventListener('click', onTag); });
+      if (gift) gift.removeEventListener('click', onGift);
       views.forEach(function (v) { v.removeEventListener('click', onView); });
       if (sort) sort.removeEventListener('change', onSort);
       resets.forEach(function (r) { r.removeEventListener('click', onReset); });
+    });
+  }
+
+  function initLikes() {
+    var buttons = document.querySelectorAll('.hoa-shop-page [data-hoa-like]');
+    if (!buttons.length) return;
+    var likes = readLikes();
+
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(likes.indexOf(b.dataset.key) > -1));
+    });
+
+    var onLike = function (e) {
+      e.preventDefault();
+      var btn = e.currentTarget;
+      var key = btn.dataset.key;
+      var current = readLikes();
+      var i = current.indexOf(key);
+      var liked;
+      if (i > -1) { current.splice(i, 1); liked = false; } else { current.push(key); liked = true; }
+      saveLikes(current);
+      document.querySelectorAll('.hoa-shop-page [data-hoa-like][data-key="' + key + '"]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(liked));
+      });
+    };
+
+    buttons.forEach(function (b) { b.addEventListener('click', onLike); });
+    cleanups.push(function () { buttons.forEach(function (b) { b.removeEventListener('click', onLike); }); });
+  }
+
+  // Add to bag: post to Shopify's cart when it exists, then show the item in the bag
+  // drawer (AghaStore, theme.js) with its price, offer price and quantity controls.
+  function initAdd() {
+    var grid = document.querySelector('[data-hoa-shop-grid]');
+    if (!grid) return;
+
+    function addToBag(card, btn, formData) {
+      var bag = typeof AghaStore !== 'undefined' ? AghaStore : null;
+      var d = card.dataset;
+      var done = function () {
+        if (bag) {
+          bag.addToCart({
+            id: (d.productId || d.name) + '-' + Date.now(),
+            title: d.name || d.title,
+            price: d.priceText || '',
+            compare: d.compareText || '',
+            image: d.image || '',
+            size: 'Eau de Parfum'
+          });
+        }
+        btn.classList.add('is-added');
+        setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
+      };
+      if (formData && window.Shopify && window.Shopify.routes) {
+        btn.disabled = true;
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        }).then(function (res) {
+          if (!res.ok) throw new Error('add failed');
+          done();
+        }).catch(function () {
+          if (bag && bag.showToast) bag.showToast('We could not add this to your bag.');
+        }).then(function () { btn.disabled = false; });
+      } else {
+        done();
+      }
+    }
+
+    var onClick = function (e) {
+      var btn = e.target.closest('[data-hoa-add]');
+      if (!btn || !grid.contains(btn)) return;
+      e.preventDefault();
+      addToBag(btn.closest('[data-hoa-item]'), btn, null);
+    };
+    var onSubmit = function (e) {
+      var form = e.target.closest('.hoa-pc__action form');
+      if (!form || !grid.contains(form)) return;
+      e.preventDefault();
+      addToBag(form.closest('[data-hoa-item]'), form.querySelector('button'), new FormData(form));
+    };
+    grid.addEventListener('click', onClick);
+    grid.addEventListener('submit', onSubmit);
+    cleanups.push(function () {
+      grid.removeEventListener('click', onClick);
+      grid.removeEventListener('submit', onSubmit);
     });
   }
 
@@ -173,7 +275,7 @@
     cleanups.push(function () { io.disconnect(); });
   }
 
-  function init() { initCatalog(); initReveals(); }
+  function init() { initCatalog(); initLikes(); initAdd(); initReveals(); }
   function destroy() {
     cleanups.forEach(function (fn) { try { fn(); } catch (e) {} });
     cleanups = [];

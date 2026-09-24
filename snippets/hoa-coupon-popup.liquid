@@ -1,0 +1,40 @@
+{%- comment -%}
+  HOUSE OF AGHA — welcome coupon popup (rendered sitewide from layout/theme.liquid).
+  Shows once per browsing session, 10 seconds after page load (see assets/hoa-coupon.js).
+  Display only: the discount itself is applied by Shopify at checkout.
+
+  TO USE A REAL DISCOUNT CODE: create it in Shopify Admin → Discounts, then change
+  coupon_code below to match. Nothing else needs to change.
+{%- endcomment -%}
+{%- assign coupon_code = 'WELCOME10' -%}
+{%- assign coupon_delay_seconds = 10 -%}
+
+<div class="hoa-coupon" data-hoa-coupon data-delay="{{ coupon_delay_seconds | times: 1000 }}" hidden>
+  <div class="hoa-coupon__scrim" data-coupon-close></div>
+  <div class="hoa-coupon__card" role="dialog" aria-modal="true" aria-labelledby="hoa-coupon-title" aria-describedby="hoa-coupon-desc" tabindex="-1">
+    <button type="button" class="hoa-coupon__close" data-coupon-close aria-label="Close offer">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+
+    <div class="hoa-coupon__media" aria-hidden="true">
+      <img src="{{ 'hoa-product-oud-fury-sm.webp' | asset_url }}" alt="" width="640" height="800" decoding="async">
+    </div>
+
+    <div class="hoa-coupon__body">
+      <p class="hoa-coupon__eyebrow">A little gift for you</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+
+      <div class="hoa-coupon__code" aria-label="Your discount code">
+        <span class="hoa-coupon__code-label">Your code</span>
+        <span class="hoa-coupon__code-value" data-coupon-code>{{ coupon_code }}</span>
+      </div>
+
+      <div class="hoa-coupon__actions">
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+      </div>
+      <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
+    </div>
+  </div>
+</div>

@@ -7,10 +7,147 @@
     "catalog": {
       "type": "hoa-shop-catalog",
       "settings": {}
+    },
+    "reviews": {
+      "type": "hoa-shop-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "body": "Oud Fury lasted through an entire flight and was still there when I landed. Compliments the whole way.",
+            "author": "Farah I.",
+            "fragrance": "Oud Fury"
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "body": "Agha Blue is my go-to for the office. Close enough to be noticed, never loud in a small room.",
+            "author": "Yusuf T.",
+            "fragrance": "Agha Blue"
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "body": "Maha is soft and grown-up. My mother borrowed the bottle once and I still haven't gotten it back.",
+            "author": "Priya V.",
+            "fragrance": "Maha"
+          }
+        },
+        "review-4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "body": "Ordered Sea Smoke as a gift and the packaging alone made it feel like a proper present.",
+            "author": "Omar Z.",
+            "fragrance": "Sea Smoke"
+          }
+        }
+      },
+      "block_order": ["review-1", "review-2", "review-3", "review-4"],
+      "settings": {}
+    },
+    "voices": {
+      "type": "hoa-testimonials",
+      "blocks": {
+        "voice_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I wore Oud Fury to a winter wedding and three people asked what it was before the first dance.",
+            "name": "Arjun M.",
+            "location": "Mumbai",
+            "fragrance": "Oud Fury",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days.",
+            "name": "Sara K.",
+            "location": "Dubai",
+            "fragrance": "Agha Blue",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Maha is soft without being sweet. My mother borrowed it once and never gave it back.",
+            "name": "Noor A.",
+            "location": "Hyderabad",
+            "fragrance": "Maha",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_4": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Dark Paradise is my evening scent. Smoky, close to the skin, never loud.",
+            "name": "Rehan S.",
+            "location": "London",
+            "fragrance": "Oud of Dark Paradise",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_5": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear.",
+            "name": "Meera P.",
+            "location": "Bengaluru",
+            "fragrance": "Sea Smoke",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_6": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much.",
+            "name": "Kabir D.",
+            "location": "Delhi",
+            "fragrance": "Tobacco Enigma",
+            "rating": 5,
+            "show_rating": true
+          }
+        },
+        "voice_7": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first.",
+            "name": "Layla H.",
+            "location": "Doha",
+            "fragrance": "Shamamah",
+            "rating": 5,
+            "show_rating": true
+          }
+        }
+      },
+      "block_order": [
+        "voice_1",
+        "voice_2",
+        "voice_3",
+        "voice_4",
+        "voice_5",
+        "voice_6",
+        "voice_7"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "shop_hero",
-    "catalog"
+    "catalog",
+    "reviews",
+    "voices"
   ]
 }

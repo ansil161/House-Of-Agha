@@ -1,0 +1,17 @@
+{% comment %}
+  AGHA PDP — one quiet meter row (label, spoken value, optional 1–5 level as five hairline segments).
+  Params: label, value (text), level (1–5, optional), text (optional supporting line).
+{% endcomment %}
+{%- assign lvl = level | plus: 0 -%}
+<div class="pdp-meter" data-pdp-card data-pdp-meter>
+  <div class="pdp-meter__head">
+    <span class="pdp-meter__label">{{ label }}</span>
+    {%- if value != blank -%}<span class="pdp-meter__value">{{ value }}</span>{%- endif -%}
+  </div>
+  {%- if lvl > 0 -%}
+    <div class="pdp-meter__track" role="img" aria-label="{{ label }}: {{ lvl }} of 5">
+      {%- for i in (1..5) -%}<span class="{% if i <= lvl %}is-on{% endif %}" style="--i: {{ forloop.index0 }}"></span>{%- endfor -%}
+    </div>
+  {%- endif -%}
+  {%- if text != blank -%}<p class="pdp-meter__text">{{ text }}</p>{%- endif -%}
+</div>

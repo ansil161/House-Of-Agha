@@ -3,10 +3,46 @@
   Score from the standard reviews.rating / reviews.rating_count metafields (written by review
   apps). Review content comes from an app block (Judge.me, Okendo, Shopify Product Reviews…)
   and/or hand-picked "Featured review" blocks containing real customer quotes.
+
+  DEMO DATA: in mock mode (theme setting "Use mock PDP data"), and ONLY when the product has no real
+  rating metafield, no featured review blocks and no app block, this section shows the clearly
+  labelled demo reviews from snippets/agha-pdp-mock-data.liquid. Real reviews always replace them.
+  To connect a real review app later: add its app block to this section (it renders in place of the
+  demo cards) and let it write reviews.rating / reviews.rating_count (+ custom.rating_breakdown).
 {% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
-  assign rating = product.metafields.reviews.rating.value
-  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign rating_val = pdp.reviews.rating
+  assign rating_scale = pdp.reviews.scale_max
+  assign rating_count = pdp.reviews.count | default: 0
+  comment
+    Breakdown: custom.rating_breakdown (JSON), e.g. {"5": 12, "4": 3, "3": 0, "2": 0, "1": 1}.
+    Shown only when data exists (real metafield, or the demo block in mock mode).
+  endcomment
+  assign breakdown = pdp.reviews.breakdown
+  assign bd_total = 0
+  if breakdown != blank
+    for star in (1..5)
+      assign star_key = star | append: ''
+      assign bd_total = bd_total | plus: breakdown[star_key]
+    endfor
+  endif
+  assign featured_count = 0
+  assign real_content = false
+  for block in section.blocks
+    if block.type == 'review' and block.settings.body != blank
+      assign featured_count = featured_count | plus: 1
+      assign real_content = true
+    elsif block.type == '@app'
+      assign real_content = true
+    endif
+  endfor
+  assign show_mock = false
+  if pdp.reviews.mock and real_content == false and pdp.reviews.items.size > 0
+    assign show_mock = true
+    assign featured_count = pdp.reviews.items.size
+  endif
 -%}
 <section class="pdp pdp-section pdp-reviews" id="pdp-reviews" data-pdp-reviews>
   <div class="container">
@@ -17,17 +53,40 @@
     <div class="pdp-reviews__grid">
       <div class="pdp-reviews__summary" data-pdp-reveal>
         <span class="pdp-eyebrow">Average rating</span>
-        {%- if rating != blank -%}
-          {%- assign rating_pct = rating.rating | divided_by: rating.scale_max | times: 100 -%}
-          <p class="pdp-reviews__score">{{ rating.rating | round: 1 }}</p>
-          <span class="pdp-stars" role="img" aria-label="Rated {{ rating.rating | round: 1 }} out of {{ rating.scale_max }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
-          <p class="pdp-reviews__count">Based on {{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}</p>
+        {%- if rating_val > 0 -%}
+          {%- assign rating_pct = rating_val | divided_by: rating_scale | times: 100 -%}
+          <p class="pdp-reviews__score">{{ rating_val | round: 1 }}</p>
+          <span class="pdp-stars" role="img" aria-label="Rated {{ rating_val | round: 1 }} out of {{ rating_scale }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+          <p class="pdp-reviews__count">Based on {{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}{% if pdp.reviews.mock %} <span class="pdp-demo-tag">Demo</span>{% endif %}</p>
         {%- else -%}
           <p class="pdp-reviews__count">No ratings yet</p>
+        {%- endif -%}
+        {%- if bd_total > 0 -%}
+          <ul class="pdp-breakdown" aria-label="Rating breakdown">
+            {%- for star in (1..5) reversed -%}
+              {%- assign star_key = star | append: '' -%}
+              {%- assign star_n = breakdown[star_key] | default: 0 | plus: 0 -%}
+              {%- assign star_pct = star_n | times: 100.0 | divided_by: bd_total | round -%}
+              <li><span>{{ star }} ★</span><span class="pdp-breakdown__bar"><i style="width: {{ star_pct }}%"></i></span><span>{{ star_n }}</span></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if section.settings.write_review_url != blank -%}
+          <a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="{{ section.settings.write_review_url }}">{{ section.settings.write_review_label }}</a>
         {%- endif -%}
       </div>
 
       <div class="pdp-reviews__list">
+        {%- if featured_count > 1 -%}
+          <div class="pdp-reviews__tools">
+            <label for="pdp-review-sort-{{ section.id }}">Sort by</label>
+            <select id="pdp-review-sort-{{ section.id }}" data-pdp-review-sort>
+              <option value="default">Featured</option>
+              <option value="high">Highest rated</option>
+              <option value="low">Lowest rated</option>
+            </select>
+          </div>
+        {%- endif -%}
         {%- assign has_content = false -%}
         {%- for block in section.blocks -%}
           {%- case block.type -%}
@@ -35,9 +94,15 @@
               {%- if block.settings.body != blank -%}
                 {%- assign has_content = true -%}
                 {%- assign stars_pct = block.settings.rating | times: 20 -%}
-                <article class="pdp-review" data-pdp-review {{ block.shopify_attributes }}>
+                <article class="pdp-review" data-pdp-review data-rating="{{ block.settings.rating }}" data-order="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
                   <span class="pdp-stars" role="img" aria-label="Rated {{ block.settings.rating }} out of 5"><span class="pdp-stars__fill" style="width: {{ stars_pct }}%"></span></span>
                   <p class="pdp-review__body">{{ block.settings.body }}</p>
+                  {%- if block.settings.photo != blank -%}
+                    {%- assign photo_alt = block.settings.author | default: 'Customer photo' -%}
+                    <figure class="pdp-review__photo">
+                      {{ block.settings.photo | image_url: width: 800 | image_tag: widths: '400, 600, 800', sizes: '(min-width: 901px) 30vw, 90vw', loading: 'lazy', alt: photo_alt }}
+                    </figure>
+                  {%- endif -%}
                   <div class="pdp-review__meta">
                     <span class="pdp-review__avatar" aria-hidden="true">{{ block.settings.author | slice: 0 }}</span>
                     <p class="pdp-review__who">{{ block.settings.author }}<span>
@@ -53,6 +118,27 @@
               <div class="pdp-reviews__app">{% render block %}</div>
           {%- endcase -%}
         {%- endfor -%}
+        {%- if show_mock -%}
+          {%- assign has_content = true -%}
+          {%- for item in pdp.reviews.items -%}
+            {%- assign stars_pct = item.rating | times: 20 -%}
+            <article class="pdp-review" data-pdp-review data-pdp-mock="review" data-rating="{{ item.rating }}" data-order="{{ forloop.index0 }}">
+              <span class="pdp-review__top"><span class="pdp-stars" role="img" aria-label="Rated {{ item.rating }} out of 5"><span class="pdp-stars__fill" style="width: {{ stars_pct }}%"></span></span><span class="pdp-demo-tag">Demo</span></span>
+              <p class="pdp-review__body">{{ item.body }}</p>
+              {%- if item.image != blank -%}
+                <figure class="pdp-review__photo"><img src="{{ item.image | asset_url }}" alt="Demo review photo" loading="lazy" width="800" height="600"></figure>
+              {%- endif -%}
+              <div class="pdp-review__meta">
+                <span class="pdp-review__avatar" aria-hidden="true">{{ item.author | slice: 0 }}</span>
+                <p class="pdp-review__who">{{ item.author }}<span>
+                  {{- item.location -}}
+                  {%- if item.date != blank -%}{% if item.location != blank %} · {% endif %}{{ item.date }}{%- endif -%}
+                  {%- if item.verified %} · <span class="pdp-review__verified">Verified purchase</span>{%- endif -%}
+                </span></p>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endif -%}
         {%- unless has_content -%}
           <p class="pdp-reviews__empty">No reviews yet. {{ section.settings.empty_text }}</p>
         {%- endunless -%}
@@ -67,7 +153,10 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "What patrons say" },
-    { "type": "text", "id": "empty_text", "label": "Empty state text", "default": "Be the first to tell us how it wears on you." }
+    { "type": "text", "id": "empty_text", "label": "Empty state text", "default": "Be the first to tell us how it wears on you." },
+    { "type": "header", "content": "Write a review" },
+    { "type": "url", "id": "write_review_url", "label": "Review form link", "info": "Your review app's form or a contact page. The button shows only when set." },
+    { "type": "text", "id": "write_review_label", "label": "Button label", "default": "Write a review" }
   ],
   "blocks": [
     { "type": "@app" },
@@ -77,6 +166,7 @@
       "settings": [
         { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
         { "type": "textarea", "id": "body", "label": "Review (a real customer quote)" },
+        { "type": "image_picker", "id": "photo", "label": "Customer photo (optional, real customer photos only)" },
         { "type": "text", "id": "author", "label": "Name" },
         { "type": "text", "id": "location", "label": "Location" },
         { "type": "text", "id": "date", "label": "Date" },

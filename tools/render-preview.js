@@ -247,6 +247,27 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('rendered', Object.keys(accountPages).length, 'account pages');
 
+  // Welcome coupon popup (snippets/hoa-coupon-popup.liquid) — layout/theme.liquid renders it on every
+  // page, so mirror that in each preview page: stylesheet, script and the rendered snippet.
+  const couponHtml = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-coupon-popup.liquid'), 'utf8'), globals)).trim();
+  const couponBlock = '  <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->\n  ' + couponHtml + '\n';
+  const couponCss = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-coupon\.css">\n/;
+  const couponJs = /[ \t]*<script src="\/?assets\/hoa-coupon\.js" defer><\/script>\n/;
+  const couponBlockRe = /[ \t]*<!-- Welcome coupon popup[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\n/;
+  const all = fs.readdirSync(THEME).filter((f) => f.endsWith('.html'));
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    let html = fs.readFileSync(file, 'utf8');
+    html = html.replace(couponCss, '').replace(couponJs, '').replace(couponBlockRe, '');
+    const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+    html = html
+      .replace(/([ \t]*<link rel="stylesheet" href="\/?assets\/hoa-home\.css">\n)/, `$1  <link rel="stylesheet" href="${pre}assets/hoa-coupon.css">\n`)
+      .replace('</head>', () => `  <script src="${pre}assets/hoa-coupon.js" defer></script>\n</head>`)
+      .replace('</body>', () => couponBlock + '</body>');
+    fs.writeFileSync(file, html);
+  }
+  console.log('coupon popup on', all.length, 'pages');
+
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {

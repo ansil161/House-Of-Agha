@@ -1,0 +1,99 @@
+{% comment %}
+  SHOP · Reviews
+  Aggregate rating (from the standard reviews.rating / reviews.rating_count metafields,
+  written by a review app on the collection or shop) plus hand-picked review cards, in the
+  hoa-* visual language. Star fills are plain CSS (width %), no JS required.
+  Empty-safe: with no rating and no review blocks the section still renders a clean
+  "no reviews yet" state rather than fabricated content.
+{% endcomment %}
+{%- liquid
+  assign s = section.settings
+  assign reviews = section.blocks | where: 'type', 'review'
+
+  comment
+    Average is computed from the review blocks actually entered here — nothing invented.
+  endcomment
+  assign rating_sum = 0
+  assign rating_count = 0
+  for block in reviews
+    if block.settings.body != blank
+      assign rating_sum = rating_sum | plus: block.settings.rating
+      assign rating_count = rating_count | plus: 1
+    endif
+  endfor
+  if rating_count > 0
+    assign rating_avg = rating_sum | times: 1.0 | divided_by: rating_count | round: 1
+  endif
+-%}
+<section class="hoa-shop-reviews" id="reviews" data-hoa-shop-reviews>
+  <div class="hoa-wrap">
+    <header class="hoa-shop-reviews__head" data-hoa-reveal>
+      <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
+      <h2 class="hoa-shop-reviews__title">{{ s.heading }}</h2>
+    </header>
+
+    <div class="hoa-shop-reviews__grid">
+      <div class="hoa-shop-reviews__summary" data-hoa-reveal>
+        {%- if rating_count > 0 -%}
+          {%- assign rating_pct = rating_avg | times: 20 -%}
+          <p class="hoa-shop-reviews__score">{{ rating_avg }}</p>
+          <span class="hoa-stars" role="img" aria-label="Rated {{ rating_avg }} out of 5"><span class="hoa-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+          <p class="hoa-shop-reviews__count">Based on {{ rating_count }} review{% if rating_count != 1 %}s{% endif %}</p>
+        {%- else -%}
+          <p class="hoa-shop-reviews__score hoa-shop-reviews__score--muted">—</p>
+          <p class="hoa-shop-reviews__count">{{ s.empty_text }}</p>
+        {%- endif -%}
+      </div>
+
+      <ul class="hoa-shop-reviews__list" role="list">
+        {%- for block in reviews -%}
+          {%- if block.settings.body != blank -%}
+            {%- assign stars_pct = block.settings.rating | times: 20 -%}
+            <li class="hoa-review" data-hoa-reveal {{ block.shopify_attributes }}>
+              <span class="hoa-stars" role="img" aria-label="Rated {{ block.settings.rating }} out of 5"><span class="hoa-stars__fill" style="width: {{ stars_pct }}%"></span></span>
+              <p class="hoa-review__body">“{{ block.settings.body }}”</p>
+              <div class="hoa-review__meta">
+                <span class="hoa-review__avatar" aria-hidden="true">{{ block.settings.author | slice: 0 }}</span>
+                <span class="hoa-review__who">
+                  <cite class="hoa-review__name">{{ block.settings.author }}</cite>
+                  <span class="hoa-review__detail">
+                    {{- block.settings.fragrance -}}
+                    {%- if block.settings.verified %}{% if block.settings.fragrance != blank %} · {% endif %}Verified purchase{%- endif -%}
+                  </span>
+                </span>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "HOA Shop reviews",
+  "tag": "div",
+  "class": "hoa-shop-reviews-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What wearers say" },
+    { "type": "text", "id": "empty_text", "label": "Text when there is no rating yet", "default": "No ratings yet — be the first to review a fragrance." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "body", "label": "Review (a real customer quote)" },
+        { "type": "text", "id": "author", "label": "Name" },
+        { "type": "text", "id": "fragrance", "label": "Fragrance" },
+        { "type": "checkbox", "id": "verified", "label": "Verified purchase", "default": true }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Shop reviews" }]
+}
+{% endschema %}

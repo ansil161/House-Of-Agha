@@ -3,7 +3,9 @@
   Icon cards under the hero. A longevity card is added automatically when the product has a
   custom.longevity metafield; everything else is a block.
 {% endcomment %}
-{%- assign mf_longevity = product.metafields.custom.longevity.value -%}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
+{%- assign mf_longevity = pdp.longevity -%}
 {%- if section.blocks.size > 0 or mf_longevity != blank -%}
 <section class="pdp pdp-section pdp-features" data-pdp-features>
   <div class="container">

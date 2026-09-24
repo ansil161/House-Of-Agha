@@ -5,6 +5,9 @@
     custom.family, custom.scent_tags (list of text), custom.short_description,
     custom.top_notes / custom.heart_notes / custom.base_notes
   Ratings come from the standard reviews.rating / reviews.rating_count metafields.
+  Every value goes through snippets/agha-pdp-data.liquid: REAL Shopify data first, then (only while
+  the theme setting "Use mock PDP data" is on) demo data from snippets/agha-pdp-mock-data.liquid.
+  Variants, prices, SKUs, stock and images are always real.
 {% endcomment %}
 
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
@@ -13,19 +16,55 @@
 </script>
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
-  assign family = product.metafields.custom.family.value | default: product.type
-  assign scent_tags = product.metafields.custom.scent_tags.value
-  assign lede = product.metafields.custom.short_description.value
+  assign family = pdp.family
+  assign scent_tags = pdp.scent_tags
+  assign lede = pdp.short_description
   if lede == blank
-    assign lede = product.description | strip_html | truncatewords: 38
+    assign lede = pdp.description_html | strip_html | truncatewords: 38
   endif
-  assign rating = product.metafields.reviews.rating.value
-  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
-  assign top_notes = product.metafields.custom.top_notes.value
-  assign heart_notes = product.metafields.custom.heart_notes.value
-  assign base_notes = product.metafields.custom.base_notes.value
+  assign rating_val = pdp.reviews.rating
+  assign rating_scale = pdp.reviews.scale_max
+  assign rating_count = pdp.reviews.count | default: 0
+  assign top_notes = pdp.top_notes
+  assign heart_notes = pdp.heart_notes
+  assign base_notes = pdp.base_notes
+
+  comment
+    SKU: the variant's real SKU; only when it is empty (and mock mode is on) a demo SKU is shown.
+    Offer: a real compare-at price wins; only without one does mock mode show a demo discount.
+    Real prices are never changed - the demo compare-at price is derived for display only.
+  endcomment
+  assign display_sku = current_variant.sku
+  assign any_sku = false
+  for v in product.variants
+    if v.sku != blank
+      assign any_sku = true
+    endif
+  endfor
+  if pdp.sku_prefix != blank
+    assign any_sku = true
+  endif
+  if display_sku == blank and pdp.sku_prefix != blank
+    assign display_sku = pdp.sku_prefix | append: '-' | append: current_variant.position
+  endif
+  assign compare_price = current_variant.compare_at_price
+  assign save_pct = 0
+  if compare_price > current_variant.price
+    assign save_pct = compare_price | minus: current_variant.price | times: 100 | divided_by: compare_price
+  elsif pdp.discount_percent > 0 and pdp.discount_percent < 90
+    assign save_pct = pdp.discount_percent
+    assign price_share = 100 | minus: save_pct
+    assign compare_price = current_variant.price | times: 100 | divided_by: price_share
+  endif
+  assign on_sale = false
+  if compare_price > current_variant.price
+    assign on_sale = true
+  endif
+  assign sale_message = section.settings.sale_message | default: pdp.sale_message
   assign single_option = false
   if product.options.size == 1 and product.has_only_default_variant == false
     assign single_option = true
@@ -34,7 +73,7 @@
   assign first_media = product.featured_media
 -%}
 
-<section class="pdp pdp-hero" id="pdp-{{ section.id }}" data-pdp-main data-section-id="{{ section.id }}" data-money-format="{{ shop.money_format | strip_html | escape }}" data-product-url="{{ product.url }}" data-product-title="{{ product.title | escape }}" data-product-handle="{{ product.handle }}">
+<section class="pdp pdp-hero" id="pdp-{{ section.id }}" data-pdp-main data-section-id="{{ section.id }}" data-mock-sku-prefix="{{ pdp.sku_prefix }}" data-mock-discount="{{ pdp.discount_percent }}" data-money-format="{{ shop.money_format | strip_html | escape }}" data-product-url="{{ product.url }}" data-product-title="{{ product.title | escape }}" data-product-handle="{{ product.handle }}">
   <div class="container">
     <nav class="pdp-breadcrumb" aria-label="Breadcrumb" data-pdp-hero-item>
       <a href="{{ routes.root_url }}">Home</a>
@@ -126,14 +165,20 @@
         <div data-pdp-hero-item>
           {%- if section.settings.eyebrow != blank -%}<span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
           <h1 class="pdp-title">{{ product.title }}</h1>
+          {%- if pdp.brand != blank or any_sku -%}
+            <p class="pdp-identity">
+              {%- if pdp.brand != blank -%}<span>{{ pdp.brand }}</span>{%- endif -%}
+              <span data-pdp-sku-wrap{% if display_sku == blank %} hidden{% endif %}>SKU <span data-pdp-sku>{{ display_sku }}</span></span>
+            </p>
+          {%- endif -%}
         </div>
 
-        {%- if rating != blank -%}
-          {%- assign rating_pct = rating.rating | divided_by: rating.scale_max | times: 100 -%}
-          <div class="pdp-rating" data-pdp-hero-item>
-            <span class="pdp-stars" role="img" aria-label="Rated {{ rating.rating | round: 1 }} out of {{ rating.scale_max }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
-            <strong>{{ rating.rating | round: 1 }}</strong>
-            <a href="#pdp-reviews">{{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}</a>
+        {%- if rating_val > 0 -%}
+          {%- assign rating_pct = rating_val | divided_by: rating_scale | times: 100 -%}
+          <div class="pdp-rating" data-pdp-hero-item{% if pdp.reviews.mock %} data-pdp-mock="reviews"{% endif %}>
+            <span class="pdp-stars" role="img" aria-label="Rated {{ rating_val | round: 1 }} out of {{ rating_scale }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+            <strong>{{ rating_val | round: 1 }}</strong>
+            <a href="#pdp-reviews">{{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}{% if pdp.reviews.mock %} (demo){% endif %}</a>
           </div>
         {%- endif -%}
 
@@ -149,7 +194,11 @@
 
         <div class="pdp-price" data-pdp-hero-item>
           <span class="pdp-price__amount" data-pdp-price>{{ current_variant.price | money }}</span>
-          <s class="pdp-price__compare" data-pdp-compare{% unless current_variant.compare_at_price > current_variant.price %} hidden{% endunless %}>{{ current_variant.compare_at_price | money }}</s>
+          <s class="pdp-price__compare" data-pdp-compare{% unless on_sale %} hidden{% endunless %}>{{ compare_price | money }}</s>
+          <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}−{{ save_pct }}%{% endif %}</span>
+          {%- if sale_message != blank -%}
+            <span class="pdp-price__offer" data-pdp-offer{% unless on_sale %} hidden{% endunless %}>{{ sale_message }}</span>
+          {%- endif -%}
           <span class="pdp-price__note">
             {%- unless product.has_only_default_variant -%}<span data-pdp-variant-title>{{ current_variant.title }}</span>{% if cart.taxes_included %} · {% endif %}{%- endunless -%}
             {%- if cart.taxes_included %}Inclusive of all taxes{% endif -%}
@@ -264,6 +313,18 @@
           </div>
         {%- endif -%}
 
+        {%- assign trust_title = section.settings.authenticity_title | default: pdp.authenticity_title -%}
+        {%- assign trust_text = section.settings.authenticity_text | default: pdp.authenticity_text -%}
+        {%- if trust_title != blank and trust_text != blank -%}
+          <div class="pdp-secure pdp-secure--trust" data-pdp-hero-item>
+            <span class="pdp-secure__icon">{% render 'agha-pdp-icon', icon: 'seal' %}</span>
+            <div>
+              <p class="pdp-secure__title">{{ trust_title }}</p>
+              <p class="pdp-secure__text">{{ trust_text }}</p>
+            </div>
+          </div>
+        {%- endif -%}
+
         {%- if section.blocks.size > 0 -%}
           <div class="pdp-benefits" data-pdp-hero-item>
             {%- for block in section.blocks -%}
@@ -288,10 +349,10 @@
         {%- endif -%}
 
         <div class="pdp-accordion" data-pdp-hero-item>
-          {%- if product.description != blank -%}
+          {%- if pdp.description_html != blank -%}
             <details data-pdp-accordion open>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body">{{ product.description }}</div>
+              <div class="pdp-accordion__body">{{ pdp.description_html }}</div>
             </details>
           {%- endif -%}
           {%- if top_notes != blank or heart_notes != blank or base_notes != blank -%}
@@ -306,22 +367,66 @@
               </div>
             </details>
           {%- endif -%}
-          {%- if section.settings.how_to_wear != blank -%}
+          {%- liquid
+            assign wear_where = pdp.spray_where
+            assign wear_count = pdp.spray_count
+            assign wear_distance = pdp.spray_distance
+            assign wear_when = pdp.spray_when
+            assign wear_general = pdp.how_to_wear_html
+            assign wear_setting = section.settings.how_to_wear
+            assign has_wear = false
+            if wear_where != blank or wear_count != blank or wear_distance != blank or wear_when != blank or wear_general != blank or wear_setting != blank
+              assign has_wear = true
+            endif
+          -%}
+          {%- if has_wear -%}
             <details data-pdp-accordion>
               <summary>How to wear<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body">{{ section.settings.how_to_wear }}</div>
+              <div class="pdp-accordion__body">
+                {%- if wear_where != blank or wear_count != blank or wear_distance != blank or wear_when != blank -%}
+                  <ul class="pdp-notes-list">
+                    {%- if wear_where != blank -%}<li><b>Where</b><span>{{ wear_where }}</span></li>{%- endif -%}
+                    {%- if wear_count != blank -%}<li><b>Sprays</b><span>{{ wear_count }}</span></li>{%- endif -%}
+                    {%- if wear_distance != blank -%}<li><b>Distance</b><span>{{ wear_distance }}</span></li>{%- endif -%}
+                    {%- if wear_when != blank -%}<li><b>When</b><span>{{ wear_when }}</span></li>{%- endif -%}
+                  </ul>
+                {%- endif -%}
+                {%- if wear_general != blank -%}{{ wear_general }}{%- elsif wear_setting != blank -%}{{ wear_setting }}{%- endif -%}
+              </div>
             </details>
           {%- endif -%}
-          {%- if section.settings.shipping_text != blank -%}
+          {%- liquid
+            assign ship_s = section.settings
+            assign ship_page = pages['shipping-returns']
+            assign ship_free = ship_s.free_shipping_text | default: pdp.free_shipping_text
+            assign ship_charges = ship_s.shipping_charges_text | default: pdp.shipping_charges_text
+            assign ship_returns = ship_s.returns_text | default: pdp.returns_text
+            assign ship_refund = pdp.refund_text
+            assign has_ship = false
+            if ship_s.show_delivery or ship_free != blank or ship_s.shipping_text != blank or ship_charges != blank or ship_returns != blank or ship_refund != blank or shop.shipping_policy or shop.refund_policy or ship_page.title != blank
+              assign has_ship = true
+            endif
+          -%}
+          {%- if has_ship -%}
             <details data-pdp-accordion>
               <summary>Shipping &amp; returns<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
               <div class="pdp-accordion__body">
-                {{ section.settings.shipping_text }}
-                {%- if shop.shipping_policy or shop.refund_policy -%}
+                <ul class="pdp-notes-list">
+                  {%- if ship_s.show_delivery -%}
+                    <li><b>Delivery</b><span>Estimated {{ ship_s.delivery_min_days }}–{{ ship_s.delivery_max_days }} business days{% if ship_s.dispatch_days > 0 %}, dispatched within {{ ship_s.dispatch_days }} business {{ ship_s.dispatch_days | pluralize: 'day', 'days' }}{% endif %}.</span></li>
+                  {%- endif -%}
+                  {%- if ship_free != blank -%}<li><b>Free shipping</b><span>{{ ship_free }}</span></li>{%- endif -%}
+                  {%- if ship_charges != blank -%}<li><b>Charges</b><span>{{ ship_charges }}</span></li>{%- endif -%}
+                  {%- if ship_returns != blank -%}<li><b>Returns</b><span>{{ ship_returns }}</span></li>{%- endif -%}
+                  {%- if ship_refund != blank -%}<li><b>Refunds</b><span>{{ ship_refund }}</span></li>{%- endif -%}
+                </ul>
+                {%- if ship_s.shipping_text != blank -%}{{ ship_s.shipping_text }}{%- endif -%}
+                {%- if shop.shipping_policy or shop.refund_policy or ship_page.title != blank -%}
                   <p>
                     {%- if shop.shipping_policy -%}<a class="pdp-link" href="{{ shop.shipping_policy.url }}">Shipping policy</a>{%- endif -%}
                     {%- if shop.shipping_policy and shop.refund_policy %} · {% endif -%}
                     {%- if shop.refund_policy -%}<a class="pdp-link" href="{{ shop.refund_policy.url }}">Refund policy</a>{%- endif -%}
+                    {%- if ship_page.title != blank -%}{% if shop.shipping_policy or shop.refund_policy %} · {% endif %}<a class="pdp-link" href="{{ ship_page.url }}">{{ ship_page.title }}</a>{%- endif -%}
                   </p>
                 {%- endif -%}
               </div>
@@ -332,6 +437,7 @@
     </div>
   </div>
 
+  {% render 'agha-pdp-jsonld' %}
   <script type="application/json" data-pdp-variants>
     {{ product.variants | json }}
   </script>
@@ -424,9 +530,18 @@
     { "type": "range", "id": "delivery_min_days", "label": "Minimum business days to deliver", "min": 1, "max": 15, "step": 1, "default": 3 },
     { "type": "range", "id": "delivery_max_days", "label": "Maximum business days to deliver", "min": 1, "max": 20, "step": 1, "default": 6 },
     { "type": "range", "id": "cutoff_hour", "label": "Same-day dispatch cutoff (hour, 0 = off)", "info": "Shows an 'Order within …' countdown until this hour.", "min": 0, "max": 23, "step": 1, "default": 0 },
+    { "type": "header", "content": "Offer" },
+    { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown beside the discount badge, only while the selected variant has a compare-at price." },
+    { "type": "header", "content": "Authenticity card" },
+    { "type": "text", "id": "authenticity_title", "label": "Title", "info": "The card shows only when both fields are filled." },
+    { "type": "textarea", "id": "authenticity_text", "label": "Text", "info": "Use only claims you can stand behind." },
     { "type": "header", "content": "Details" },
-    { "type": "richtext", "id": "how_to_wear", "label": "How to wear" },
-    { "type": "richtext", "id": "shipping_text", "label": "Shipping & returns" }
+    { "type": "richtext", "id": "how_to_wear", "label": "How to wear", "info": "Fallback. Per-product metafields (custom.spray_where, spray_count, spray_distance, spray_when, how_to_wear) take precedence." },
+    { "type": "header", "content": "Shipping & returns" },
+    { "type": "text", "id": "free_shipping_text", "label": "Free shipping" },
+    { "type": "text", "id": "shipping_charges_text", "label": "Shipping charges" },
+    { "type": "text", "id": "returns_text", "label": "Returns / refunds" },
+    { "type": "richtext", "id": "shipping_text", "label": "Additional shipping & returns text" }
   ]
 }
 {% endschema %}

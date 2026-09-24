@@ -1,0 +1,100 @@
+{% comment %}
+  AGHA PDP — MOCK / DEMO DATA  (development only)
+  ---------------------------------------------------------------------------
+  This is the ONE place demo content lives. It is only ever rendered by
+  snippets/agha-pdp-data.liquid, and only while the theme setting
+  "Use mock PDP data" (settings.use_mock_pdp_data) is ON.
+
+  Nothing here is real. Real Shopify data always wins: the resolver takes a value from
+  here only when the product's own field is empty. Mock data is never written to Shopify,
+  never used in the Product JSON-LD, and never replaces variants, prices, SKUs or stock.
+
+  To go live: theme editor → Theme settings → Development → turn "Use mock PDP data" OFF.
+  (Optionally delete this file; the resolver then simply finds no mock data.)
+
+  Keys mirror the product metafields (namespace "custom") the sections read.
+{% endcomment %}
+{
+  "brand": "AGHA",
+  "sku_prefix": "AGH-DEMO",
+  "short_description": "A dense, smoky extrait of aged agarwood, iris root and pink pepper — compounded at 35% oil and rested for ninety days.",
+  "description_html": "<p>A dense, smoky extrait built around wild agarwood and Florentine iris root. Pink pepper opens it with a dry spark; amber and sandalwood settle underneath and stay on skin for the rest of the day.</p><p>Compounded at 35% oil concentration and macerated for ninety days, so it wears close, warm and unhurried.</p>",
+  "family": "Oriental Woody",
+  "scent_tags": ["Smoky", "Resinous", "Warm"],
+  "scent_character": "Dark, resinous and warm",
+  "mood": "Nocturnal",
+  "top_notes": "Pink pepper, Bergamot, Saffron",
+  "heart_notes": "Florentine iris, Damask rose, Cardamom",
+  "base_notes": "Assam agarwood, Amber, Sandalwood, White musk",
+  "key_material_name": "Assam agarwood",
+  "key_material_text": "Hand-harvested and distilled slowly, it gives the base its smoky, resinous depth.",
+  "claims": ["Extrait de parfum", "Long lasting", "Batch numbered"],
+  "story_heading": "Made slowly, worn quietly",
+  "story_html": "<p>Every batch is compounded, rested and numbered by hand. What reaches the flacon has had time to settle — no sharp alcohol edge, only the composition.</p>",
+  "net_volume": "50 ml",
+  "weight": "320 g (boxed)",
+  "dimensions": "6 × 4 × 11 cm",
+  "ingredients_html": "<p>Alcohol denat., Parfum (fragrance), Aqua (water), Limonene, Linalool, Citronellol, Coumarin, Eugenol.</p>",
+  "care_html": "<p>Store upright, away from direct sunlight and heat. Keep the cap closed and the flacon in its box between uses.</p>",
+  "intensity": "Rich",
+  "intensity_level": 4,
+  "longevity": "10–12 hours",
+  "longevity_level": 5,
+  "sillage": "Close to moderate",
+  "sillage_level": 3,
+  "day_night": "Night",
+  "occasions": ["Evening", "Weddings", "Special occasions"],
+  "seasons": ["Autumn", "Winter"],
+  "how_it_wears_html": "<p>It opens dry and peppery, then the iris and rose pull it toward something powdery and warm. After an hour it is all smoke and amber, sitting close to the skin.</p>",
+  "spray_where": "Pulse points — wrists, neck, behind the ears",
+  "spray_count": "1–2 sprays",
+  "spray_distance": "About 15 cm from the skin",
+  "spray_when": "On clean, moisturised skin after bathing",
+  "how_to_wear_html": "<p>Spray, then let it dry. Rubbing the wrists together crushes the top notes.</p>",
+  "discount_percent": 15,
+  "sale_message": "Introductory price",
+  "free_shipping_text": "Complimentary shipping on every order.",
+  "shipping_charges_text": "Free within India. International rates are shown at checkout.",
+  "returns_text": "Unopened flacons can be returned within 7 days of delivery.",
+  "refund_text": "Refunds go back to the original payment method within 5–7 business days.",
+  "authenticity_title": "Authentic AGHA extrait",
+  "authenticity_text": "Every flacon is numbered, batch-coded and sealed before it leaves the atelier.",
+  "reviews": {
+    "rating": 4.5,
+    "count": 6,
+    "breakdown": { "5": 4, "4": 1, "3": 1, "2": 0, "1": 0 },
+    "items": [
+      {
+        "rating": 5,
+        "body": "Demo review — it lasts all evening and the drydown is beautiful. Two sprays were plenty.",
+        "author": "Demo Reviewer A",
+        "location": "Mumbai",
+        "date": "Demo date",
+        "verified": true,
+        "image": "hoa-product-oud-fury-sm.webp"
+      },
+      {
+        "rating": 5,
+        "body": "Demo review — dark, smoky and never loud. I get compliments every time.",
+        "author": "Demo Reviewer B",
+        "location": "Delhi",
+        "date": "Demo date",
+        "verified": true
+      },
+      {
+        "rating": 4,
+        "body": "Demo review — lovely and long lasting. I would like a slightly brighter opening.",
+        "author": "Demo Reviewer C",
+        "location": "Bengaluru",
+        "date": "Demo date",
+        "verified": false
+      }
+    ]
+  },
+  "related": [
+    { "title": "Oud Fury", "handle": "oud-fury", "family": "Oriental Woody", "price": "₹5,600", "image": "hoa-product-oud-fury-sm.webp" },
+    { "title": "Agha Blue", "handle": "agha-blue", "family": "Aquatic Woody", "price": "₹5,600", "image": "hoa-product-agha-blue-sm.webp" },
+    { "title": "Maha", "handle": "maha", "family": "Amber Floral", "price": "₹5,600", "image": "hoa-product-maha-sm.webp" },
+    { "title": "Shamamah", "handle": "shamamah", "family": "Attar Musk", "price": "₹5,600", "image": "hoa-product-shamamah-sm.webp" }
+  ]
+}

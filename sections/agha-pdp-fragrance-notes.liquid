@@ -17,25 +17,23 @@
   Motion: assets/pdp.js (heading, then image, then the facts pair by pair). Static without JS.
 {% endcomment %}
 
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
   assign s = section.settings
-  assign mf = product.metafields.custom
-
-  assign top = mf.top_notes.value
-  assign heart = mf.heart_notes.value
-  assign base = mf.base_notes.value
-  assign family = mf.family.value | default: product.type
-
-  assign character = mf.scent_character.value
-  if character == blank and mf.scent_tags.value != blank
-    assign character = mf.scent_tags.value | join: ', '
+  assign top = pdp.top_notes
+  assign heart = pdp.heart_notes
+  assign base = pdp.base_notes
+  assign family = pdp.family
+  assign character = pdp.scent_character
+  if character == blank and pdp.scent_tags != blank
+    assign character = pdp.scent_tags | join: ', '
   endif
   if character == blank
-    assign character = mf.mood.value
+    assign character = pdp.mood
   endif
-
-  assign longevity = mf.longevity.value
-  assign sillage = mf.sillage.value
+  assign longevity = pdp.longevity
+  assign sillage = pdp.sillage
 
   assign image = s.image | default: product.featured_image
 

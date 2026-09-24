@@ -6,14 +6,15 @@
 // product data + metafields (custom.tagline, custom.family, custom.top_notes, …).
 const AGHA_PRODUCTS = {
   // Real House of Agha line-up. Photography from the brand's Drive folder (see HOA-ASSETS.md).
-  // Prices, sizes and notes are not confirmed yet, so they are left empty (shown as "Price on request").
+  // PREVIEW-ONLY placeholder prices (same mock figures as the shop cards); on Shopify prices come from the product variants.
   'oud-fury': {
     title: "OUD FURY",
     family: "Woody",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-oud-fury.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-hero-oud-fury.webp', '/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-craft-embers.webp', '/assets/hoa-world-profile.webp'],
     description: "Amber smoke, charred wood and a single shaft of evening light.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 4500 },
+    compare: { 'Eau de Parfum': 5200 },
     reviews: [{ rating: 5, author: "Arjun M.", location: "Mumbai", verified: true, body: "I wore Oud Fury to a winter wedding and three people asked what it was before the first dance." }]
   },
   'agha-blue': {
@@ -22,7 +23,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-hero-agha-blue.webp', '/assets/hoa-craft-ice.webp', '/assets/hoa-world-gift.webp'],
     description: "Ice caves, cold stone and the deep blue of a winter night.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 5200 },
     reviews: [{ rating: 5, author: "Sara K.", location: "Dubai", verified: true, body: "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days." }]
   },
   'oud-of-dark-paradise': {
@@ -31,7 +32,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-dark-paradise-portrait.webp', '/assets/hoa-hero-dark-paradise.webp', '/assets/hoa-craft-sand.webp', '/assets/hoa-world-hand.webp'],
     description: "Black sand, rising smoke and a room lit only by embers.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 4800 },
     reviews: [{ rating: 5, author: "Rehan S.", location: "London", verified: true, body: "Dark Paradise is my evening scent. Smoky, close to the skin, never loud." }]
   },
   'maha': {
@@ -40,7 +41,8 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-maha.webp', '/assets/hoa-maha-portrait.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
     description: "Blossom, warm sand and late sun through an open window.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 4600 },
+    compare: { 'Eau de Parfum': 5400 },
     reviews: [{ rating: 5, author: "Noor A.", location: "Hyderabad", verified: true, body: "Maha is soft without being sweet. My mother borrowed it once and never gave it back." }]
   },
   'sea-smoke': {
@@ -49,7 +51,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-world-poolside.webp'],
     description: "Clear water, pale stone and salt carried in on the wind.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 4900 },
     reviews: [{ rating: 5, author: "Meera P.", location: "Bengaluru", verified: true, body: "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear." }]
   },
   'tobacco-enigma': {
@@ -58,7 +60,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-ingredients-tobacco.webp', '/assets/hoa-family-green.webp', '/assets/hoa-craft-moss.webp'],
     description: "Tobacco leaf, moss and a forest floor after rain.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 5400 },
     reviews: [{ rating: 5, author: "Kabir D.", location: "Delhi", verified: true, body: "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much." }]
   },
   'shamamah': {
@@ -67,7 +69,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-shamamah-portrait.webp', '/assets/hoa-shamamah-lily.webp'],
     description: "Jasmine, gilded columns and the hush of a palace garden.",
-    sizes: { 'Eau de Parfum': null },
+    sizes: { 'Eau de Parfum': 4700 },
     reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]
   },
   // Older placeholder catalogue, still used by shop.html.
@@ -145,6 +147,7 @@ const AghaStore = {
   cart: [],
 
   init() {
+    this.loadCart();
     this.bindEvents();
     this.updateCartUI();
   },
@@ -161,6 +164,23 @@ const AghaStore = {
     document.querySelectorAll('.js-cart-close').forEach(btn => {
       btn.addEventListener('click', () => this.toggleCartDrawer(false));
     });
+
+    // Quantity / remove buttons inside the bag (delegated: the lines are re-rendered)
+    const cartBody = document.querySelector('.cart-drawer-body');
+    if (cartBody) {
+      cartBody.addEventListener('click', (ev) => {
+        const btn = ev.target.closest('[data-cart-act]');
+        const line = btn && btn.closest('.cart-line');
+        if (!line) return;
+        const key = line.dataset.key;
+        const act = btn.dataset.cartAct;
+        if (act === 'inc') this.changeQty(key, 1);
+        else if (act === 'dec') this.changeQty(key, -1);
+        else if (act === 'remove') this.removeLine(key);
+      });
+    }
+    const checkout = document.querySelector('[data-cart-checkout]');
+    if (checkout) checkout.addEventListener('click', (ev) => { if (!this.cart.length) ev.preventDefault(); });
 
     // Quick View Modal Triggers
     document.querySelectorAll('.js-quick-view').forEach(btn => {
@@ -384,34 +404,126 @@ const AghaStore = {
     this.updateCartUI();
   },
 
+  // One bag line per product+size+price; the cart array holds one entry per unit.
+  cartKey(item) { return [item.title, item.size, item.price].join('|'); },
+
+  changeQty(key, delta) {
+    if (delta > 0) {
+      const src = this.cart.find(i => this.cartKey(i) === key);
+      if (src) this.cart.push({ ...src, id: `${src.id}-${Date.now()}` });
+    } else {
+      for (let i = this.cart.length - 1; i >= 0; i--) {
+        if (this.cartKey(this.cart[i]) === key) { this.cart.splice(i, 1); break; }
+      }
+    }
+    this.updateCartUI();
+  },
+
+  removeLine(key) {
+    this.cart = this.cart.filter(i => this.cartKey(i) !== key);
+    this.updateCartUI();
+  },
+
+  parseMoney(str) {
+    const m = String(str || '').replace(/,/g, '').match(/\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : 0;
+  },
+
+  formatMoney(n, sample) {
+    const s = String(sample || '');
+    const prefix = (s.match(/^[^\d]*/) || [''])[0];
+    const suffix = (s.match(/[^\d.,]+$/) || [''])[0];
+    return prefix + n.toLocaleString('en-IN', { maximumFractionDigits: 2 }) + suffix;
+  },
+
+  escapeHtml(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  },
+
+  saveCart() { try { localStorage.setItem('agha-bag', JSON.stringify(this.cart)); } catch (e) {} },
+  loadCart() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('agha-bag'));
+      if (Array.isArray(saved)) this.cart = saved;
+    } catch (e) {}
+  },
+
   updateCartUI() {
-    const countElements = document.querySelectorAll('.cart-count');
-    countElements.forEach(el => el.textContent = this.cart.length);
+    this.saveCart();
+    const total = this.cart.length;
+    document.querySelectorAll('.cart-count').forEach(el => el.textContent = total);
+    document.querySelectorAll('[data-cart-count-label]').forEach(el => el.textContent = total ? `(${total})` : '');
 
     const body = document.querySelector('.cart-drawer-body');
     if (!body) return;
+    const e = (v) => this.escapeHtml(v);
 
-    if (this.cart.length === 0) {
+    const lines = [];
+    this.cart.forEach(item => {
+      const key = this.cartKey(item);
+      const line = lines.find(l => l.key === key);
+      if (line) line.qty += 1; else lines.push({ key, item, qty: 1 });
+    });
+
+    let subtotal = 0;
+    let saved = 0;
+    let sample = '';
+    lines.forEach(({ item, qty }) => {
+      const p = this.parseMoney(item.price);
+      subtotal += p * qty;
+      if (item.compare) saved += Math.max(0, this.parseMoney(item.compare) - p) * qty;
+      if (!sample) sample = item.price;
+    });
+
+    const footer = document.querySelector('.cart-drawer-footer');
+    if (footer) footer.classList.toggle('is-empty', total === 0);
+    const totalEl = document.querySelector('.cart-total-price');
+    if (totalEl) totalEl.textContent = this.formatMoney(subtotal, sample || '₹');
+    const saveRow = document.querySelector('[data-cart-save]');
+    if (saveRow) {
+      saveRow.hidden = saved <= 0;
+      const amt = saveRow.querySelector('.cart-save-amount');
+      if (amt) amt.textContent = this.formatMoney(saved, sample || '₹');
+    }
+    const checkout = document.querySelector('[data-cart-checkout]');
+    if (checkout) checkout.setAttribute('aria-disabled', String(total === 0));
+
+    if (total === 0) {
       body.innerHTML = `
-        <div style="text-align: center; margin: auto 0; color: var(--color-muted);">
-          <p style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 8px;">Your Bag is Empty</p>
-          <p style="font-size: 0.8rem;">Explore our Signature Fragrances to select your scent.</p>
-        </div>
-      `;
+        <div class="cart-empty">
+          <p class="cart-empty__title">Your bag is empty</p>
+          <p class="cart-empty__text">Explore our signature fragrances to select your scent.</p>
+        </div>`;
       return;
     }
 
-    body.innerHTML = this.cart.map((item, i) => `
-      <div style="display: flex; gap: 16px; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 16px;">
-        <img src="${item.image}" alt="${item.title}" style="width: 70px; height: 90px; object-fit: cover;">
-        <div style="flex-grow: 1;">
-          <h4 style="font-family: var(--font-serif); font-size: 1.1rem;">${item.title}</h4>
-          <p style="font-size: 0.72rem; color: var(--color-muted); text-transform: uppercase;">${item.size} · EXTRAIT DE PARFUM</p>
-          <p style="font-size: 0.9rem; margin-top: 4px;">${item.price}</p>
+    body.innerHTML = lines.map(({ key, item, qty }) => {
+      const p = this.parseMoney(item.price);
+      const cmp = item.compare ? this.parseMoney(item.compare) : 0;
+      const off = cmp > p ? Math.round((1 - p / cmp) * 100) : 0;
+      return `
+      <article class="cart-line" data-key="${e(key)}">
+        <div class="cart-line__media">${item.image ? `<img src="${e(item.image)}" alt="${e(item.title)}">` : ''}</div>
+        <div class="cart-line__info">
+          <div class="cart-line__top">
+            <h4 class="cart-line__title">${e(item.title)}</h4>
+            <button type="button" class="cart-line__remove" data-cart-act="remove" aria-label="Remove ${e(item.title)}">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <p class="cart-line__meta">${e(item.size || 'Eau de Parfum')}</p>
+          <div class="cart-line__prices">
+            <span class="cart-line__price">${e(this.formatMoney(p * qty, item.price))}</span>
+            ${cmp > p ? `<s class="cart-line__was">${e(this.formatMoney(cmp * qty, item.price))}</s><span class="cart-line__off">${off}% off</span>` : ''}
+          </div>
+          <div class="cart-qty" role="group" aria-label="Quantity for ${e(item.title)}">
+            <button type="button" data-cart-act="dec" aria-label="Decrease quantity">&minus;</button>
+            <span class="cart-qty__n" aria-live="polite">${qty}</span>
+            <button type="button" data-cart-act="inc" aria-label="Increase quantity">+</button>
+          </div>
         </div>
-        <button onclick="AghaStore.removeFromCart(${i})" style="background: none; border: none; color: var(--color-muted); cursor: pointer; font-size: 1.2rem;">&times;</button>
-      </div>
-    `).join('');
+      </article>`;
+    }).join('');
   },
 
   openQuickView(product) {

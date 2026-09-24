@@ -1,0 +1,142 @@
+{% comment %}
+  AGHA PDP — 06 HOW IT WEARS
+  A short passage on the left, quiet meters on the right, then the moments it suits.
+  Every value comes from snippets/agha-pdp-data.liquid (real Shopify data first, demo data only in
+  mock mode); a row or group without data is left out.
+    Passage ...... custom.how_it_wears
+    Intensity .... custom.intensity (text) + custom.intensity_level (1–5)
+    Longevity .... custom.longevity (text) + custom.longevity_level (1–5)
+    Sillage ...... custom.sillage   (text) + custom.sillage_level   (1–5)
+    Day / night .. custom.day_night (text, e.g. "Day & night")
+    Occasions .... custom.occasions (list or comma-separated text)
+    Seasons ...... custom.seasons   (list or comma-separated text)
+  "Metric" blocks add further rows; one whose label repeats a metafield row is skipped.
+  Motion: assets/pdp.js (data-pdp-reveal / data-pdp-card; segments draw in when seen).
+{% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
+{%- liquid
+  assign s = section.settings
+  assign int_val = pdp.intensity
+  assign lon_val = pdp.longevity
+  assign sil_val = pdp.sillage
+  assign int_lvl = pdp.intensity_level
+  assign lon_lvl = pdp.longevity_level
+  assign sil_lvl = pdp.sillage_level
+  assign day_night = pdp.day_night
+  assign occasions = pdp.occasions
+  assign seasons = pdp.seasons
+  assign has_story = false
+  if pdp.how_it_wears_html != blank
+    assign has_story = true
+  endif
+
+  assign has_meters = false
+  if int_val != blank or lon_val != blank or sil_val != blank or int_lvl != blank or lon_lvl != blank or sil_lvl != blank or section.blocks.size > 0
+    assign has_meters = true
+  endif
+  assign has_when = false
+  if day_night != blank or occasions.size > 0 or seasons.size > 0
+    assign has_when = true
+  endif
+  assign dn = day_night | downcase
+  assign dn_split = false
+  if dn contains 'day' or dn contains 'night'
+    assign dn_split = true
+  endif
+-%}
+{%- if has_story or has_meters or has_when -%}
+<section class="pdp pdp-section pdp-exp" data-pdp-exp>
+  <div class="container">
+    <header class="pdp-heading" data-pdp-reveal>
+      {%- if s.label != blank -%}<span class="pdp-eyebrow">{{ s.label }}</span>{%- endif -%}
+      <h2>{{ s.heading }}</h2>
+    </header>
+    <div class="pdp-exp__grid{% unless has_story %} pdp-exp__grid--single{% endunless %}">
+      {%- if has_story -%}
+        <div class="pdp-exp__story" data-pdp-reveal>{{ pdp.how_it_wears_html }}</div>
+      {%- endif -%}
+      {%- if has_meters -%}
+        <div class="pdp-exp__meters">
+          {%- if int_val != blank or int_lvl != blank -%}
+            {% render 'agha-pdp-meter', label: s.intensity_label, value: int_val, level: int_lvl %}
+          {%- endif -%}
+          {%- if lon_val != blank or lon_lvl != blank -%}
+            {% render 'agha-pdp-meter', label: s.longevity_label, value: lon_val, level: lon_lvl %}
+          {%- endif -%}
+          {%- if sil_val != blank or sil_lvl != blank -%}
+            {% render 'agha-pdp-meter', label: s.sillage_label, value: sil_val, level: sil_lvl %}
+          {%- endif -%}
+          {%- for block in section.blocks -%}
+            {%- assign b_key = block.settings.label | downcase | strip -%}
+            {%- assign skip = false -%}
+            {%- if b_key == 'intensity' and int_val != blank %}{% assign skip = true %}{% endif -%}
+            {%- if b_key == 'longevity' and lon_val != blank %}{% assign skip = true %}{% endif -%}
+            {%- if b_key == 'sillage' and sil_val != blank %}{% assign skip = true %}{% endif -%}
+            {%- if skip == false and block.settings.label != blank -%}
+              {% render 'agha-pdp-meter', label: block.settings.label, value: block.settings.value, level: block.settings.level, text: block.settings.text %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if has_when -%}
+      <div class="pdp-exp__when">
+        {%- if day_night != blank -%}
+          <div class="pdp-when" data-pdp-card>
+            <span class="pdp-eyebrow">{{ s.day_night_label }}</span>
+            <div class="pdp-when__chips">
+              {%- if dn_split -%}
+                <span class="pdp-chip{% if dn contains 'day' %} is-on{% endif %}">Day</span>
+                <span class="pdp-chip{% if dn contains 'night' %} is-on{% endif %}">Night</span>
+              {%- else -%}
+                <span class="pdp-chip is-on">{{ day_night }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if occasions.size > 0 -%}
+          <div class="pdp-when" data-pdp-card>
+            <span class="pdp-eyebrow">{{ s.occasions_label }}</span>
+            <div class="pdp-when__chips">{%- for o in occasions -%}{%- assign o_s = o | strip -%}{%- if o_s != blank -%}<span class="pdp-chip">{{ o_s }}</span>{%- endif -%}{%- endfor -%}</div>
+          </div>
+        {%- endif -%}
+        {%- if seasons.size > 0 -%}
+          <div class="pdp-when" data-pdp-card>
+            <span class="pdp-eyebrow">{{ s.seasons_label }}</span>
+            <div class="pdp-when__chips">{%- for o in seasons -%}{%- assign o_s = o | strip -%}{%- if o_s != blank -%}<span class="pdp-chip">{{ o_s }}</span>{%- endif -%}{%- endfor -%}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · How it wears",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Eyebrow", "default": "06 — On skin" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How it wears" },
+    { "type": "text", "id": "intensity_label", "label": "Intensity label", "default": "Intensity" },
+    { "type": "text", "id": "longevity_label", "label": "Longevity label", "default": "Longevity" },
+    { "type": "text", "id": "sillage_label", "label": "Sillage label", "default": "Sillage" },
+    { "type": "text", "id": "day_night_label", "label": "Day / night label", "default": "Day or night" },
+    { "type": "text", "id": "occasions_label", "label": "Occasions label", "default": "Occasions" },
+    { "type": "text", "id": "seasons_label", "label": "Seasons label", "default": "Seasons" }
+  ],
+  "blocks": [
+    {
+      "type": "metric",
+      "name": "Metric",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Intensity" },
+        { "type": "text", "id": "value", "label": "Value" },
+        { "type": "range", "id": "level", "label": "Level (0 = no meter)", "min": 0, "max": 5, "step": 1, "default": 0 },
+        { "type": "text", "id": "text", "label": "Supporting line" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1177,3 +1177,362 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-voices.is-animated .hoa-voice { --vw: min(86vw, 360px); --vx: 50%; --vy: 0.76; }
   .hoa-voices.is-animated .hoa-voice:nth-child(n+6) { display: none; }
 }
+
+/* ==========================================================================
+   FEATURED FILM — celebrity / testimonial video
+   Asymmetric editorial pair: a tall cinematic film with the perfume's card
+   overlapping its lower edge. No JS: static poster + panel, both visible.
+   ========================================================================== */
+.hoa-film { padding-block: var(--hoa-section); background: var(--hoa-paper); }
+.hoa-film__head { max-width: 46ch; margin-bottom: clamp(36px, 5vw, 64px); }
+.hoa-film__head .hoa-h2 { margin-top: 12px; }
+
+.hoa-film__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  align-items: end;
+}
+
+.hoa-film__media-col { position: relative; min-width: 0; }
+.hoa-film__stage {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-stone);
+}
+.hoa-film__video,
+.hoa-film__poster-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tag on the film (top-left) */
+.hoa-film__tag {
+  position: absolute;
+  top: clamp(16px, 2vw, 28px);
+  left: clamp(16px, 2vw, 28px);
+  z-index: 2;
+  padding: 7px 14px;
+  background: var(--hoa-ivory);
+  color: var(--hoa-ink);
+  font-family: var(--hoa-sans);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+/* Celebrity caption (bottom-left, over a soft scrim) */
+.hoa-film__caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 72px clamp(20px, 3vw, 32px) clamp(20px, 2.6vw, 28px);
+  background: linear-gradient(to top, rgba(8, 7, 6, 0.6), rgba(8, 7, 6, 0) 85%);
+}
+.hoa-film__name {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2.1vw, 1.7rem);
+  color: var(--hoa-ivory);
+}
+.hoa-film__title {
+  font-family: var(--hoa-sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(246, 241, 231, 0.78);
+}
+
+/* Centred prompt: the poster's fallback / first-play control */
+.hoa-film__prompt {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(8, 7, 6, 0.16);
+  color: var(--hoa-ivory);
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.6s var(--hoa-ease), background-color 0.6s var(--hoa-ease);
+}
+.hoa-film__prompt-ring {
+  display: grid;
+  place-items: center;
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 1px solid rgba(246, 241, 231, 0.6);
+  background: rgba(8, 7, 6, 0.35);
+  transition: transform 0.5s var(--hoa-ease), background-color 0.5s var(--hoa-ease);
+}
+.hoa-film__prompt-ring svg { width: 20px; height: 20px; margin-left: 3px; }
+.hoa-film__prompt-label {
+  font-family: var(--hoa-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hoa-film__prompt:hover .hoa-film__prompt-ring { transform: scale(1.06); background-color: rgba(8, 7, 6, 0.5); }
+.hoa-film.is-playing .hoa-film__prompt { opacity: 0; pointer-events: none; background: transparent; }
+
+/* Corner control: subtle, persists once playing */
+.hoa-film__toggle {
+  position: absolute;
+  right: clamp(16px, 2vw, 24px);
+  bottom: clamp(16px, 2vw, 24px);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(246, 241, 231, 0.55);
+  background: rgba(8, 7, 6, 0.4);
+  color: var(--hoa-ivory);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s var(--hoa-ease), transform 0.5s var(--hoa-ease), background-color 0.3s var(--hoa-ease);
+}
+.hoa-film.is-playing .hoa-film__toggle { opacity: 1; transform: translateY(0); }
+.hoa-film__toggle:hover { background-color: rgba(8, 7, 6, 0.6); }
+.hoa-film__icon { width: 14px; height: 14px; }
+.hoa-film__icon--pause { display: none; }
+.hoa-film.is-playing .hoa-film__icon--play { display: none; }
+.hoa-film.is-playing .hoa-film__icon--pause { display: block; }
+
+/* Perfume panel: overlaps the film's lower-left edge */
+.hoa-film__panel {
+  position: relative;
+  z-index: 2;
+  margin-left: clamp(-64px, -9vw, -32px);
+  margin-bottom: clamp(28px, 7vw, 72px);
+  padding: clamp(28px, 3vw, 44px);
+  background: var(--hoa-paper);
+  border: 1px solid var(--hoa-line);
+}
+.hoa-film__quote {
+  margin: 0 0 20px;
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--hoa-ink);
+}
+.hoa-film__eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--hoa-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-film__product {
+  margin: 0 0 10px;
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  letter-spacing: -0.02em;
+  color: var(--hoa-ink);
+}
+.hoa-film__desc {
+  margin: 0 0 22px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--hoa-ink-2);
+  max-width: 34ch;
+}
+.hoa-film__buy { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.hoa-film__price { font-family: var(--hoa-sans); font-size: 0.95rem; font-weight: 500; color: var(--hoa-ink); }
+.hoa-film__cta { color: var(--hoa-ink); }
+
+@media (max-width: 960px) {
+  .hoa-film__grid { grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr); }
+  .hoa-film__panel { margin-left: clamp(-40px, -6vw, -20px); padding: clamp(22px, 3vw, 32px); }
+}
+
+/* Mobile: film first, panel underneath as its own card (no overlap) */
+@media (max-width: 767px) {
+  .hoa-film__grid { grid-template-columns: 1fr; gap: 20px; }
+  .hoa-film__stage { aspect-ratio: 4 / 5; border-radius: 0; }
+  .hoa-film__panel { margin: 0; padding: 24px 4px 0; border: 0; border-top: 1px solid var(--hoa-line); border-radius: 0; }
+  .hoa-film__desc { max-width: none; }
+  .hoa-film__caption { padding: 56px 20px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-film__prompt,
+  .hoa-film__toggle,
+  .hoa-film__prompt-ring { transition: none; }
+}
+
+/* ==========================================================================
+   SHOPPABLE FILMS — sections/hoa-reels.liquid
+   Portrait film cards, each joined to its product panel. Native scroll-snap
+   track; 4 cards on desktop, 3.2 / 2.3 tablet, 1.32 mobile so the next
+   card always peeks.
+   ========================================================================== */
+.hoa-reels { padding-block: var(--hoa-section); background: var(--hoa-paper); overflow-x: clip; }
+.hoa-reels__head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap;
+  margin-bottom: clamp(32px, 4.5vw, 60px);
+}
+.hoa-reels__head .hoa-h2 { margin-top: 12px; }
+.hoa-reels__nav { display: flex; align-items: center; gap: 28px; }
+.hoa-reels__arrows { display: flex; gap: 10px; }
+.hoa-reels__arrows[hidden] { display: none; }
+.hoa-reels__arrow {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1px solid var(--hoa-line); background: transparent; color: var(--hoa-ink);
+  cursor: pointer;
+  transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease), opacity 0.3s;
+}
+.hoa-reels__arrow svg { width: 20px; height: 20px; }
+.hoa-reels__arrow:hover:not(:disabled) { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
+.hoa-reels__arrow:disabled { opacity: 0.3; cursor: default; }
+.hoa-reels__arrow:focus-visible,
+.hoa-reel__ctrl:focus-visible,
+.hoa-reel__add:focus-visible,
+.hoa-reel__link:focus-visible,
+.hoa-reels__track:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 3px; }
+
+/* Track bleeds to the right viewport edge so the next card is always cut off. */
+.hoa-reels__viewport { margin-right: calc(var(--hoa-gutter) * -1); }
+.hoa-reels__track {
+  --reel-gap: clamp(14px, 1.4vw, 22px);
+  --reel-count: 4;
+  display: flex; gap: var(--reel-gap);
+  margin: 0; padding: 0 0 28px; list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+.hoa-reels__track::-webkit-scrollbar { display: none; }
+.hoa-reels__track.is-tweening { scroll-snap-type: none; }
+.hoa-reels__track.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+.hoa-reels__track.is-dragging * { pointer-events: none; }
+
+.hoa-reel {
+  /* width is measured against the wrap's content box (track minus the bleed) */
+  flex: 0 0 calc((100% - var(--hoa-gutter) - var(--reel-gap) * (var(--reel-count) - 1)) / var(--reel-count));
+  min-width: 0; scroll-snap-align: start;
+}
+.hoa-reel__frame {
+  position: relative; height: 100%;
+  display: flex; flex-direction: column;
+  border-radius: 14px; overflow: hidden; background: #fff;
+  box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04), 0 18px 40px -26px rgba(20, 18, 16, 0.32);
+  transition: box-shadow 0.6s var(--hoa-ease);
+}
+.hoa-reel__frame:hover { box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04), 0 30px 54px -26px rgba(20, 18, 16, 0.4); }
+
+.hoa-reel__stage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--hoa-night); isolation: isolate; }
+.hoa-reel__poster, .hoa-reel__video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1); transition: transform 1.4s var(--hoa-ease);
+  -webkit-user-drag: none; user-select: none;
+}
+.hoa-reel__video { opacity: 0; transition: opacity 0.7s var(--hoa-ease), transform 1.4s var(--hoa-ease); }
+.hoa-reel.is-playing .hoa-reel__video { opacity: 1; }
+.hoa-reel__frame:hover .hoa-reel__poster,
+.hoa-reel__frame:hover .hoa-reel__video { transform: scale(1.04); }
+.hoa-reel__stage::after {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 34%; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(12, 10, 8, 0.32), transparent);
+}
+
+.hoa-reel__controls {
+  position: absolute; z-index: 2; top: 12px; right: 12px; display: flex; gap: 8px;
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity 0.4s var(--hoa-ease), transform 0.4s var(--hoa-ease);
+}
+.hoa-reel__frame:hover .hoa-reel__controls,
+.hoa-reel__controls:focus-within,
+.hoa-reel.has-sound .hoa-reel__controls { opacity: 1; transform: none; }
+@media (hover: none) { .hoa-reel__controls { opacity: 1; transform: none; } }
+.hoa-reel__ctrl {
+  width: 36px; height: 36px; border-radius: 50%; padding: 0;
+  display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgba(246, 241, 231, 0.28); color: var(--hoa-ivory);
+  background: rgba(12, 10, 8, 0.38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background-color 0.3s;
+}
+.hoa-reel__ctrl:hover { background: rgba(12, 10, 8, 0.62); }
+.hoa-reel__ctrl svg { width: 16px; height: 16px; grid-area: 1 / 1; }
+.hoa-reel__i-play, .hoa-reel__i-sound { display: none; }
+.hoa-reel:not(.is-playing) .hoa-reel__i-play { display: block; }
+.hoa-reel:not(.is-playing) .hoa-reel__i-pause { display: none; }
+.hoa-reel.has-sound .hoa-reel__i-sound { display: block; }
+.hoa-reel.has-sound .hoa-reel__i-muted { display: none; }
+
+/* Product panel: the whole panel is one link; the bag button sits above it */
+.hoa-reel__product {
+  position: relative; flex: 1;
+  display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 12px;
+  border-top: 1px solid var(--hoa-line);
+  background: #fff;
+}
+.hoa-reel__thumb {
+  width: 52px; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: var(--hoa-paper-2);
+  display: block;
+}
+.hoa-reel__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; mix-blend-mode: multiply; }
+.hoa-reel__info { min-width: 0; }
+.hoa-reel__name { margin: 0; font-family: var(--hoa-sans); font-size: 0.92rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; text-transform: none; }
+.hoa-reel__link { color: inherit; text-decoration: none; }
+.hoa-reel__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.hoa-reel__family { margin: 3px 0 0; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-reel__price { margin: 6px 0 0; font-size: 0.9rem; color: var(--hoa-ink); }
+.hoa-reel__form { margin: 0; position: relative; z-index: 2; }
+.hoa-reel__add {
+  position: relative; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%; padding: 0;
+  display: grid; place-items: center; cursor: pointer; text-decoration: none;
+  border: 1px solid var(--hoa-line); background: transparent; color: var(--hoa-ink);
+  transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
+}
+.hoa-reel__add svg { width: 19px; height: 19px; grid-area: 1 / 1; }
+.hoa-reel__add:hover { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
+.hoa-reel__i-check { display: none; }
+.hoa-reel__add.is-added { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
+.hoa-reel__add.is-added .hoa-reel__i-bag { display: none; }
+.hoa-reel__add.is-added .hoa-reel__i-check { display: block; }
+.hoa-reel__add.is-loading { opacity: 0.5; pointer-events: none; }
+.hoa-reel__frame:hover .hoa-reel__link { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+.hoa-reels__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+@media (max-width: 1100px) { .hoa-reels__track { --reel-count: 3.2; } }
+@media (max-width: 860px)  { .hoa-reels__track { --reel-count: 2.3; } }
+@media (max-width: 560px) {
+  .hoa-reels__track { --reel-count: 1.32; --reel-gap: 14px; }
+  .hoa-reels__nav { width: 100%; justify-content: space-between; }
+  .hoa-reels__arrows { display: none; }
+  .hoa-reel__product { grid-template-columns: 56px minmax(0, 1fr) auto; padding: 14px; gap: 14px; }
+  .hoa-reel__thumb { width: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-reel__poster, .hoa-reel__video, .hoa-reel__frame, .hoa-reel__controls { transition: none; }
+  .hoa-reel__frame:hover .hoa-reel__poster, .hoa-reel__frame:hover .hoa-reel__video { transform: none; }
+}

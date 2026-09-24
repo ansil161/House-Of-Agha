@@ -1,0 +1,163 @@
+{% comment %}
+  HOUSE OF AGHA — FEATURED FILM (celebrity / testimonial video)
+
+  An asymmetric editorial composition: a large cinematic film (or, until one is
+  uploaded, a still campaign portrait) with the featured perfume's details on a
+  card that overlaps its edge. Celebrity name, title, quote, video, poster and
+  perfume are all configurable in the Theme Editor / templates/index.json.
+
+  Video: give "video" a theme asset filename (e.g. "agha-celebrity-film.mp4",
+  uploaded to /assets) or a full hosted URL; "video_webm" is optional. With no
+  video set, the poster renders as a static image and no play control appears.
+
+  Playback (assets/hoa-celebrity.js): muted + playsinline, source attached lazily,
+  autoplay starts once ~45% of the film is on screen, pauses off screen, resumes
+  on return. A small corner control lets the visitor pause/resume manually; a
+  centred "Play the film" prompt covers the poster until playback first starts
+  (also the fallback if the browser blocks autoplay). Respects prefers-reduced-motion.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign p = s.product
+
+  if p != blank
+    assign f_name = p.title
+    assign f_url = p.url
+    if p.price_varies
+      assign f_price = p.price_min | money | prepend: 'From '
+    else
+      assign f_price = p.price | money
+    endif
+  else
+    assign f_name = s.perfume_name
+    assign f_url = s.cta_url | default: routes.all_products_collection_url
+    assign f_price = s.perfume_price
+  endif
+
+  assign has_video = false
+  if s.video != blank
+    assign has_video = true
+    if s.video contains '://'
+      assign video_src = s.video
+    else
+      assign video_src = s.video | asset_url
+    endif
+    if s.video_webm != blank
+      if s.video_webm contains '://'
+        assign webm_src = s.video_webm
+      else
+        assign webm_src = s.video_webm | asset_url
+      endif
+    endif
+  endif
+
+  if s.poster != blank
+    assign poster_url = s.poster | image_url: width: 1600
+  elsif s.poster_asset != blank
+    assign poster_url = s.poster_asset | append: '.webp' | asset_url
+  endif
+
+  assign poster_alt = s.poster_alt | default: s.celebrity_name
+-%}
+<section class="hoa-film" id="celebrity-film" data-hoa-film aria-labelledby="film-{{ section.id }}-title">
+  <div class="hoa-wrap hoa-film__wrap">
+    <header class="hoa-film__head" data-hoa-reveal>
+      <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
+      <h2 class="hoa-h2" id="film-{{ section.id }}-title">{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+    </header>
+
+    <div class="hoa-film__grid">
+      <div class="hoa-film__media-col">
+        <div class="hoa-film__stage" data-hoa-film-stage>
+          {%- if has_video -%}
+            <video
+              class="hoa-film__video"
+              data-hoa-film-video
+              muted
+              playsinline
+              {%- if s.video_loop %} loop{% endif %}
+              preload="none"
+              poster="{{ poster_url }}"
+              data-src="{{ video_src }}"
+              {%- if webm_src != blank %} data-src-webm="{{ webm_src }}"{% endif %}
+              aria-label="{{ s.celebrity_name | escape }}{% if f_name != blank %} on {{ f_name | escape }}{% endif %}"
+            ></video>
+          {%- else -%}
+            {%- render 'hoa-img', name: s.poster_asset, image: s.poster, w: 1600, h: 2000, alt: poster_alt, sizes: '(min-width: 960px) 62vw, 100vw', class: 'hoa-film__poster-img' -%}
+          {%- endif -%}
+
+          {%- if s.film_label != blank -%}<span class="hoa-film__tag">{{ s.film_label }}</span>{%- endif -%}
+
+          {%- if s.celebrity_name != blank -%}
+            <div class="hoa-film__caption">
+              <span class="hoa-film__name">{{ s.celebrity_name }}</span>
+              {%- if s.celebrity_title != blank -%}<span class="hoa-film__title">{{ s.celebrity_title }}</span>{%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if has_video -%}
+            <button type="button" class="hoa-film__prompt" data-hoa-film-prompt aria-label="Play the film">
+              <span class="hoa-film__prompt-ring">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+              </span>
+              <span class="hoa-film__prompt-label">Play the film</span>
+            </button>
+
+            <button type="button" class="hoa-film__toggle" data-hoa-film-toggle aria-label="Pause film">
+              <svg class="hoa-film__icon hoa-film__icon--play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+              <svg class="hoa-film__icon hoa-film__icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="4" height="14" fill="currentColor"/><rect x="13" y="5" width="4" height="14" fill="currentColor"/></svg>
+            </button>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <aside class="hoa-film__panel" data-hoa-film-panel>
+        {%- if s.quote != blank -%}<blockquote class="hoa-film__quote">&ldquo;{{ s.quote }}&rdquo;</blockquote>{%- endif -%}
+        <p class="hoa-film__eyebrow">{{ s.panel_eyebrow }}</p>
+        {%- if f_name != blank -%}<h3 class="hoa-film__product">{{ f_name }}</h3>{%- endif -%}
+        {%- if s.perfume_description != blank -%}<p class="hoa-film__desc">{{ s.perfume_description }}</p>{%- endif -%}
+        <div class="hoa-film__buy">
+          {%- if f_price != blank -%}<span class="hoa-film__price">{{ f_price }}</span>{%- endif -%}
+          <a href="{{ f_url }}" class="hoa-link hoa-film__cta">{{ s.cta_label | default: 'Discover the fragrance' }} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'hoa-celebrity.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "HOA Featured Film",
+  "tag": "div",
+  "class": "hoa-film-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured film" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A face" },
+    { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "of the House." },
+    { "type": "text", "id": "film_label", "label": "Tag on the film", "default": "The Film" },
+    { "type": "header", "content": "Celebrity" },
+    { "type": "text", "id": "celebrity_name", "label": "Name", "default": "Celebrity Name" },
+    { "type": "text", "id": "celebrity_title", "label": "Title", "default": "Friend of the House" },
+    { "type": "textarea", "id": "quote", "label": "Quote (optional)", "info": "A short line from the film, shown on the perfume card." },
+    { "type": "header", "content": "Film" },
+    { "type": "text", "id": "video", "label": "Video", "info": "A filename already uploaded to /assets (e.g. agha-celebrity-film.mp4), or a full hosted URL. Leave blank to show the poster only." },
+    { "type": "text", "id": "video_webm", "label": "Video, WebM (optional)" },
+    { "type": "checkbox", "id": "video_loop", "label": "Loop the video", "default": false },
+    { "type": "image_picker", "id": "poster", "label": "Poster image" },
+    { "type": "text", "id": "poster_asset", "label": "Poster (theme asset filename, used if no image is picked)", "default": "hoa-hero-oud-fury" },
+    { "type": "text", "id": "poster_alt", "label": "Poster alt text" },
+    { "type": "header", "content": "Perfume" },
+    { "type": "product", "id": "product", "label": "Product", "info": "Price and link come from this product when picked." },
+    { "type": "text", "id": "perfume_name", "label": "Name (used when no product is picked)", "default": "Oud Fury" },
+    { "type": "textarea", "id": "perfume_description", "label": "Short description" },
+    { "type": "text", "id": "perfume_price", "label": "Price (used when no product is picked; leave blank to hide)" },
+    { "type": "text", "id": "panel_eyebrow", "label": "Label above the perfume name", "default": "Featured fragrance" },
+    { "type": "text", "id": "cta_label", "label": "Link label", "default": "Discover the fragrance" },
+    { "type": "url", "id": "cta_url", "label": "Link (used when no product is picked)" }
+  ],
+  "presets": [{ "name": "HOA Featured Film" }]
+}
+{% endschema %}

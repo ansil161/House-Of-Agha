@@ -7,11 +7,13 @@
   <meta name="description" content="Shop every House of Agha Eau de Parfum, for men, for women and unisex.">
   <link rel="stylesheet" href="assets/theme.css">
   <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-coupon.css">
   <link rel="stylesheet" href="assets/hoa-shop.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="assets/theme.js" defer></script>
   <script src="assets/hoa-shop.js" defer></script>
+  <script src="assets/hoa-coupon.js" defer></script>
 </head>
 <body class="hoa-shop-page">
 
@@ -83,6 +85,13 @@
       <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by scent family">
         <span class="hoa-shop-bar__label">Family</span><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="woody">Woody</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="fresh">Fresh</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="floral">Floral</button><button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="aromatic">Aromatic</button></div>
 
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--gift" role="group" aria-label="Shop by occasion">
+        <button type="button" class="hoa-ftag hoa-ftag--gift" aria-pressed="false" data-hoa-gift>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6.5h12v2H2zM3 8.5h10V14H3zM8 6.5V14M8 6.5C6.5 6.5 5.5 5.6 5.5 4.5S6.3 3 7 3.6C7.6 4.1 8 5 8 6.5ZM8 6.5c1.5 0 2.5-.9 2.5-2s-.8-1.5-1.5-.9C8.4 4.1 8 5 8 6.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Gift<sup data-hoa-count="gift"></sup>
+        </button>
+      </div>
+
       <div class="hoa-shop-bar__end">
         <label class="hoa-sort">
           <span class="hoa-shop-bar__label">Sort</span>
@@ -106,85 +115,103 @@
   <div class="hoa-wrap">
     <p class="hoa-shop-cat__status" aria-live="polite"><span data-hoa-shown></span><button type="button" class="hoa-shop-cat__clear" data-hoa-reset hidden>Clear filters</button></p>
 
-    <div class="hoa-shop-grid" data-hoa-shop-grid data-view="grid"><article class="hoa-pc" data-hoa-item data-for="men" data-family="woody" data-name="Oud Fury" data-index="0"
-                   data-product-id="oud-fury" data-title="OUD FURY" data-image="assets/hoa-product-oud-fury-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=oud-fury" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+    <div class="hoa-shop-grid" data-hoa-shop-grid data-view="grid"><article class="hoa-pc" data-hoa-item data-for="men" data-family="woody" data-gift="true" data-name="Oud Fury" data-index="0"
+                   data-product-id="oud-fury" data-title="OUD FURY" data-image="assets/hoa-product-oud-fury-sm.webp" data-price="" data-price-text="₹4,500" data-compare-text="₹5,200">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=oud-fury" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-oud-fury.webp"
     srcset="assets/hoa-product-oud-fury-sm.webp 700w, assets/hoa-product-oud-fury.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-oud-fury-portrait.webp"
     srcset="assets/hoa-oud-fury-portrait-sm.webp 700w, assets/hoa-oud-fury-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">01</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag hoa-pc__tag--sale">₹4,500 <s>₹5,200</s></p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Oud Fury to your wishlist" data-hoa-like data-key="oud-fury">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
-              <h3 class="hoa-pc__name"><a href="/product.html?p=oud-fury">Oud Fury</a></h3>
-              <p class="hoa-pc__meta"><span>Woody</span><span>Men</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Woody</span><span class="hoa-pc__chip">Men</span></p>
+              <h3 class="hoa-pc__name"><a href="/product.html?p=oud-fury">Oud Fury</a><span class="hoa-pc__gift-tag">Gift</span></h3>
+              <p class="hoa-pc__price">₹4,500 <s>₹5,200</s></p>
+              <p class="hoa-pc__about">A woody Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=oud-fury">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Oud Fury to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
-          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="fresh" data-name="Agha Blue" data-index="1"
-                   data-product-id="agha-blue" data-title="AGHA BLUE" data-image="assets/hoa-product-agha-blue-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=agha-blue" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="fresh" data-gift="false" data-name="Agha Blue" data-index="1"
+                   data-product-id="agha-blue" data-title="AGHA BLUE" data-image="assets/hoa-product-agha-blue-sm.webp" data-price="" data-price-text="₹5,200">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=agha-blue" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-agha-blue.webp"
     srcset="assets/hoa-product-agha-blue-sm.webp 700w, assets/hoa-product-agha-blue.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-agha-blue-portrait.webp"
     srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">02</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag">₹5,200</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Agha Blue to your wishlist" data-hoa-like data-key="agha-blue">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Fresh</span><span class="hoa-pc__chip">Men</span></p>
               <h3 class="hoa-pc__name"><a href="/product.html?p=agha-blue">Agha Blue</a></h3>
-              <p class="hoa-pc__meta"><span>Fresh</span><span>Men</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__price">₹5,200</p>
+              <p class="hoa-pc__about">A fresh Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=agha-blue">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Agha Blue to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
-          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="woody" data-name="Oud of Dark Paradise" data-index="2"
-                   data-product-id="oud-of-dark-paradise" data-title="OUD OF DARK PARADISE" data-image="assets/hoa-product-dark-paradise-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=oud-of-dark-paradise" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="woody" data-gift="false" data-name="Oud of Dark Paradise" data-index="2"
+                   data-product-id="oud-of-dark-paradise" data-title="OUD OF DARK PARADISE" data-image="assets/hoa-product-dark-paradise-sm.webp" data-price="" data-price-text="₹4,800">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=oud-of-dark-paradise" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-dark-paradise.webp"
     srcset="assets/hoa-product-dark-paradise-sm.webp 700w, assets/hoa-product-dark-paradise.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-dark-paradise-portrait.webp"
     srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">03</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag">₹4,800</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Oud of Dark Paradise to your wishlist" data-hoa-like data-key="oud-of-dark-paradise">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Woody</span><span class="hoa-pc__chip">Unisex</span></p>
               <h3 class="hoa-pc__name"><a href="/product.html?p=oud-of-dark-paradise">Oud of Dark Paradise</a></h3>
-              <p class="hoa-pc__meta"><span>Woody</span><span>Unisex</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__price">₹4,800</p>
+              <p class="hoa-pc__about">A woody Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=oud-of-dark-paradise">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Oud of Dark Paradise to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
           </article><figure class="hoa-shop-interlude" data-hoa-interlude>
@@ -200,112 +227,136 @@
         <p class="hoa-pc__meta"><span>By the water</span></p>
         <p class="hoa-pc__price"><a href="/product.html?p=sea-smoke">View<span aria-hidden="true">&rarr;</span></a></p>
       </figcaption>
-    </figure><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-name="Maha" data-index="3"
-                   data-product-id="maha" data-title="MAHA" data-image="assets/hoa-product-maha-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=maha" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+    </figure><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-gift="true" data-name="Maha" data-index="3"
+                   data-product-id="maha" data-title="MAHA" data-image="assets/hoa-product-maha-sm.webp" data-price="" data-price-text="₹4,600" data-compare-text="₹5,400">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=maha" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-maha.webp"
     srcset="assets/hoa-product-maha-sm.webp 700w, assets/hoa-product-maha.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-maha-portrait.webp"
     srcset="assets/hoa-maha-portrait-sm.webp 700w, assets/hoa-maha-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">04</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag hoa-pc__tag--sale">₹4,600 <s>₹5,400</s></p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Maha to your wishlist" data-hoa-like data-key="maha">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
-              <h3 class="hoa-pc__name"><a href="/product.html?p=maha">Maha</a></h3>
-              <p class="hoa-pc__meta"><span>Floral</span><span>Women</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Floral</span><span class="hoa-pc__chip">Women</span></p>
+              <h3 class="hoa-pc__name"><a href="/product.html?p=maha">Maha</a><span class="hoa-pc__gift-tag">Gift</span></h3>
+              <p class="hoa-pc__price">₹4,600 <s>₹5,400</s></p>
+              <p class="hoa-pc__about">A floral Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=maha">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Maha to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
-          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="fresh" data-name="Sea Smoke" data-index="4"
-                   data-product-id="sea-smoke" data-title="SEA SMOKE" data-image="assets/hoa-product-sea-smoke-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=sea-smoke" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+          </article><article class="hoa-pc" data-hoa-item data-for="unisex" data-family="fresh" data-gift="true" data-name="Sea Smoke" data-index="4"
+                   data-product-id="sea-smoke" data-title="SEA SMOKE" data-image="assets/hoa-product-sea-smoke-sm.webp" data-price="" data-price-text="₹4,900">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=sea-smoke" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-sea-smoke.webp"
     srcset="assets/hoa-product-sea-smoke-sm.webp 700w, assets/hoa-product-sea-smoke.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-sea-smoke-portrait.webp"
     srcset="assets/hoa-sea-smoke-portrait-sm.webp 700w, assets/hoa-sea-smoke-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">05</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag">₹4,900</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Sea Smoke to your wishlist" data-hoa-like data-key="sea-smoke">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
-              <h3 class="hoa-pc__name"><a href="/product.html?p=sea-smoke">Sea Smoke</a></h3>
-              <p class="hoa-pc__meta"><span>Fresh</span><span>Unisex</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Fresh</span><span class="hoa-pc__chip">Unisex</span></p>
+              <h3 class="hoa-pc__name"><a href="/product.html?p=sea-smoke">Sea Smoke</a><span class="hoa-pc__gift-tag">Gift</span></h3>
+              <p class="hoa-pc__price">₹4,900</p>
+              <p class="hoa-pc__about">A fresh Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=sea-smoke">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Sea Smoke to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
-          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="aromatic" data-name="Tobacco Enigma" data-index="5"
-                   data-product-id="tobacco-enigma" data-title="TOBACCO ENIGMA" data-image="assets/hoa-product-tobacco-enigma-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=tobacco-enigma" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+          </article><article class="hoa-pc" data-hoa-item data-for="men" data-family="aromatic" data-gift="false" data-name="Tobacco Enigma" data-index="5"
+                   data-product-id="tobacco-enigma" data-title="TOBACCO ENIGMA" data-image="assets/hoa-product-tobacco-enigma-sm.webp" data-price="" data-price-text="₹5,400">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=tobacco-enigma" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-tobacco-enigma.webp"
     srcset="assets/hoa-product-tobacco-enigma-sm.webp 700w, assets/hoa-product-tobacco-enigma.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-tobacco-enigma-portrait.webp"
     srcset="assets/hoa-tobacco-enigma-portrait-sm.webp 700w, assets/hoa-tobacco-enigma-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">06</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag">₹5,400</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Tobacco Enigma to your wishlist" data-hoa-like data-key="tobacco-enigma">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Aromatic</span><span class="hoa-pc__chip">Men</span></p>
               <h3 class="hoa-pc__name"><a href="/product.html?p=tobacco-enigma">Tobacco Enigma</a></h3>
-              <p class="hoa-pc__meta"><span>Aromatic</span><span>Men</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__price">₹5,400</p>
+              <p class="hoa-pc__about">An aromatic Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=tobacco-enigma">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Tobacco Enigma to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
-          </article><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-name="Shamamah" data-index="6"
-                   data-product-id="shamamah" data-title="SHAMAMAH" data-image="assets/hoa-product-shamamah-sm.webp" data-price="">
-            <a class="hoa-pc__media" href="/product.html?p=shamamah" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product"><img
+          </article><article class="hoa-pc" data-hoa-item data-for="women" data-family="floral" data-gift="false" data-name="Shamamah" data-index="6"
+                   data-product-id="shamamah" data-title="SHAMAMAH" data-image="assets/hoa-product-shamamah-sm.webp" data-price="" data-price-text="₹4,700">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/product.html?p=shamamah" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product"><img
     src="assets/hoa-product-shamamah.webp"
     srcset="assets/hoa-product-shamamah-sm.webp 700w, assets/hoa-product-shamamah.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__img hoa-pc__img--mood"><img
+                <span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-shamamah-portrait.webp"
     srcset="assets/hoa-shamamah-portrait-sm.webp 700w, assets/hoa-shamamah-portrait.webp 1200w"
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1607"
     alt=""
     loading="lazy" decoding="async"></span>
-              <span class="hoa-pc__num">07</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag">₹4,700</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save Shamamah to your wishlist" data-hoa-like data-key="shamamah">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">Floral</span><span class="hoa-pc__chip">Women</span></p>
               <h3 class="hoa-pc__name"><a href="/product.html?p=shamamah">Shamamah</a></h3>
-              <p class="hoa-pc__meta"><span>Floral</span><span>Women</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__price">₹4,700</p>
+              <p class="hoa-pc__about">A floral Eau de Parfum from House of Agha.</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/product.html?p=shamamah">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Shamamah to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
           </article></div>
@@ -313,10 +364,145 @@
     <div class="hoa-shop-empty" data-hoa-empty hidden>
       <p class="hoa-shop-empty__title">Nothing matches both filters.</p>
       <p class="hoa-shop-empty__text">Try another scent family, or see every fragrance.</p>
-      <button type="button" class="hoa-pc__btn hoa-pc__btn--solid" data-hoa-reset>Show all fragrances</button>
+      <button type="button" class="hoa-btn" data-hoa-reset><span>Show all fragrances</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
     </div>
   </div>
 </section>
+
+
+</div>
+
+    <!-- reviews · sections/hoa-shop-reviews.liquid -->
+    <div id="shopify-section-reviews" class="shopify-section hoa-shop-reviews-section"><section class="hoa-shop-reviews" id="reviews" data-hoa-shop-reviews>
+  <div class="hoa-wrap">
+    <header class="hoa-shop-reviews__head" data-hoa-reveal>
+      <p class="hoa-eyebrow">Reviews</p>
+      <h2 class="hoa-shop-reviews__title">What wearers say</h2>
+    </header>
+
+    <div class="hoa-shop-reviews__grid">
+      <div class="hoa-shop-reviews__summary" data-hoa-reveal><p class="hoa-shop-reviews__score">4.8</p>
+          <span class="hoa-stars" role="img" aria-label="Rated 4.8 out of 5"><span class="hoa-stars__fill" style="width: 96%"></span></span>
+          <p class="hoa-shop-reviews__count">Based on 4 reviews</p></div>
+
+      <ul class="hoa-shop-reviews__list" role="list"><li class="hoa-review" data-hoa-reveal >
+              <span class="hoa-stars" role="img" aria-label="Rated 5 out of 5"><span class="hoa-stars__fill" style="width: 100%"></span></span>
+              <p class="hoa-review__body">“Oud Fury lasted through an entire flight and was still there when I landed. Compliments the whole way.”</p>
+              <div class="hoa-review__meta">
+                <span class="hoa-review__avatar" aria-hidden="true">F</span>
+                <span class="hoa-review__who">
+                  <cite class="hoa-review__name">Farah I.</cite>
+                  <span class="hoa-review__detail">Oud Fury · Verified purchase</span>
+                </span>
+              </div>
+            </li><li class="hoa-review" data-hoa-reveal >
+              <span class="hoa-stars" role="img" aria-label="Rated 5 out of 5"><span class="hoa-stars__fill" style="width: 100%"></span></span>
+              <p class="hoa-review__body">“Agha Blue is my go-to for the office. Close enough to be noticed, never loud in a small room.”</p>
+              <div class="hoa-review__meta">
+                <span class="hoa-review__avatar" aria-hidden="true">Y</span>
+                <span class="hoa-review__who">
+                  <cite class="hoa-review__name">Yusuf T.</cite>
+                  <span class="hoa-review__detail">Agha Blue · Verified purchase</span>
+                </span>
+              </div>
+            </li><li class="hoa-review" data-hoa-reveal >
+              <span class="hoa-stars" role="img" aria-label="Rated 4 out of 5"><span class="hoa-stars__fill" style="width: 80%"></span></span>
+              <p class="hoa-review__body">“Maha is soft and grown-up. My mother borrowed the bottle once and I still haven't gotten it back.”</p>
+              <div class="hoa-review__meta">
+                <span class="hoa-review__avatar" aria-hidden="true">P</span>
+                <span class="hoa-review__who">
+                  <cite class="hoa-review__name">Priya V.</cite>
+                  <span class="hoa-review__detail">Maha · Verified purchase</span>
+                </span>
+              </div>
+            </li><li class="hoa-review" data-hoa-reveal >
+              <span class="hoa-stars" role="img" aria-label="Rated 5 out of 5"><span class="hoa-stars__fill" style="width: 100%"></span></span>
+              <p class="hoa-review__body">“Ordered Sea Smoke as a gift and the packaging alone made it feel like a proper present.”</p>
+              <div class="hoa-review__meta">
+                <span class="hoa-review__avatar" aria-hidden="true">O</span>
+                <span class="hoa-review__who">
+                  <cite class="hoa-review__name">Omar Z.</cite>
+                  <span class="hoa-review__detail">Sea Smoke · Verified purchase</span>
+                </span>
+              </div>
+            </li></ul>
+    </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- voices · sections/hoa-testimonials.liquid -->
+    <div id="shopify-section-voices" class="shopify-section hoa-voices-section"><section class="hoa-voices" id="testimonials" data-hoa-voices aria-labelledby="voices-voices-title">
+  <div class="hoa-voices__stage" data-hoa-voices-stage>
+    <div class="hoa-voices__intro" data-hoa-voices-intro>
+      <p class="hoa-eyebrow">In their words</p><p class="hoa-voices__lede">Notes from the people who wear the House, in their own words.</p></div>
+
+    <h2 class="hoa-voices__statement" id="voices-voices-title" data-hoa-voices-statement><span class="hoa-voices__line hoa-voices__line--1" data-hoa-voices-line>Loved by</span><span class="hoa-voices__line hoa-voices__line--2 hoa-voices__line--serif" data-hoa-voices-line>those who</span><span class="hoa-voices__line hoa-voices__line--3" data-hoa-voices-line>wear it.</span></h2>
+
+    <ul class="hoa-voices__cards" role="list"><li class="hoa-voice hoa-voice--1" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>I wore Oud Fury to a winter wedding and three people asked what it was before the first dance.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">AM</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Arjun M.</cite>
+                <span class="hoa-voice__detail">Mumbai · wears Oud Fury</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--2" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">SK</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Sara K.</cite>
+                <span class="hoa-voice__detail">Dubai · wears Agha Blue</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--3" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Maha is soft without being sweet. My mother borrowed it once and never gave it back.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">NA</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Noor A.</cite>
+                <span class="hoa-voice__detail">Hyderabad · wears Maha</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--4" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Dark Paradise is my evening scent. Smoky, close to the skin, never loud.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">RS</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Rehan S.</cite>
+                <span class="hoa-voice__detail">London · wears Oud of Dark Paradise</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--5" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">MP</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Meera P.</cite>
+                <span class="hoa-voice__detail">Bengaluru · wears Sea Smoke</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--6" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">KD</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Kabir D.</cite>
+                <span class="hoa-voice__detail">Delhi · wears Tobacco Enigma</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li><li class="hoa-voice hoa-voice--7" data-hoa-voice >
+          <figure class="hoa-voice__card"><p class="hoa-voice__rating" aria-label="Rated 5 out of 5"><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span><span aria-hidden="true">★</span></p><blockquote class="hoa-voice__quote"><p>Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first.</p></blockquote>
+            <figcaption class="hoa-voice__who"><span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">LH</span><span class="hoa-voice__meta">
+                <cite class="hoa-voice__name">Layla H.</cite>
+                <span class="hoa-voice__detail">Doha · wears Shamamah</span>
+              </span>
+            </figcaption>
+          </figure>
+        </li></ul>
+  </div>
+</section>
+
+<script src="assets/hoa-testimonials.js" defer></script>
 
 
 </div>
@@ -373,18 +559,46 @@
   </footer>
 
   <!-- Slide-out Cart Drawer -->
+  <!-- Slide-out Bag Drawer · filled by AghaStore.updateCartUI (theme.js) -->
   <div class="cart-drawer-overlay js-cart-close"></div>
-  <div class="cart-drawer">
+
+  <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Your bag">
     <div class="cart-drawer-header">
-      <span class="editorial-label">YOUR SELECTION</span>
-      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
-      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <div class="cart-drawer-heading">
+        <span class="editorial-label">YOUR SELECTION</span>
+        <h3 class="cart-drawer-title">Your bag <span class="cart-drawer-count" data-cart-count-label></span></h3>
+      </div>
+      <button type="button" class="cart-drawer-close js-cart-close" aria-label="Close bag">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
     </div>
-    <div class="cart-drawer-body"></div>
+
+    <div class="cart-drawer-body">
+      <!-- Populated dynamically via theme.js -->
+    </div>
+
     <div class="cart-drawer-footer">
-      <button class="btn-primary" style="width: 100%; justify-content: center;">PROCEED TO CHECKOUT →</button>
+      <dl class="cart-summary">
+        <div class="cart-summary__row cart-summary__row--save" data-cart-save hidden>
+          <dt>You save</dt>
+          <dd class="cart-save-amount"></dd>
+        </div>
+        <div class="cart-summary__row">
+          <dt>Shipping</dt>
+          <dd>Complimentary</dd>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <dt>Subtotal</dt>
+          <dd class="cart-total-price">₹0</dd>
+        </div>
+      </dl>
+      <a class="cart-checkout" href="/checkout" data-cart-checkout>
+        <span>Checkout</span>
+        <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button type="button" class="cart-continue js-cart-close">Continue shopping</button>
     </div>
-  </div>
+  </aside>
 
   <!-- Quick View Modal -->
   <div class="modal-overlay js-modal-close"></div>
@@ -404,5 +618,35 @@
     </div>
   </div>
 
+  <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->
+  <div class="hoa-coupon" data-hoa-coupon data-delay="10000" hidden>
+  <div class="hoa-coupon__scrim" data-coupon-close></div>
+  <div class="hoa-coupon__card" role="dialog" aria-modal="true" aria-labelledby="hoa-coupon-title" aria-describedby="hoa-coupon-desc" tabindex="-1">
+    <button type="button" class="hoa-coupon__close" data-coupon-close aria-label="Close offer">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+
+    <div class="hoa-coupon__media" aria-hidden="true">
+      <img src="assets/hoa-product-oud-fury-sm.webp" alt="" width="640" height="800" decoding="async">
+    </div>
+
+    <div class="hoa-coupon__body">
+      <p class="hoa-coupon__eyebrow">A little gift for you</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+
+      <div class="hoa-coupon__code" aria-label="Your discount code">
+        <span class="hoa-coupon__code-label">Your code</span>
+        <span class="hoa-coupon__code-value" data-coupon-code>WELCOME10</span>
+      </div>
+
+      <div class="hoa-coupon__actions">
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+      </div>
+      <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
+    </div>
+  </div>
+</div>
 </body>
 </html>

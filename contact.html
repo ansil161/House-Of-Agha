@@ -8,12 +8,14 @@
   
   <link rel="stylesheet" href="assets/theme.css">
   <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/hoa-coupon.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 
   <script src="assets/theme.js" defer></script>
   <script src="assets/hero-scroll.js" defer></script>
+  <script src="assets/hoa-coupon.js" defer></script>
 </head>
 <body>
 
@@ -199,21 +201,76 @@
   </footer>
 
   <!-- Drawers & Modals -->
+  <!-- Slide-out Bag Drawer · filled by AghaStore.updateCartUI (theme.js) -->
   <div class="cart-drawer-overlay js-cart-close"></div>
-  <div class="cart-drawer">
+
+  <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Your bag">
     <div class="cart-drawer-header">
-      <span class="editorial-label">YOUR SELECTION</span>
-      <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">FRAGRANCE BAG</h3>
-      <button class="js-cart-close" style="background: none; border: none; color: var(--color-black); font-size: 1.5rem; cursor: pointer;">&times;</button>
-    </div>
-    <div class="cart-drawer-body"></div>
-    <div class="cart-drawer-footer">
-      <button class="btn-primary" style="width: 100%; justify-content: center;">
-        <span>PROCEED TO CHECKOUT</span>
-        <span class="btn-arrow">→</span>
+      <div class="cart-drawer-heading">
+        <span class="editorial-label">YOUR SELECTION</span>
+        <h3 class="cart-drawer-title">Your bag <span class="cart-drawer-count" data-cart-count-label></span></h3>
+      </div>
+      <button type="button" class="cart-drawer-close js-cart-close" aria-label="Close bag">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </div>
-  </div>
 
+    <div class="cart-drawer-body">
+      <!-- Populated dynamically via theme.js -->
+    </div>
+
+    <div class="cart-drawer-footer">
+      <dl class="cart-summary">
+        <div class="cart-summary__row cart-summary__row--save" data-cart-save hidden>
+          <dt>You save</dt>
+          <dd class="cart-save-amount"></dd>
+        </div>
+        <div class="cart-summary__row">
+          <dt>Shipping</dt>
+          <dd>Complimentary</dd>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <dt>Subtotal</dt>
+          <dd class="cart-total-price">₹0</dd>
+        </div>
+      </dl>
+      <a class="cart-checkout" href="/checkout" data-cart-checkout>
+        <span>Checkout</span>
+        <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button type="button" class="cart-continue js-cart-close">Continue shopping</button>
+    </div>
+  </aside>
+
+  <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->
+  <div class="hoa-coupon" data-hoa-coupon data-delay="10000" hidden>
+  <div class="hoa-coupon__scrim" data-coupon-close></div>
+  <div class="hoa-coupon__card" role="dialog" aria-modal="true" aria-labelledby="hoa-coupon-title" aria-describedby="hoa-coupon-desc" tabindex="-1">
+    <button type="button" class="hoa-coupon__close" data-coupon-close aria-label="Close offer">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+
+    <div class="hoa-coupon__media" aria-hidden="true">
+      <img src="assets/hoa-product-oud-fury-sm.webp" alt="" width="640" height="800" decoding="async">
+    </div>
+
+    <div class="hoa-coupon__body">
+      <p class="hoa-coupon__eyebrow">A little gift for you</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+
+      <div class="hoa-coupon__code" aria-label="Your discount code">
+        <span class="hoa-coupon__code-label">Your code</span>
+        <span class="hoa-coupon__code-value" data-coupon-code>WELCOME10</span>
+      </div>
+
+      <div class="hoa-coupon__actions">
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+      </div>
+      <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
+    </div>
+  </div>
+</div>
 </body>
 </html>

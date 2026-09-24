@@ -4,14 +4,16 @@
   custom.top_notes / custom.heart_notes / custom.base_notes (comma separated); the key-material
   tile from custom.key_material_name / custom.key_material_text. Tiles without data are omitted.
 {% endcomment %}
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
-  assign top = product.metafields.custom.top_notes.value
-  assign heart = product.metafields.custom.heart_notes.value
-  assign base = product.metafields.custom.base_notes.value
-  assign key_name = product.metafields.custom.key_material_name.value
-  assign key_text = product.metafields.custom.key_material_text.value
+  assign top = pdp.top_notes
+  assign heart = pdp.heart_notes
+  assign base = pdp.base_notes
+  assign key_name = pdp.key_material_name
+  assign key_text = pdp.key_material_text
   assign image = section.settings.image | default: product.featured_image
-  assign family = product.metafields.custom.family.value | default: product.type
+  assign family = pdp.family
 -%}
 
 {%- if top != blank or heart != blank or base != blank -%}

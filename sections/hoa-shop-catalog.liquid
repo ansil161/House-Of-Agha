@@ -28,10 +28,13 @@
   assign families = s.families | split: ','
 
   comment
-    Static line-up: name | handle | family | asset suffix | wearer
-    Wearers are a first draft; confirm them before launch.
+    Static line-up: name | handle | family | asset suffix | wearer | gift-ready | price | compare-at
+    Prices are PREVIEW-ONLY placeholders (same mock figures as hoa-reels); real prices come from Shopify.
+    Wearers are a first draft; confirm them before launch. Gift-ready is an unconfirmed
+    merchandising guess (every bottle can be gifted; these three are marked as a starting
+    point for the new Gift category) — confirm the real set with the user before launch.
   endcomment
-  assign lineup = 'Oud Fury|oud-fury|Woody|oud-fury|men;Agha Blue|agha-blue|Fresh|agha-blue|men;Oud of Dark Paradise|oud-of-dark-paradise|Woody|dark-paradise|unisex;Maha|maha|Floral|maha|women;Sea Smoke|sea-smoke|Fresh|sea-smoke|unisex;Tobacco Enigma|tobacco-enigma|Aromatic|tobacco-enigma|men;Shamamah|shamamah|Floral|shamamah|women' | split: ';'
+  assign lineup = 'Oud Fury|oud-fury|Woody|oud-fury|men|true|₹4,500|₹5,200;Agha Blue|agha-blue|Fresh|agha-blue|men|false|₹5,200|;Oud of Dark Paradise|oud-of-dark-paradise|Woody|dark-paradise|unisex|false|₹4,800|;Maha|maha|Floral|maha|women|true|₹4,600|₹5,400;Sea Smoke|sea-smoke|Fresh|sea-smoke|unisex|true|₹4,900|;Tobacco Enigma|tobacco-enigma|Aromatic|tobacco-enigma|men|false|₹5,400|;Shamamah|shamamah|Floral|shamamah|women|false|₹4,700|' | split: ';'
   assign interlude_after = 3
 -%}
 
@@ -66,6 +69,13 @@
           {%- assign fl = f | strip -%}
           <button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="{{ fl | handleize }}">{{ fl }}</button>
         {%- endfor -%}
+      </div>
+
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--gift" role="group" aria-label="Shop by occasion">
+        <button type="button" class="hoa-ftag hoa-ftag--gift" aria-pressed="false" data-hoa-gift>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6.5h12v2H2zM3 8.5h10V14H3zM8 6.5V14M8 6.5C6.5 6.5 5.5 5.6 5.5 4.5S6.3 3 7 3.6C7.6 4.1 8 5 8 6.5ZM8 6.5c1.5 0 2.5-.9 2.5-2s-.8-1.5-1.5-.9C8.4 4.1 8 5 8 6.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {{ s.gift_label }}<sup data-hoa-count="gift"></sup>
+        </button>
       </div>
 
       <div class="hoa-shop-bar__end">
@@ -123,33 +133,67 @@
             else
               assign price = product.price | money
             endif
+            assign on_sale = false
+            if product.compare_at_price > product.price and product.price_varies == false
+              assign on_sale = true
+            endif
             assign mood = product.media[1].preview_image
-            assign num = forloop.index | prepend: '0' | slice: -2, 2
+            assign is_gift = false
+            if product.metafields.custom.gift.value
+              assign is_gift = true
+            endif
+            for t in product.tags
+              if t contains 'gift' or t contains 'Gift'
+                assign is_gift = true
+              endif
+            endfor
+            assign about = product.description | strip_html | strip_newlines | truncate: 110
+            if about == blank
+              assign fam_lc = fam | downcase
+              assign article = 'A'
+              assign fam_initial = fam_lc | slice: 0
+              if 'aeiou' contains fam_initial
+                assign article = 'An'
+              endif
+              assign about = article | append: ' ' | append: fam_lc | append: ' Eau de Parfum from House of Agha.'
+            endif
           -%}
-          <article class="hoa-pc" data-hoa-item data-for="{{ wearer }}" data-family="{{ fam | handleize }}" data-name="{{ product.title | escape }}" data-price="{{ product.price }}" data-index="{{ forloop.index0 }}">
-            <a class="hoa-pc__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product">
-                {%- if product.featured_media -%}
-                  {{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 1000px) 30vw, 50vw', loading: 'lazy', alt: '' }}
+          <article class="hoa-pc" data-hoa-item data-for="{{ wearer }}" data-family="{{ fam | handleize }}" data-gift="{{ is_gift }}" data-name="{{ product.title | escape }}" data-price="{{ product.price }}" data-price-text="{{ price | escape }}"{% if on_sale %} data-compare-text="{{ product.compare_at_price | money | escape }}"{% endif %} data-image="{{ product.featured_media.preview_image | image_url: width: 240 }}" data-index="{{ forloop.index0 }}">
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product">
+                  {%- if product.featured_media -%}
+                    {{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 1000px) 30vw, 50vw', loading: 'lazy', alt: '' }}
+                  {%- endif -%}
+                </span>
+                {%- if mood -%}
+                  <span class="hoa-pc__img hoa-pc__img--mood">{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</span>
                 {%- endif -%}
-              </span>
-              {%- if mood -%}
-                <span class="hoa-pc__img hoa-pc__img--mood">{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</span>
-              {%- endif -%}
-              <span class="hoa-pc__num">{{ num }}</span>
-            </a>
+              </a>
+              <p class="hoa-pc__tag{% if on_sale and product.available %} hoa-pc__tag--sale{% endif %}">
+                {%- if product.available -%}
+                  {{ price }}{% if on_sale %} <s>{{ product.compare_at_price | money }}</s>{% endif %}
+                {%- else -%}
+                  Sold out
+                {%- endif -%}
+              </p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ product.title | escape }} to your wishlist" data-hoa-like data-key="{{ product.handle }}">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
-              <h3 class="hoa-pc__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
-              <p class="hoa-pc__meta"><span>{{ fam }}</span><span>{{ wearer | capitalize }}</span></p>
-              <p class="hoa-pc__price">{% if product.available %}{{ price }}{% else %}Sold out{% endif %}</p>
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">{{ fam }}</span><span class="hoa-pc__chip">{{ wearer | capitalize }}</span></p>
+              <h3 class="hoa-pc__name"><a href="{{ product.url }}">{{ product.title }}</a>{%- if is_gift -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
+              <p class="hoa-pc__price">{% if product.available %}{{ price }}{% if on_sale %} <s>{{ product.compare_at_price | money }}</s>{% endif %}{% else %}Sold out{% endif %}</p>
+              {%- if about != blank -%}<p class="hoa-pc__about">{{ about }}</p>{%- endif -%}
               <div class="hoa-pc__action">
-                {%- if product.has_only_default_variant and variant.available -%}
+                {%- if variant.available -%}
                   {%- form 'product', product -%}
                     <input type="hidden" name="id" value="{{ variant.id }}">
-                    <button type="submit" name="add" class="hoa-pc__btn">Add to bag</button>
+                    <button type="submit" name="add" class="hoa-pc__cta" aria-label="Add {{ product.title | escape }} to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
                   {%- endform -%}
                 {%- else -%}
-                  <a class="hoa-pc__btn" href="{{ product.url }}">View</a>
+                  <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
                 {%- endif -%}
               </div>
             </div>
@@ -162,25 +206,37 @@
             assign f = row | split: '|'
             assign p_asset = 'hoa-product-' | append: f[3]
             assign m_asset = 'hoa-' | append: f[3] | append: '-portrait'
-            assign num = forloop.index | prepend: '0' | slice: -2, 2
+            assign fam_lc = f[2] | downcase
+            assign article = 'A'
+            assign fam_initial = fam_lc | slice: 0
+            if 'aeiou' contains fam_initial
+              assign article = 'An'
+            endif
+            assign about = article | append: ' ' | append: fam_lc | append: ' Eau de Parfum from House of Agha.'
           -%}
-          <article class="hoa-pc" data-hoa-item data-for="{{ f[4] }}" data-family="{{ f[2] | handleize }}" data-name="{{ f[0] }}" data-index="{{ forloop.index0 }}"
-                   data-product-id="{{ f[1] }}" data-title="{{ f[0] | upcase }}" data-image="{{ p_asset | append: '-sm.webp' | asset_url }}" data-price="">
-            <a class="hoa-pc__media" href="/products/{{ f[1] }}" tabindex="-1" aria-hidden="true">
-              <span class="hoa-pc__img hoa-pc__img--product">
-                {%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
-              </span>
-              <span class="hoa-pc__img hoa-pc__img--mood">
-                {%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
-              </span>
-              <span class="hoa-pc__num">{{ num }}</span>
-            </a>
+          <article class="hoa-pc" data-hoa-item data-for="{{ f[4] }}" data-family="{{ f[2] | handleize }}" data-gift="{{ f[5] }}" data-name="{{ f[0] }}" data-index="{{ forloop.index0 }}"
+                   data-product-id="{{ f[1] }}" data-title="{{ f[0] | upcase }}" data-image="{{ p_asset | append: '-sm.webp' | asset_url }}" data-price="" data-price-text="{{ f[6] }}"{% if f[7] != blank %} data-compare-text="{{ f[7] }}"{% endif %}>
+            <div class="hoa-pc__visual">
+              <a class="hoa-pc__media" href="/products/{{ f[1] }}" tabindex="-1" aria-hidden="true">
+                <span class="hoa-pc__img hoa-pc__img--product">
+                  {%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
+                </span>
+                <span class="hoa-pc__img hoa-pc__img--mood">
+                  {%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
+                </span>
+              </a>
+              <p class="hoa-pc__tag{% if f[7] != blank %} hoa-pc__tag--sale{% endif %}">{{ f[6] }}{% if f[7] != blank %} <s>{{ f[7] }}</s>{% endif %}</p>
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ f[0] }} to your wishlist" data-hoa-like data-key="{{ f[1] }}">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
             <div class="hoa-pc__info">
-              <h3 class="hoa-pc__name"><a href="/products/{{ f[1] }}">{{ f[0] }}</a></h3>
-              <p class="hoa-pc__meta"><span>{{ f[2] }}</span><span>{{ f[4] | capitalize }}</span></p>
-              <p class="hoa-pc__price">Eau de Parfum</p>
+              <p class="hoa-pc__meta"><span class="hoa-pc__chip">{{ f[2] }}</span><span class="hoa-pc__chip">{{ f[4] | capitalize }}</span></p>
+              <h3 class="hoa-pc__name"><a href="/products/{{ f[1] }}">{{ f[0] }}</a>{%- if f[5] == 'true' -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
+              <p class="hoa-pc__price">{{ f[6] }}{% if f[7] != blank %} <s>{{ f[7] }}</s>{% endif %}</p>
+              <p class="hoa-pc__about">{{ about }}</p>
               <div class="hoa-pc__action">
-                <a class="hoa-pc__btn" href="/products/{{ f[1] }}">View</a>
+                <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add {{ f[0] }} to bag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add</span></button>
               </div>
             </div>
           </article>
@@ -192,7 +248,7 @@
     <div class="hoa-shop-empty" data-hoa-empty hidden>
       <p class="hoa-shop-empty__title">{{ s.empty_title }}</p>
       <p class="hoa-shop-empty__text">{{ s.empty_text }}</p>
-      <button type="button" class="hoa-pc__btn hoa-pc__btn--solid" data-hoa-reset>Show all fragrances</button>
+      <button type="button" class="hoa-btn" data-hoa-reset><span>Show all fragrances</span>{% render 'hoa-btn-icon' %}</button>
     </div>
   </div>
 </section>
@@ -208,6 +264,7 @@
     { "type": "text", "id": "women_label", "label": "Women tab", "default": "Women" },
     { "type": "text", "id": "unisex_label", "label": "Unisex tab", "default": "Unisex" },
     { "type": "text", "id": "families", "label": "Scent families (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
+    { "type": "text", "id": "gift_label", "label": "Gift category label", "info": "Matched against the custom.gift metafield or a tag containing \"gift\".", "default": "Gift" },
     { "type": "header", "content": "Campaign photo in the grid" },
     { "type": "checkbox", "id": "show_interlude", "label": "Show photo after the third product", "default": true },
     { "type": "image_picker", "id": "interlude_image", "label": "Image" },

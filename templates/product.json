@@ -46,7 +46,10 @@
         "caption_left": "Extrait de parfum",
         "caption_right": "35% oil concentration",
         "show_dynamic_checkout": true,
-        "show_delivery": true
+        "show_delivery": true,
+        "free_shipping_text": "Complimentary shipping on every flacon.",
+        "authenticity_title": "Numbered and batch-coded",
+        "authenticity_text": "Every flacon is laser-engraved with its batch code and compounding date."
       }
     },
     "story": {
@@ -242,6 +245,10 @@
     "the_fragrance": {
       "type": "agha-pdp-the-fragrance",
       "settings": {}
+    },
+    "recently_viewed": {
+      "type": "agha-pdp-recently-viewed",
+      "settings": {}
     }
   },
   "order": [
@@ -256,6 +263,7 @@
     "reviews",
     "faq",
     "related",
+    "recently_viewed",
     "finale"
   ]
 }
