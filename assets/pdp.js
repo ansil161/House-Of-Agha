@@ -427,32 +427,18 @@
   }
 
   /* --------------------------------------------------------------- Wishlist */
-  // Saved per browser; swap for an app/customer-account integration if one is added
-  function initWishlist(main) {
+  // State, login and storage live in assets/agha-wishlist.js. Here the heart only follows the
+  // selected size, so a saved product remembers which variant was chosen.
+  function initWishlist(main, variantState) {
     const btn = $('[data-pdp-wishlist]', main);
     if (!btn) return;
-    const key = 'agha-wishlist';
-    const id = main.dataset.productHandle || main.dataset.productTitle;
-    const read = () => {
-      try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; }
-    };
     const sync = () => {
-      const saved = read().includes(id);
-      btn.setAttribute('aria-pressed', String(saved));
-      btn.setAttribute('aria-label', saved ? 'Remove from wishlist' : 'Save to wishlist');
+      const variant = variantState && variantState.variant;
+      if (!variant) return;
+      btn.dataset.wishlistVariant = variant.id;
+      if (window.AghaWishlist && window.AghaWishlist.has(btn.dataset.wishlistHandle)) window.AghaWishlist.updateVariant(btn.dataset.wishlistHandle, variant.id);
     };
-    listen(btn, 'click', () => {
-      const list = read();
-      const saved = list.includes(id);
-      const next = saved ? list.filter((x) => x !== id) : [...list, id];
-      try { localStorage.setItem(key, JSON.stringify(next)); } catch (e) { /* storage unavailable */ }
-      sync();
-      store()?.showToast?.(saved ? 'Removed from your wishlist.' : 'Saved to your wishlist.');
-      if (!saved && window.gsap && !reduceMotion.matches) {
-        window.gsap.fromTo($('svg', btn), { scale: 0.7 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
-      }
-    });
-    sync();
+    $$('[data-pdp-option]', main).forEach((fieldset) => listen(fieldset, 'change', () => setTimeout(sync, 0)));
   }
 
   /* -------------------------------------------------------- Delivery window */
@@ -906,14 +892,16 @@
     const limit = Number(section.dataset.limit) || 4;
     const wanted = handles.filter((h) => h && h !== current).slice(0, limit);
     const esc = (str) => String(str ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const card = (p, price) => `<a class="pdp-rel" href="${esc(p.url)}"><div class="pdp-rel__frame">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" width="400" height="400">` : ''}</div><div class="pdp-rel__body"><h3 class="pdp-rel__title">${esc(p.title)}</h3><span class="pdp-rel__price">${esc(price)}</span></div></a>`;
+    const handleOf = (url) => ((String(url).match(/\/products\/([^/?#]+)/) || [])[1] || '');
+    const heart = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+    const card = (p, price) => `<div class="pdp-rel-wrap"><a class="pdp-rel" href="${esc(p.url)}"><div class="pdp-rel__frame">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" width="400" height="400">` : ''}</div><div class="pdp-rel__body"><h3 class="pdp-rel__title">${esc(p.title)}</h3><span class="pdp-rel__price">${esc(price)}</span></div></a><button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="${esc(handleOf(p.url))}" data-wishlist-title="${esc(p.title)}" aria-pressed="false" aria-label="Save to wishlist">${heart}</button></div>`;
     // Mock mode only: no real history yet, so show the demo cards embedded by the section
     const showDemo = () => {
       const demo = readJSON($('[data-pdp-recent-mock]', section));
       if (!Array.isArray(demo) || !demo.length) return;
       grid.innerHTML = demo.slice(0, limit).map((p) => card(p, p.price)).join('');
       section.hidden = false;
-      revealNow($$('.pdp-rel', grid));
+      revealNow($$('.pdp-rel-wrap', grid));
     };
     if (!wanted.length) { showDemo(); return; }
     const results = await Promise.all(wanted.map((h) => fetch(`/products/${encodeURIComponent(h)}.js`).then((r) => (r.ok ? r.json() : null)).catch(() => null)));
@@ -923,7 +911,7 @@
     grid.innerHTML = items.map((p) => card({ url: p.url, title: p.title, image: p.featured_image }, formatMoney(p.price, format))).join('');
     section.hidden = false;
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    revealNow($$('.pdp-rel', grid));
+    revealNow($$('.pdp-rel-wrap', grid));
   }
 
   /* ------------------------------------------------------------------- Boot */
@@ -939,7 +927,7 @@
       initAddToBag(main, variantState);
       initDock(main);
       initDelivery(main);
-      initWishlist(main);
+      initWishlist(main, variantState);
       initZoom(main);
     }
     initAccordions(document);

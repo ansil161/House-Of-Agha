@@ -1,0 +1,269 @@
+/* ==========================================================================
+   HOUSE OF AGHA · WISHLIST PAGE (templates/page.wishlist.json)
+   Same language as the shop and account pages: warm paper, hairlines, 2px radius,
+   tabular figures, pill buttons from hoa-home.css. Motion is one quiet entrance per
+   card and a hairline heart that draws once in the empty state; both stop under
+   prefers-reduced-motion.
+   ========================================================================== */
+
+.hoa-wishlist-page { background: var(--hoa-paper); color: var(--hoa-ink); }
+.hoa-wishlist-page main { overflow-x: clip; }
+
+.hoa-wl {
+  padding: calc(var(--hoa-header-h) + clamp(28px, 5vw, 64px)) 0 clamp(72px, 9vw, 140px);
+  min-height: 70vh;
+  font-family: var(--hoa-sans);
+}
+
+/* ---------- Head ---------- */
+.hoa-wl__head { margin-bottom: clamp(36px, 5vw, 64px); }
+.hoa-wl__crumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-wl__crumb a { color: inherit; text-decoration: none; transition: color 0.3s var(--hoa-ease); }
+.hoa-wl__crumb a:hover { color: var(--hoa-ink); }
+.hoa-wl__title {
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+.hoa-wl__title em {
+  font-family: var(--hoa-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.hoa-wl__count {
+  margin-left: 0.25em;
+  font-size: 0.28em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--hoa-mute);
+  vertical-align: super;
+  font-variant-numeric: tabular-nums;
+}
+.hoa-wl__lede {
+  margin-top: 20px;
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.1vw, 1.1rem);
+  line-height: 1.65;
+  color: var(--hoa-ink-2);
+}
+
+/* ---------- Grid ---------- */
+.hoa-wl__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 44px) clamp(14px, 1.6vw, 24px);
+}
+.hoa-wl__grid[hidden],
+.hoa-wl__state[hidden] { display: none; }
+
+@media (max-width: 1100px) { .hoa-wl__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 780px) { .hoa-wl__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .hoa-wl__grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Card ---------- */
+.hoa-wl-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  animation: hoa-wl-in 0.8s var(--hoa-ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes hoa-wl-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hoa-wl-card__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--hoa-radius);
+  background: var(--hoa-paper-2);
+}
+.hoa-wl-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.1s var(--hoa-ease);
+}
+.hoa-wl-card__media:hover img { transform: scale(1.04); }
+.hoa-wl-card__media--gone { display: grid; place-items: center; color: var(--hoa-mute); }
+.hoa-wl-card__media--gone svg { width: 34px; height: 34px; }
+.hoa-wl-card__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--hoa-ink);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.hoa-wl-card__body { display: flex; flex-direction: column; flex: 1; padding-top: 16px; }
+.hoa-wl-card__meta {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-wl-card__name {
+  margin-top: 6px;
+  font-family: var(--hoa-serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.hoa-wl-card__name a { color: inherit; text-decoration: none; }
+.hoa-wl-card__about {
+  margin-top: 8px;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--hoa-ink-2);
+}
+.hoa-wl-card__price {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.hoa-wl-card__price s { margin-left: 6px; font-weight: 400; font-size: 0.9em; color: var(--hoa-mute); }
+.hoa-wl-card__stock {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--hoa-mute);
+}
+.hoa-wl-card__stock[data-state='in'] { color: #2F6B47; }
+
+.hoa-wl-card__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+.hoa-wl-card__add {
+  height: 46px;
+  border: 1px solid var(--hoa-ink);
+  border-radius: 999px;
+  background: var(--hoa-ink);
+  color: var(--hoa-paper);
+  font: 500 0.84rem var(--hoa-sans);
+  cursor: pointer;
+  transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), opacity 0.3s;
+}
+.hoa-wl-card__add:hover:not(:disabled) { background: transparent; color: var(--hoa-ink); }
+.hoa-wl-card__add:disabled { opacity: 0.45; cursor: not-allowed; }
+.hoa-wl-card__add[aria-busy='true'] { cursor: progress; opacity: 0.7; }
+.hoa-wl-card__view {
+  justify-self: start;
+  font-size: 0.8rem;
+  color: var(--hoa-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--hoa-line);
+  transition: text-decoration-color 0.3s;
+}
+.hoa-wl-card__view:hover { text-decoration-color: var(--hoa-ink); }
+.hoa-wl-card__remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 400 0.78rem var(--hoa-sans);
+  color: var(--hoa-mute);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.hoa-wl-card__remove:hover { color: var(--hoa-ink); }
+.hoa-wl-card__remove svg { width: 15px; height: 15px; }
+.hoa-wl-card__remove svg path { fill: currentColor; stroke: currentColor; }
+.hoa-wl-card__remove[aria-busy='true'] { opacity: 0.5; cursor: progress; pointer-events: none; }
+.hoa-wl-card__add:focus-visible,
+.hoa-wl-card__view:focus-visible,
+.hoa-wl-card__remove:focus-visible { outline: 2px solid var(--hoa-ink); outline-offset: 3px; }
+
+/* ---------- Skeleton ---------- */
+.hoa-wl-card--skeleton { animation: none; gap: 12px; }
+.hoa-wl-card--skeleton .hoa-wl-card__media,
+.hoa-wl-card__line {
+  display: block;
+  background: linear-gradient(90deg, var(--hoa-paper-2) 25%, var(--hoa-stone) 50%, var(--hoa-paper-2) 75%);
+  background-size: 200% 100%;
+  animation: hoa-wl-shimmer 1.6s linear infinite;
+}
+.hoa-wl-card__line { height: 12px; border-radius: 2px; }
+.hoa-wl-card__line--short { width: 55%; }
+@keyframes hoa-wl-shimmer { to { background-position: -200% 0; } }
+
+/* ---------- Empty · login · error ---------- */
+.hoa-wl__state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 560px;
+  padding: clamp(24px, 4vw, 56px) 0;
+  animation: hoa-wl-in 0.9s var(--hoa-ease) both;
+}
+.hoa-wl__mark {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin-bottom: 28px;
+  border: 1px solid var(--hoa-line);
+  border-radius: 50%;
+  color: var(--hoa-brass);
+}
+.hoa-wl__mark svg { width: 34px; height: 34px; }
+.hoa-wl__mark--draw svg path {
+  stroke-dasharray: 80;
+  stroke-dashoffset: 80;
+  animation: hoa-wl-draw 1.6s var(--hoa-ease-in-out) 0.2s forwards;
+}
+@keyframes hoa-wl-draw { to { stroke-dashoffset: 0; } }
+.hoa-wl__state-title {
+  font-family: var(--hoa-serif);
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.hoa-wl__state-text {
+  margin: 16px 0 32px;
+  max-width: 42ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--hoa-ink-2);
+}
+.hoa-wl__state .hoa-btn:focus-visible { outline: 2px solid var(--hoa-ink); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-wl-card,
+  .hoa-wl__state { animation: none; }
+  .hoa-wl__mark--draw svg path { animation: none; stroke-dashoffset: 0; }
+  .hoa-wl-card--skeleton .hoa-wl-card__media,
+  .hoa-wl-card__line { animation: none; }
+  .hoa-wl-card__media img { transition: none; }
+}

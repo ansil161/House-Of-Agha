@@ -3019,3 +3019,82 @@ html:has(.pdp) body {
 .pdp-rform__done p { margin: 0; color: var(--pdp-ink-soft); }
 .pdp-rform__done:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) { .pdp-rform.is-open { animation: none; } }
+
+/* ---------- Wishlist hearts (state and login handled by assets/agha-wishlist.js) ---------- */
+.pdp-icon-btn[data-wishlist-toggle][aria-busy='true'],
+.pdp-like[aria-busy='true'],
+.hoa-pc__like[aria-busy='true'] {
+  opacity: 0.55;
+  cursor: progress;
+  pointer-events: none;
+}
+
+.pdp-icon-btn[data-wishlist-toggle].is-pop svg,
+.pdp-like.is-pop svg {
+  animation: pdp-heart-pop 0.5s var(--ease-editorial);
+}
+
+.hoa-pc__like.is-pop svg {
+  animation: pdp-heart-pop 0.5s var(--ease-editorial);
+}
+
+@keyframes pdp-heart-pop {
+  0% { transform: scale(0.7); }
+  55% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+.pdp-rel-wrap {
+  position: relative;
+}
+
+.pdp-like {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 1px 6px rgba(20, 18, 16, 0.1);
+  color: var(--pdp-ink);
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-editorial), background-color 0.3s;
+}
+
+.pdp-like svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pdp-like svg path {
+  transition: fill 0.25s, stroke 0.25s;
+}
+
+.pdp-like:hover {
+  background: var(--pdp-soft);
+  transform: scale(1.08);
+}
+
+.pdp-like[aria-pressed='true'] svg path {
+  fill: var(--pdp-ink);
+  stroke: var(--pdp-ink);
+}
+
+.pdp-recent .pdp-like {
+  top: 16px;
+  right: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdp-icon-btn.is-pop svg,
+  .pdp-like.is-pop svg,
+  .hoa-pc__like.is-pop svg {
+    animation: none;
+  }
+}

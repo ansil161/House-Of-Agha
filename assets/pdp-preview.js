@@ -159,7 +159,7 @@
                 <span class="pdp-add__price" data-pdp-add-price>${money(current.price == null ? null : current.price / 100)}</span>
                 <span class="pdp-add__progress" aria-hidden="true"></span>
               </button>
-              <button type="button" class="pdp-icon-btn" data-pdp-wishlist aria-pressed="false" aria-label="Save to wishlist">${icon('heart')}</button>
+              <button type="button" class="pdp-icon-btn" data-pdp-wishlist data-wishlist-toggle data-wishlist-handle="${esc(handle)}" aria-pressed="false" aria-label="Save to wishlist">${icon('heart')}</button>
             </div>
             <button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block" data-pdp-buy-now>Buy it now</button>
             <p class="pdp-stock" data-pdp-stock data-state="in" role="status">In stock · ready to dispatch</p>

@@ -1,0 +1,24 @@
+{% comment %}
+  AGHA WISHLIST — page-level configuration for assets/agha-wishlist.js
+  ---------------------------------------------------------------------------
+  Login state comes straight from Shopify's own `customer` object (classic customer accounts):
+  it is nil for guests and set once someone has signed in through Shopify's login page. Only the
+  customer's numeric id is exposed to the script (no name, email or other personal data).
+
+  Storage (theme setting "Wishlist storage", see config/settings_schema.json):
+    proxy  ... a Shopify App Proxy endpoint (settings.wishlist_proxy_path) backed by an app that keeps
+               the list on the customer record. This is the only mode that persists across devices.
+    device ... development stand-in: the list is kept in this browser, per customer id.
+{% endcomment %}
+<script>
+  window.AghaWishlistConfig = {
+    loggedIn: {% if customer %}true{% else %}false{% endif %},
+    customerId: {% if customer %}{{ customer.id | json }}{% else %}null{% endif %},
+    loginUrl: {{ routes.account_login_url | json }},
+    wishlistUrl: {{ routes.root_url | append: 'pages/wishlist' | json }},
+    root: {{ routes.root_url | json }},
+    storage: {{ settings.wishlist_storage | default: 'proxy' | json }},
+    proxyPath: {{ settings.wishlist_proxy_path | default: '/apps/wishlist' | json }},
+    moneyFormat: {{ shop.money_format | strip_html | json }}
+  };
+</script>

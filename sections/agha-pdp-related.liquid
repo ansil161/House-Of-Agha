@@ -17,7 +17,8 @@
       </div>
       <div class="pdp-related__grid">
         {%- for item in recommendations.products -%}
-          <a class="pdp-rel" href="{{ item.url }}" data-pdp-reveal>
+          <div class="pdp-rel-wrap" data-pdp-reveal>
+          <a class="pdp-rel" href="{{ item.url }}">
             <div class="pdp-rel__frame">
               {%- if item.featured_image -%}
                 {%- assign item_alt = item.featured_image.alt | default: item.title -%}
@@ -31,6 +32,8 @@
               <span class="pdp-rel__price">{{ item.price | money }}</span>
             </div>
           </a>
+          <button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="{{ item.handle }}" data-wishlist-variant="{{ item.selected_or_first_available_variant.id }}" data-wishlist-title="{{ item.title | escape }}" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
+          </div>
         {%- endfor -%}
       </div>
     </div>
@@ -49,7 +52,8 @@
         {%- for item in pdp.related -%}
           {%- if item.handle != product.handle and shown < section.settings.limit -%}
             {%- assign shown = shown | plus: 1 -%}
-            <a class="pdp-rel" href="{{ routes.root_url | append: 'products/' | append: item.handle }}" data-pdp-reveal>
+            <div class="pdp-rel-wrap" data-pdp-reveal>
+            <a class="pdp-rel" href="{{ routes.root_url | append: 'products/' | append: item.handle }}">
               <div class="pdp-rel__frame"><img src="{{ item.image | asset_url }}" alt="{{ item.title | escape }}" loading="lazy" width="800" height="800"></div>
               <div class="pdp-rel__body">
                 {%- if item.family != blank -%}<span class="pdp-rel__meta">{{ item.family }}</span>{%- endif -%}
@@ -57,6 +61,8 @@
                 <span class="pdp-rel__price">{{ item.price }}</span>
               </div>
             </a>
+            <button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="{{ item.handle }}" data-wishlist-title="{{ item.title | escape }}" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
+            </div>
           {%- endif -%}
         {%- endfor -%}
       </div>

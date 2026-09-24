@@ -177,7 +177,7 @@
                   Sold out
                 {%- endif -%}
               </p>
-              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ product.title | escape }} to your wishlist" data-hoa-like data-key="{{ product.handle }}">
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ product.title | escape }} to your wishlist" data-hoa-like data-key="{{ product.handle }}" data-wishlist-toggle data-wishlist-handle="{{ product.handle }}" data-wishlist-variant="{{ product.selected_or_first_available_variant.id }}" data-wishlist-title="{{ product.title | escape }}">
                 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
               </button>
             </div>
@@ -226,7 +226,7 @@
                 </span>
               </a>
               <p class="hoa-pc__tag{% if f[7] != blank %} hoa-pc__tag--sale{% endif %}">{{ f[6] }}{% if f[7] != blank %} <s>{{ f[7] }}</s>{% endif %}</p>
-              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ f[0] }} to your wishlist" data-hoa-like data-key="{{ f[1] }}">
+              <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ f[0] }} to your wishlist" data-hoa-like data-key="{{ f[1] }}" data-wishlist-toggle data-wishlist-handle="{{ f[1] }}" data-wishlist-title="{{ f[0] | escape }}">
                 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
               </button>
             </div>

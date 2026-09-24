@@ -22,5 +22,38 @@
         "info": "Development only. When ON, product-page fields that are empty in Shopify are filled from snippets/agha-pdp-mock-data.liquid. Real Shopify data always wins. Turn OFF before going live; the page then shows real data only and hides empty fields."
       }
     ]
+  },
+  {
+    "name": "Wishlist",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Customer wishlist"
+      },
+      {
+        "type": "select",
+        "id": "wishlist_storage",
+        "label": "Wishlist storage",
+        "default": "proxy",
+        "options": [
+          {
+            "value": "proxy",
+            "label": "App proxy (persists across devices)"
+          },
+          {
+            "value": "device",
+            "label": "This browser only (development)"
+          }
+        ],
+        "info": "Shopify has no built-in wishlist storage for classic customer accounts. \"App proxy\" talks to the endpoint below (a wishlist app or a small custom app). \"This browser only\" is a development stand-in and does NOT sync across devices."
+      },
+      {
+        "type": "text",
+        "id": "wishlist_proxy_path",
+        "label": "App proxy path",
+        "default": "/apps/wishlist",
+        "info": "The storefront path of your app proxy, e.g. /apps/wishlist. See the wishlist contract in assets/agha-wishlist.js."
+      }
+    ]
   }
 ]

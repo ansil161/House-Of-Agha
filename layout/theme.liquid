@@ -18,6 +18,8 @@
   {{ 'hoa-coupon.css' | asset_url | stylesheet_tag }}
 
   <!-- JS Assets -->
+  {% render 'agha-wishlist-config' %}
+  <script src="{{ 'agha-wishlist.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
   <script src="{{ 'hoa-coupon.js' | asset_url }}" defer></script>
@@ -36,12 +38,16 @@
     {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-shop.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- if template.name == 'page' and template.suffix == 'wishlist' -%}
+    {{ 'agha-wishlist.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'agha-wishlist-page.js' | asset_url }}" defer></script>
+  {%- endif -%}
   {%- if template.directory == 'customers' -%}
     {{ 'hoa-account.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-account.js' | asset_url }}" defer></script>
   {%- endif -%}
 </head>
-<body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
+<body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
 
   <!-- Navigation Header -->
   {% render 'header' %}

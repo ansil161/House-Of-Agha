@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "agha-wishlist",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -19,16 +19,11 @@
   var root = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var VIEW_KEY = 'hoa-shop-view';
-  var LIKES_KEY = 'hoa-shop-likes';
   var cleanups = [];
 
   function readView() { try { return localStorage.getItem(VIEW_KEY); } catch (e) { return null; } }
   function saveView(v) { try { localStorage.setItem(VIEW_KEY, v); } catch (e) {} }
 
-  function readLikes() {
-    try { return JSON.parse(localStorage.getItem(LIKES_KEY)) || []; } catch (e) { return []; }
-  }
-  function saveLikes(list) { try { localStorage.setItem(LIKES_KEY, JSON.stringify(list)); } catch (e) {} }
 
   function initCatalog() {
     var sec = document.querySelector('[data-hoa-shop]');
@@ -172,32 +167,7 @@
     });
   }
 
-  function initLikes() {
-    var buttons = document.querySelectorAll('.hoa-shop-page [data-hoa-like]');
-    if (!buttons.length) return;
-    var likes = readLikes();
-
-    buttons.forEach(function (b) {
-      b.setAttribute('aria-pressed', String(likes.indexOf(b.dataset.key) > -1));
-    });
-
-    var onLike = function (e) {
-      e.preventDefault();
-      var btn = e.currentTarget;
-      var key = btn.dataset.key;
-      var current = readLikes();
-      var i = current.indexOf(key);
-      var liked;
-      if (i > -1) { current.splice(i, 1); liked = false; } else { current.push(key); liked = true; }
-      saveLikes(current);
-      document.querySelectorAll('.hoa-shop-page [data-hoa-like][data-key="' + key + '"]').forEach(function (b) {
-        b.setAttribute('aria-pressed', String(liked));
-      });
-    };
-
-    buttons.forEach(function (b) { b.addEventListener('click', onLike); });
-    cleanups.push(function () { buttons.forEach(function (b) { b.removeEventListener('click', onLike); }); });
-  }
+  // Wishlist hearts are handled site-wide by assets/agha-wishlist.js (data-wishlist-toggle).
 
   // Add to bag: post to Shopify's cart when it exists, then show the item in the bag
   // drawer (AghaStore, theme.js) with its price, offer price and quantity controls.
@@ -275,7 +245,7 @@
     cleanups.push(function () { io.disconnect(); });
   }
 
-  function init() { initCatalog(); initLikes(); initAdd(); initReveals(); }
+  function init() { initCatalog(); initAdd(); initReveals(); }
   function destroy() {
     cleanups.forEach(function (fn) { try { fn(); } catch (e) {} });
     cleanups = [];

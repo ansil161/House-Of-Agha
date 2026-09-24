@@ -1,5 +1,6 @@
 {
   "current": {
-    "use_mock_pdp_data": true
+    "use_mock_pdp_data": true,
+    "wishlist_storage": "device"
   }
 }

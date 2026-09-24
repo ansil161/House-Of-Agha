@@ -15,6 +15,7 @@ const arg = (name, dflt) => {
 const MOCK = arg('mock', 'on') === 'on';
 const REAL = Boolean(arg('real', false));
 const OUT = arg('out', '_pdp-test.html');
+const CUSTOMER = arg('customer', 'on') === 'on';
 
 const mf = (value, type = 'single_line_text_field') => ({ value, type });
 const variants = [
@@ -117,7 +118,8 @@ const defaults = (list) => Object.fromEntries((list || []).filter((s) => s.id).m
   page = page.replace('<main id="main-content" data-pdp-preview></main>', () => `<main id="main-content">${main}</main>`);
   // the main section loads pdp.css / pdp.js itself (as on Shopify); drop the preview shell's copies
   page = page.replace(/[ \t]*<script src="\/assets\/pdp\.js" defer><\/script>\r?\n/, '').replace(/[ \t]*<link rel="stylesheet" href="\/assets\/pdp\.css">\r?\n/, '');
-  page = page.replace('<script src="/assets/pdp-preview.js" defer></script>', () => '<script>window.Shopify = { routes: { root: "/" } };</script>');
+  page = page.replace('<script src="/assets/pdp-preview.js" defer></script>', () => `<script>window.Shopify = { routes: { root: "/" } }; window.AghaWishlistConfig = { loggedIn: ${CUSTOMER}, customerId: ${CUSTOMER ? 4242 : 'null'}, loginUrl: '/account-login.html', root: '/', storage: 'device', moneyFormat: '₹{{amount_no_decimals}}' };</script>
+<script src="/assets/agha-wishlist.js" defer></script>`);
   fs.writeFileSync(path.join(THEME, OUT), page);
   console.log(`rendered ${tpl.order.length} sections → ${OUT} (mock ${MOCK ? 'ON' : 'OFF'}${REAL ? ', real data' : ''})`);
 })().catch((e) => { console.error(e); process.exit(1); });
