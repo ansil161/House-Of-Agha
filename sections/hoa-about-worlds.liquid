@@ -27,26 +27,6 @@
         {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
       </div>
 
-      <div class="hoa-ab-prog" data-hoa-ab-progress aria-hidden="true">
-        <span class="hoa-ab-prog__count">
-          <span class="hoa-ab-prog__window"><span class="hoa-ab-prog__roll" data-hoa-ab-roll>
-            {%- for block in section.blocks -%}
-              {%- liquid
-                assign pn = block.settings.number
-                if pn == blank
-                  assign pn = forloop.index
-                  if forloop.index < 10
-                    assign pn = pn | prepend: '0'
-                  endif
-                endif
-              -%}
-              <b>{{ pn }}</b>
-            {%- endfor -%}
-          </span></span>
-          <span class="hoa-ab-prog__of">/ {{ total_label }}</span>
-        </span>
-        <span class="hoa-ab-prog__line"><i data-hoa-ab-bar></i></span>
-      </div>
     </header>
 
     <div class="hoa-ab-worlds__viewport">

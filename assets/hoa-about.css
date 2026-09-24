@@ -194,7 +194,7 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
    03 The seven worlds
    One continuous canvas. Base = the stacked layout (phones, reduced motion, no JS).
    hoa-about.js adds .is-panning (768px+, motion allowed): the section pins and the canvas
-   pans sideways. It adds .is-scrolly on phones: the stack gets a sticky counter.
+   pans sideways. It adds .is-scrolly on phones (the stack).
    Type is set large and tight; colour comes only from the photographs and, very lightly,
    from each world's accent (--tint) behind the section.
    ========================================================================== */
@@ -206,18 +206,6 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 }
 .hoa-ab-worlds__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 48px; flex-wrap: wrap; padding-top: 8px; padding-bottom: clamp(28px, 4vw, 56px); }
 .hoa-ab-worlds__intro { display: grid; gap: 14px; }
-
-/* Progress: rolling counter + hairline. Only meaningful (and shown) when scroll drives the section. */
-.hoa-ab-prog { display: none; align-items: center; gap: 18px; font-family: var(--hoa-sans); color: var(--hoa-ink); }
-.is-panning .hoa-ab-prog, .is-scrolly .hoa-ab-prog { display: flex; }
-.hoa-ab-prog__count { display: inline-flex; align-items: baseline; gap: 8px; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
-.hoa-ab-prog__window { display: inline-block; height: 1.2em; overflow: hidden; line-height: 1.2; }
-.hoa-ab-prog__roll { display: flex; flex-direction: column; will-change: transform; }
-.hoa-ab-prog__roll b { display: block; height: 1.2em; font-weight: 500; }
-.hoa-ab-prog__of { color: var(--hoa-mute); }
-.hoa-ab-prog__line { position: relative; display: block; width: clamp(120px, 16vw, 240px); height: 1px; background: rgba(20, 18, 16, 0.18); }
-.hoa-ab-prog__line i { position: absolute; inset: 0; display: block; background: var(--hoa-ink); transform-origin: 0 50%; transform: scaleX(0); }
-.hoa-ab-prog__line i::after { content: ''; position: absolute; right: -3px; top: -2.5px; width: 6px; height: 6px; border-radius: 50%; background: var(--hoa-ink); }
 
 .hoa-ab-worlds__viewport { position: relative; }
 .hoa-ab-worlds__track { display: grid; gap: clamp(64px, 12vw, 120px); margin: 0; padding: 0 var(--hoa-gutter); list-style: none; }
@@ -250,16 +238,7 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
   .hoa-ab-world--long .hoa-ab-world__name { font-size: clamp(2.4rem, 4.8vw, 4.4rem); }
 }
 
-/* Phones: each world is a screen of its own; the counter sticks under the header */
-.hoa-ab-worlds.is-scrolly .hoa-ab-prog {
-  position: sticky; top: calc(var(--hoa-header-h) + 6px); z-index: 3;
-  width: max-content; margin-inline: var(--hoa-gutter) auto; padding: 8px 14px; border: 1px solid var(--hoa-line); border-radius: 999px;
-  background: rgba(246, 243, 238, 0.92);
-}
-/* display: contents lets the sticky counter use the whole section as its containing block */
-.hoa-ab-worlds.is-scrolly .hoa-ab-worlds__head { display: contents; }
-.hoa-ab-worlds.is-scrolly .hoa-ab-worlds__intro { padding: 8px var(--hoa-gutter) 24px; }
-.hoa-ab-worlds.is-scrolly .hoa-ab-prog__line { width: 70px; }
+/* Phones: each world is a screen of its own */
 @media (max-width: 767px) {
   .hoa-ab-world { min-height: min(88svh, 720px); align-content: center; }
   .hoa-ab-world__media { aspect-ratio: 4 / 5; max-height: 56svh; width: 100%; }
@@ -281,10 +260,6 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 .hoa-ab-worlds.is-panning .hoa-ab-worlds__track {
   position: relative; display: flex; align-items: stretch; width: max-content; height: 100%;
   gap: clamp(56px, 9vw, 150px); padding: 0; will-change: transform;
-}
-/* one hairline runs through every world: the canvas reads as a single sheet */
-.hoa-ab-worlds.is-panning .hoa-ab-worlds__track::before {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(20, 18, 16, 0.14); pointer-events: none;
 }
 .hoa-ab-worlds.is-panning .hoa-ab-world {
   flex: none; display: flex; height: 100%; min-height: 0; gap: clamp(20px, 3vw, 52px);

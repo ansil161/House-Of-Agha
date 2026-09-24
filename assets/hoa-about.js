@@ -65,9 +65,7 @@
       return {
         pin: section.querySelector('[data-hoa-ab-pin]'),
         track: section.querySelector('[data-hoa-ab-track]'),
-        worlds: gsap.utils.toArray('[data-hoa-ab-world]', section),
-        roll: section.querySelector('[data-hoa-ab-roll]'),
-        bar: section.querySelector('[data-hoa-ab-bar]')
+        worlds: gsap.utils.toArray('[data-hoa-ab-world]', section)
       };
     }
 
@@ -90,7 +88,6 @@
       var n = p.worlds.length;
       var centers = [];
       var active = -1;
-      var setBar = p.bar ? gsap.quickSetter(p.bar, 'scaleX') : function () {};
       section.classList.add('is-panning');
 
       // Pad the canvas so the first and last world can sit exactly at the centre.
@@ -110,7 +107,6 @@
         p.worlds.forEach(function (w, k) { w.classList.toggle('is-active', k === i); });
         var tint = p.worlds[i].getAttribute('data-tint');
         if (tint) p.pin.style.setProperty('--tint', tint);
-        if (p.roll) gsap.to(p.roll, { yPercent: -(100 / n) * i, duration: 0.7, ease: 'power3.out', overwrite: true });
       };
 
       var sync = function () {
@@ -137,8 +133,7 @@
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onRefresh: function () { sync(); },
-          onUpdate: function (self) { setBar(self.progress); }
+          onRefresh: function () { sync(); }
         }
       });
 
@@ -174,7 +169,6 @@
       var p = parts(section);
       if (!p.worlds.length) return;
       var n = p.worlds.length;
-      var setBar = p.bar ? gsap.quickSetter(p.bar, 'scaleX') : function () {};
       section.classList.add('is-scrolly');
 
       p.worlds.forEach(function (w, i) {
@@ -193,8 +187,6 @@
           end: 'bottom 55%',
           onToggle: function (self) {
             if (!self.isActive) return;
-            if (p.roll) gsap.to(p.roll, { yPercent: -(100 / n) * i, duration: 0.6, ease: 'power3.out', overwrite: true });
-            setBar(n > 1 ? i / (n - 1) : 1);
             var tint = w.getAttribute('data-tint');
             if (tint) p.pin.style.setProperty('--tint', tint);
           }

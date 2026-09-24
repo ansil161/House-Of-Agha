@@ -49,19 +49,6 @@
       <a href="{{ s.cta_url | default: '#fragrances' }}" class="hoa-btn hoa-btn--glass hoa-hero__cta" data-hoa-hero-fade>
         <span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}
       </a>
-      {%- if section.blocks.size > 1 -%}
-        <ol class="hoa-hero__index" data-hoa-hero-fade>
-          {%- for block in section.blocks -%}
-            <li>
-              <button type="button" class="hoa-hero__dot{% if forloop.first %} is-active{% endif %}" data-hoa-dot="{{ forloop.index0 }}" aria-label="Show {{ block.settings.name }}">
-                {{ forloop.index | prepend: '0' | slice: -2, 2 }}
-                <span class="hoa-hero__dot-name">{{ block.settings.name }}</span>
-                <span class="hoa-hero__dot-bar"><i></i></span>
-              </button>
-            </li>
-          {%- endfor -%}
-        </ol>
-      {%- endif -%}
     </div>
   </div>
 </section>
