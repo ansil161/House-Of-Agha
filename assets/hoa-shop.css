@@ -429,7 +429,8 @@
   .hoa-shop-bar__inner { flex-wrap: wrap; row-gap: 0; }
   .hoa-shop-bar__group--for { min-height: 52px; }
   .hoa-shop-bar__group--family { order: 3; flex-basis: 100%; padding: 10px 0; border-left: 0; border-top: 1px solid var(--hoa-line); }
-  .hoa-shop-bar__group--gift { order: 3; padding: 10px clamp(16px, 2.4vw, 40px); border-left: 1px solid var(--hoa-line); border-top: 1px solid var(--hoa-line); }
+  /* Gift wraps onto its own row here; a left/top rule turned it into a stray boxed stub */
+  .hoa-shop-bar__group--gift { order: 3; flex-basis: 100%; padding: 0 0 12px; border: 0; }
   .hoa-shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hoa-shop-grid[data-view='list'] .hoa-pc__info { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; grid-template-areas: 'name meta action'; }
   .hoa-shop-grid[data-view='list'] .hoa-pc__price { display: none; }
@@ -437,14 +438,15 @@
 
 /* ---------- Mobile ---------- */
 @media (max-width: 767px) {
-  .hoa-shop-head__grid,
+  /* head grid stays 2-col on desktop; on phones the copy dropped onto the title, so stack it */
+  .hoa-shop-head__grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
   .hoa-shop-head__title { font-size: clamp(2.5rem, 12vw, 3.4rem); }
 
   /* A tall toolbar would eat the screen; on phones it scrolls with the page */
   .hoa-shop-bar { position: static; }
   .hoa-shop-bar__group--for { flex-basis: 100%; overflow-x: auto; scrollbar-width: none; }
   .hoa-shop-bar__group--family { order: 2; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--hoa-gutter) * -1); padding: 10px var(--hoa-gutter); flex-basis: auto; width: calc(100% + var(--hoa-gutter) * 2); }
-  .hoa-shop-bar__group--gift { order: 2; flex-basis: auto; padding: 10px 0 10px clamp(12px, 2vw, 20px); border-left: 1px solid var(--hoa-line); border-top: 0; }
+  .hoa-shop-bar__group--gift { order: 2; flex-basis: 100%; padding: 0 0 12px; border: 0; }
   .hoa-shop-bar__group::-webkit-scrollbar { display: none; }
   .hoa-shop-bar__end { order: 3; flex-basis: 100%; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--hoa-line); }
 

@@ -1,0 +1,62 @@
+/* ==========================================================================
+   WISHLIST DRAWER — reuses the bag drawer (.cart-drawer*, .cart-line*, .cart-checkout in theme.css);
+   only what the bag does not have is defined here.
+   ========================================================================== */
+.wl-drawer-overlay { z-index: 2000; }
+.wl-drawer { z-index: 2001; }
+
+.wl-drawer .cart-line__title a { color: inherit; text-decoration: none; }
+.wl-drawer .cart-line__media { display: block; }
+.wl-line__gone { display: grid !important; place-items: center; color: var(--color-muted); }
+.wl-line__gone svg { width: 26px; height: 26px; }
+
+.wl-line__stock { margin: 6px 0 0; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+.wl-line__stock[data-state='in'] { color: #2F6B47; }
+
+.wl-line__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 12px; }
+.wl-line__add {
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--color-black);
+  border-radius: 999px;
+  background: var(--color-black);
+  color: #fff;
+  font: 600 0.7rem var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, opacity 0.25s;
+}
+.wl-line__add:hover:not(:disabled) { background: #fff; color: var(--color-black); }
+.wl-line__add:disabled { opacity: 0.4; cursor: not-allowed; }
+.wl-line__add[aria-busy='true'] { opacity: 0.6; cursor: progress; }
+.wl-line__view { font-size: 0.76rem; color: var(--color-black); text-decoration: underline; text-underline-offset: 4px; }
+.wl-line__add:focus-visible, .wl-line__view:focus-visible { outline: 2px solid var(--color-black); outline-offset: 2px; }
+.wl-drawer .cart-line__remove[aria-busy='true'] { opacity: 0.4; pointer-events: none; }
+
+.wl-empty { display: flex; flex-direction: column; align-items: center; }
+.wl-empty__mark { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 18px; border: 1px solid var(--color-border-light); border-radius: 50%; color: var(--color-black); }
+.wl-empty__mark svg { width: 26px; height: 26px; }
+.wl-empty__mark svg path { stroke-dasharray: 80; stroke-dashoffset: 80; animation: wl-draw 1.4s var(--ease-editorial) 0.15s forwards; }
+@keyframes wl-draw { to { stroke-dashoffset: 0; } }
+.wl-empty .cart-empty__text { max-width: 30ch; }
+.wl-empty__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 20px; padding: 13px 24px;
+  border: 0; border-radius: 18px;
+  background: var(--color-black); color: #fff;
+  font: 600 0.74rem var(--font-sans);
+  letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.wl-empty__btn:hover { transform: translateY(-1px); box-shadow: 0 14px 24px -14px rgba(8, 8, 8, 0.6); }
+
+.wl-skeleton { display: grid; gap: 12px; }
+.wl-skeleton span { display: block; height: 118px; border-radius: 22px; background: linear-gradient(90deg, var(--color-bg-secondary) 25%, #ece8e1 50%, var(--color-bg-secondary) 75%); background-size: 200% 100%; animation: wl-shimmer 1.5s linear infinite; }
+@keyframes wl-shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-empty__mark svg path { animation: none; stroke-dashoffset: 0; }
+  .wl-skeleton span { animation: none; }
+}

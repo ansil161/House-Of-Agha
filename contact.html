@@ -8,6 +8,7 @@
   
   <link rel="stylesheet" href="assets/theme.css">
   <link rel="stylesheet" href="assets/hoa-home.css">
+  <link rel="stylesheet" href="assets/agha-wishlist-drawer.css">
   <link rel="stylesheet" href="assets/hoa-coupon.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -16,6 +17,9 @@
   <script src="assets/theme.js" defer></script>
   <script src="assets/hero-scroll.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
+  <script src="assets/wishlist-preview.js" defer></script>
+  <script src="assets/agha-wishlist.js" defer></script>
+  <script src="assets/agha-wishlist-drawer.js" defer></script>
 </head>
 <body>
 
@@ -38,7 +42,8 @@
       <small>HOUSE OF</small>AGHA
     </a>
 
-    <ul class="hoa-header__nav hoa-header__nav--right"><li class="hoa-header__hide-sm"><a href="/account-login.html">Account</a></li><li>
+    <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a class="hoa-header__wish" data-wishlist-open aria-haspopup="dialog" href="/pages/wishlist">Wishlist<sup class="hoa-header__wish-count" data-wishlist-count hidden></sup></a></li><li class="hoa-header__hide-sm"><a href="/account-login.html">Account</a></li><li>
         <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
           <span>Bag</span>
           <span class="cart-count">0</span>
@@ -53,7 +58,8 @@
     <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
     <li><a href="/#fragrances"><span>02</span>Fragrances</a></li>
     <li><a href="/the-house.html"><span>03</span>The House</a></li>
-    <li><a href="/private-access.html"><span>04</span>Private Access</a></li><li><a href="/account-login.html"><span>05</span>Sign <em>in</em></a></li></ul>
+    <li><a href="/private-access.html"><span>04</span>Private Access</a></li><li><a href="/account-login.html"><span>05</span>Sign <em>in</em></a></li><li><a href="/pages/wishlist" data-wishlist-open><span>06</span>Wish<em>list</em></a></li>
+  </ul>
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
 </nav>
 
@@ -272,5 +278,29 @@
     </div>
   </div>
 </div>
+  <!-- Wishlist drawer · snippets/wishlist-drawer.liquid (rendered by the preview build) -->
+  <div class="cart-drawer-overlay wl-drawer-overlay js-wl-close" data-wl-drawer-overlay></div>
+
+<aside class="cart-drawer wl-drawer" role="dialog" aria-modal="true" aria-label="Your wishlist" aria-hidden="true" data-wl-drawer>
+  <div class="cart-drawer-header">
+    <div class="cart-drawer-heading">
+      <span class="editorial-label">SAVED FRAGRANCES</span>
+      <h3 class="cart-drawer-title">Your wishlist <span class="cart-drawer-count" data-wl-drawer-count></span></h3>
+    </div>
+    <button type="button" class="cart-drawer-close js-wl-close" aria-label="Close wishlist" data-wl-drawer-close>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer-body" data-wl-drawer-body aria-live="polite"></div>
+
+  <div class="cart-drawer-footer" data-wl-drawer-footer hidden>
+    <a class="cart-checkout" href="/pages/wishlist">
+      <span>View full wishlist</span>
+      <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <button type="button" class="cart-continue js-wl-close">Continue shopping</button>
+  </div>
+</aside>
 </body>
 </html>

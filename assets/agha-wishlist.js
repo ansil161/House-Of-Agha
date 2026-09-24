@@ -154,7 +154,14 @@
     }
     btn.toggleAttribute('data-wishlist-loading', status === 'loading' && cfg.loggedIn);
   };
-  const paintAll = () => buttonsFor().forEach(paint);
+  const paintAll = () => {
+    buttonsFor().forEach(paint);
+    $$('[data-wishlist-count]').forEach((el) => {
+      const n = cfg.loggedIn && (status === 'ready' || items.size) ? items.size : 0;
+      el.textContent = n ? String(n) : '';
+      el.hidden = !n;
+    });
+  };
 
   const pop = (handle) => {
     if (reduceMotion.matches) return;

@@ -1536,3 +1536,85 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-reel__poster, .hoa-reel__video, .hoa-reel__frame, .hoa-reel__controls { transition: none; }
   .hoa-reel__frame:hover .hoa-reel__poster, .hoa-reel__frame:hover .hoa-reel__video { transform: none; }
 }
+
+/* Header wishlist link: count appears once the customer has saved something */
+.hoa-header__wish-count { margin-left: 3px; font-size: 0.62em; font-weight: 600; font-variant-numeric: tabular-nums; vertical-align: super; }
+.hoa-header__wish-count[hidden] { display: none; }
+
+/* ==========================================================================
+   RESPONSIVE AUDIT (2026-09-24)
+   Loaded on every page. Smallest fixes found by measuring all pages at
+   1920 / 1440 / 1366 / 1280 / 1024 / 768 / 430 / 390 / 375 / 320.
+   ========================================================================== */
+
+/* 1. Legacy pages (contact, FAQ, shipping, private access) size their padding
+      with inline var(--space-*) tokens tuned for desktop: a 96px padding on a
+      390px card left a ~50px form. Rescale the tokens instead of editing every
+      inline style. */
+@media (max-width: 768px) {
+  :root { --space-lg: 28px; --space-xl: 44px; --space-2xl: 56px; --space-3xl: 80px; --space-4xl: 112px; }
+  .private-access-box { padding: var(--space-xl) var(--space-md); }
+  main p, main h3 { overflow-wrap: break-word; }
+}
+@media (max-width: 480px) {
+  :root { --space-xl: 32px; --space-2xl: 40px; --space-3xl: 64px; }
+  .vault-input { letter-spacing: 0.06em; }
+  main .btn-primary { max-width: 100%; white-space: normal; text-align: center; }
+}
+
+/* Footer intro copy inherits --color-soft-white (#333), unreadable on the near-black footer. */
+.footer .text-soft { color: #BDB8B0; }
+.vault-input { text-overflow: ellipsis; }
+
+/* 2. Footer on phones: brand block gets a full-width row instead of a
+      ~130px column; legal line stacks. */
+@media (max-width: 560px) {
+  .footer-grid { gap: var(--space-lg) var(--space-md); }
+  .footer-grid > :first-child { grid-column: 1 / -1; }
+  .footer-grid > :first-child p { max-width: none; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+/* 3. Touch targets: give primary controls a 40-44px hit area on touch and
+      narrow screens without changing how they look. */
+@media (pointer: coarse), (max-width: 1024px) {
+  .hoa-header__menu { min-height: 44px; padding: 0 4px; }
+  .hoa-header .header-action-btn { min-height: 44px; min-width: 44px; justify-content: center; }
+  .hoa-header__brand.header-brand { position: relative; }
+  .hoa-header__brand.header-brand::after { content: ''; position: absolute; inset: -8px -12px; }
+  .hoa-tab { min-height: 44px; padding-inline: 6px; }
+  .hoa-ftag { min-height: 40px; padding-inline: 14px; display: inline-flex; align-items: center; }
+  .hoa-fview .hoa-fview__btn { width: 40px; height: 40px; }  /* .hoa-fview prefix: hoa-shop.css loads later and would win */
+  .hoa-pc .hoa-pc__cta { min-height: 40px; }
+  .hoa-pc .hoa-pc__like::after { content: ''; position: absolute; inset: -7px; }
+  .footer-links a { display: inline-block; padding-block: 6px; }
+  select[data-hoa-sort] { min-height: 40px; }
+  .modal-close-btn { width: 44px; height: 44px; top: 8px; right: 8px; display: grid; place-items: center; }
+  .cart-continue { padding: 12px 16px; }
+  .hoa-field__toggle { min-height: 44px; }
+  .hoa-field__aside, .hoa-auth__text-btn { display: inline-block; padding-block: 8px; }
+  .pdp-dots button { position: relative; }
+  .pdp-dots button::after { content: ''; position: absolute; inset: -12px -5px; }
+}
+
+/* 4. Hero footer on tablets: the 1fr / auto / 1fr row squeezed the intro copy
+      into ~150px. Copy + button share row one; the film index runs full width. */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .hoa-hero__foot { grid-template-columns: minmax(0, 1fr) auto; row-gap: 22px; }
+  .hoa-hero__cta { justify-self: end; }
+  .hoa-hero__index { grid-column: 1 / -1; justify-self: stretch; gap: 10px; }
+  .hoa-hero__dot { width: auto; flex: 1; }
+}
+
+/* 5. Mobile menu on short screens (320x568 phones, landscape): the sheet was a
+      fixed, non-scrolling flex column, so the last links were unreachable. */
+.hoa-menu { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+@media (max-height: 700px) {
+  .hoa-menu { padding-top: calc(var(--hoa-header-h) + 12px); padding-bottom: 24px; }
+  .hoa-menu__links a { padding: 6px 0; font-size: clamp(1.7rem, 6.4vw, 2.4rem); }
+}
+@media (max-height: 500px) {
+  /* landscape phones: the sheet scrolls under the fixed header, so give the bar a backing */
+  .hoa-menu-open .hoa-header.header { background: var(--hoa-night); }
+  .hoa-menu__links a { font-size: clamp(1.5rem, 5vh, 2rem); }
+}

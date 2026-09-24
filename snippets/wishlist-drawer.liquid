@@ -1,0 +1,29 @@
+{% comment %}
+  Slide-out Wishlist Drawer (same shell and look as the bag drawer in cart-drawer.liquid).
+  Opened by any [data-wishlist-open] link (the navbar Wishlist link); filled by
+  assets/agha-wishlist-drawer.js from the list held by assets/agha-wishlist.js.
+  Guests see a sign-in prompt that goes to Shopify's login page; nothing is stored for them.
+{% endcomment %}
+<div class="cart-drawer-overlay wl-drawer-overlay js-wl-close" data-wl-drawer-overlay></div>
+
+<aside class="cart-drawer wl-drawer" role="dialog" aria-modal="true" aria-label="Your wishlist" aria-hidden="true" data-wl-drawer>
+  <div class="cart-drawer-header">
+    <div class="cart-drawer-heading">
+      <span class="editorial-label">SAVED FRAGRANCES</span>
+      <h3 class="cart-drawer-title">Your wishlist <span class="cart-drawer-count" data-wl-drawer-count></span></h3>
+    </div>
+    <button type="button" class="cart-drawer-close js-wl-close" aria-label="Close wishlist" data-wl-drawer-close>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer-body" data-wl-drawer-body aria-live="polite"></div>
+
+  <div class="cart-drawer-footer" data-wl-drawer-footer hidden>
+    <a class="cart-checkout" href="{{ routes.root_url }}pages/wishlist">
+      <span>View full wishlist</span>
+      <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <button type="button" class="cart-continue js-wl-close">Continue shopping</button>
+  </div>
+</aside>

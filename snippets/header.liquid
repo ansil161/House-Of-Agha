@@ -22,6 +22,7 @@
     </a>
 
     <ul class="hoa-header__nav hoa-header__nav--right">
+      <li class="hoa-header__hide-sm"><a class="hoa-header__wish" data-wishlist-open aria-haspopup="dialog" href="{{ routes.root_url }}pages/wishlist"{% if template.suffix == 'wishlist' %} aria-current="page"{% endif %}>Wishlist<sup class="hoa-header__wish-count" data-wishlist-count hidden></sup></a></li>
       {%- if shop.customer_accounts_enabled -%}
         <li class="hoa-header__hide-sm"><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"{% if template.directory == 'customers' %} aria-current="page"{% endif %}>Account</a></li>
       {%- endif -%}
@@ -44,6 +45,7 @@
     {%- if shop.customer_accounts_enabled -%}
       <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>05</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
     {%- endif -%}
+    <li><a href="{{ routes.root_url }}pages/wishlist" data-wishlist-open><span>06</span>Wish<em>list</em></a></li>
   </ul>
   <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
 </nav>

@@ -268,6 +268,27 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('coupon popup on', all.length, 'pages');
 
+  // Wishlist drawer (snippets/wishlist-drawer.liquid) — layout/theme.liquid renders it on every page.
+  // The preview also loads assets/wishlist-preview.js, which fakes the customer, storage and product
+  // JSON (see that file; ?signedin=1 signs in).
+  const wlHtml = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/wishlist-drawer.liquid'), 'utf8'), globals)).trim();
+  const wlBlock = '  <!-- Wishlist drawer · snippets/wishlist-drawer.liquid (rendered by the preview build) -->\n  ' + wlHtml + '\n';
+  const wlCss = /[ \t]*<link rel="stylesheet" href="\/?assets\/agha-wishlist-drawer\.css">\n/;
+  const wlJs = /[ \t]*<script src="\/?assets\/(?:wishlist-preview|agha-wishlist|agha-wishlist-drawer)\.js" defer><\/script>\n/g;
+  const wlBlockRe = /[ \t]*<!-- Wishlist drawer[\s\S]*?<\/aside>\n/;
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    let html = fs.readFileSync(file, 'utf8');
+    html = html.replace(wlCss, '').replace(wlJs, '').replace(wlBlockRe, '');
+    const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+    html = html
+      .replace(/([ \t]*<link rel="stylesheet" href="\/?assets\/hoa-home\.css">\n)/, `$1  <link rel="stylesheet" href="${pre}assets/agha-wishlist-drawer.css">\n`)
+      .replace('</head>', () => `  <script src="${pre}assets/wishlist-preview.js" defer></script>\n  <script src="${pre}assets/agha-wishlist.js" defer></script>\n  <script src="${pre}assets/agha-wishlist-drawer.js" defer></script>\n</head>`)
+      .replace('</body>', () => wlBlock + '</body>');
+    fs.writeFileSync(file, html);
+  }
+  console.log('wishlist drawer on', all.length, 'pages');
+
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {

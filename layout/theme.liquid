@@ -20,6 +20,8 @@
   <!-- JS Assets -->
   {% render 'agha-wishlist-config' %}
   <script src="{{ 'agha-wishlist.js' | asset_url }}" defer></script>
+  {{ 'agha-wishlist-drawer.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'agha-wishlist-drawer.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
   <script src="{{ 'hoa-coupon.js' | asset_url }}" defer></script>
@@ -62,6 +64,7 @@
 
   <!-- Modals & Drawers -->
   {% render 'cart-drawer' %}
+  {% render 'wishlist-drawer' %}
   {% render 'quick-view-modal' %}
   {% render 'hoa-coupon-popup' %}
 
