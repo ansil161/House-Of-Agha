@@ -1,16 +1,53 @@
 {%- comment -%}
   House of Agha · About 03 · The seven worlds
-  Desktop: the section pins and the row of fragrances pans sideways with scroll
-  (GSAP ScrollTrigger in assets/hoa-about.js). Touch / narrow screens and reduced
-  motion: a native scroll-snap row. Each block is one fragrance.
+
+  One continuous editorial canvas. Wide screens (768px+): the section pins and vertical scroll
+  pans the canvas sideways while each world comes into focus at the centre (GSAP ScrollTrigger,
+  assets/hoa-about.js -> initSevenWorlds). Phones: the worlds stack and each one settles into
+  view as you scroll. Reduced motion / no JS: the same stack, static and complete.
+
+  Every block is one world (one fragrance). Nothing here is hard-coded: the number is the
+  block's position (or the "Number" override), the total is the block count, the name and link
+  come from the picked product (or the text fields), the image from the image picker (or the
+  fallback theme asset), the tint from the colour setting.
 {%- endcomment -%}
-{%- assign s = section.settings -%}
-<section class="hoa-ab-worlds" id="worlds" data-hoa-ab-worlds>
+{%- liquid
+  assign s = section.settings
+  assign total = section.blocks.size
+  assign total_label = total
+  if total < 10
+    assign total_label = total | prepend: '0'
+  endif
+-%}
+<section class="hoa-ab-worlds" id="worlds" data-hoa-ab-worlds aria-labelledby="worlds-{{ section.id }}-title">
   <div class="hoa-ab-worlds__pin" data-hoa-ab-pin>
-    <div class="hoa-wrap hoa-ab-worlds__head">
-      <h2 class="hoa-ab-h2">{{ s.heading }}{% if s.heading_serif != blank %} <span class="hoa-ab-muted">{{ s.heading_serif }}</span>{% endif %}</h2>
-      {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
-    </div>
+    <header class="hoa-wrap hoa-ab-worlds__head">
+      <div class="hoa-ab-worlds__intro">
+        <h2 class="hoa-ab-h2" id="worlds-{{ section.id }}-title">{{ s.heading }}{% if s.heading_serif != blank %} <span class="hoa-ab-muted">{{ s.heading_serif }}</span>{% endif %}</h2>
+        {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
+      </div>
+
+      <div class="hoa-ab-prog" data-hoa-ab-progress aria-hidden="true">
+        <span class="hoa-ab-prog__count">
+          <span class="hoa-ab-prog__window"><span class="hoa-ab-prog__roll" data-hoa-ab-roll>
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign pn = block.settings.number
+                if pn == blank
+                  assign pn = forloop.index
+                  if forloop.index < 10
+                    assign pn = pn | prepend: '0'
+                  endif
+                endif
+              -%}
+              <b>{{ pn }}</b>
+            {%- endfor -%}
+          </span></span>
+          <span class="hoa-ab-prog__of">/ {{ total_label }}</span>
+        </span>
+        <span class="hoa-ab-prog__line"><i data-hoa-ab-bar></i></span>
+      </div>
+    </header>
 
     <div class="hoa-ab-worlds__viewport">
       <ol class="hoa-ab-worlds__track" data-hoa-ab-track>
@@ -25,19 +62,51 @@
               assign w_name = b.name
               assign w_url = b.url | default: routes.all_products_collection_url
             endif
+            assign w_no = b.number
+            if w_no == blank
+              assign w_no = forloop.index
+              if forloop.index < 10
+                assign w_no = w_no | prepend: '0'
+              endif
+            endif
+            assign variant_i = forloop.index0 | modulo: 3
+            assign variant = 'a'
+            if variant_i == 1
+              assign variant = 'b'
+            elsif variant_i == 2
+              assign variant = 'c'
+            endif
+            assign long_name = false
+            assign name_size = w_name | size
+            if name_size > 12
+              assign long_name = true
+            endif
+            assign cta = b.cta_label | default: 'Discover'
+            assign alt_text = b.alt | default: w_name
+            assign eager = 'lazy'
+            if forloop.first
+              assign eager = 'eager'
+            endif
           -%}
-          <li class="hoa-ab-world" style="--hoa-tint: {{ b.tint | default: '#2b241d' }};" {{ block.shopify_attributes }}>
-            <a class="hoa-ab-world__link" href="{{ w_url }}">
-              <figure class="hoa-ab-world__media">
-                {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: b.alt, sizes: '(min-width: 900px) 26vw, 72vw' -%}
-              </figure>
-              <div class="hoa-ab-world__body">
-                <h3 class="hoa-ab-world__name">{{ w_name }}</h3>
-                <p class="hoa-ab-chip hoa-ab-world__family">{{ b.family }}</p>
-                <p class="hoa-ab-world__line">{{ b.line }}</p>
-                <span class="hoa-ab-world__arrow">{% render 'hoa-btn-icon' %}</span>
-              </div>
+          <li class="hoa-ab-world{% if long_name %} hoa-ab-world--long{% endif %}" data-hoa-ab-world data-variant="{{ variant }}" data-tint="{{ b.tint | default: '#2b241d' }}" style="--hoa-tint: {{ b.tint | default: '#2b241d' }};" {{ block.shopify_attributes }}>
+            <a class="hoa-ab-world__media" href="{{ w_url }}" tabindex="-1" data-hoa-ab-media>
+              <span class="hoa-ab-world__frame">
+                {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: alt_text, sizes: '(min-width: 768px) 44vh, 92vw', loading: eager, class: 'hoa-ab-world__img' -%}
+              </span>
             </a>
+            <div class="hoa-ab-world__body" data-hoa-ab-body>
+              <p class="hoa-ab-world__kicker" data-hoa-ab-meta>World {{ w_no }} <span>/ {{ total_label }}</span></p>
+              <h3 class="hoa-ab-world__name" data-hoa-ab-title><a href="{{ w_url }}">{{ w_name }}</a></h3>
+              <p class="hoa-ab-world__meta" data-hoa-ab-meta>
+                {%- if b.location != blank -%}<span>{{ b.location }}</span>{%- endif -%}
+                {%- if b.family != blank -%}<span>{{ b.family }}</span>{%- endif -%}
+              </p>
+              {%- if b.line != blank -%}<p class="hoa-ab-world__line" data-hoa-ab-meta>{{ b.line }}</p>{%- endif -%}
+              <a class="hoa-ab-world__cta" href="{{ w_url }}" data-hoa-ab-meta aria-label="{{ cta }}: {{ w_name | escape }}">
+                <span>{{ cta }}</span>
+                <svg viewBox="0 0 24 8" fill="none" aria-hidden="true"><path d="M0 4h22M18.5 1L22 4l-3.5 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
           </li>
         {%- endfor -%}
       </ol>
@@ -47,32 +116,35 @@
 
 {% schema %}
 {
-  "name": "About: fragrances row",
+  "name": "About: seven worlds",
   "tag": "div",
   "class": "hoa-ab-section",
   "max_blocks": 12,
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "One house," },
     { "type": "text", "id": "heading_serif", "label": "Heading, muted part", "default": "seven worlds." },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Choose one to see it up close." }
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Scroll to travel through them." }
   ],
   "blocks": [
     {
       "type": "world",
-      "name": "Fragrance",
+      "name": "World",
       "settings": [
+        { "type": "text", "id": "number", "label": "Number", "info": "Leave empty to number worlds by their order (01, 02 ...)." },
         { "type": "product", "id": "product", "label": "Product", "info": "Uses the product title and link. Leave empty to use the fields below." },
         { "type": "text", "id": "name", "label": "Name" },
-        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "text", "id": "location", "label": "Location / setting (small label)" },
         { "type": "text", "id": "family", "label": "Scent family" },
-        { "type": "textarea", "id": "line", "label": "One line" },
+        { "type": "textarea", "id": "line", "label": "Description" },
         { "type": "image_picker", "id": "image", "label": "Image (portrait)" },
         { "type": "text", "id": "asset", "label": "Fallback theme asset" },
         { "type": "text", "id": "alt", "label": "Image alt text" },
-        { "type": "color", "id": "tint", "label": "Card tint", "default": "#2b241d" }
+        { "type": "color", "id": "tint", "label": "Accent colour", "default": "#2b241d", "info": "Tints the section background very lightly while this world is in focus." },
+        { "type": "text", "id": "cta_label", "label": "Link text", "default": "Discover" },
+        { "type": "url", "id": "url", "label": "Link" }
       ]
     }
   ],
-  "presets": [{ "name": "About: fragrances row" }]
+  "presets": [{ "name": "About: seven worlds" }]
 }
 {% endschema %}
