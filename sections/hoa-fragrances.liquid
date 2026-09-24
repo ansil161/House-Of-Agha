@@ -1,59 +1,26 @@
 {% comment %}
   03 — SIGNATURE FRAGRANCES
-  A centred coverflow carousel on paper. The active bottle sits large in the middle,
-  its neighbours smaller and softer on either side; circular arrows sit on the seam
-  between them. The name, line and price of the active fragrance settle below.
-  Arrows, a click on a side bottle, swipe/drag and the keyboard all move it; it loops.
+  A full-width showroom carousel on paper: three bottles at once, the active one large in
+  the middle, its neighbours smaller on either side, plain arrows at the page edges.
+  No cards: the bottles sit straight on the section. The name, line and link of the active
+  fragrance settle below. Arrows, a click on a side bottle, swipe and the keyboard all move
+  it, and it loops. GSAP drives the move; without it the bottles simply swap places.
 
   One "fragrance" block per fragrance. Pick the Shopify product to use its real title,
-  price, URL and featured image; the text fields are used when no product is picked.
+  URL and featured image; the text fields are used when no product is picked.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
 <section class="hoa-cf" id="fragrances" data-hoa-cf aria-roledescription="carousel" aria-label="{{ s.eyebrow | escape }}">
   <div class="hoa-wrap">
-    <header class="hoa-cf__head" data-hoa-reveal>
+    <header class="hoa-cf__head" data-hoa-cf-head>
       <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
       <h2 class="hoa-h2">{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
     </header>
+  </div>
 
-    <div class="hoa-cf__stage" data-hoa-reveal>
-      <div class="hoa-cf__track" data-hoa-cf-track>
-        {%- for block in section.blocks -%}
-          {%- liquid
-            assign b = block.settings
-            assign p = b.product
-            if p != blank
-              assign f_name = p.title
-              assign f_url = p.url
-            else
-              assign f_name = b.name
-              assign f_url = b.url | default: routes.all_products_collection_url
-            endif
-            assign f_alt = b.alt | default: f_name
-            assign f_image = b.image
-            if f_image == blank and p != blank
-              assign f_image = p.featured_image
-            endif
-          -%}
-          <a href="{{ f_url }}" class="hoa-cf__card{% if forloop.first %} is-active{% endif %}" style="--hoa-tint: {{ b.tint }};"
-             data-hoa-cf-card draggable="false" data-index="{{ forloop.index0 }}"
-             role="group" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ section.blocks.size }}: {{ f_name | escape }}"
-             {% unless forloop.first %}tabindex="-1" aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
-            {%- render 'hoa-img', name: b.asset, image: f_image, w: 1200, h: 1500, alt: f_alt, sizes: '(min-width: 900px) 30vw, 64vw' -%}
-          </a>
-        {%- endfor -%}
-
-        <button type="button" class="hoa-cf__arrow hoa-cf__arrow--prev" data-hoa-cf-prev aria-label="Previous fragrance">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 10H4M4 10L9 5M4 10L9 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button type="button" class="hoa-cf__arrow hoa-cf__arrow--next" data-hoa-cf-next aria-label="Next fragrance">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="hoa-cf__details" aria-live="polite">
+  <div class="hoa-cf__stage" data-hoa-cf-stage>
+    <div class="hoa-cf__track" data-hoa-cf-track tabindex="0" aria-label="{{ s.eyebrow | escape }}">
       {%- for block in section.blocks -%}
         {%- liquid
           assign b = block.settings
@@ -61,37 +28,61 @@
           if p != blank
             assign f_name = p.title
             assign f_url = p.url
-            if p.price_varies
-              assign f_price = p.price_min | money | prepend: 'From '
-            else
-              assign f_price = p.price | money
-            endif
           else
             assign f_name = b.name
             assign f_url = b.url | default: routes.all_products_collection_url
-            assign f_price = ''
+          endif
+          assign f_alt = b.alt | default: f_name
+          assign f_image = b.image
+          if f_image == blank and p != blank
+            assign f_image = p.featured_image
           endif
         -%}
-        <div class="hoa-cf__info{% if forloop.first %} is-active{% endif %}" data-hoa-cf-info {% unless forloop.first %}hidden{% endunless %}>
+        <a href="{{ f_url }}" class="hoa-cf__item{% if forloop.first %} is-active{% endif %}"
+           data-hoa-cf-card draggable="false" data-index="{{ forloop.index0 }}"
+           role="group" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ section.blocks.size }}: {{ f_name | escape }}"
+           {% unless forloop.first %}tabindex="-1" aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
+          <span class="hoa-cf__pic">
+            {%- render 'hoa-img', name: b.asset, image: f_image, w: 1200, h: 1500, alt: f_alt, sizes: '(min-width: 900px) 30vw, 64vw', loading: 'eager' -%}
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+
+    <button type="button" class="hoa-cf__arrow hoa-cf__arrow--prev" data-hoa-cf-prev aria-label="Previous fragrance">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 3L6 12L15 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button type="button" class="hoa-cf__arrow hoa-cf__arrow--next" data-hoa-cf-next aria-label="Next fragrance">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3L18 12L9 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="hoa-wrap">
+    <div class="hoa-cf__details" data-hoa-cf-details aria-live="polite">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          if p != blank
+            assign f_name = p.title
+            assign f_url = p.url
+          else
+            assign f_name = b.name
+            assign f_url = b.url | default: routes.all_products_collection_url
+          endif
+        -%}
+        <div class="hoa-cf__info{% if forloop.first %} is-active{% endif %}" data-hoa-cf-info>
           <p class="hoa-cf__num">Nº {{ forloop.index | prepend: '0' | slice: -2, 2 }} <span>·</span> {{ b.label }}</p>
           <h3 class="hoa-cf__name">{{ f_name }}</h3>
           {%- if b.line != blank -%}<p class="hoa-cf__line">{{ b.line }}</p>{%- endif -%}
-          <div class="hoa-cf__buy">
-            {%- if f_price != blank -%}<span class="hoa-cf__price">{{ f_price }}</span>{%- endif -%}
-            <a href="{{ f_url }}" class="hoa-btn hoa-btn--small"><span>Discover</span>{% render 'hoa-btn-icon' %}</a>
-          </div>
+          <a href="{{ f_url }}" class="hoa-btn hoa-btn--small"{% unless forloop.first %} tabindex="-1"{% endunless %}><span>{{ b.cta | default: 'Discover' }}</span>{% render 'hoa-btn-icon' %}</a>
         </div>
       {%- endfor -%}
     </div>
 
-    <footer class="hoa-cf__foot">
-      <p class="hoa-cf__count" aria-hidden="true">
-        <span data-hoa-cf-current>01</span>
-        <i class="hoa-cf__bar"><b data-hoa-cf-bar style="--p: {{ 1.0 | divided_by: section.blocks.size }};"></b></i>
-        <span>{{ section.blocks.size | prepend: '0' | slice: -2, 2 }}</span>
-      </p>
-      <a class="hoa-link" href="{{ s.all_url | default: routes.all_products_collection_url }}">{{ s.all_label }}</a>
-    </footer>
+    {%- if s.all_label != blank -%}
+      <p class="hoa-cf__all"><a class="hoa-link" href="{{ s.all_url | default: routes.all_products_collection_url }}">{{ s.all_label }}</a></p>
+    {%- endif -%}
   </div>
 </section>
 
@@ -118,7 +109,8 @@
         { "type": "url", "id": "url", "label": "Link (when no product is picked)" },
         { "type": "text", "id": "label", "label": "Label", "default": "Eau de Parfum" },
         { "type": "textarea", "id": "line", "label": "One line about its world" },
-        { "type": "color", "id": "tint", "label": "Card tint", "info": "A faint wash behind the bottle.", "default": "#1A1511" },
+        { "type": "text", "id": "cta", "label": "Button label", "default": "Discover" },
+        { "type": "color", "id": "tint", "label": "Tint (unused by the showroom layout)", "default": "#1A1511" },
         { "type": "image_picker", "id": "image", "label": "Bottle image (4:5, white background)", "info": "Defaults to the product's featured image." },
         { "type": "text", "id": "asset", "label": "Theme asset (when no image or product is picked)" },
         { "type": "text", "id": "alt", "label": "Alt text" }

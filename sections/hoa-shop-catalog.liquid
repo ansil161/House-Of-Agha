@@ -54,28 +54,93 @@
 {%- endcapture -%}
 
 <section class="hoa-shop-cat" id="catalog" data-hoa-shop>
+  <div class="hoa-wrap hoa-cats" data-hoa-cats>
+    <div class="hoa-cats__head">
+      <p class="hoa-cats__eyebrow"><span></span>{{ s.rail_eyebrow }}</p>
+      <h2 class="hoa-cats__title">{{ s.rail_title }}</h2>
+    </div>
+    <div class="hoa-cats__rail" role="group" aria-label="Shop by category">
+        <button type="button" class="hoa-cat" aria-pressed="true" data-hoa-for="all" style="--i: 0">
+          <span class="hoa-cat__shell">
+            <span class="hoa-cat__media">
+              {%- render 'hoa-img', name: 'hoa-world-portrait', w: 800, h: 1000, loading: 'eager', alt: '', sizes: '(min-width: 1100px) 20vw, 60vw' -%}
+              <span class="hoa-cat__idx">01</span>
+              <span class="hoa-cat__count"><span data-hoa-count="all"></span> <em>scents</em></span>
+              <span class="hoa-cat__body">
+                <span class="hoa-cat__sub">{{ s.all_sub }}</span>
+                <span class="hoa-cat__name">{{ s.all_label }}</span>
+              </span>
+              <span class="hoa-cat__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </span>
+        </button>
+        <button type="button" class="hoa-cat" aria-pressed="false" data-hoa-for="men" style="--i: 1">
+          <span class="hoa-cat__shell">
+            <span class="hoa-cat__media">
+              {%- render 'hoa-img', name: 'hoa-oud-fury-portrait', w: 800, h: 1000, loading: 'eager', alt: '', sizes: '(min-width: 1100px) 20vw, 60vw' -%}
+              <span class="hoa-cat__idx">02</span>
+              <span class="hoa-cat__count"><span data-hoa-count="men"></span> <em>scents</em></span>
+              <span class="hoa-cat__body">
+                <span class="hoa-cat__sub">{{ s.men_sub }}</span>
+                <span class="hoa-cat__name">{{ s.men_label }}</span>
+              </span>
+              <span class="hoa-cat__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </span>
+        </button>
+        <button type="button" class="hoa-cat" aria-pressed="false" data-hoa-for="women" style="--i: 2">
+          <span class="hoa-cat__shell">
+            <span class="hoa-cat__media">
+              {%- render 'hoa-img', name: 'hoa-maha-portrait', w: 800, h: 1000, loading: 'eager', alt: '', sizes: '(min-width: 1100px) 20vw, 60vw' -%}
+              <span class="hoa-cat__idx">03</span>
+              <span class="hoa-cat__count"><span data-hoa-count="women"></span> <em>scents</em></span>
+              <span class="hoa-cat__body">
+                <span class="hoa-cat__sub">{{ s.women_sub }}</span>
+                <span class="hoa-cat__name">{{ s.women_label }}</span>
+              </span>
+              <span class="hoa-cat__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </span>
+        </button>
+        <button type="button" class="hoa-cat" aria-pressed="false" data-hoa-for="unisex" style="--i: 3">
+          <span class="hoa-cat__shell">
+            <span class="hoa-cat__media">
+              {%- render 'hoa-img', name: 'hoa-sea-smoke-portrait', w: 800, h: 1000, loading: 'eager', alt: '', sizes: '(min-width: 1100px) 20vw, 60vw' -%}
+              <span class="hoa-cat__idx">04</span>
+              <span class="hoa-cat__count"><span data-hoa-count="unisex"></span> <em>scents</em></span>
+              <span class="hoa-cat__body">
+                <span class="hoa-cat__sub">{{ s.unisex_sub }}</span>
+                <span class="hoa-cat__name">{{ s.unisex_label }}</span>
+              </span>
+              <span class="hoa-cat__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </span>
+        </button>
+        <button type="button" class="hoa-cat hoa-cat--gift" aria-pressed="false" data-hoa-gift style="--i: 4">
+          <span class="hoa-cat__shell">
+            <span class="hoa-cat__media">
+              {%- render 'hoa-img', name: 'hoa-world-gift', w: 800, h: 1000, loading: 'eager', alt: '', sizes: '(min-width: 1100px) 20vw, 60vw' -%}
+              <span class="hoa-cat__idx">05</span>
+              <span class="hoa-cat__count"><span data-hoa-count="gift"></span> <em>scents</em></span>
+              <span class="hoa-cat__body">
+                <span class="hoa-cat__sub">{{ s.gift_sub }}</span>
+                <span class="hoa-cat__name">{{ s.gift_label }}</span>
+              </span>
+              <span class="hoa-cat__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </span>
+        </button>
+    </div>
+  </div>
+
   <div class="hoa-shop-bar" data-hoa-shop-bar>
     <div class="hoa-wrap hoa-shop-bar__inner">
-      <div class="hoa-shop-bar__group hoa-shop-bar__group--for" role="group" aria-label="Filter by wearer">
-        <button type="button" class="hoa-ftab" aria-pressed="true" data-hoa-for="all">{{ s.all_label }}<sup data-hoa-count="all"></sup></button>
-        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="men">{{ s.men_label }}<sup data-hoa-count="men"></sup></button>
-        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="women">{{ s.women_label }}<sup data-hoa-count="women"></sup></button>
-        <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="unisex">{{ s.unisex_label }}<sup data-hoa-count="unisex"></sup></button>
-      </div>
-
       <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by scent family">
         <span class="hoa-shop-bar__label">Family</span>
         {%- for f in families -%}
           {%- assign fl = f | strip -%}
           <button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="{{ fl | handleize }}">{{ fl }}</button>
         {%- endfor -%}
-      </div>
-
-      <div class="hoa-shop-bar__group hoa-shop-bar__group--gift" role="group" aria-label="Shop by occasion">
-        <button type="button" class="hoa-ftag hoa-ftag--gift" aria-pressed="false" data-hoa-gift>
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6.5h12v2H2zM3 8.5h10V14H3zM8 6.5V14M8 6.5C6.5 6.5 5.5 5.6 5.5 4.5S6.3 3 7 3.6C7.6 4.1 8 5 8 6.5ZM8 6.5c1.5 0 2.5-.9 2.5-2s-.8-1.5-1.5-.9C8.4 4.1 8 5 8 6.5Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          {{ s.gift_label }}<sup data-hoa-count="gift"></sup>
-        </button>
       </div>
 
       <div class="hoa-shop-bar__end">
@@ -263,6 +328,13 @@
     { "type": "text", "id": "men_label", "label": "Men tab", "default": "Men" },
     { "type": "text", "id": "women_label", "label": "Women tab", "default": "Women" },
     { "type": "text", "id": "unisex_label", "label": "Unisex tab", "default": "Unisex" },
+    { "type": "text", "id": "rail_eyebrow", "label": "Category rail eyebrow", "default": "Shop by category" },
+    { "type": "text", "id": "rail_title", "label": "Category rail title", "default": "Find your signature" },
+    { "type": "text", "id": "all_sub", "label": "All caption", "default": "The full house" },
+    { "type": "text", "id": "men_sub", "label": "Men caption", "default": "Bold, smoked, woody" },
+    { "type": "text", "id": "women_sub", "label": "Women caption", "default": "Soft, floral, radiant" },
+    { "type": "text", "id": "unisex_sub", "label": "Unisex caption", "default": "Made for anyone" },
+    { "type": "text", "id": "gift_sub", "label": "Gift caption", "default": "Ready to give" },
     { "type": "text", "id": "families", "label": "Scent families (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
     { "type": "text", "id": "gift_label", "label": "Gift category label", "info": "Matched against the custom.gift metafield or a tag containing \"gift\".", "default": "Gift" },
     { "type": "header", "content": "Campaign photo in the grid" },

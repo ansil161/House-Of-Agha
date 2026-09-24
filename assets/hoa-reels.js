@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HOUSE OF AGHA — SHOPPABLE FILMS
+   HOUSE OF AGHA — INSTAGRAM REELS
    sections/hoa-reels.liquid
 
    Carousel: a native scroll-snap track (touch momentum, no scrollbar). The
@@ -12,10 +12,6 @@
    otherwise, so at most a handful ever run. Sound is opt-in per card and only
    one card can be unmuted at a time.
 
-   Cart: the bag button is a real Shopify product form. It is enhanced to post
-   to /cart/add.js and open the theme's bag drawer (mirrors assets/pdp.js);
-   if JS fails the native form post still works.
-
    Motion: GSAP entrance stagger only, skipped under prefers-reduced-motion
    (films also do not autoplay then; the visitor presses play).
    ========================================================================== */
@@ -25,7 +21,6 @@
   var SELECTOR = '[data-hoa-reels]';
   var instances = new WeakMap();
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var store = function () { return typeof AghaStore !== 'undefined' ? AghaStore : window.AghaStore; };
 
   function attachSources(video) {
     if (video.dataset.loaded) return;
@@ -55,7 +50,7 @@
     function setPlaying(reel, playing) {
       reel.classList.toggle('is-playing', playing);
       var btn = reel.querySelector('[data-hoa-reel-play]');
-      if (btn) btn.setAttribute('aria-label', playing ? 'Pause film' : 'Play film');
+      if (btn) btn.setAttribute('aria-label', playing ? 'Pause reel' : 'Play reel');
     }
 
     function sync(reel) {
@@ -124,6 +119,8 @@
     if (!state.size) return function () {};
 
     if ('IntersectionObserver' in window) {
+      // A track that does not scroll (single product reel) has nothing to clip against: observe the page instead.
+      var ioRoot = track.classList.contains('hoa-reels__track') && getComputedStyle(track).overflowX === 'visible' ? null : track;
       // Horizontal: visible inside the carousel viewport.
       var ioTrack = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -132,7 +129,7 @@
           st.inTrack = e.isIntersecting && e.intersectionRatio >= 0.6;
           sync(e.target);
         });
-      }, { root: track, threshold: [0, 0.6] });
+      }, { root: ioRoot, threshold: [0, 0.6] });
       // Preload: within roughly one card either side of the carousel.
       var ioNear = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -141,7 +138,7 @@
           st.near = e.isIntersecting;
           sync(e.target);
         });
-      }, { root: track, rootMargin: '0px 320px 0px 320px', threshold: 0 });
+      }, { root: ioRoot, rootMargin: '0px 320px 0px 320px', threshold: 0 });
       // Vertical: visible on the page.
       var ioPage = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -292,54 +289,10 @@
     };
   }
 
-  /* ---------------- Add to bag ---------------- */
-  function initCart(root) {
-    var live = root.querySelector('[data-hoa-reels-live]');
-    var onSubmit = function (e) {
-      var form = e.target.closest && e.target.closest('.hoa-reel__form');
-      if (!form || !root.contains(form)) return;
-      var btn = form.querySelector('.hoa-reel__add');
-      if (!btn || !window.fetch) return; // native post as the fallback
-      e.preventDefault();
-      if (btn.classList.contains('is-loading')) return;
-      btn.classList.add('is-loading');
-      var rootUrl = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
-
-      fetch(rootUrl + 'cart/add.js', {
-        method: 'POST',
-        headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: new FormData(form)
-      }).then(function (res) {
-        if (!res.ok) return res.json().catch(function () { return {}; }).then(function (err) { throw new Error(err.description || 'We couldn’t add this to your bag.'); });
-        btn.classList.remove('is-loading');
-        btn.classList.add('is-added');
-        if (live) live.textContent = (btn.dataset.title || 'Fragrance') + ' added to your bag';
-        var bag = store();
-        if (bag) {
-          bag.cart.push({
-            id: btn.dataset.title + '-' + Date.now(),
-            title: btn.dataset.title,
-            price: btn.dataset.price,
-            image: btn.dataset.image,
-            size: btn.dataset.size
-          });
-          bag.updateCartUI();
-          setTimeout(function () { bag.toggleCartDrawer(true); }, 350);
-        }
-        setTimeout(function () { btn.classList.remove('is-added'); }, 2200);
-      }).catch(function (err) {
-        btn.classList.remove('is-loading');
-        var bag = store();
-        if (bag && bag.showToast) bag.showToast(err.message);
-        else if (live) live.textContent = err.message;
-      });
-    };
-    root.addEventListener('submit', onSubmit);
-    return function destroy() { root.removeEventListener('submit', onSubmit); };
-  }
-
   /* ---------------- Motion ---------------- */
   function initMotion(root) {
+    // Product page: one card, no entrance stagger (a late-built page can leave ScrollTrigger positions stale).
+    if (root.classList.contains('hoa-reels--product')) return null;
     if (reduceMotion || typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') return null;
     gsap.registerPlugin(ScrollTrigger);
     var cards = root.querySelectorAll('[data-hoa-reel]');
@@ -364,7 +317,6 @@
     instances.set(root, {
       videos: initVideos(root, track),
       carousel: initCarousel(root, track),
-      cart: initCart(root),
       motion: initMotion(root)
     });
   }
@@ -372,7 +324,7 @@
   function destroy(root) {
     var inst = instances.get(root);
     if (!inst) return;
-    ['videos', 'carousel', 'cart'].forEach(function (k) { if (inst[k]) inst[k](); });
+    ['videos', 'carousel'].forEach(function (k) { if (inst[k]) inst[k](); });
     if (inst.motion) inst.motion.revert();
     instances.delete(root);
   }

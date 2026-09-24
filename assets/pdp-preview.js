@@ -654,6 +654,58 @@
     <div class="pdp-dock-spacer" aria-hidden="true"></div>
   </section>`;
 
-  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + reviewsSection + faq + related + finale;
+  /* ------------------------------------------------- Product films (only this product) */
+  // Mirrors sections/hoa-reels.liquid in product-page mode. Mock clips = the Liquid mock list.
+  const CLIPS = [
+    ['oud-fury', 'https://videos.pexels.com/video-files/7816005/7816005-sd_540_960_25fps.mp4', 'hoa-oud-fury-portrait'],
+    ['agha-blue', 'https://videos.pexels.com/video-files/6764969/6764969-sd_540_960_25fps.mp4', 'hoa-agha-blue-portrait'],
+    ['oud-of-dark-paradise', '/assets/hoa-reel-oud-of-dark-paradise.mp4', 'hoa-dark-paradise-portrait'],
+    ['maha', 'https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4', 'hoa-maha-portrait']
+  ];
+  // Only this product's own video(s). Add more entries per handle when more films exist.
+  const reelSet = CLIPS.filter((c) => c[0] === handle);
+  const reelName = esc(titleCase(product.title));
+  const reelCard = (r, k) => `
+          <li class="hoa-reel" data-hoa-reel>
+            <div class="hoa-reel__frame"><div class="hoa-reel__stage" data-hoa-reel-stage>
+              <img class="hoa-reel__poster" src="/assets/${r[2]}.webp" alt="${reelName} film" width="1200" height="1607">
+              <video class="hoa-reel__video" data-hoa-reel-video muted loop playsinline preload="none" disablepictureinpicture data-src="${r[1]}" aria-label="${reelName} film"></video>
+              <div class="hoa-reel__controls">
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
+                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
+                </button>
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
+                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            </div></div>
+          </li>`;
+  const reels = !reelSet.length ? '' : `
+  <section class="hoa-reels hoa-reels--product" id="product-films" data-hoa-reels>
+    <div class="hoa-wrap">
+      <header class="hoa-reels__head">
+        <div>
+          <p class="hoa-eyebrow">Product film</p>
+          <h2 class="hoa-h2">See it <em>in motion.</em></h2>
+        </div>
+        <div class="hoa-reels__nav">
+          <div class="hoa-reels__arrows"><button type="button" class="hoa-reels__arrow" data-hoa-reels-prev aria-label="Previous reels"></button><button type="button" class="hoa-reels__arrow" data-hoa-reels-next aria-label="Next reels"></button></div>
+        </div>
+      </header>
+      <div class="hoa-reels__viewport">
+        <ul class="hoa-reels__track" data-hoa-reels-track role="list" tabindex="0" aria-label="Product films">${reelSet.map(reelCard).join('')}
+        </ul>
+      </div>
+    </div>
+  </section>`;
+
+  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + reels + reviewsSection + faq + related + finale;
   window.AghaPDP?.init();
+  if (reels) {
+    const sc = document.createElement('script');
+    sc.src = '/assets/hoa-reels.js';
+    document.body.appendChild(sc);
+  }
 })();

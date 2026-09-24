@@ -496,99 +496,130 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 
 /* ==========================================================================
-   03 — SIGNATURE FRAGRANCES (centred coverflow carousel)
-   Cards share one slot the size of the active card; JS sets --o (offset from the
-   active card: -2…2) and each card derives its position, scale and opacity from it.
+   03 — SIGNATURE FRAGRANCES (full-width showroom carousel)
+   Three bottles on paper, no cards. Items share one slot centred in the stage;
+   JS (GSAP) sets each one's x / scale from its offset to the active bottle.
    ========================================================================== */
 .hoa-cf {
-  --cf-w: clamp(250px, 29vw, 430px);   /* active card width */
-  --cf-step: 0.8;                      /* side card centre, in active-card widths */
-  --cf-side: 0.7;                      /* side card scale */
-  --cf-arrow: 56px;
-  padding: var(--hoa-section) 0;
+  --cf-w: clamp(230px, 29vw, 430px);   /* active bottle width (4:5 slot) */
+  padding: clamp(56px, 6vw, 96px) 0 var(--hoa-section);
   background: var(--hoa-paper);
   color: var(--hoa-ink);
   overflow: hidden;
 }
 .hoa-cf__head { text-align: center; }
-.hoa-cf__head .hoa-h2 { margin-top: 18px; font-size: clamp(2.2rem, 4.4vw, 4.4rem); }
+.hoa-cf__head .hoa-h2 {
+  margin-top: 18px;
+  font-size: clamp(2rem, 3.8vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  word-spacing: 0.08em;
+  text-wrap: balance;
+}
+.hoa-cf__head .hoa-h2 em {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  word-spacing: 0.04em;
+  color: var(--hoa-brass);
+}
 
-.hoa-cf__stage { margin-top: clamp(56px, 7vw, 104px); }
-.hoa-cf__track {
-  --drag: 0px;
+.hoa-cf__stage {
   position: relative;
-  width: var(--cf-w);
-  aspect-ratio: 4 / 5;
-  margin: 0 auto;
+  width: 100%;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.hoa-cf__track {
+  position: relative;
+  width: 100%;
+  height: calc(var(--cf-w) * 1.2);
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
+  outline: none;
 }
-.hoa-cf__card {
-  --o: 0;
-  --abs: max(var(--o), calc(var(--o) * -1));
+.hoa-cf__item {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 50%;
+  width: var(--cf-w);
+  height: 100%;
   display: block;
-  overflow: hidden;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--hoa-tint, var(--hoa-ink)) 5%, var(--hoa-paper-2));
-  z-index: calc(10 - var(--abs));
-  opacity: calc(1 - var(--abs) * 0.45);
-  transform:
-    translate3d(calc(var(--o) * var(--cf-step) * var(--cf-w) + var(--drag)), 0, 0)
-    scale(calc(1 - min(var(--abs), 1) * (1 - var(--cf-side))));
-  transition: transform 0.9s var(--hoa-ease), opacity 0.7s var(--hoa-ease), box-shadow 0.9s var(--hoa-ease);
+  transform: translateX(-50%);   /* GSAP takes over with xPercent / x / scale */
+  mix-blend-mode: multiply;   /* a white studio backdrop dissolves into the paper */
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
 }
-.hoa-cf__card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: multiply;   /* white studio backdrop takes on the card tint */
+.hoa-cf__pic { display: block; width: 100%; height: 100%; transition: transform 0.7s var(--hoa-ease), filter 0.7s var(--hoa-ease); }
+.hoa-cf__pic img {
+  width: 134%;
+  height: 134%;
+  max-width: none;
+  margin: -17% 0 0 -17%;
+  object-fit: contain;
   pointer-events: none;
   -webkit-user-drag: none;
 }
-.hoa-cf__card.is-active { box-shadow: 0 40px 80px -48px rgba(20, 18, 16, 0.35); }
-.hoa-cf__card.is-far { opacity: 0; pointer-events: none; }
-.hoa-cf__card:not(.is-active) { cursor: pointer; }
-.hoa-cf__card:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 6px; }
-.hoa-cf__track.is-dragging .hoa-cf__card { transition: none; }
+/* Centre bottle: a soft contact shadow grounds it; neighbours sit back, slightly muted */
+.hoa-cf__item::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7%;
+  width: 70%;
+  height: 6%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(20, 16, 12, 0.32) 0%, rgba(20, 16, 12, 0) 70%);
+  opacity: 0;
+  z-index: 2;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  transition: opacity 0.9s var(--hoa-ease);
+}
+.hoa-cf__item.is-active::after { opacity: 1; }
+.hoa-cf__item:not(.is-active) .hoa-cf__pic { filter: saturate(0.8); }
+.hoa-cf__item.is-active .hoa-cf__pic { filter: saturate(1.06); }
+.hoa-cf__item:not(.is-active) { cursor: pointer; }
+.hoa-cf__item:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: -8px; }
+@media (hover: hover) {
+  .hoa-cf__item:not(.is-active):hover .hoa-cf__pic { transform: scale(1.05); filter: saturate(1); }
+  .hoa-cf__item.is-active:hover .hoa-cf__pic { transform: scale(1.02); }
+}
+.hoa-cf__track.is-dragging { cursor: grabbing; }
 
-/* Arrows sit on the seam between the active card and its neighbours */
+/* Plain arrows at the far edges of the page */
 .hoa-cf__arrow {
   position: absolute;
   top: 50%;
   z-index: 20;
-  width: var(--cf-arrow);
-  height: var(--cf-arrow);
+  width: 48px;
+  height: 64px;
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--hoa-line);
-  border-radius: 50%;
-  background: var(--hoa-paper);
+  border: 0;
+  background: none;
   color: var(--hoa-ink);
   cursor: pointer;
-  box-shadow: 0 14px 30px -18px rgba(20, 18, 16, 0.3);
-  transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease), border-color 0.5s var(--hoa-ease), transform 0.5s var(--hoa-ease);
+  transform: translateY(-50%);
+  transition: transform 0.5s var(--hoa-ease), opacity 0.3s linear;
 }
-.hoa-cf__arrow svg { width: 18px; height: 18px; transition: transform 0.5s var(--hoa-ease); }
-.hoa-cf__arrow--prev { left: 0; transform: translate(calc(-50% - 1px), -50%); }
-.hoa-cf__arrow--next { right: 0; transform: translate(calc(50% + 1px), -50%); }
-.hoa-cf__arrow:hover { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
-.hoa-cf__arrow--prev:hover svg { transform: translateX(-3px); }
-.hoa-cf__arrow--next:hover svg { transform: translateX(3px); }
-.hoa-cf__arrow--prev:active { transform: translate(calc(-50% - 1px), -50%) scale(0.94); }
-.hoa-cf__arrow--next:active { transform: translate(calc(50% + 1px), -50%) scale(0.94); }
-.hoa-cf__arrow:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 4px; }
+.hoa-cf__arrow svg { width: 26px; height: 26px; }
+.hoa-cf__arrow--prev { left: clamp(8px, 1.8vw, 28px); }
+.hoa-cf__arrow--next { right: clamp(8px, 1.8vw, 28px); }
+@media (hover: hover) {
+  .hoa-cf__arrow--prev:hover { transform: translate(-4px, -50%); }
+  .hoa-cf__arrow--next:hover { transform: translate(4px, -50%); }
+}
+.hoa-cf__arrow:active { opacity: 0.6; }
+.hoa-cf__arrow:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 2px; }
 
 /* Details of the active fragrance */
 .hoa-cf__details {
   display: grid;
   max-width: 520px;
-  margin: clamp(40px, 5vw, 64px) auto 0;
+  margin: clamp(32px, 3.4vw, 52px) auto 0;
   text-align: center;
 }
 .hoa-cf__info {
@@ -596,70 +627,60 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+  visibility: hidden;
+  opacity: 0;
 }
-.hoa-cf__info[hidden] { display: flex; visibility: hidden; opacity: 0; transform: translateY(10px); }
-.hoa-cf__info.is-active { animation: hoa-cf-in 0.8s var(--hoa-ease) both; }
-@keyframes hoa-cf-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-.hoa-cf__num { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-cf__info.is-active { visibility: visible; opacity: 1; }
+.hoa-cf__num {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-cf__num::before,
+.hoa-cf__num::after { content: ''; width: 28px; height: 1px; background: var(--hoa-brass); opacity: 0.6; }
 .hoa-cf__num span { margin: 0 6px; }
 .hoa-cf__name {
   font-family: var(--hoa-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(2.2rem, 3.6vw, 3.6rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.6rem, 4vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: 0;
+  padding-bottom: 0.06em;
   color: var(--hoa-ink);
   text-transform: none;
 }
-.hoa-cf__line { color: var(--hoa-ink-2); font-size: 1rem; line-height: 1.6; max-width: 38ch; }
-.hoa-cf__buy { display: flex; align-items: center; gap: 20px; margin-top: 10px; }
-.hoa-cf__price { font-size: 0.95rem; font-weight: 500; }
-
-/* Counter + collection link */
-.hoa-cf__foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  max-width: 880px;
-  margin: clamp(56px, 6vw, 88px) auto 0;
-  padding-top: 22px;
-  border-top: 1px solid var(--hoa-line);
+.hoa-cf__line {
+  max-width: 34ch;
+  margin-top: 2px;
+  color: var(--hoa-ink-2);
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
 }
-.hoa-cf__count {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  color: var(--hoa-mute);
-  font-variant-numeric: tabular-nums;
-}
-.hoa-cf__count span:first-child { color: var(--hoa-ink); }
-.hoa-cf__bar { position: relative; display: block; width: 96px; height: 1px; background: var(--hoa-line); overflow: hidden; }
-.hoa-cf__bar b {
-  position: absolute;
-  inset: 0;
-  background: var(--hoa-ink);
-  transform-origin: left;
-  transform: scaleX(var(--p, 0));
-  transition: transform 0.9s var(--hoa-ease);
-}
+.hoa-cf__info .hoa-btn { margin-top: 6px; }
+.hoa-cf__all { margin-top: clamp(32px, 4vw, 56px); text-align: center; }
 
 @media (max-width: 899px) {
-  .hoa-cf { --cf-w: min(62vw, 340px); --cf-step: 0.78; --cf-side: 0.72; --cf-arrow: 44px; }
-  .hoa-cf__arrow svg { width: 16px; height: 16px; }
-  .hoa-cf__foot { flex-direction: column; gap: 18px; }
+  .hoa-cf { --cf-w: min(60vw, 320px); }
+  .hoa-cf__arrow { width: 40px; }
+  .hoa-cf__arrow svg { width: 22px; height: 22px; }
 }
 @media (max-width: 480px) {
-  .hoa-cf { --cf-w: 66vw; --cf-step: 0.74; }
-  .hoa-cf__line { font-size: 0.92rem; }
+  .hoa-cf { --cf-w: 66vw; }
+  .hoa-cf__line { font-size: 0.86rem; }
+  .hoa-cf__num::before, .hoa-cf__num::after { width: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hoa-cf__card, .hoa-cf__bar b { transition: opacity 0.3s linear; }
-  .hoa-cf__info.is-active { animation: none; }
+  .hoa-cf__pic, .hoa-cf__arrow { transition: none; }
 }
 
 /* ==========================================================================
@@ -1384,8 +1405,8 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 
 /* ==========================================================================
-   SHOPPABLE FILMS — sections/hoa-reels.liquid
-   Portrait film cards, each joined to its product panel. Native scroll-snap
+   INSTAGRAM REELS — sections/hoa-reels.liquid
+   Portrait Instagram-style reel cards (video only, no product panel). Native scroll-snap
    track; 4 cards on desktop, 3.2 / 2.3 tablet, 1.32 mobile so the next
    card always peeks.
    ========================================================================== */
@@ -1410,8 +1431,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reels__arrow:disabled { opacity: 0.3; cursor: default; }
 .hoa-reels__arrow:focus-visible,
 .hoa-reel__ctrl:focus-visible,
-.hoa-reel__add:focus-visible,
-.hoa-reel__link:focus-visible,
 .hoa-reels__track:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 3px; }
 
 /* Track bleeds to the right viewport edge so the next card is always cut off. */
@@ -1439,13 +1458,13 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reel__frame {
   position: relative; height: 100%;
   display: flex; flex-direction: column;
-  border-radius: 14px; overflow: hidden; background: #fff;
+  border-radius: 14px; overflow: hidden; background: var(--hoa-night);
   box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04), 0 18px 40px -26px rgba(20, 18, 16, 0.32);
   transition: box-shadow 0.6s var(--hoa-ease);
 }
 .hoa-reel__frame:hover { box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04), 0 30px 54px -26px rgba(20, 18, 16, 0.4); }
 
-.hoa-reel__stage { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--hoa-night); isolation: isolate; }
+.hoa-reel__stage { position: relative; aspect-ratio: 9 / 16; overflow: hidden; background: var(--hoa-night); isolation: isolate; }
 .hoa-reel__poster, .hoa-reel__video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
   transform: scale(1); transition: transform 1.4s var(--hoa-ease);
@@ -1484,41 +1503,38 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reel.has-sound .hoa-reel__i-sound { display: block; }
 .hoa-reel.has-sound .hoa-reel__i-muted { display: none; }
 
-/* Product panel: the whole panel is one link; the bag button sits above it */
-.hoa-reel__product {
-  position: relative; flex: 1;
-  display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 12px;
-  padding: 12px;
-  border-top: 1px solid var(--hoa-line);
-  background: #fff;
+/* Instagram chrome: handle chip top-left, "Reel" badge bottom-left, whole card is one link */
+.hoa-reel__open { position: absolute; inset: 0; z-index: 1; }
+.hoa-reel__open:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: -4px; }
+.hoa-reel__ig {
+  position: absolute; z-index: 2; top: 12px; left: 12px; right: 96px;
+  display: flex; align-items: center; gap: 8px; color: var(--hoa-ivory); pointer-events: none;
+  text-shadow: 0 1px 8px rgba(12, 10, 8, 0.55);
 }
-.hoa-reel__thumb {
-  width: 52px; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: var(--hoa-paper-2);
-  display: block;
+.hoa-reel__avatar {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--hoa-serif); font-style: italic; font-size: 0.95rem; line-height: 1;
+  color: var(--hoa-ivory); background: var(--hoa-night);
+  box-shadow: 0 0 0 2px var(--hoa-brass), 0 0 0 3.5px rgba(12, 10, 8, 0.4);
 }
-.hoa-reel__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; mix-blend-mode: multiply; }
-.hoa-reel__info { min-width: 0; }
-.hoa-reel__name { margin: 0; font-family: var(--hoa-sans); font-size: 0.92rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; text-transform: none; }
-.hoa-reel__link { color: inherit; text-decoration: none; }
-.hoa-reel__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
-.hoa-reel__family { margin: 3px 0 0; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hoa-mute); }
-.hoa-reel__price { margin: 6px 0 0; font-size: 0.9rem; color: var(--hoa-ink); }
-.hoa-reel__form { margin: 0; position: relative; z-index: 2; }
-.hoa-reel__add {
-  position: relative; z-index: 2;
-  width: 40px; height: 40px; border-radius: 50%; padding: 0;
-  display: grid; place-items: center; cursor: pointer; text-decoration: none;
-  border: 1px solid var(--hoa-line); background: transparent; color: var(--hoa-ink);
-  transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
+.hoa-reel__handle { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8rem; font-weight: 500; letter-spacing: -0.01em; }
+.hoa-reel__glyph { flex: none; width: 16px; height: 16px; opacity: 0.85; }
+.hoa-reel__badge {
+  position: absolute; z-index: 2; left: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px 6px 9px; border-radius: 999px;
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--hoa-ivory); background: rgba(12, 10, 8, 0.42);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none;
 }
-.hoa-reel__add svg { width: 19px; height: 19px; grid-area: 1 / 1; }
-.hoa-reel__add:hover { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
-.hoa-reel__i-check { display: none; }
-.hoa-reel__add.is-added { background: var(--hoa-ink); color: var(--hoa-paper); border-color: var(--hoa-ink); }
-.hoa-reel__add.is-added .hoa-reel__i-bag { display: none; }
-.hoa-reel__add.is-added .hoa-reel__i-check { display: block; }
-.hoa-reel__add.is-loading { opacity: 0.5; pointer-events: none; }
-.hoa-reel__frame:hover .hoa-reel__link { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.hoa-reel__badge svg { width: 14px; height: 14px; }
+.hoa-reel__ctrl { position: relative; z-index: 3; }
+.hoa-reel__controls { z-index: 3; }
+
+/* Product page: this product's reels (3), no bleed */
+.hoa-reels--product { padding-block: clamp(56px, 7vw, 104px); }
+.hoa-reels--product .hoa-reels__viewport { margin-right: 0; }
+.hoa-reels--product .hoa-reel { flex: 0 0 min(340px, 78vw); }
 
 .hoa-reels__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
@@ -1528,8 +1544,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-reels__track { --reel-count: 1.32; --reel-gap: 14px; }
   .hoa-reels__nav { width: 100%; justify-content: space-between; }
   .hoa-reels__arrows { display: none; }
-  .hoa-reel__product { grid-template-columns: 56px minmax(0, 1fr) auto; padding: 14px; gap: 14px; }
-  .hoa-reel__thumb { width: 56px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

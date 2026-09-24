@@ -245,7 +245,78 @@
     cleanups.push(function () { io.disconnect(); });
   }
 
-  function init() { initCatalog(); initAdd(); initReveals(); }
+  /* Hero: pointer parallax on the image stack, count-up on the facts, a magnetic button. */
+  function initHero() {
+    var hero = document.querySelector('[data-hoa-sh]');
+    if (!hero || reduceMotion) return;
+    var hover = window.matchMedia('(hover: hover)').matches;
+    var layers = Array.prototype.slice.call(hero.querySelectorAll('[data-depth]'));
+    var stage = hero.querySelector('.hoa-sh__stage');
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+
+    function frame() {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      layers.forEach(function (el) {
+        var d = parseFloat(el.dataset.depth) || 0;
+        el.style.translate = (cx * d * 26).toFixed(2) + 'px ' + (cy * d * 20).toFixed(2) + 'px';
+      });
+      if (stage) {
+        stage.style.setProperty('--mx', (50 + cx * 30) + '%');
+        stage.style.setProperty('--my', (50 + cy * 30) + '%');
+      }
+      raf = (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) ? requestAnimationFrame(frame) : 0;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+    function move(e) {
+      var r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      kick();
+    }
+    function leave() { tx = 0; ty = 0; kick(); }
+
+    if (hover) {
+      hero.addEventListener('pointermove', move);
+      hero.addEventListener('pointerleave', leave);
+      cleanups.push(function () {
+        hero.removeEventListener('pointermove', move);
+        hero.removeEventListener('pointerleave', leave);
+        cancelAnimationFrame(raf);
+      });
+
+      var magnet = hero.querySelector('[data-sh-magnet]');
+      if (magnet) {
+        magnet.addEventListener('pointermove', function (e) {
+          var r = magnet.getBoundingClientRect();
+          var x = (e.clientX - (r.left + r.width / 2)) * 0.18;
+          var y = (e.clientY - (r.top + r.height / 2)) * 0.3;
+          magnet.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
+        });
+        magnet.addEventListener('pointerleave', function () { magnet.style.translate = ''; });
+      }
+    }
+
+    // Count the facts up. The total is written by initCatalog, so wait a beat before reading it.
+    setTimeout(function () {
+      hero.querySelectorAll('[data-sh-count]').forEach(function (el, i) {
+        var end = parseInt(el.textContent, 10);
+        if (!end) return;
+        var start = null, dur = 1100 + i * 200;
+        var node = el.firstChild;
+        node.nodeValue = '0';
+        function step(t) {
+          if (start === null) start = t;
+          var p = Math.min((t - start) / dur, 1);
+          node.nodeValue = Math.round(end * (1 - Math.pow(1 - p, 4)));
+          if (p < 1) requestAnimationFrame(step);
+        }
+        setTimeout(function () { requestAnimationFrame(step); }, 700 + i * 120);
+      });
+    }, 60);
+  }
+
+  function init() { initCatalog(); initAdd(); initReveals(); initHero(); }
   function destroy() {
     cleanups.forEach(function (fn) { try { fn(); } catch (e) {} });
     cleanups = [];

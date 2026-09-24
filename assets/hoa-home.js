@@ -226,52 +226,114 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 03 Signature fragrances: centred coverflow carousel                 */
+  /* 03 Signature fragrances: full-width showroom carousel               */
   /* ------------------------------------------------------------------ */
   function initFragrances() {
     var sec = document.querySelector('[data-hoa-cf]');
     if (!sec) return;
     var track = sec.querySelector('[data-hoa-cf-track]');
+    var stage = sec.querySelector('[data-hoa-cf-stage]');
     var cards = Array.prototype.slice.call(sec.querySelectorAll('[data-hoa-cf-card]'));
-    var infos = sec.querySelectorAll('[data-hoa-cf-info]');
-    var current = sec.querySelector('[data-hoa-cf-current]');
-    var bar = sec.querySelector('[data-hoa-cf-bar]');
+    var infos = Array.prototype.slice.call(sec.querySelectorAll('[data-hoa-cf-info]'));
     var prev = sec.querySelector('[data-hoa-cf-prev]');
     var next = sec.querySelector('[data-hoa-cf-next]');
     var n = cards.length;
     if (!n || !track) return;
     var active = 0;
-    var pad = function (k) { return (k < 9 ? '0' : '') + (k + 1); };
+    var animated = hasGsap() && !reduceMotion;
+    var SIDE = 0.72;          // scale of the neighbouring bottles
+    var DURATION = 0.9;
+    var EASE = 'power3.inOut';
+    var step = 0;
 
-    // Shortest signed distance from the active card, so the carousel loops.
-    function offset(k) {
-      var o = ((k - active) % n + n) % n;
+    // Shortest signed distance from the active bottle, so the carousel loops.
+    function offset(k, a) {
+      var o = ((k - a) % n + n) % n;
       return o > n / 2 ? o - n : o;
     }
 
-    function render() {
-      cards.forEach(function (c, k) {
-        var o = offset(k);
-        var isActive = o === 0;
-        c.style.setProperty('--o', Math.max(-2, Math.min(2, o)));
-        c.classList.toggle('is-active', isActive);
-        c.classList.toggle('is-far', Math.abs(o) > 1);
-        c.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-        c.tabIndex = isActive ? 0 : -1;
-      });
-      infos.forEach(function (el, k) {
-        var on = k === active;
-        el.hidden = !on;
-        el.classList.toggle('is-active', on);
-      });
-      if (current) current.textContent = pad(active);
-      if (bar) bar.style.setProperty('--p', (active + 1) / n);
+    // Distance between bottle centres: wide on desktop, tight enough on a phone
+    // that the neighbours stay partly in view.
+    function measure() {
+      var w = stage.clientWidth;
+      var cw = cards[0].offsetWidth;
+      step = w < 700 ? cw * 0.84 : Math.max(w * 0.3, cw * 0.92);
     }
 
-    function go(i) { active = ((i % n) + n) % n; render(); }
+    function pose(o) {
+      var c = Math.max(-2, Math.min(2, o));
+      var a = Math.abs(c);
+      return { x: c * step, scale: a === 0 ? 1 : SIDE, autoAlpha: a <= 1 ? 1 : 0, zIndex: 10 - a };
+    }
 
-    var onPrev = function () { go(active - 1); };
-    var onNext = function () { go(active + 1); };
+    function place(el, p) {
+      if (hasGsap()) {
+        gsap.set(el, { xPercent: -50, x: p.x, scale: p.scale, autoAlpha: p.autoAlpha, zIndex: p.zIndex });
+      } else {
+        el.style.transform = 'translateX(calc(-50% + ' + p.x + 'px)) scale(' + p.scale + ')';
+        el.style.opacity = p.autoAlpha;
+        el.style.visibility = p.autoAlpha ? 'visible' : 'hidden';
+        el.style.zIndex = p.zIndex;
+      }
+    }
+
+    function flags() {
+      cards.forEach(function (c, k) {
+        var on = k === active;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-hidden', on ? 'false' : 'true');
+        c.tabIndex = on ? 0 : -1;
+      });
+    }
+
+    function showInfo(from, to) {
+      infos.forEach(function (el, k) {
+        var btn = el.querySelector('a');
+        if (btn) btn.tabIndex = k === to ? 0 : -1;
+      });
+      gsap_kill(infos);
+      if (!animated || from === to) {
+        infos.forEach(function (el, k) { el.classList.toggle('is-active', k === to); });
+        return;
+      }
+      infos.forEach(function (el, k) { if (k !== from && k !== to) el.classList.remove('is-active'); });
+      var out = infos[from], inn = infos[to];
+      out.classList.add('is-active');
+      inn.classList.add('is-active');
+      gsap.to(out, { autoAlpha: 0, y: -8, duration: 0.3, ease: 'power2.in',
+        onComplete: function () { out.classList.remove('is-active'); gsap.set(out, { clearProps: 'opacity,visibility,transform' }); } });
+      gsap.fromTo(inn, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, delay: 0.35, ease: 'power3.out',
+        onComplete: function () { gsap.set(inn, { clearProps: 'opacity,visibility,transform' }); } });
+    }
+    function gsap_kill(list) {
+      if (!hasGsap()) return;
+      list.forEach(function (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: 'opacity,visibility,transform' }); });
+    }
+
+    function go(delta) {
+      var from = active;
+      var to = ((active + delta) % n + n) % n;
+      if (to === from) return;
+      active = to;
+      flags();
+      cards.forEach(function (c, k) {
+        var target = pose(offset(k, active));
+        // A bottle wrapping round the far side is repositioned unseen; the rest travel.
+        var wraps = Math.abs(offset(k, active) - offset(k, from)) > 1;
+        if (!animated || wraps) { place(c, target); return; }
+        gsap.to(c, { x: target.x, scale: target.scale, autoAlpha: target.autoAlpha, zIndex: target.zIndex,
+          duration: DURATION, ease: EASE, overwrite: 'auto' });
+      });
+      showInfo(from, to);
+    }
+
+    function layout() {
+      measure();
+      cards.forEach(function (c, k) { place(c, pose(offset(k, active))); });
+    }
+
+    var onPrev = function () { go(-1); };
+    var onNext = function () { go(1); };
     if (prev) prev.addEventListener('click', onPrev);
     if (next) next.addEventListener('click', onNext);
 
@@ -279,8 +341,8 @@
     var suppressClick = false;
     var onCardClick = function (e) {
       var k = cards.indexOf(e.currentTarget);
-      if (suppressClick || k !== active) { e.preventDefault(); }
-      if (!suppressClick && k !== active) go(k);
+      if (suppressClick || k !== active) e.preventDefault();
+      if (!suppressClick && k !== active) go(offset(k, active) < 0 ? -1 : 1);
       suppressClick = false;
     };
     cards.forEach(function (c) { c.addEventListener('click', onCardClick); });
@@ -291,34 +353,29 @@
     };
     sec.addEventListener('keydown', onKey);
 
-    // Swipe / drag: the row follows the pointer, then settles on the nearest card.
+    // Swipe / drag: a decisive horizontal move steps the carousel once.
     var startX = 0, startY = 0, dx = 0, dragging = false, pid = null;
     var onDown = function (e) {
       if (e.button !== undefined && e.button !== 0) return;
-      if (e.target.closest('.hoa-cf__arrow')) return;
       pid = e.pointerId; startX = e.clientX; startY = e.clientY; dx = 0; dragging = false;
     };
     var onMove = function (e) {
       if (e.pointerId !== pid) return;
       dx = e.clientX - startX;
-      if (!dragging) {
-        if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(e.clientY - startY)) return;
+      if (!dragging && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(e.clientY - startY)) {
         dragging = true;
         track.classList.add('is-dragging');
-        try { track.setPointerCapture(pid); } catch (err) {}
       }
-      track.style.setProperty('--drag', dx * 0.6 + 'px');
     };
     var onUp = function (e) {
       if (e.pointerId !== pid) return;
       pid = null;
+      track.classList.remove('is-dragging');
       if (!dragging) return;
       dragging = false;
       suppressClick = true;
       setTimeout(function () { suppressClick = false; }, 0);
-      track.classList.remove('is-dragging');
-      track.style.setProperty('--drag', '0px');
-      var threshold = Math.min(80, track.offsetWidth * 0.18);
+      var threshold = Math.min(70, track.offsetWidth * 0.12);
       if (dx <= -threshold) onNext(); else if (dx >= threshold) onPrev();
     };
     track.addEventListener('pointerdown', onDown);
@@ -326,9 +383,38 @@
     track.addEventListener('pointerup', onUp);
     track.addEventListener('pointercancel', onUp);
 
-    render();
+    layout();
+    flags();
+    showInfo(active, active);
+
+    var lastW = stage.clientWidth;
+    var ro = null;
+    var onResize = function () {
+      if (stage.clientWidth === lastW) return;
+      lastW = stage.clientWidth;
+      layout();
+    };
+    if ('ResizeObserver' in window) { ro = new ResizeObserver(onResize); ro.observe(stage); }
+    else window.addEventListener('resize', onResize);
+
+    // Entrance: heading first, then the bottles settle (centre last to land), then the details.
+    if (animated && window.ScrollTrigger) {
+      var head = sec.querySelector('[data-hoa-cf-head]');
+      var pics = cards.map(function (c) { return c.querySelector('img'); });
+      var side = pics.filter(function (_, k) { return Math.abs(offset(k, active)) === 1; });
+      var arrows = [prev, next].filter(Boolean);
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+      tl.from(head, { autoAlpha: 0, y: 24, duration: 0.9 }, 0)
+        .from(side, { autoAlpha: 0, scale: 0.9, duration: 1.1 }, 0.15)
+        .from(pics[active], { autoAlpha: 0, scale: 0.94, duration: 1.2 }, 0.25)
+        .from(arrows, { autoAlpha: 0, duration: 0.8 }, 0.6)
+        .from(infos[active], { autoAlpha: 0, y: 16, duration: 0.9 }, 0.7);
+      tl.progress(0.0001).pause();
+      ScrollTrigger.create({ trigger: sec, start: 'top 75%', once: true, onEnter: function () { tl.play(); } });
+    }
 
     cleanups.push(function () {
+      if (ro) ro.disconnect(); else window.removeEventListener('resize', onResize);
       if (prev) prev.removeEventListener('click', onPrev);
       if (next) next.removeEventListener('click', onNext);
       cards.forEach(function (c) { c.removeEventListener('click', onCardClick); });
@@ -403,17 +489,18 @@
     initLenis();
     initReveals();
     initCollection();
-    initFragrances();
 
     if (hasGsap()) {
       gsap.registerPlugin(ScrollTrigger);
       ctx = gsap.context(function () {
         var mm = gsap.matchMedia();
+        initFragrances();
         initHero();
         initManifesto();
         initParallax(mm);
       });
     } else {
+      initFragrances();
       initHero();
     }
     initHeader();

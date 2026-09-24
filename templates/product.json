@@ -249,6 +249,59 @@
     "recently_viewed": {
       "type": "agha-pdp-recently-viewed",
       "settings": {}
+    },
+    "reels": {
+      "type": "hoa-reels",
+      "blocks": {
+        "video_oud_fury_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "oud-fury",
+            "video": "https://videos.pexels.com/video-files/7816005/7816005-sd_540_960_25fps.mp4",
+            "poster_asset": "hoa-oud-fury-portrait",
+            "poster_alt": "Oud Fury"
+          }
+        },
+        "video_agha_blue_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "agha-blue",
+            "video": "https://videos.pexels.com/video-files/6764969/6764969-sd_540_960_25fps.mp4",
+            "poster_asset": "hoa-agha-blue-portrait",
+            "poster_alt": "Agha Blue"
+          }
+        },
+        "video_oud_of_dark_paradise_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "oud-of-dark-paradise",
+            "video": "hoa-reel-oud-of-dark-paradise.mp4",
+            "poster_asset": "hoa-dark-paradise-portrait",
+            "poster_alt": "Oud of Dark Paradise"
+          }
+        },
+        "video_maha_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "maha",
+            "video": "https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4",
+            "poster_asset": "hoa-maha-portrait",
+            "poster_alt": "Maha"
+          }
+        }
+      },
+      "block_order": [
+        "video_oud_fury_1",
+        "video_agha_blue_1",
+        "video_oud_of_dark_paradise_1",
+        "video_maha_1"
+      ],
+      "settings": {
+        "eyebrow": "Product film",
+        "heading": "See it",
+        "heading_serif": "in motion.",
+        "only_current_product": true
+      }
     }
   },
   "order": [
@@ -260,6 +313,7 @@
     "craft",
     "experience",
     "fragrance_notes",
+    "reels",
     "reviews",
     "faq",
     "related",
