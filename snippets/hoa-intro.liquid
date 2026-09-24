@@ -1,0 +1,20 @@
+{%- comment -%}
+  HOUSE OF AGHA — opening ritual, part 2 of 2: the overlay (rendered once, first thing in <body>, homepage only).
+  Hidden unless html.hoa-intro-active is set (snippets/hoa-intro-head.liquid). assets/hoa-intro.js animates it:
+  the bottle appears, the cap is pressed, a fine mist crosses the screen and uncovers the wordmark, then the
+  overlay lifts into the homepage hero. The photograph is drawn twice (cap / body) so only the cap moves.
+  The wordmark text below is what the canvas reproduces, and what travels to the hero at the end.
+{%- endcomment -%}
+<div class="hoa-intro" data-hoa-intro aria-hidden="true">
+  <div class="hoa-intro__stage">
+    <div class="hoa-intro__bottle" data-intro-bottle>
+      <div class="hoa-intro__float" data-intro-float>
+        <img class="hoa-intro__body" data-intro-body src="{{ 'hoa-product-oud-fury.webp' | asset_url }}" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async" fetchpriority="high">
+        <img class="hoa-intro__cap" data-intro-cap src="{{ 'hoa-product-oud-fury.webp' | asset_url }}" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async">
+      </div>
+    </div>
+    <canvas class="hoa-intro__mist" data-intro-canvas></canvas>
+    <p class="hoa-intro__mark" data-intro-mark>House of Agha</p>
+  </div>
+  <button type="button" class="hoa-intro__skip" data-intro-skip aria-hidden="false" tabindex="0">Skip</button>
+</div>

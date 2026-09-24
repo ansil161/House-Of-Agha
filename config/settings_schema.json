@@ -24,6 +24,18 @@
     ]
   },
   {
+    "name": "Homepage intro",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_home_intro",
+        "label": "Play the opening intro",
+        "default": true,
+        "info": "A short perfume-mist opening on the homepage: the bottle is sprayed and the fragrance uncovers HOUSE OF AGHA, then the page begins. Plays once per browsing session, is skipped for reduced-motion visitors (they get a brief still version) and can be skipped with the Skip link. Turn off to remove it entirely."
+      }
+    ]
+  },
+  {
     "name": "Wishlist",
     "settings": [
       {

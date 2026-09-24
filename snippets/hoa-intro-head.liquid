@@ -1,0 +1,26 @@
+{%- comment -%}
+  HOUSE OF AGHA — opening ritual, part 1 of 2: the decision (runs in <head>, before first paint).
+  Adds html.hoa-intro-active only when the intro should play, so the homepage never flashes before it:
+    · first visit in this browsing session → play
+    · returning within the session, an in-page link (#hash) or ?nointro → skip;  ?intro=1 → force
+  A failsafe lifts the hold after 16 s even if assets/hoa-intro.js never runs, so the site can never stay covered.
+  Part 2 (markup) is snippets/hoa-intro.liquid; the motion is assets/hoa-intro.js. Turn the whole thing off in
+  Theme settings → Homepage intro.
+{%- endcomment -%}
+<script>
+  (function () {
+    var d = document.documentElement;
+    try {
+      var q = location.search, skip = /[?&]nointro/.test(q) || !!location.hash || sessionStorage.getItem('hoa-intro') === '1';
+      if (/[?&]intro=1/.test(q)) skip = false;
+      if (skip) return;
+      d.classList.add('hoa-intro-active');
+      var l = document.createElement('link');
+      l.rel = 'preload'; l.as = 'image'; l.crossOrigin = 'anonymous'; l.href = '{{ 'hoa-product-oud-fury.webp' | asset_url }}';
+      document.head.appendChild(l);
+      setTimeout(function () {
+        if (d.classList.contains('hoa-intro-active')) { d.classList.remove('hoa-intro-active'); document.dispatchEvent(new Event('hoa:intro-reveal')); }
+      }, 16000);
+    } catch (e) {}
+  })();
+</script>

@@ -296,6 +296,25 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('commerce layer on', all.length, 'pages');
 
+  // Homepage opening intro (snippets/hoa-intro-head.liquid + hoa-intro.liquid, assets/hoa-intro.css/.js):
+  // layout/theme.liquid adds it on the index template only, so mirror that in index.html.
+  {
+    const introHead = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-intro-head.liquid'), 'utf8'), globals)).trim();
+    const introBody = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-intro.liquid'), 'utf8'), globals)).trim();
+    const file = path.join(THEME, 'index.html');
+    let html = fs.readFileSync(file, 'utf8');
+    html = html
+      .replace(/[ \t]*<!-- House of Agha intro:head -->[\s\S]*?<!-- \/House of Agha intro:head -->\n/, '')
+      .replace(/[ \t]*<!-- House of Agha intro:body -->[\s\S]*?<!-- \/House of Agha intro:body -->\n/, '')
+      .replace(/[ \t]*<script src="assets\/hoa-intro\.js" defer><\/script>\n/, '');
+    html = html
+      .replace('  <link rel="stylesheet" href="assets/hoa-commerce.css">\n</head>', () => '  <link rel="stylesheet" href="assets/hoa-commerce.css">\n  <!-- House of Agha intro:head -->\n  ' + introHead + '\n  <link rel="stylesheet" href="assets/hoa-intro.css">\n  <!-- /House of Agha intro:head -->\n</head>')
+      .replace(/([ \t]*<script src="assets\/hoa-home\.js" defer><\/script>\n)/, '  <script src="assets/hoa-intro.js" defer></script>\n$1')
+      .replace(/(<body class="hoa-home">\n)/, () => '<body class="hoa-home">\n  <!-- House of Agha intro:body -->\n  ' + introBody + '\n  <!-- /House of Agha intro:body -->\n');
+    fs.writeFileSync(file, html);
+    console.log('homepage intro on index.html');
+  }
+
   // Wishlist drawer (snippets/wishlist-drawer.liquid) — layout/theme.liquid renders it on every page.
   // The preview also loads assets/wishlist-preview.js, which fakes the customer, storage and product
   // JSON (see that file; ?signedin=1 signs in).

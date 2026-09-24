@@ -17,6 +17,10 @@
   {{ 'hoa-home.css' | asset_url | stylesheet_tag }}
   {{ 'hoa-coupon.css' | asset_url | stylesheet_tag }}
   {{ 'hoa-commerce.css' | asset_url | stylesheet_tag }}
+  {%- if template.name == 'index' and settings.enable_home_intro -%}
+    {% render 'hoa-intro-head' %}
+    {{ 'hoa-intro.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
 
   <!-- JS Assets -->
   {% render 'agha-wishlist-config' %}
@@ -33,6 +37,7 @@
     <link rel="preload" as="image" href="{{ 'hoa-hero-oud-fury.webp' | asset_url }}" media="(min-width: 768px)" fetchpriority="high">
     <link rel="preload" as="image" href="{{ 'hoa-oud-fury-portrait-sm.webp' | asset_url }}" media="(max-width: 767px)" fetchpriority="high">
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+    {%- if settings.enable_home_intro -%}<script src="{{ 'hoa-intro.js' | asset_url }}" defer></script>{%- endif -%}
     <script src="{{ 'hoa-home.js' | asset_url }}" defer></script>
   {%- endif -%}
   {%- if template.name == 'page' and template.suffix == 'the-house' -%}
@@ -58,6 +63,8 @@
   {%- endif -%}
 </head>
 <body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
+
+  {%- if template.name == 'index' and settings.enable_home_intro -%}{% render 'hoa-intro' %}{%- endif -%}
 
   <!-- Navigation Header -->
   {% render 'header' %}

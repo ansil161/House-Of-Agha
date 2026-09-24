@@ -145,10 +145,13 @@
     // Entrance: words rise out of their masks, supporting copy follows.
     var words = hero.querySelectorAll('[data-hoa-hero-word]');
     var fades = hero.querySelectorAll('[data-hoa-hero-fade]');
-    gsap.timeline({ defaults: { ease: 'expo.out' } })
+    // While the opening intro (assets/hoa-intro.js) is up, hold this until it lifts ('hoa:intro-reveal').
+    var holdForIntro = document.documentElement.classList.contains('hoa-intro-active');
+    var entrance = gsap.timeline({ defaults: { ease: 'expo.out' }, paused: holdForIntro })
       .from(hero.querySelector('[data-hoa-hero-media]'), { scale: 1.12, duration: 2.6, ease: 'power3.out' }, 0)
       .from(words, { yPercent: 110, duration: 1.6, stagger: 0.12 }, 0.25)
       .from(fades, { autoAlpha: 0, y: 18, duration: 1.2, stagger: 0.08 }, 0.8);
+    if (holdForIntro) document.addEventListener('hoa:intro-reveal', function () { entrance.play(0); }, { once: true });
 
     // Scroll: the frame drifts back and dims as the House takes over.
     gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
