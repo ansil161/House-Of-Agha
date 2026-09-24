@@ -1,110 +1,48 @@
 {% comment %}
-  SHOP · Hero
-  Editorial split: breadcrumb pill, a large italic serif heading with the live fragrance
-  count, one line of copy, a primary "explore" button (jumps to #catalog) and up to two
-  text links, then three quiet facts. On the right, a double-bezel image stack: one tall
-  campaign photo with two smaller bottle cards overlapping it.
-  The count is filled in by hoa-shop.js from the catalogue ([data-hoa-total]).
+  SHOP · Page head
+  Product-first: a compact head instead of a hero. Title with the live fragrance count
+  on the left, one line of copy and up to two optional text links on the right.
+  The catalogue starts directly below, inside the first screen.
+  The count is filled in by hoa-shop.js from the catalogue.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
-<section class="hoa-sh" data-hoa-sh>
-  <div class="hoa-sh__glow" aria-hidden="true"></div>
-  <div class="hoa-wrap hoa-sh__grid">
-    <div class="hoa-sh__copy">
-      <p class="hoa-sh__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span><span>{{ s.eyebrow }}</span></p>
-      <h1 class="hoa-sh__title">
-        {%- assign words = s.heading | split: ' ' -%}
-        {%- for w in words -%}
-          <span class="hoa-sh__word" style="--w: {{ forloop.index0 }}"><span>{{ w }}</span></span>
-        {%- endfor -%}
-      </h1>
-      {%- if s.text != blank -%}<p class="hoa-sh__text">{{ s.text }}</p>{%- endif -%}
-
-      <div class="hoa-sh__actions">
-        {%- if s.cta_label != blank -%}
-          <a class="hoa-sh__cta" href="#catalog" data-sh-magnet>
-            <span>{{ s.cta_label }}</span>
-            <span class="hoa-sh__cta-icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5L8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </a>
-        {%- endif -%}
+<section class="hoa-shop-head">
+  <div class="hoa-wrap hoa-shop-head__grid">
+    <div class="hoa-shop-head__title-wrap">
+      <p class="hoa-shop-head__crumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">/</span>{{ s.eyebrow }}</p>
+      <h1 class="hoa-shop-head__title">{{ s.heading }}<sup class="hoa-shop-head__count" data-hoa-total></sup></h1>
+    </div>
+    <div class="hoa-shop-head__side">
+      {%- if s.text != blank -%}<p class="hoa-shop-head__text">{{ s.text }}</p>{%- endif -%}
+      {%- if s.link_1_label != blank or s.link_2_label != blank -%}
+      <ul class="hoa-shop-head__links">
         {%- if s.link_1_label != blank -%}
-          <a class="hoa-sh__link" href="{{ s.link_1_url | default: routes.all_products_collection_url }}">{{ s.link_1_label }}<span aria-hidden="true">&rarr;</span></a>
+          <li><a href="{{ s.link_1_url | default: routes.all_products_collection_url }}">{{ s.link_1_label }}<span aria-hidden="true">&rarr;</span></a></li>
         {%- endif -%}
         {%- if s.link_2_label != blank -%}
-          <a class="hoa-sh__link" href="{{ s.link_2_url | default: routes.all_products_collection_url }}">{{ s.link_2_label }}<span aria-hidden="true">&rarr;</span></a>
+          <li><a href="{{ s.link_2_url | default: routes.all_products_collection_url }}">{{ s.link_2_label }}<span aria-hidden="true">&rarr;</span></a></li>
         {%- endif -%}
-      </div>
-
-      <dl class="hoa-sh__facts">
-        <div><dt data-hoa-total data-sh-count></dt><dd>Eau de Parfum</dd></div>
-        <div><dt data-sh-count>4</dt><dd>Scent families</dd></div>
-        <div><dt data-sh-count>3</dt><dd>Ways to wear</dd></div>
-      </dl>
-    </div>
-
-    <div class="hoa-sh__stage" aria-hidden="true">
-      <div class="hoa-sh__shell hoa-sh__shell--main" data-depth="0.35">
-        <div class="hoa-sh__frame">
-          {%- render 'hoa-img', name: s.main_asset, image: s.main_image, w: 1200, h: 1500, alt: '', loading: 'eager', priority: true, sizes: '(min-width: 1000px) 40vw, 90vw' -%}
-        </div>
-      </div>
-      <div class="hoa-sh__shell hoa-sh__shell--a" data-depth="1">
-        <div class="hoa-sh__frame">
-          {%- render 'hoa-img', name: s.card_a_asset, w: 700, h: 900, alt: '', loading: 'eager', sizes: '22vw' -%}
-        </div>
-        <p class="hoa-sh__tag"><span>{{ s.card_a_name }}</span><em>{{ s.card_a_note }}</em></p>
-      </div>
-      <div class="hoa-sh__shell hoa-sh__shell--b" data-depth="-0.8">
-        <div class="hoa-sh__frame">
-          {%- render 'hoa-img', name: s.card_b_asset, w: 700, h: 900, alt: '', loading: 'eager', sizes: '22vw' -%}
-        </div>
-        <p class="hoa-sh__tag"><span>{{ s.card_b_name }}</span><em>{{ s.card_b_note }}</em></p>
-      </div>
-      <p class="hoa-sh__badge" data-depth="0.7"><span></span>{{ s.badge }}</p>
+      </ul>
+      {%- endif -%}
     </div>
   </div>
-
-  {%- assign ticker = s.ticker | split: ',' -%}
-  {%- if s.ticker != blank -%}
-    <div class="hoa-sh__ticker" aria-hidden="true">
-      <div class="hoa-sh__track">
-        {%- for pass in (1..2) -%}
-          <ul>
-            {%- for t in ticker -%}<li>{{ t | strip }}</li>{%- endfor -%}
-          </ul>
-        {%- endfor -%}
-      </div>
-    </div>
-  {%- endif -%}
 </section>
 
 {% schema %}
 {
-  "name": "HOA Shop hero",
+  "name": "HOA Shop head",
   "tag": "div",
   "class": "hoa-shop-head-section",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Breadcrumb label", "default": "Shop" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "All fragrances" },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family." },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore the collection" },
     { "type": "text", "id": "link_1_label", "label": "First link" },
     { "type": "url", "id": "link_1_url", "label": "First link URL" },
     { "type": "text", "id": "link_2_label", "label": "Second link" },
-    { "type": "url", "id": "link_2_url", "label": "Second link URL" },
-    { "type": "text", "id": "ticker", "label": "Scrolling strip (comma separated)", "default": "Oud Fury, Agha Blue, Oud of Dark Paradise, Maha, Sea Smoke, Tobacco Enigma, Shamamah" },
-    { "type": "header", "content": "Image stack" },
-    { "type": "image_picker", "id": "main_image", "label": "Main image" },
-    { "type": "text", "id": "main_asset", "label": "Main theme asset (when no image is picked)", "default": "hoa-oud-fury-smoke" },
-    { "type": "text", "id": "badge", "label": "Badge", "default": "Eau de Parfum" },
-    { "type": "text", "id": "card_a_asset", "label": "Card 1 theme asset", "default": "hoa-agha-blue-portrait" },
-    { "type": "text", "id": "card_a_name", "label": "Card 1 name", "default": "Agha Blue" },
-    { "type": "text", "id": "card_a_note", "label": "Card 1 note", "default": "Fresh" },
-    { "type": "text", "id": "card_b_asset", "label": "Card 2 theme asset", "default": "hoa-shamamah-portrait" },
-    { "type": "text", "id": "card_b_name", "label": "Card 2 name", "default": "Shamamah" },
-    { "type": "text", "id": "card_b_note", "label": "Card 2 note", "default": "Floral" }
+    { "type": "url", "id": "link_2_url", "label": "Second link URL" }
   ],
-  "presets": [{ "name": "HOA Shop hero" }]
+  "presets": [{ "name": "HOA Shop head" }]
 }
 {% endschema %}

@@ -72,7 +72,7 @@
           endif
         -%}
         <div class="hoa-cf__info{% if forloop.first %} is-active{% endif %}" data-hoa-cf-info>
-          <p class="hoa-cf__num">Nº {{ forloop.index | prepend: '0' | slice: -2, 2 }} <span>·</span> {{ b.label }}</p>
+          <p class="hoa-cf__num">{{ b.label }}</p>
           <h3 class="hoa-cf__name">{{ f_name }}</h3>
           {%- if b.line != blank -%}<p class="hoa-cf__line">{{ b.line }}</p>{%- endif -%}
           <a href="{{ f_url }}" class="hoa-btn hoa-btn--small"{% unless forloop.first %} tabindex="-1"{% endunless %}><span>{{ b.cta | default: 'Discover' }}</span>{% render 'hoa-btn-icon' %}</a>

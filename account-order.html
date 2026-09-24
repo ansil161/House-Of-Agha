@@ -18,6 +18,10 @@
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
   <script src="assets/agha-wishlist-drawer.js" defer></script>
+  <script src="assets/hoa-coupon.js" defer></script>
+  <script src="assets/wishlist-preview.js" defer></script>
+  <script src="assets/agha-wishlist.js" defer></script>
+  <script src="assets/agha-wishlist-drawer.js" defer></script>
 </head>
 <body class="hoa-account-page">
 
@@ -241,6 +245,60 @@
     </div>
   </div>
 
+  <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->
+  <div class="hoa-coupon" data-hoa-coupon data-delay="10000" hidden>
+  <div class="hoa-coupon__scrim" data-coupon-close></div>
+  <div class="hoa-coupon__card" role="dialog" aria-modal="true" aria-labelledby="hoa-coupon-title" aria-describedby="hoa-coupon-desc" tabindex="-1">
+    <button type="button" class="hoa-coupon__close" data-coupon-close aria-label="Close offer">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+
+    <div class="hoa-coupon__media" aria-hidden="true">
+      <img src="assets/hoa-product-oud-fury-sm.webp" alt="" width="640" height="800" decoding="async">
+    </div>
+
+    <div class="hoa-coupon__body">
+      <p class="hoa-coupon__eyebrow">A little gift for you</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+
+      <div class="hoa-coupon__code" aria-label="Your discount code">
+        <span class="hoa-coupon__code-label">Your code</span>
+        <span class="hoa-coupon__code-value" data-coupon-code>WELCOME10</span>
+      </div>
+
+      <div class="hoa-coupon__actions">
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+      </div>
+      <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
+    </div>
+  </div>
+</div>
+  <!-- Wishlist drawer · snippets/wishlist-drawer.liquid (rendered by the preview build) -->
+  <div class="cart-drawer-overlay wl-drawer-overlay js-wl-close" data-wl-drawer-overlay></div>
+
+<aside class="cart-drawer wl-drawer" role="dialog" aria-modal="true" aria-label="Your wishlist" aria-hidden="true" data-wl-drawer>
+  <div class="cart-drawer-header">
+    <div class="cart-drawer-heading">
+      <span class="editorial-label">SAVED FRAGRANCES</span>
+      <h3 class="cart-drawer-title">Your wishlist <span class="cart-drawer-count" data-wl-drawer-count></span></h3>
+    </div>
+    <button type="button" class="cart-drawer-close js-wl-close" aria-label="Close wishlist" data-wl-drawer-close>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer-body" data-wl-drawer-body aria-live="polite"></div>
+
+  <div class="cart-drawer-footer" data-wl-drawer-footer hidden>
+    <a class="cart-checkout" href="/pages/wishlist">
+      <span>View full wishlist</span>
+      <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <button type="button" class="cart-continue js-wl-close">Continue shopping</button>
+  </div>
+</aside>
   <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->
   <div class="hoa-coupon" data-hoa-coupon data-delay="10000" hidden>
   <div class="hoa-coupon__scrim" data-coupon-close></div>
