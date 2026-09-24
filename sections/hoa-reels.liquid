@@ -48,8 +48,16 @@
     assign single = true
   endif
   assign shown = 0
+  comment
+    On a product page the product's own film comes first, then the rest of the House's films (two passes).
+  endcomment
+  assign pass_count = 1
+  if single
+    assign pass_count = 2
+  endif
 -%}
 {%- capture reel_cards -%}
+  {%- for pass in (1..pass_count) -%}
   {%- for block in section.blocks -%}
     {%- liquid
       assign b = block.settings
@@ -72,8 +80,12 @@
       endif
 
       assign skip = false
-      if single and r_handle != product.handle
-        assign skip = true
+      if single
+        if pass == 1 and r_handle != product.handle
+          assign skip = true
+        elsif pass == 2 and r_handle == product.handle
+          assign skip = true
+        endif
       endif
 
       assign has_video = false
@@ -160,6 +172,7 @@
         </div>
       </li>
     {%- endunless -%}
+  {%- endfor -%}
   {%- endfor -%}
 {%- endcapture -%}
 

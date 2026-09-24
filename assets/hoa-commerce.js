@@ -53,7 +53,7 @@
     var hasOffer = sale != null && sale > 0 && sale < reg;
     return {
       kind: kind, handle: p.handle, name: p.name, family: p.family || '', wearer: p.wearer || '', gift: !!p.gift,
-      asset: p.asset || '', image: img(p.image), url: kind === 'fragrance' ? '/products/' + p.handle : '/collections/all#bundles',
+      asset: p.asset || '', image: img(p.image), imageMain: img(p.imageMain), imageMood: img(p.imageMood), url: kind === 'fragrance' ? '/products/' + p.handle : '/collections/all#bundles',
       tagline: p.tagline || '', members: p.members || [],
       regularPrice: reg, salePrice: hasOffer ? sale : null, hasOffer: hasOffer,
       price: hasOffer ? sale : reg,
@@ -192,6 +192,29 @@
     cls = cls || 'hoa-cprice';
     return '<span class="' + cls + '"><span class="' + cls + '__now">' + money(p.price) + '</span>' +
       (p.hasOffer ? '<s class="' + cls + '__was"><span class="hoa-sr">Was </span>' + money(p.regularPrice) + '</s><span class="' + cls + '__off">' + p.discountPercentage + '% off</span>' : '') + '</span>';
+  }
+
+  /* -------------------------- product card (same markup as snippets/hoa-shop-card.liquid) */
+  // Used where a page is painted by JS (the static product-page preview). Liquid pages render the snippet.
+  function cardHtml(p, i) {
+    var fill = p.rating * 20;
+    var sold = p.inventory === 0;
+    return '<article class="hoa-pc" data-hoa-item data-product-id="' + esc(p.handle) + '" data-name="' + esc(p.name) + '" style="--i:' + (i || 0) + '">' +
+      '<div class="hoa-pc__visual"><a class="hoa-pc__media" href="' + esc(p.url) + '" tabindex="-1" aria-hidden="true">' +
+      '<span class="hoa-pc__img hoa-pc__img--product"><img src="' + esc(p.imageMain || p.image) + '" alt="" width="1200" height="1500" loading="lazy" decoding="async"></span>' +
+      (p.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(p.imageMood) + '" alt="" width="1200" height="1607" loading="lazy" decoding="async"></span>' : '') + '</a>' +
+      (sold ? '<p class="hoa-pc__tag">Sold out</p>' : p.isBestSeller ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : '') +
+      '<button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save ' + esc(p.name) + ' to your wishlist" data-hoa-like data-key="' + esc(p.handle) + '" data-wishlist-toggle data-wishlist-handle="' + esc(p.handle) + '" data-wishlist-title="' + esc(p.name) + '">' +
+      '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button></div>' +
+      '<div class="hoa-pc__info"><p class="hoa-pc__meta"><span class="hoa-pc__chip">' + esc(p.family) + '</span><span class="hoa-pc__chip">' + esc(p.wearer.charAt(0).toUpperCase() + p.wearer.slice(1)) + '</span></p>' +
+      '<h3 class="hoa-pc__name"><a href="' + esc(p.url) + '">' + esc(p.name) + '</a></h3>' +
+      '<p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill:' + fill + '%" role="img" aria-label="Rated ' + p.rating + ' out of 5"></span><span class="hoa-pc__count" aria-label="' + p.reviewCount + ' reviews">(' + p.reviewCount + ')</span></p>' +
+      '<p class="hoa-pc__price' + (p.hasOffer ? ' hoa-pc__price--offer' : '') + '">' + (sold ? 'Sold out' : '<span class="hoa-pc__now">' + money(p.price) + '</span>' +
+        (p.hasOffer ? '<s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>' + money(p.regularPrice) + '</s><span class="hoa-pc__off">' + p.discountPercentage + '% off</span>' : '')) + '</p>' +
+      '<p class="hoa-pc__about">' + (/^[aeiou]/i.test(p.family) ? 'An ' : 'A ') + esc(p.family.toLowerCase()) + ' Eau de Parfum from House of Agha.</p>' +
+      '<div class="hoa-pc__action">' + (sold ? '<button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>' :
+        '<button type="button" class="hoa-pc__cta" data-hoa-quick-add="' + esc(p.handle) + '" aria-label="Add ' + esc(p.name) + ' to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>') +
+      '</div></div></article>';
   }
 
   /* ---------------------------------------------------------------- bag UI */
@@ -551,6 +574,24 @@
 
   /* --------------------------------------- shared quick-add (home cards etc.) */
   function initGlobal() {
+    // Product cards outside the shop grid (e.g. "You may also like"): the snippet's real product form
+    // adds via Shopify's cart API, then mirrors the line into the bag drawer.
+    document.addEventListener('submit', function (e) {
+      var form = e.target.closest && e.target.closest('[data-hoa-related] .hoa-pc__action form');
+      if (!form) return;
+      e.preventDefault();
+      var card = form.closest('[data-hoa-item]'), d = card.dataset, btn = form.querySelector('button');
+      var done = function () {
+        if (typeof AghaStore === 'undefined') return;
+        AghaStore.addToCart({ id: (d.productId || d.name) + '-' + Date.now(), handle: d.productId || '', title: d.name, price: d.priceText || '', compare: d.compareText || '', image: d.image || '', size: 'Eau de Parfum' });
+        flash(btn);
+      };
+      if (window.Shopify && window.Shopify.routes) {
+        fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, body: new FormData(form) })
+          .then(function (r) { if (!r.ok) throw new Error('add failed'); done(); })
+          .catch(function () { if (typeof AghaStore !== 'undefined' && AghaStore.showToast) AghaStore.showToast('We could not add this to your bag.'); });
+      } else done();
+    });
     document.addEventListener('click', function (e) {
       if (e.target.closest('.cart-drawer')) return; // the drawer has its own handler
       var add = e.target.closest('[data-hoa-quick-add]');
@@ -586,7 +627,7 @@
     product: product, fragrances: fragrances, byName: byName, pairOf: function (h) { return product(PAIRS[h]); },
     quote: quote, bundleQuote: bundleQuote, tierFor: tierFor, coupon: coupon, makeItem: makeItem,
     stockState: stockState, priceHtml: priceHtml, noteText: noteText, tierText: tierText,
-    renderBag: renderBag, applyToPreviewProducts: applyToPreviewProducts, initPair: initPair,
+    cardHtml: cardHtml, renderBag: renderBag, applyToPreviewProducts: applyToPreviewProducts, initPair: initPair,
     lowStock: LOW_STOCK, threshold: THRESHOLD
   };
 })();

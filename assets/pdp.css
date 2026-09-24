@@ -280,120 +280,135 @@ html:has(.pdp) body {
 
 .pdp-hero__grid {
   display: grid;
-  grid-template-columns: 84px minmax(0, 1.1fr) minmax(0, 0.9fr);
-  column-gap: 20px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr);
+  column-gap: clamp(28px, 3.4vw, 56px);
   align-items: start;
 }
 
-/* Thumbnails */
-.pdp-rail {
-  position: sticky;
-  top: calc(var(--pdp-header-offset) + 12px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.pdp-thumb {
+/* --------------------------------------------------------------------------
+   Editorial product gallery (replaces the pinned scroll story)
+   Desktop: one dominant image spans the full width; the supporting images sit flush beneath it in a
+   two-column grid whose rows alternate between portrait and square, so the wall reads as art-directed
+   rather than as a uniform grid. Clicking a supporting image trades places with the main image
+   (pdp.js, one GSAP move). The purchase column stays sticky beside the tall wall.
+   Tablet: main + the first four supporting images. Phones: one swipeable strip (see the 768px block).
+   No JS: the same grid, first image first.
+   -------------------------------------------------------------------------- */
+.pdp-story {
+  --pdp-gap: 6px;
   position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  padding: 0;
-  border: 2px solid transparent;
-  border-radius: var(--pdp-radius-sm);
-  background: var(--pdp-soft);
-  overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.25s, transform 0.25s var(--ease-editorial);
-}
-
-.pdp-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pdp-thumb:hover {
-  transform: translateY(-1px);
-}
-
-.pdp-thumb.is-active {
-  border-color: var(--pdp-ink);
-}
-
-.pdp-thumb__play {
-  position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 20px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--color-white);
-  font-size: 0.5rem;
-}
-
-/* Stage */
-.pdp-media {
-  position: sticky;
-  top: calc(var(--pdp-header-offset) + 12px);
 }
 
 .pdp-stage {
   position: relative;
-  aspect-ratio: 4 / 5;
-  max-height: calc(100dvh - var(--pdp-header-offset) - 40px);
-  width: 100%;
-  border-radius: var(--pdp-radius-lg);
-  background: var(--pdp-soft);
-  overflow: hidden;
   isolation: isolate;
 }
 
-.pdp-stage__inner,
+.pdp-stage__inner {
+  display: block;
+}
+
 .pdp-stage__track {
-  position: absolute;
-  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pdp-gap);
 }
 
 .pdp-slide {
-  position: absolute;
-  inset: 0;
+  position: relative;
   margin: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.6s var(--ease-editorial), visibility 0s linear 0.6s;
+  aspect-ratio: 4 / 5;
+  background: var(--pdp-soft);
+  overflow: hidden;
 }
 
-.pdp-slide.is-active {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.6s var(--ease-editorial), visibility 0s;
+.pdp-slide:first-child:not([data-slot]) {
+  grid-column: 1 / -1;
+  aspect-ratio: 1 / 1.04;
 }
 
 .pdp-slide img,
 .pdp-slide video,
 .pdp-slide iframe {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border: 0;
 }
 
-.pdp-slide img {
-  transform: scale(1.04);
-  transition: transform 0.9s var(--ease-editorial);
+.pdp-slide svg {
+  width: 100%;
+  height: 100%;
 }
 
-.pdp-slide.is-active img {
-  transform: scale(1);
+/* Family / best-seller chips over the first image on phones only (desktop uses the stage badge) */
+.pdp-slide__tags {
+  display: none;
 }
 
-@media (hover: hover) {
-  .pdp-stage:hover .pdp-slide.is-active img {
-    transform: scale(1.03);
+.pdp-story__progress {
+  display: none;
+}
+
+.pdp-slide:focus-visible {
+  outline: 2px solid var(--pdp-ink);
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+@media (min-width: 769px) {
+  /* Slot shapes. A slide's slot (data-slot) and its order are swapped by pdp.js, so the geometry of the
+     wall never changes: only which photograph sits where. */
+  .pdp-slide[data-slot='main'] { grid-column: 1 / -1; aspect-ratio: 1 / 1.04; }
+  .pdp-slide[data-slot='a'] { aspect-ratio: 4 / 5; }
+  .pdp-slide[data-slot='b'] { aspect-ratio: 1 / 1; }
+  .pdp-slide[data-slot='wide'] { grid-column: 1 / -1; aspect-ratio: 6 / 5; }
+
+  .pdp-slide[data-role='main'] { cursor: zoom-in; }
+  .pdp-slide[data-role='support'] { cursor: pointer; }
+
+  /* Quiet hover: a slight push-in on supporting images. Uses the standalone `scale` property so it
+     never fights the transforms GSAP applies while two images trade places. */
+  .pdp-slide img,
+  .pdp-slide video {
+    transition: scale 0.7s var(--ease-editorial, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+
+  .pdp-slide[data-role='support']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--pdp-ink);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  @media (hover: hover) {
+    .pdp-slide[data-role='support']:hover img,
+    .pdp-slide[data-role='support']:hover video { scale: 1.02; }
+    .pdp-slide[data-role='support']:hover::after { opacity: 0.04; }
+  }
+
+  /* Purchase column stays in view while the wall scrolls (pdp.js sets --pdp-info-top so a column
+     taller than the screen scrolls until its end, then holds) */
+  .pdp-info {
+    position: sticky;
+    top: var(--pdp-info-top, calc(var(--pdp-header-offset) + 12px));
+    align-self: start;
+  }
+
+  .pdp-stage__badge {
+    z-index: 5;
+  }
+}
+
+/* Tablet: the wall keeps its hierarchy but shows fewer supporting images */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .pdp-slide.is-extra {
+    display: none;
   }
 }
 
@@ -430,51 +445,6 @@ html:has(.pdp) body {
 
 .pdp-expand:hover {
   transform: scale(1.06);
-}
-
-.pdp-stage__nav {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pdp-stage__nav button {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-white);
-  color: var(--pdp-ink);
-  box-shadow: var(--pdp-shadow);
-  cursor: pointer;
-  transition: transform 0.2s var(--ease-editorial);
-}
-
-.pdp-stage__nav button:hover {
-  transform: scale(1.06);
-}
-
-.pdp-counter {
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 12px;
-  border-radius: var(--pdp-pill);
-  background: rgba(17, 17, 17, 0.7);
-  color: var(--color-white);
-  font-size: 0.72rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
-}
-
-.pdp-dots {
-  display: none;
 }
 
 /* Purchase column */
@@ -1898,65 +1868,8 @@ html:has(.pdp) body {
    ========================================================================== */
 
 @media (max-width: 1100px) {
-  .pdp-hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 32px;
-  }
-
-  .pdp-rail {
-    display: none;
-  }
-
   .pdp-info {
     padding-left: 0;
-  }
-
-  /* Swipeable track replaces the crossfade stage */
-  .pdp-stage__track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-
-  .pdp-stage__track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .pdp-slide {
-    position: relative;
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .pdp-slide img {
-    transform: none;
-  }
-
-  .pdp-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 12px;
-  }
-
-  .pdp-dots button {
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    border: 0;
-    border-radius: var(--pdp-pill);
-    background: var(--pdp-line);
-    cursor: pointer;
-    transition: width 0.3s var(--ease-editorial), background-color 0.3s;
-  }
-
-  .pdp-dots button.is-active {
-    width: 24px;
-    background: var(--pdp-ink);
   }
 
   .pdp-features__grid,
@@ -2016,21 +1929,104 @@ html:has(.pdp) body {
     padding-bottom: var(--space-xl);
   }
 
+  /* Phones: a dedicated strip, not a shrunken wall. The main image leads at almost full width and
+     the related images follow in one swipeable row (the next one peeks in to show it swipes), with a
+     progress line beneath. The purchase column follows naturally below. */
   .pdp-hero__grid {
-    grid-template-columns: 1fr;
-    row-gap: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
   }
 
-  .pdp-media {
+  .pdp-stage__track {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: calc(var(--space-lg) * -1);
+    padding-inline: var(--space-lg);
+    scroll-padding-inline: var(--space-lg);
+  }
+
+  .pdp-stage__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pdp-slide {
+    flex: 0 0 86%;
+    aspect-ratio: 4 / 5;
+    scroll-snap-align: start;
+    border-radius: 0;
+  }
+
+  .pdp-slide:first-child {
+    flex-basis: 92%;
+  }
+
+  .pdp-story--single .pdp-slide {
+    flex-basis: 100%;
+  }
+
+  .pdp-story__progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    color: var(--pdp-ink);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.1em;
+  }
+
+  .pdp-story__progress > span:first-child {
+    flex: none;
+  }
+
+  .pdp-story__bar {
     position: relative;
-    top: 0;
+    flex: 1;
+    height: 2px;
+    background: var(--pdp-line);
+    overflow: hidden;
   }
 
-  .pdp-stage {
-    max-height: none;
-    border-radius: var(--pdp-radius);
+  .pdp-story__bar i {
+    position: absolute;
+    inset: 0;
+    background: var(--pdp-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
   }
 
+  .pdp-info {
+    position: static;
+    padding: 8px 0 20px;
+  }
+
+  .pdp-stage__badge,
+  .pdp-expand {
+    display: none;
+  }
+
+  .pdp-slide__tags {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pdp-slide__tags .pdp-chip {
+    border-color: transparent;
+    box-shadow: var(--pdp-shadow);
+    color: var(--pdp-ink);
+  }
   .pdp-title {
     font-size: 2.3rem;
   }
@@ -2161,8 +2157,7 @@ html:has(.pdp) body {
   }
 }
 
-.pdp-expand svg,
-.pdp-stage__nav svg {
+.pdp-expand svg {
   width: 18px;
   height: 18px;
 }
@@ -2589,20 +2584,6 @@ html:has(.pdp) body {
 
 .pdp-accordion__body .pdp-notes-list + p {
   margin-top: 0.9em;
-}
-
-/* Gallery zoom (pointer devices only) */
-@media (hover: hover) and (pointer: fine) {
-  .pdp-stage.is-zoomable .pdp-slide.is-active img {
-    cursor: zoom-in;
-  }
-
-  .pdp-stage.is-zoomable.is-zooming .pdp-slide.is-active img {
-    transform: scale(1.9);
-    transform-origin: var(--pdp-zx, 50%) var(--pdp-zy, 50%);
-    transition: transform 0.35s var(--ease-editorial);
-    cursor: zoom-out;
-  }
 }
 
 /* ---------- 03 Details ---------- */

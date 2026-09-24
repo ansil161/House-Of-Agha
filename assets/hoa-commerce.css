@@ -231,3 +231,8 @@
 
 /* The footer can scroll on short screens; keep the checkout button in view at all times */
 .cart-drawer-footer .cart-checkout { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -10px 14px -6px #fff; }
+
+/* "You may also like" on the product page: the shop's product cards, four across */
+.pdp-related-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.pdp-related-cards .hoa-pc__about { display: none; }
+@media (max-width: 1023px) { .pdp-related-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

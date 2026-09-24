@@ -88,22 +88,14 @@
     </nav>
 
     <div class="pdp-hero__grid">
-      {%- if media_count > 1 -%}
-        <div class="pdp-rail" aria-label="Product media">
-          {%- for media in product.media -%}
-            <button type="button" class="pdp-thumb{% if forloop.first %} is-active{% endif %}" data-pdp-thumb="{{ forloop.index0 }}" aria-label="Show media {{ forloop.index }} of {{ media_count }}"{% if forloop.first %} aria-current="true"{% endif %}>
-              {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
-              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                <span class="pdp-thumb__play" aria-hidden="true">▶</span>
-              {%- endif -%}
-            </button>
-          {%- endfor -%}
-        </div>
-      {%- else -%}
-        <div aria-hidden="true"></div>
-      {%- endif -%}
-
-      <div class="pdp-media">
+      {%- comment -%}
+        Product visual story. Every product image is a chapter in one vertical sequence: pdp.js pins the
+        frame and reveals the next image over the last as the page scrolls (tablet / desktop), or eases
+        them in one after another on phones. Any number of images works; nothing is hard-coded.
+        Without JS or with reduced motion it is simply a column of large images.
+      {%- endcomment -%}
+      {%- assign story_n = media_count | at_least: 1 -%}
+      <div class="pdp-media pdp-story{% if story_n < 2 %} pdp-story--single{% endif %}" data-pdp-story style="--pdp-n: {{ story_n }}">
         <div class="pdp-stage" data-pdp-stage>
           <div class="pdp-stage__inner" data-pdp-stage-inner>
             <div class="pdp-stage__track" data-pdp-track>
@@ -121,7 +113,7 @@
                         assign media_alt = media.alt | default: product.title
                         assign full_src = media | image_url: width: 2400
                       -%}
-                      {{ media | image_url: width: 1800 | image_tag: widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 1101px) 48vw, (min-width: 769px) 50vw, 100vw', loading: loading, fetchpriority: priority, alt: media_alt, data-pdp-full: full_src }}
+                      {{ media | image_url: width: 1800 | image_tag: widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 769px) 55vw, 100vw', loading: loading, fetchpriority: priority, alt: media_alt, data-pdp-full: full_src }}
                     {%- when 'video' -%}
                       {{ media | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', image_size: '1200x' }}
                     {%- when 'external_video' -%}
@@ -129,6 +121,9 @@
                     {%- else -%}
                       {{ media | media_tag }}
                   {%- endcase -%}
+                  {%- if forloop.first and family != blank -%}
+                    <div class="pdp-slide__tags" aria-hidden="true"><span class="pdp-chip pdp-chip--dot">{{ family }}</span>{% if product.tags contains 'best-seller' or product.tags contains 'Best Seller' %}<span class="pdp-chip pdp-chip--best">Best seller</span>{% endif %}</div>
+                  {%- endif -%}
                 </figure>
               {%- else -%}
                 <figure class="pdp-slide is-active" data-pdp-slide="0">
@@ -145,20 +140,12 @@
             <button type="button" class="pdp-expand" data-pdp-expand aria-label="View images full screen">{% render 'agha-pdp-icon', icon: 'expand' %}</button>
           {%- endif -%}
           {%- if media_count > 1 -%}
-            <div class="pdp-stage__nav">
-              <span class="pdp-counter" aria-hidden="true"><span data-pdp-count>01</span>&nbsp;/&nbsp;{% if media_count < 10 %}0{% endif %}{{ media_count }}</span>
-              <button type="button" data-pdp-media-step="-1" aria-label="Previous image">{% render 'agha-pdp-icon', icon: 'prev' %}</button>
-              <button type="button" data-pdp-media-step="1" aria-label="Next image">{% render 'agha-pdp-icon', icon: 'next' %}</button>
+            <div class="pdp-story__progress" aria-hidden="true">
+              <span><span data-pdp-count>01</span>&nbsp;/&nbsp;{% if media_count < 10 %}0{% endif %}{{ media_count }}</span>
+              <span class="pdp-story__bar"><i data-pdp-bar></i></span>
             </div>
           {%- endif -%}
         </div>
-        {%- if media_count > 1 -%}
-          <div class="pdp-dots" aria-hidden="true">
-            {%- for media in product.media -%}
-              <button type="button" tabindex="-1" data-pdp-dot="{{ forloop.index0 }}"{% if forloop.first %} class="is-active"{% endif %}></button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
       </div>
 
       <div class="pdp-info">

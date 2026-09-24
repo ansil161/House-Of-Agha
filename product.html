@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/agha-wishlist-drawer.css">
   <link rel="stylesheet" href="/assets/hoa-coupon.css">
   <link rel="stylesheet" href="/assets/pdp.css">
+  <link rel="stylesheet" href="/assets/hoa-shop.css">
   <script>
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdp-js');
   </script>
@@ -44,25 +45,25 @@
   ],
   "products": [
     { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
-      "image": "assets/hoa-product-oud-fury-sm.webp", "regularPrice": 5200, "salePrice": 4500,
+      "image": "assets/hoa-product-oud-fury-sm.webp", "imageMain": "assets/hoa-product-oud-fury.webp", "imageMood": "assets/hoa-oud-fury-portrait.webp", "regularPrice": 5200, "salePrice": 4500,
       "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
     { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
-      "image": "assets/hoa-product-agha-blue-sm.webp", "regularPrice": 3600, "salePrice": 2880,
+      "image": "assets/hoa-product-agha-blue-sm.webp", "imageMain": "assets/hoa-product-agha-blue.webp", "imageMood": "assets/hoa-agha-blue-portrait.webp", "regularPrice": 3600, "salePrice": 2880,
       "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
     { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
-      "image": "assets/hoa-product-dark-paradise-sm.webp", "regularPrice": 3999, "salePrice": 3199,
+      "image": "assets/hoa-product-dark-paradise-sm.webp", "imageMain": "assets/hoa-product-dark-paradise.webp", "imageMood": "assets/hoa-dark-paradise-portrait.webp", "regularPrice": 3999, "salePrice": 3199,
       "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
     { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
-      "image": "assets/hoa-product-maha-sm.webp", "regularPrice": 2499, "salePrice": 1999,
+      "image": "assets/hoa-product-maha-sm.webp", "imageMain": "assets/hoa-product-maha.webp", "imageMood": "assets/hoa-maha-portrait.webp", "regularPrice": 2499, "salePrice": 1999,
       "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
     { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
-      "image": "assets/hoa-product-sea-smoke-sm.webp", "regularPrice": 1999, "salePrice": null,
+      "image": "assets/hoa-product-sea-smoke-sm.webp", "imageMain": "assets/hoa-product-sea-smoke.webp", "imageMood": "assets/hoa-sea-smoke-portrait.webp", "regularPrice": 1999, "salePrice": null,
       "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
     { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
-      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "regularPrice": 4900, "salePrice": null,
+      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "imageMain": "assets/hoa-product-tobacco-enigma.webp", "imageMood": "assets/hoa-tobacco-enigma-portrait.webp", "regularPrice": 4900, "salePrice": null,
       "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
     { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
-      "image": "assets/hoa-product-shamamah-sm.webp", "regularPrice": 1499, "salePrice": 1199,
+      "image": "assets/hoa-product-shamamah-sm.webp", "imageMain": "assets/hoa-product-shamamah.webp", "imageMood": "assets/hoa-shamamah-portrait.webp", "regularPrice": 1499, "salePrice": 1199,
       "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
   ],
   "bundles": [
@@ -142,53 +143,83 @@
   <main id="main-content" data-pdp-preview></main>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <a href="/" class="footer-logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
-          <p class="text-soft" style="max-width: 320px; font-size: 0.85rem; margin-bottom: 24px; color: #E7E7E5;">
-            A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
-          </p>
-          <div class="tag-pill" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border-color: rgba(255,255,255,0.2);">PARIS · LONDON · MUMBAI</div>
-        </div>
+  <footer class="footer hoa-footer" data-header-theme="dark">
+  <div class="hoa-wrap">
 
-        <div class="footer-col">
-          <h5>COLLECTIONS</h5>
-          <ul class="footer-links">
-            <li><a href="/shop.html">Shop All Formulations</a></li>
-            <li><a href="/product.html?p=oud-royal">Spotlight: Oud Royal</a></li>
-            <li><a href="/#discovery">Discovery Set Sampler</a></li>
-            <li><a href="/private-access.html">Private Vault Drops</a></li>
-          </ul>
-        </div>
+    <section class="hoa-footer__invite" aria-labelledby="hoa-footer-invite-title">
+      <div class="hoa-footer__invite-copy">
+        <p class="hoa-footer__eyebrow">The House Letter</p>
+        <h2 class="hoa-footer__display" id="hoa-footer-invite-title">Notes from the house, <em>before anyone else.</em></h2>
+        <p class="hoa-footer__lede">New extraits, private releases and the occasional story from the atelier. Never more than once a month.</p>
+      </div>
+      <div class="hoa-footer__invite-form"><form method="post" action="/" accept-charset="UTF-8" class="hoa-footer__form" novalidate><input type="hidden" name="form_type" value="customer"><input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="hoa-footer__field" for="hoa-footer-email">
+            <span class="hoa-footer__sr">Email address</span>
+            <input id="hoa-footer-email" type="email" name="contact[email]" autocomplete="email" placeholder="Your email address" required>
+          </label>
+          <button type="submit" class="hoa-footer__submit">
+            <span>Subscribe</span>
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button></form><p class="hoa-footer__fine">By subscribing you agree to receive House of Agha emails. Unsubscribe any time.</p>
+      </div>
+    </section>
 
-        <div class="footer-col">
-          <h5>THE HOUSE</h5>
-          <ul class="footer-links">
-            <li><a href="/the-house.html">Our Craft Manifesto</a></li>
-            <li><a href="/the-house.html#house-timeline">90-Day Maceration</a></li>
-            <li><a href="/private-access.html">Private Member Access</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>CLIENT CARE</h5>
-          <ul class="footer-links">
-            <li><a href="/contact.html">Concierge Advisory</a></li>
-            <li><a href="/faq.html">Frequently Asked Questions</a></li>
-            <li><a href="/shipping-returns.html">Complimentary Shipping & Returns</a></li>
-            <li><a href="/contact.html">Store Locator</a></li>
-          </ul>
-        </div>
+    <div class="hoa-footer__main">
+      <div class="hoa-footer__brand">
+        <a href="/" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
+        <p class="hoa-footer__about">A Hyderabad fragrance house composing concentrated Eau de Parfum from oud, amber and rare florals. Made to linger, for those who notice.</p>
+        <ul class="hoa-footer__social" role="list">
+          <li><a href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="House of Agha on Instagram (opens in a new tab)">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+          </a></li>
+          <li><a href="/pages/contact" aria-label="Contact House of Agha">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7.5L12 13l7.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a></li>
+        </ul>
       </div>
 
-      <div class="footer-bottom">
-        <p>© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
-        <p style="text-transform: uppercase; letter-spacing: 0.15em;">CRAFTED TO LINGER</p>
-      </div>
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-shop">
+        <h3 class="hoa-footer__title" id="hoa-footer-shop">Shop</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/collections/all">All fragrances</a></li>
+          <li><a href="/collections/all?for=men">For him</a></li>
+          <li><a href="/collections/all?for=women">For her</a></li>
+          <li><a href="/collections/all?gift=1">Gifts</a></li>
+          <li><a href="/pages/wishlist" data-wishlist-open>Wishlist</a></li>
+        </ul>
+      </nav>
+
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-house">
+        <h3 class="hoa-footer__title" id="hoa-footer-house">The House</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/pages/the-house">Our story</a></li>
+          <li><a href="/pages/private-access">Private access</a></li>
+          <li><a href="/account">Your account</a></li>
+        </ul>
+      </nav>
+
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-care">
+        <h3 class="hoa-footer__title" id="hoa-footer-care">Client care</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/pages/shipping-returns">Shipping &amp; returns</a></li>
+          <li><a href="/pages/faq">Questions</a></li>
+          <li><a href="/pages/contact">Contact</a></li>
+        </ul>
+      </nav>
     </div>
-  </footer>
+
+    <p class="hoa-footer__mark" aria-hidden="true">AGHA</p>
+
+    <div class="footer-bottom hoa-footer__bottom">
+      <p>&copy; 2026 House of Agha. All rights reserved.</p>
+      <ul class="hoa-footer__legal" role="list">
+        <li><a href="/pages/shipping-returns">Shipping &amp; returns</a></li>
+        <li><a href="/pages/contact">Contact</a></li>
+      </ul>
+      <p class="hoa-footer__place">Composed in Hyderabad</p>
+    </div>
+  </div>
+</footer>
 
   <!-- Slide-out Cart Drawer -->
   <!-- Slide-out Bag Drawer · filled by AghaStore.updateCartUI (theme.js) -->

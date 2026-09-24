@@ -1,48 +1,94 @@
-<footer class="footer" data-header-theme="dark">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <a href="{{ routes.root_url }}" class="footer-logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="House of Agha" width="500" height="156" loading="lazy"></a>
-        <p class="text-soft" style="max-width: 320px; font-size: 0.85rem; margin-bottom: 24px;">
-          A high-fashion fragrance house crafting ultra-concentrated extraits de parfum. Crafted to linger. Made for those who notice.
-        </p>
-        <div class="tag-pill">PARIS · LONDON · MUMBAI</div>
-      </div>
+{% comment %}
+  SITE FOOTER
+  Dark, editorial: a newsletter invitation, the brand and three link columns, a large
+  outlined wordmark, then the legal line. Styles: the "Footer" block at the end of
+  assets/hoa-home.css (loaded on every page). The local preview build swaps this same
+  markup into every static page (tools/render-preview.js), so edit it here only.
+  Links use real Shopify routes; the preview has redirect stubs for the /pages/ ones.
+{% endcomment %}
+<footer class="footer hoa-footer" data-header-theme="dark">
+  <div class="hoa-wrap">
 
-      <div class="footer-col">
-        <h5>COLLECTIONS</h5>
-        <ul class="footer-links">
-          <li><a href="#signature">Extraits De Parfum</a></li>
-          <li><a href="#best-sellers">Bestseller Signatures</a></li>
-          <li><a href="#discovery">Discovery Sampler Box</a></li>
-          <li><a href="/pages/private-access">Bespoke Private Vault</a></li>
+    <section class="hoa-footer__invite" aria-labelledby="hoa-footer-invite-title">
+      <div class="hoa-footer__invite-copy">
+        <p class="hoa-footer__eyebrow">The House Letter</p>
+        <h2 class="hoa-footer__display" id="hoa-footer-invite-title">Notes from the house, <em>before anyone else.</em></h2>
+        <p class="hoa-footer__lede">New extraits, private releases and the occasional story from the atelier. Never more than once a month.</p>
+      </div>
+      <div class="hoa-footer__invite-form">
+        {%- form 'customer', class: 'hoa-footer__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="hoa-footer__field" for="hoa-footer-email">
+            <span class="hoa-footer__sr">Email address</span>
+            <input id="hoa-footer-email" type="email" name="contact[email]" autocomplete="email" placeholder="Your email address" required>
+          </label>
+          <button type="submit" class="hoa-footer__submit">
+            <span>Subscribe</span>
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          {%- if form.posted_successfully? -%}
+            <p class="hoa-footer__note" role="status">Thank you. You are on the list.</p>
+          {%- elsif form.errors -%}
+            <p class="hoa-footer__note hoa-footer__note--error" role="alert">Please enter a valid email address.</p>
+          {%- endif -%}
+        {%- endform -%}
+        <p class="hoa-footer__fine">By subscribing you agree to receive House of Agha emails. Unsubscribe any time.</p>
+      </div>
+    </section>
+
+    <div class="hoa-footer__main">
+      <div class="hoa-footer__brand">
+        <a href="{{ routes.root_url }}" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="House of Agha" width="500" height="156" loading="lazy"></a>
+        <p class="hoa-footer__about">A Hyderabad fragrance house composing concentrated Eau de Parfum from oud, amber and rare florals. Made to linger, for those who notice.</p>
+        <ul class="hoa-footer__social" role="list">
+          <li><a href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="House of Agha on Instagram (opens in a new tab)">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+          </a></li>
+          <li><a href="{{ routes.root_url }}pages/contact" aria-label="Contact House of Agha">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7.5L12 13l7.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a></li>
         </ul>
       </div>
 
-      <div class="footer-col">
-        <h5>THE HOUSE</h5>
-        <ul class="footer-links">
-          <li><a href="#the-house">Our Manifesto</a></li>
-          <li><a href="#art">Artisanal Extraction</a></li>
-          <li><a href="#reels">House Films</a></li>
-          <li><a href="#stories">Press &amp; Accolades</a></li>
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-shop">
+        <h3 class="hoa-footer__title" id="hoa-footer-shop">Shop</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="{{ routes.all_products_collection_url }}">All fragrances</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}?for=men">For him</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}?for=women">For her</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}?gift=1">Gifts</a></li>
+          <li><a href="{{ routes.root_url }}pages/wishlist" data-wishlist-open>Wishlist</a></li>
         </ul>
-      </div>
+      </nav>
 
-      <div class="footer-col">
-        <h5>CLIENT CARE</h5>
-        <ul class="footer-links">
-          <li><a href="#">Complimentary Shipping</a></li>
-          <li><a href="#">Bespoke Engraving</a></li>
-          <li><a href="#">Concierge Advisory</a></li>
-          <li><a href="#">Store Locator</a></li>
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-house">
+        <h3 class="hoa-footer__title" id="hoa-footer-house">The House</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="{{ routes.root_url }}pages/the-house">Our story</a></li>
+          <li><a href="{{ routes.root_url }}pages/private-access">Private access</a></li>
+          <li><a href="{{ routes.account_url }}">Your account</a></li>
         </ul>
-      </div>
+      </nav>
+
+      <nav class="hoa-footer__col" aria-labelledby="hoa-footer-care">
+        <h3 class="hoa-footer__title" id="hoa-footer-care">Client care</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="{{ routes.root_url }}pages/shipping-returns">Shipping &amp; returns</a></li>
+          <li><a href="{{ routes.root_url }}pages/faq">Questions</a></li>
+          <li><a href="{{ routes.root_url }}pages/contact">Contact</a></li>
+        </ul>
+      </nav>
     </div>
 
-    <div class="footer-bottom">
-      <p>© {{ 'now' | date: "%Y" }} AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.</p>
-      <p style="text-transform: uppercase; letter-spacing: 0.15em;">SHIPTIFY EDITORIAL ARCHITECTURE</p>
+    <p class="hoa-footer__mark" aria-hidden="true">AGHA</p>
+
+    <div class="footer-bottom hoa-footer__bottom">
+      <p>&copy; {{ 'now' | date: '%Y' }} House of Agha. All rights reserved.</p>
+      <ul class="hoa-footer__legal" role="list">
+        <li><a href="{{ routes.root_url }}pages/shipping-returns">Shipping &amp; returns</a></li>
+        <li><a href="{{ routes.root_url }}pages/contact">Contact</a></li>
+      </ul>
+      <p class="hoa-footer__place">Composed in Hyderabad</p>
     </div>
   </div>
 </footer>

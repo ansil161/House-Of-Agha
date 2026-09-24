@@ -317,6 +317,20 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('wishlist drawer on', all.length, 'pages');
 
+  // Site footer (snippets/footer.liquid) — layout/theme.liquid renders it on every page, so swap
+  // the rendered snippet into each static preview page (replaces whatever footer it carries).
+  const footerHtml = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/footer.liquid'), 'utf8'), globals)).trim();
+  const footerRe = /<footer class="footer[\s\S]*?<\/footer>/;
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    const html = fs.readFileSync(file, 'utf8');
+    if (!footerRe.test(html)) { console.warn('no footer in', f); continue; }
+    const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+    const block = footerHtml.replace(/(src|href)="\/assets\//g, `$1="${pre}assets/`);
+    fs.writeFileSync(file, html.replace(footerRe, () => block));
+  }
+  console.log('footer on', all.length, 'pages');
+
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {

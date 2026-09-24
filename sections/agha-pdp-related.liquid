@@ -1,10 +1,14 @@
 {% comment %}
-  AGHA PDP — 08 YOU MAY ALSO LIKE
+  AGHA PDP — 08 YOU MAY ALSO LIKE ("Explore the house")
   Uses Shopify product recommendations. The first render is an empty shell; pdp.js fetches this
   section with ?section_id=…&product_id=… and swaps in the recommended products.
+  The products are shown with the SAME card as the shop page (snippets/hoa-shop-card.liquid): best-seller tag,
+  rating and review count, sale price with the struck original and % off, wishlist heart and Add to cart.
+  Local preview / fresh store (no recommendations): the shared mock catalog (snippets/hoa-catalog-data.liquid),
+  paired fragrance first.
 {% endcomment %}
-{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
-{%- assign pdp = pdp_json | parse_json -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- assign catalog = catalog_json | parse_json -%}
 <section class="pdp pdp-section pdp-related" data-pdp-related data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent=related">
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
     <div class="container">
@@ -15,30 +19,58 @@
         </header>
         <a class="pdp-link" href="{{ routes.all_products_collection_url }}">{{ section.settings.link_label }}</a>
       </div>
-      <div class="pdp-related__grid">
+      <div class="hoa-shop-grid pdp-related-cards" data-view="grid" data-hoa-related>
         {%- for item in recommendations.products -%}
-          <div class="pdp-rel-wrap" data-pdp-reveal>
-          <a class="pdp-rel" href="{{ item.url }}">
-            <div class="pdp-rel__frame">
-              {%- if item.featured_image -%}
-                {%- assign item_alt = item.featured_image.alt | default: item.title -%}
-                {{ item.featured_image | image_url: width: 800 | image_tag: widths: '400, 600, 800', sizes: '(min-width: 901px) 25vw, 50vw', loading: 'lazy', alt: item_alt }}
-              {%- endif -%}
-            </div>
-            <div class="pdp-rel__body">
-              {%- assign item_family = item.metafields.custom.family.value | default: item.type -%}
-              {%- if item_family != blank -%}<span class="pdp-rel__meta">{{ item_family }}</span>{%- endif -%}
-              <h3 class="pdp-rel__title">{{ item.title }}</h3>
-              <span class="pdp-rel__price">{{ item.price | money }}</span>
-            </div>
-          </a>
-          <button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="{{ item.handle }}" data-wishlist-variant="{{ item.selected_or_first_available_variant.id }}" data-wishlist-title="{{ item.title | escape }}" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
-          </div>
+          {%- liquid
+            assign fam = item.metafields.custom.family.value | default: item.type
+            assign wearer = item.metafields.custom.gender.value | downcase
+            assign wearer = wearer | default: 'unisex'
+            assign variant = item.selected_or_first_available_variant
+            assign mood = item.media[1].preview_image
+            assign sale_rupees = item.price | divided_by: 100
+            assign regular_rupees = ''
+            assign regular_txt = ''
+            if item.compare_at_price > item.price and item.price_varies == false
+              assign regular_rupees = item.compare_at_price | divided_by: 100
+              assign regular_txt = item.compare_at_price | money
+            endif
+            assign sale_txt = item.price | money
+            assign best = false
+            if item.tags contains 'best-seller' or item.tags contains 'Best Seller'
+              assign best = true
+            endif
+            assign thumb = item.featured_media.preview_image | image_url: width: 240
+          -%}
+          {%- capture img_main -%}{%- if item.featured_media -%}{{ item.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 1000px) 22vw, 50vw', loading: 'lazy', alt: '' }}{%- endif -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- if mood -%}{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}{%- endcapture -%}
+          {%- render 'hoa-shop-card',
+            index: forloop.index0,
+            handle: item.handle,
+            url: item.url,
+            name: item.title,
+            family: fam,
+            wearer: wearer,
+            gift: false,
+            img_main: img_main,
+            img_mood: img_mood,
+            thumb: thumb,
+            available: item.available,
+            sale_price: sale_rupees,
+            regular_price: regular_rupees,
+            sale_text: sale_txt,
+            regular_text: regular_txt,
+            rating: item.metafields.reviews.rating.value.rating,
+            review_count: item.metafields.reviews.rating_count.value,
+            best_seller: best,
+            shopify_product: item,
+            variant_id: variant.id
+          -%}
         {%- endfor -%}
       </div>
     </div>
-  {%- elsif recommendations.performed and pdp.use_mock and pdp.related.size > 0 -%}
-    {%- comment -%} Mock mode only: Shopify returned no recommendations, so show demo cards (real recommendations replace these). {%- endcomment -%}
+  {%- elsif recommendations.performed and catalog.products.size > 0 -%}
+    {%- comment -%} Mock mode only: Shopify returned no recommendations, so show the mock catalog (real recommendations replace these). {%- endcomment -%}
+    {%- assign pair_handle = catalog.pairs[product.handle] -%}
     <div class="container" data-pdp-mock="related">
       <div class="pdp-related__head">
         <header class="pdp-heading pdp-heading--left">
@@ -47,23 +79,57 @@
         </header>
         <a class="pdp-link" href="{{ routes.all_products_collection_url }}">{{ section.settings.link_label }}</a>
       </div>
-      <div class="pdp-related__grid">
+      <div class="hoa-shop-grid pdp-related-cards" data-view="grid" data-hoa-related>
         {%- assign shown = 0 -%}
-        {%- for item in pdp.related -%}
-          {%- if item.handle != product.handle and shown < section.settings.limit -%}
-            {%- assign shown = shown | plus: 1 -%}
-            <div class="pdp-rel-wrap" data-pdp-reveal>
-            <a class="pdp-rel" href="{{ routes.root_url | append: 'products/' | append: item.handle }}">
-              <div class="pdp-rel__frame"><img src="{{ item.image | asset_url }}" alt="{{ item.title | escape }}" loading="lazy" width="800" height="800"></div>
-              <div class="pdp-rel__body">
-                {%- if item.family != blank -%}<span class="pdp-rel__meta">{{ item.family }}</span>{%- endif -%}
-                <h3 class="pdp-rel__title">{{ item.title }}</h3>
-                <span class="pdp-rel__price">{{ item.price }}</span>
-              </div>
-            </a>
-            <button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="{{ item.handle }}" data-wishlist-title="{{ item.title | escape }}" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
-            </div>
-          {%- endif -%}
+        {%- for pass in (1..2) -%}
+          {%- for p in catalog.products -%}
+            {%- liquid
+              assign take = false
+              if p.handle != product.handle and shown < section.settings.limit
+                if pass == 1 and p.handle == pair_handle
+                  assign take = true
+                elsif pass == 2 and p.handle != pair_handle
+                  assign take = true
+                endif
+              endif
+            -%}
+            {%- if take -%}
+              {%- liquid
+                assign shown = shown | plus: 1
+                assign p_asset = 'hoa-product-' | append: p.asset
+                assign m_asset = 'hoa-' | append: p.asset | append: '-portrait'
+                assign thumb_file = p_asset | append: '-sm.webp'
+                assign thumb = thumb_file | asset_url
+                assign purl = routes.root_url | append: 'products/' | append: p.handle
+                assign sale_v = p.salePrice | default: p.regularPrice
+                assign is_available = true
+                if p.inventory == 0
+                  assign is_available = false
+                endif
+              -%}
+              {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 22vw, 50vw' -%}{%- endcapture -%}
+              {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 22vw, 50vw' -%}{%- endcapture -%}
+              {%- render 'hoa-shop-card',
+                index: shown,
+                handle: p.handle,
+                url: purl,
+                name: p.name,
+                family: p.family,
+                wearer: p.wearer,
+                gift: false,
+                img_main: img_main,
+                img_mood: img_mood,
+                thumb: thumb,
+                available: is_available,
+                sale_price: sale_v,
+                regular_price: p.regularPrice,
+                rating: p.rating,
+                review_count: p.reviewCount,
+                best_seller: p.isBestSeller,
+                product_id: p.handle
+              -%}
+            {%- endif -%}
+          {%- endfor -%}
         {%- endfor -%}
       </div>
     </div>

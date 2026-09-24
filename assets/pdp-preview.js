@@ -84,35 +84,26 @@
       </nav>
 
       <div class="pdp-hero__grid">
-        ${images.length > 1 ? `
-        <div class="pdp-rail" aria-label="Product media">
-          ${images.map((src, i) => `
-            <button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${images.length}"${i === 0 ? ' aria-current="true"' : ''}>
-              <img src="${src}" alt="" loading="lazy">
-            </button>`).join('')}
-        </div>` : '<div aria-hidden="true"></div>'}
-
-        <div class="pdp-media">
+        <!-- Product visual story: mirrors sections/agha-pdp-main.liquid -->
+        <div class="pdp-media pdp-story${images.length < 2 ? ' pdp-story--single' : ''}" data-pdp-story style="--pdp-n: ${images.length}">
           <div class="pdp-stage" data-pdp-stage>
             <div class="pdp-stage__inner" data-pdp-stage-inner>
               <div class="pdp-stage__track" data-pdp-track>
                 ${images.map((src, i) => `
                   <figure class="pdp-slide${i === 0 ? ' is-active' : ''}" data-pdp-slide="${i}">
-                    <img src="${src}" alt="${esc(niceTitle)} — image ${i + 1}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+                    <img src="${src}" alt="${esc(niceTitle)} — image ${i + 1} of ${images.length}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+                    ${i === 0 ? `<div class="pdp-slide__tags" aria-hidden="true"><span class="pdp-chip pdp-chip--dot">${esc(product.family)}</span>${cat && cat.isBestSeller ? '<span class="pdp-chip pdp-chip--best">Best seller</span>' : ''}</div>` : ''}
                   </figure>`).join('')}
               </div>
             </div>
             <div class="pdp-stage__badge"><span class="pdp-chip pdp-chip--dot">${esc(product.family)}</span>${cat && cat.isBestSeller ? '<span class="pdp-chip pdp-chip--best">Best seller</span>' : ''}</div>
             <button type="button" class="pdp-expand" data-pdp-expand aria-label="View images full screen">${icon('expand')}</button>
             ${images.length > 1 ? `
-            <div class="pdp-stage__nav">
-              <span class="pdp-counter" aria-hidden="true"><span data-pdp-count>01</span>&nbsp;/&nbsp;${pad(images.length)}</span>
-              <button type="button" data-pdp-media-step="-1" aria-label="Previous image">${icon('prev')}</button>
-              <button type="button" data-pdp-media-step="1" aria-label="Next image">${icon('next')}</button>
+            <div class="pdp-story__progress" aria-hidden="true">
+              <span><span data-pdp-count>01</span>&nbsp;/&nbsp;${pad(images.length)}</span>
+              <span class="pdp-story__bar"><i data-pdp-bar></i></span>
             </div>` : ''}
           </div>
-          ${images.length > 1 ? `
-          <div class="pdp-dots" aria-hidden="true">${images.map((_, i) => `<button type="button" tabindex="-1" data-pdp-dot="${i}"${i === 0 ? ' class="is-active"' : ''}></button>`).join('')}</div>` : ''}
         </div>
 
         <div class="pdp-info">
@@ -638,16 +629,12 @@
         </header>
         <a class="pdp-link" href="/shop.html">View all</a>
       </div>
-      <div class="pdp-related__grid">
-        ${others.map(([key, p]) => `
-          <a class="pdp-rel" href="/product.html?p=${key}" data-pdp-card>
-            <div class="pdp-rel__frame"><img src="${p.images[0]}" alt="${esc(titleCase(p.title))}" loading="lazy"></div>
-            <div class="pdp-rel__body">
-              <span class="pdp-rel__meta">${esc(p.family)}</span>
-              <h3 class="pdp-rel__title">${esc(titleCase(p.title))}</h3>
-              <span class="pdp-rel__price">${relPrice(key, p)}</span>
-            </div>
-          </a>`).join('')}
+      <!-- Same product card as the shop page (mirrors snippets/hoa-shop-card.liquid) -->
+      <div class="hoa-shop-grid pdp-related-cards" data-view="grid" data-hoa-related>
+        ${others.map(([key, p], i) => {
+          const c = window.HOA && window.HOA.ready ? window.HOA.product(key) : null;
+          return c ? window.HOA.cardHtml(c, i) : '';
+        }).join('')}
       </div>
     </div>
   </section>`;
@@ -679,8 +666,8 @@
     ['oud-of-dark-paradise', '/assets/hoa-reel-oud-of-dark-paradise.mp4', 'hoa-dark-paradise-portrait'],
     ['maha', 'https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4', 'hoa-maha-portrait']
   ];
-  // Only this product's own video(s). Add more entries per handle when more films exist.
-  const reelSet = CLIPS.filter((c) => c[0] === handle);
+  // This product's own film first, then the House's other films: four in all.
+  const reelSet = [...CLIPS.filter((c) => c[0] === handle), ...CLIPS.filter((c) => c[0] !== handle)].slice(0, 4);
   const reelName = esc(titleCase(product.title));
   const reelCard = (r, k) => `
           <li class="hoa-reel" data-hoa-reel>

@@ -46,78 +46,234 @@
   }
 
   /* ---------------------------------------------------------------- Gallery */
-  function initGallery(main) {
-    const slides = $$('[data-pdp-slide]', main);
-    const thumbs = $$('[data-pdp-thumb]', main);
-    const track = $('[data-pdp-track]', main);
-    const counter = $('[data-pdp-count]', main);
-    const dots = $$('[data-pdp-dot]', main);
-    const swipeMode = window.matchMedia('(max-width: 1100px)');
-    let current = 0;
+  // Editorial wall (tablet / desktop): slide 0 is the dominant image, the rest sit in fixed supporting
+  // slots. A slot has a shape (data-slot) and a position (CSS order); clicking a supporting image trades
+  // slots with the main image, so the wall's geometry never changes, only which photograph is where.
+  // The trade is one GSAP move: each figure travels from the other's box to its own (position + size)
+  // while its photograph is counter-scaled, so nothing is stretched. Rapid clicks settle the previous move
+  // first. Without GSAP or with reduced motion the trade is instant.
+  // Phones: a swipeable strip (CSS scroll-snap); this code only tracks the visible image and progress.
+  const wallMode = () => window.matchMedia('(min-width: 769px)').matches;
 
-    const setActive = (index, { scroll = false } = {}) => {
-      if (!slides[index]) return;
+  // Shapes for slots 1..n-1: rows of two alternating portrait / square; a lone last image spans the width
+  function slotShapes(n) {
+    const shapes = ['main'];
+    for (let i = 1; i < n; i += 1) {
+      const lone = i === n - 1 && (n - 1) % 2 === 1;
+      shapes.push(lone ? 'wide' : (Math.floor((i - 1) / 2) % 2 === 0 ? 'a' : 'b'));
+    }
+    return shapes;
+  }
+
+  function initGallery(main) {
+    const story = $('[data-pdp-story]', main);
+    const track = $('[data-pdp-track]', main);
+    const slides = $$('[data-pdp-slide]', main);
+    const counter = $('[data-pdp-count]', main);
+    const bar = $('[data-pdp-bar]', main);
+    const n = slides.length;
+    const shapes = slotShapes(n);
+    const slotOf = slides.map((_, i) => i); // slotOf[i] = the slot slide i sits in (0 = main)
+    let mainIndex = 0; // slide in slot 0 (wall)
+    let current = 0; // slide showing (wall: the main one; strip: the most visible)
+    let swapping = null;
+
+    const media = (slide) => $('img, video', slide);
+    // GSAP writes the individual transform properties as well as `transform`; remove all of them so the
+    // stylesheet's hover `scale` is not overridden by a leftover inline `scale: none`
+    const clean = (el) => {
+      if (!el) return;
+      ['transform', 'transform-origin', 'translate', 'rotate', 'scale', 'z-index'].forEach((p) => el.style.removeProperty(p));
+    };
+
+    const paint = () => {
+      const wall = wallMode() && n > 1;
+      slides.forEach((s, i) => {
+        const k = slotOf[i];
+        if (wall) {
+          s.dataset.slot = shapes[k];
+          s.dataset.role = k === 0 ? 'main' : 'support';
+          s.style.order = k;
+          s.classList.toggle('is-extra', k > 4);
+          s.tabIndex = 0;
+          s.setAttribute('role', 'button');
+          s.setAttribute('aria-label', k === 0 ? 'Open image ' + (i + 1) + ' full screen' : 'Show image ' + (i + 1) + ' as the main image');
+        } else {
+          delete s.dataset.slot;
+          delete s.dataset.role;
+          s.style.removeProperty('order');
+          s.classList.remove('is-extra');
+          s.removeAttribute('tabindex');
+          s.removeAttribute('role');
+          s.removeAttribute('aria-label');
+        }
+      });
+    };
+
+    const markActive = (index) => {
       current = index;
       slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
-      thumbs.forEach((t, i) => {
-        t.classList.toggle('is-active', i === index);
-        if (i === index) t.setAttribute('aria-current', 'true');
-        else t.removeAttribute('aria-current');
-      });
-      dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
       if (counter) counter.textContent = pad(index + 1);
-      if (scroll && swipeMode.matches && track) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      }
-      // Pause videos that are no longer visible
+      // Play only the videos that can be seen
       slides.forEach((s, i) => {
         const video = $('video', s);
         if (!video) return;
-        if (i === index) video.play().catch(() => {});
+        if (i === index || (wallMode() && slotOf[i] < 5)) video.play().catch(() => {});
         else video.pause();
       });
     };
 
-    thumbs.forEach((thumb) => {
-      listen(thumb, 'click', () => setActive(Number(thumb.dataset.pdpThumb), { scroll: true }));
-    });
-    dots.forEach((dot) => {
-      listen(dot, 'click', () => setActive(Number(dot.dataset.pdpDot), { scroll: true }));
-    });
-    $$('[data-pdp-media-step]', main).forEach((btn) => {
-      listen(btn, 'click', () => {
-        const next = (current + Number(btn.dataset.pdpMediaStep) + slides.length) % slides.length;
-        setActive(next, { scroll: true });
-      });
-    });
+    const settle = () => {
+      if (!swapping || !window.gsap) return;
+      const { gsap } = window;
+      swapping.forEach((el) => { gsap.killTweensOf(el); const m = media(el); if (m) gsap.killTweensOf(m); });
+      swapping.forEach((el) => { clean(el); clean(media(el)); });
+      swapping = null;
+    };
 
-    // Keyboard arrows on the rail
-    const rail = $('.pdp-rail', main);
-    if (rail) {
-      listen(rail, 'keydown', (e) => {
-        if (!['ArrowUp', 'ArrowDown'].includes(e.key)) return;
-        e.preventDefault();
-        const next = (current + (e.key === 'ArrowDown' ? 1 : -1) + slides.length) % slides.length;
-        setActive(next);
-        thumbs[next]?.focus();
+    // Trade slots between slide `i` and the current main image
+    const swapToMain = (i) => {
+      if (!wallMode() || i === mainIndex || !slides[i]) return;
+      const { gsap } = window;
+      const animate = Boolean(gsap) && !reduceMotion.matches;
+      const a = slides[i];
+      const b = slides[mainIndex];
+      if (animate) settle();
+      const first = animate ? [a, b].map((el) => el.getBoundingClientRect()) : null;
+
+      const t = slotOf[i];
+      slotOf[i] = slotOf[mainIndex];
+      slotOf[mainIndex] = t;
+      mainIndex = i;
+      paint();
+      markActive(i);
+      if (!animate) return;
+
+      const last = [a, b].map((el) => el.getBoundingClientRect());
+      const els = [a, b];
+      els.forEach((el, j) => {
+        const f = first[j];
+        const l = last[j];
+        const sx = f.width / l.width;
+        const sy = f.height / l.height;
+        const m = media(el);
+        gsap.fromTo(el,
+          { x: f.left - l.left, y: f.top - l.top, scaleX: sx, scaleY: sy, transformOrigin: '0 0', zIndex: j === 0 ? 4 : 3 },
+          { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.7, ease: 'power3.inOut', onComplete: () => clean(el) });
+        if (m) {
+          gsap.fromTo(m,
+            { scaleX: 1 / sx, scaleY: 1 / sy, transformOrigin: '0 0' },
+            { scaleX: 1, scaleY: 1, duration: 0.7, ease: 'power3.inOut', onComplete: () => clean(m) });
+        }
       });
+      swapping = els;
+      gsap.delayedCall(0.75, () => { if (swapping === els) swapping = null; });
+    };
+
+    // Bring the main slot into view first if the reader has scrolled past it
+    const promote = (i) => {
+      if (i === mainIndex) return;
+      const top = slides[mainIndex].getBoundingClientRect().top;
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96;
+      if (top < header - 60 && !reduceMotion.matches) {
+        window.scrollTo({ top: top + window.scrollY - header - 12, behavior: 'smooth' });
+        setTimeout(() => swapToMain(i), 420);
+      } else {
+        swapToMain(i);
+      }
+    };
+
+    // setActive(index, {scroll}): a variant's own image (or the lightbox closing on another image) asks for
+    // that photograph to be the main one. Otherwise on phones it just records what is on screen.
+    const setActive = (index, { scroll = false } = {}) => {
+      if (!slides[index]) return;
+      if (wallMode() && n > 1) {
+        if (scroll) promote(index);
+        else if (index === mainIndex) markActive(index);
+        return;
+      }
+      markActive(index);
+      if (scroll && track) {
+        const el = slides[index];
+        track.scrollTo({ left: el.offsetLeft - (parseFloat(getComputedStyle(track).paddingLeft) || 0), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      }
+    };
+
+    // Phones: the visible image is the one most on screen; the bar follows the strip's scroll
+    if (story && n > 1 && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (wallMode()) return;
+        const best = entries.filter((e) => e.isIntersecting).sort((x, y) => y.intersectionRatio - x.intersectionRatio)[0];
+        if (best) markActive(slides.indexOf(best.target));
+      }, { threshold: [0.25, 0.5, 0.75] });
+      slides.forEach((s) => io.observe(s));
+      cleanups.push(() => io.disconnect());
     }
-
-    // Swipe track keeps the counter in sync
-    if (track) {
-      let ticking = false;
+    if (track && bar) {
+      let raf = 0;
       listen(track, 'scroll', () => {
-        if (!swipeMode.matches || ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          const index = Math.round(track.scrollLeft / track.clientWidth);
-          if (index !== current) setActive(index);
-          ticking = false;
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const max = track.scrollWidth - track.clientWidth;
+          bar.style.transform = 'scaleX(' + (max > 0 ? Math.max(0.05, track.scrollLeft / max) : 1) + ')';
         });
       }, { passive: true });
     }
 
-    return { setActive, get current() { return current; }, slides };
+    slides.forEach((slide, i) => {
+      const activate = () => {
+        if (!wallMode()) {
+          // phones: a tap opens the image full screen
+          setActive(i);
+          $('[data-pdp-expand]', main)?.click();
+          return;
+        }
+        if (i === mainIndex) $('[data-pdp-expand]', main)?.click();
+        else promote(i);
+      };
+      listen(slide, 'click', activate);
+      listen(slide, 'keydown', (e) => {
+        if (!wallMode() || (e.key !== 'Enter' && e.key !== ' ')) return;
+        e.preventDefault();
+        activate();
+      });
+    });
+
+    paint();
+    markActive(0);
+    listen(window.matchMedia('(min-width: 769px)'), 'change', () => { settle(); paint(); markActive(wallMode() ? mainIndex : current); });
+
+    return {
+      setActive,
+      slides,
+      get current() { return current; },
+      setProgress() {}
+    };
+  }
+
+  /* --------------------------------------------- Info column: hold in view */
+  // The purchase column is sticky next to the moving images. If it is taller than the screen its
+  // sticky offset goes negative, so it scrolls until its end is in view and only then holds.
+  function initInfoSticky(main) {
+    const info = $('.pdp-info', main);
+    if (!info) return;
+    const wide = window.matchMedia('(min-width: 769px)');
+    const apply = () => {
+      info.style.removeProperty('--pdp-info-top');
+      if (!wide.matches) return;
+      const base = parseFloat(getComputedStyle(info).top) || 0;
+      const top = Math.min(base, window.innerHeight - info.offsetHeight - 24);
+      info.style.setProperty('--pdp-info-top', Math.round(top) + 'px');
+    };
+    apply();
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(apply);
+      ro.observe(info);
+      cleanups.push(() => ro.disconnect());
+    }
+    listen(window, 'resize', apply);
+    cleanups.push(() => info.style.removeProperty('--pdp-info-top'));
   }
 
   /* --------------------------------------------------------------- Lightbox */
@@ -530,7 +686,7 @@
   /* -------------------------------------------------------- Recommendations */
   async function initRecommendations() {
     const section = $('[data-pdp-related][data-url]');
-    if (!section || !isShopify || section.querySelector('.pdp-rel')) return;
+    if (!section || !isShopify || section.querySelector('.pdp-rel, .hoa-pc')) return;
     try {
       const res = await fetch(section.dataset.url);
       const html = await res.text();
@@ -579,11 +735,7 @@
       /* Hero — product first, then the purchase column in a quick cascade */
       const intro = gsap.timeline({ defaults: { ease: 'expo.out' } });
       const stage = $('[data-pdp-stage]', scope);
-      const firstImg = $('[data-pdp-slide].is-active img', scope);
-      if (stage) intro.fromTo(stage, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1.1, clearProps: 'transform' }, 0);
-      if (firstImg) intro.fromTo(firstImg, { scale: 1.1 }, { scale: 1, duration: 1.6, clearProps: 'transform' }, 0);
-      const thumbs = $$('.pdp-thumb', scope);
-      if (thumbs.length) intro.fromTo(thumbs, { autoAlpha: 0, x: -10 }, { autoAlpha: 1, x: 0, duration: 0.7, stagger: 0.06, clearProps: 'transform' }, 0.25);
+      if (stage) intro.fromTo(stage, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.1, clearProps: 'opacity,visibility' }, 0);
       intro.fromTo('[data-pdp-hero-item]', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.05, clearProps: 'transform' }, 0.2);
 
       /* Headings and copy */
@@ -693,28 +845,6 @@
 
     // Late-loading images change section heights
     listen(window, 'load', () => ScrollTrigger.refresh(), { once: true });
-  }
-
-  /* ------------------------------------------------------------ Image zoom */
-  function initZoom(main) {
-    const stage = $('[data-pdp-stage]', main);
-    if (!stage || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    stage.classList.add('is-zoomable');
-    const off = () => stage.classList.remove('is-zooming');
-    const move = (e) => {
-      const r = stage.getBoundingClientRect();
-      stage.style.setProperty('--pdp-zx', `${((e.clientX - r.left) / r.width) * 100}%`);
-      stage.style.setProperty('--pdp-zy', `${((e.clientY - r.top) / r.height) * 100}%`);
-    };
-    listen(stage, 'click', (e) => {
-      if (reduceMotion.matches || e.target.closest('button, a')) return;
-      if (!e.target.closest('.pdp-slide.is-active') || e.target.tagName !== 'IMG') return;
-      move(e);
-      stage.classList.toggle('is-zooming');
-    });
-    listen(stage, 'mousemove', (e) => { if (stage.classList.contains('is-zooming')) move(e); });
-    listen(stage, 'mouseleave', off);
-    $$('[data-pdp-thumb], [data-pdp-dot], [data-pdp-media-step]', main).forEach((el) => listen(el, 'click', off));
   }
 
   /* ------------------------------------------------------------ Write a review */
@@ -934,7 +1064,7 @@
       initDock(main);
       initDelivery(main);
       initWishlist(main, variantState);
-      initZoom(main);
+      initInfoSticky(main);
     }
     initAccordions(document);
     initRecommendations();
@@ -950,7 +1080,7 @@
       motionCtx.revert();
       motionCtx = null;
       // Tweens that never started don't restore their pre-state on revert; clear it explicitly
-      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], .pdp-thumb, [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-block], .pdp-tf__wave path, .pdp-tf__particle', { clearProps: 'transform,opacity,visibility' });
+      window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-block], .pdp-tf__wave path, .pdp-tf__particle', { clearProps: 'transform,opacity,visibility' });
     }
     cleanups.splice(0).forEach((fn) => fn());
   }

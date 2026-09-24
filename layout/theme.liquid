@@ -40,6 +40,10 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
     <script src="{{ 'hoa-about.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- if template.name == 'product' -%}
+    {%- comment -%} the product cards in "You may also like" are the shop's cards {%- endcomment -%}
+    {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
   {%- if template.name == 'collection' -%}
     {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-shop.js' | asset_url }}" defer></script>
