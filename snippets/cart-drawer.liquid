@@ -13,24 +13,13 @@
   </div>
 
   <div class="cart-drawer-body">
-    <!-- Populated dynamically via theme.js -->
+    <!-- Populated dynamically: theme.js (AghaStore) → assets/hoa-commerce.js (HOA.renderBag) -->
   </div>
 
   <div class="cart-drawer-footer">
-    <dl class="cart-summary">
-      <div class="cart-summary__row cart-summary__row--save" data-cart-save hidden>
-        <dt>You save</dt>
-        <dd class="cart-save-amount"></dd>
-      </div>
-      <div class="cart-summary__row">
-        <dt>Shipping</dt>
-        <dd>Complimentary</dd>
-      </div>
-      <div class="cart-summary__row cart-summary__row--total">
-        <dt>Subtotal</dt>
-        <dd class="cart-total-price">₹0</dd>
-      </div>
-    </dl>
+    <!-- Coupon field, price summary and reassurance are painted by assets/hoa-commerce.js -->
+    <div class="bag-coupon" data-bag-coupon></div>
+    <dl class="cart-summary"></dl>
     <a class="cart-checkout" href="/checkout" data-cart-checkout>
       <span>Checkout</span>
       <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

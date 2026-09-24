@@ -1,12 +1,17 @@
 {%- comment -%}
   HOUSE OF AGHA — welcome coupon popup (rendered sitewide from layout/theme.liquid).
   Shows once per browsing session, 10 seconds after page load (see assets/hoa-coupon.js).
-  Display only: the discount itself is applied by Shopify at checkout.
+  The code comes from the shared mock catalog (snippets/hoa-catalog-data.liquid → coupons), and the bag
+  (assets/hoa-commerce.js) validates and applies that same code, so what the popup shows always works.
+  Mock only for now: nothing here talks to Shopify.
 
-  TO USE A REAL DISCOUNT CODE: create it in Shopify Admin → Discounts, then change
-  coupon_code below to match. Nothing else needs to change.
+  TO USE A REAL DISCOUNT CODE: create it in Shopify Admin → Discounts and change the coupon's "code" in
+  the catalog to match; the bag already links checkout with ?discount=CODE.
 {%- endcomment -%}
-{%- assign coupon_code = 'WELCOME10' -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- assign catalog = catalog_json | parse_json -%}
+{%- assign coupon_code = catalog.coupons[0].code -%}
+{%- assign coupon_value = catalog.coupons[0].value -%}
 {%- assign coupon_delay_seconds = 10 -%}
 
 <div class="hoa-coupon" data-hoa-coupon data-delay="{{ coupon_delay_seconds | times: 1000 }}" hidden>
@@ -21,9 +26,9 @@
     </div>
 
     <div class="hoa-coupon__body">
-      <p class="hoa-coupon__eyebrow">A little gift for you</p>
-      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
-      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+      <p class="hoa-coupon__eyebrow">Welcome to Agha</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy {{ coupon_value }}% off <em>your first order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Copy your code, then add it in your bag before checkout.</p>
 
       <div class="hoa-coupon__code" aria-label="Your discount code">
         <span class="hoa-coupon__code-label">Your code</span>
@@ -31,8 +36,8 @@
       </div>
 
       <div class="hoa-coupon__actions">
-        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
-        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>COPY CODE</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
     </div>

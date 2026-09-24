@@ -199,7 +199,7 @@
       let comparePrice = variant ? variant.compare_at_price : 0;
       let savePct = 0;
       if (variant && comparePrice > variant.price) {
-        savePct = Math.floor(((comparePrice - variant.price) * 100) / comparePrice);
+        savePct = Math.round(((comparePrice - variant.price) * 100) / comparePrice);
       } else if (variant && mockPct > 0 && mockPct < 90) {
         savePct = mockPct;
         comparePrice = Math.floor((variant.price * 100) / (100 - mockPct));
@@ -208,8 +208,13 @@
       const save = $('[data-pdp-save]', main);
       if (save) {
         save.hidden = !saleOn;
-        if (saleOn) save.textContent = `−${savePct}%`;
+        if (saleOn) save.textContent = `${savePct}% off`;
       }
+      // "You save ₹X": only when the selected variant really has a compare-at price
+      $$('[data-pdp-savings]', main).forEach((el) => {
+        el.hidden = !saleOn;
+        if (saleOn) el.textContent = `You save ${formatMoney(comparePrice - variant.price, moneyFormat)}`;
+      });
       $$('[data-pdp-offer]', main).forEach((el) => { el.hidden = !saleOn; });
 
       const compare = $('[data-pdp-compare]', main);
@@ -359,6 +364,7 @@
           for (let i = 0; i < quantity; i += 1) {
             bag.cart.push({
               id: `${variant.id}-${Date.now()}-${i}`,
+              handle: main.dataset.productHandle || '',
               title: main.dataset.productTitle || variant.name,
               price,
               compare,

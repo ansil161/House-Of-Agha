@@ -262,8 +262,11 @@
       var d = card.dataset;
       var done = function () {
         if (bag) {
+          // The bag prices a known product from the shared catalog by its handle (hoa-commerce.js);
+          // title / price / compare are only the fallback for a product the catalog does not know.
           bag.addToCart({
             id: (d.productId || d.name) + '-' + Date.now(),
+            handle: d.productId || '',
             title: d.name || d.title,
             price: d.priceText || '',
             compare: d.compareText || '',

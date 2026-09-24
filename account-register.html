@@ -12,13 +12,82 @@
   <link rel="stylesheet" href="assets/hoa-account.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script type="application/json" id="hoa-catalog-data">{
+  "currency": "INR",
+  "settings": {
+    "freeShippingThreshold": 5000,
+    "lowStockThreshold": 5,
+    "quantityTiers": [
+      { "qty": 2, "percent": 10 },
+      { "qty": 3, "percent": 15 }
+    ],
+    "messages": {
+      "shipping": "Complimentary shipping on orders above ₹5,000",
+      "tiers": "Save more when you explore two fragrances",
+      "discover": "Discover your signature scent"
+    },
+    "trust": ["Secure checkout", "Returns within 7 days", "Authentic and batch-numbered"],
+    "returnsText": "Unopened flacons can be returned within 7 days"
+  },
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "Welcome offer",
+      "description": "10% off your first order",
+      "stackable": true
+    }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
+      "image": "assets/hoa-product-oud-fury-sm.webp", "regularPrice": 5200, "salePrice": 4500,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
+      "image": "assets/hoa-product-agha-blue-sm.webp", "regularPrice": 3600, "salePrice": 2880,
+      "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
+      "image": "assets/hoa-product-dark-paradise-sm.webp", "regularPrice": 3999, "salePrice": 3199,
+      "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
+    { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
+      "image": "assets/hoa-product-maha-sm.webp", "regularPrice": 2499, "salePrice": 1999,
+      "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
+      "image": "assets/hoa-product-sea-smoke-sm.webp", "regularPrice": 1999, "salePrice": null,
+      "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
+      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "regularPrice": 4900, "salePrice": null,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
+    { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
+      "image": "assets/hoa-product-shamamah-sm.webp", "regularPrice": 1499, "salePrice": 1199,
+      "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
+  ],
+  "bundles": [
+    { "id": "discovery-set", "kind": "set", "handle": "discovery-set", "name": "The Discovery Set",
+      "tagline": "Three signature fragrances, 5 ml each",
+      "members": ["oud-fury", "agha-blue", "sea-smoke"],
+      "image": "assets/discovery_box.jpg", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
+    { "id": "signature", "kind": "curated", "name": "The Signature Collection",
+      "tagline": "Our three best sellers, together",
+      "members": ["oud-fury", "tobacco-enigma", "agha-blue"] }
+  ],
+  "pairs": {
+    "oud-fury": "tobacco-enigma",
+    "tobacco-enigma": "oud-fury",
+    "agha-blue": "sea-smoke",
+    "sea-smoke": "agha-blue",
+    "maha": "shamamah",
+    "shamamah": "maha",
+    "oud-of-dark-paradise": "agha-blue"
+  }
+}
+</script>
+  <script src="assets/hoa-commerce.js" defer></script>
   <script src="assets/theme.js" defer></script>
   <script src="assets/hoa-account.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
-  <script src="assets/wishlist-preview.js" defer></script>
-  <script src="assets/agha-wishlist.js" defer></script>
-  <script src="assets/agha-wishlist-drawer.js" defer></script>
-  <script src="assets/hoa-coupon.js" defer></script>
+  <link rel="stylesheet" href="assets/hoa-commerce.css">
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
   <script src="assets/agha-wishlist-drawer.js" defer></script>
@@ -257,9 +326,9 @@
     </div>
 
     <div class="hoa-coupon__body">
-      <p class="hoa-coupon__eyebrow">A little gift for you</p>
-      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
-      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+      <p class="hoa-coupon__eyebrow">Welcome to Agha</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% off <em>your first order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Copy your code, then add it in your bag before checkout.</p>
 
       <div class="hoa-coupon__code" aria-label="Your discount code">
         <span class="hoa-coupon__code-label">Your code</span>
@@ -267,8 +336,8 @@
       </div>
 
       <div class="hoa-coupon__actions">
-        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
-        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>COPY CODE</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
     </div>

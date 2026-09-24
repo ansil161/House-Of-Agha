@@ -42,13 +42,13 @@
 .hoa-coupon__copy {
   flex: 1 1 auto; min-width: 150px; padding: 15px 26px; cursor: pointer;
   border: 1px solid var(--hoa-ink); border-radius: 999px; background: var(--hoa-ink); color: var(--hoa-paper);
-  font: 500 0.86rem/1 var(--hoa-sans); letter-spacing: -0.005em;
+  font: 600 0.72rem/1 var(--hoa-sans); letter-spacing: 0.16em;
   transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease), border-color 0.5s var(--hoa-ease);
 }
 .hoa-coupon__copy:hover { background: transparent; color: var(--hoa-ink); }
 .hoa-coupon__copy.is-copied { background: var(--hoa-brass); border-color: var(--hoa-brass); color: var(--hoa-night); }
 .hoa-coupon__cta {
-  font: 500 0.82rem/1 var(--hoa-sans); color: var(--hoa-ink); text-decoration: none; padding: 6px 0;
+  font: 600 0.72rem/1 var(--hoa-sans); letter-spacing: 0.16em; color: var(--hoa-ink); text-decoration: none; padding: 6px 0;
   border-bottom: 1px solid var(--hoa-ink); transition: color 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
 }
 .hoa-coupon__cta:hover { color: var(--hoa-brass); border-color: var(--hoa-brass); }

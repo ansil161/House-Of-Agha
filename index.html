@@ -20,10 +20,83 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 
   <!-- Theme JS -->
+  <script type="application/json" id="hoa-catalog-data">{
+  "currency": "INR",
+  "settings": {
+    "freeShippingThreshold": 5000,
+    "lowStockThreshold": 5,
+    "quantityTiers": [
+      { "qty": 2, "percent": 10 },
+      { "qty": 3, "percent": 15 }
+    ],
+    "messages": {
+      "shipping": "Complimentary shipping on orders above ₹5,000",
+      "tiers": "Save more when you explore two fragrances",
+      "discover": "Discover your signature scent"
+    },
+    "trust": ["Secure checkout", "Returns within 7 days", "Authentic and batch-numbered"],
+    "returnsText": "Unopened flacons can be returned within 7 days"
+  },
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "Welcome offer",
+      "description": "10% off your first order",
+      "stackable": true
+    }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
+      "image": "assets/hoa-product-oud-fury-sm.webp", "regularPrice": 5200, "salePrice": 4500,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
+      "image": "assets/hoa-product-agha-blue-sm.webp", "regularPrice": 3600, "salePrice": 2880,
+      "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
+      "image": "assets/hoa-product-dark-paradise-sm.webp", "regularPrice": 3999, "salePrice": 3199,
+      "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
+    { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
+      "image": "assets/hoa-product-maha-sm.webp", "regularPrice": 2499, "salePrice": 1999,
+      "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
+      "image": "assets/hoa-product-sea-smoke-sm.webp", "regularPrice": 1999, "salePrice": null,
+      "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
+      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "regularPrice": 4900, "salePrice": null,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
+    { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
+      "image": "assets/hoa-product-shamamah-sm.webp", "regularPrice": 1499, "salePrice": 1199,
+      "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
+  ],
+  "bundles": [
+    { "id": "discovery-set", "kind": "set", "handle": "discovery-set", "name": "The Discovery Set",
+      "tagline": "Three signature fragrances, 5 ml each",
+      "members": ["oud-fury", "agha-blue", "sea-smoke"],
+      "image": "assets/discovery_box.jpg", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
+    { "id": "signature", "kind": "curated", "name": "The Signature Collection",
+      "tagline": "Our three best sellers, together",
+      "members": ["oud-fury", "tobacco-enigma", "agha-blue"] }
+  ],
+  "pairs": {
+    "oud-fury": "tobacco-enigma",
+    "tobacco-enigma": "oud-fury",
+    "agha-blue": "sea-smoke",
+    "sea-smoke": "agha-blue",
+    "maha": "shamamah",
+    "shamamah": "maha",
+    "oud-of-dark-paradise": "agha-blue"
+  }
+}
+</script>
+  <script src="assets/hoa-commerce.js" defer></script>
   <script src="assets/theme.js" defer></script>
   <script src="assets/hero-scroll.js" defer></script>
   <script src="assets/hoa-home.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
+  <link rel="stylesheet" href="assets/hoa-commerce.css">
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
   <script src="assets/agha-wishlist-drawer.js" defer></script>
@@ -436,13 +509,14 @@
     <header class="hoa-collection__head">
       <div>
         <p class="hoa-eyebrow" data-hoa-reveal>The Collection</p>
+        <p class="hoa-offer-note hoa-collection__note" data-hoa-reveal>Save more when you explore two fragrances</p>
         <div class="hoa-tabs" role="tablist" aria-label="Filter by scent family" data-hoa-reveal>
           <button class="hoa-tab" role="tab" type="button" aria-selected="true" data-hoa-filter="all">All</button><button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="woody">Woody</button><button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="fresh">Fresh</button><button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="floral">Floral</button><button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="aromatic">Aromatic</button></div>
       </div>
       <a class="hoa-link" href="/shop.html" data-hoa-reveal>Shop all fragrances</a>
     </header>
 
-    <div class="hoa-collection__grid" data-hoa-grid><article class="hoa-card" data-family="woody" data-hoa-card data-product-id="oud-fury" data-title="OUD FURY" data-image="assets/hoa-product-oud-fury-sm.webp" data-price="">
+    <div class="hoa-collection__grid" data-hoa-grid><article class="hoa-card" data-family="woody" data-hoa-card data-product-id="oud-fury" data-title="OUD FURY">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=oud-fury" aria-label="Oud Fury">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -458,19 +532,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Woody</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag hoa-card__tag--best">Best seller</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=oud-fury"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="oud-fury" aria-label="Add Oud Fury to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=oud-fury">Oud Fury</a></h3>
+              <span class="hoa-card__price">₹4,500</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 98%" role="img" aria-label="Rated 4.9 out of 5"></span>
+              <span class="hoa-card__count">(214)</span><span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>₹5,200</s><span class="hoa-card__off">13% off</span></span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="fresh" data-hoa-card data-product-id="agha-blue" data-title="AGHA BLUE" data-image="assets/hoa-product-agha-blue-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="fresh" data-hoa-card data-product-id="agha-blue" data-title="AGHA BLUE">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=agha-blue" aria-label="Agha Blue">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -486,19 +562,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Fresh</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag hoa-card__tag--best">Best seller</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=agha-blue"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="agha-blue" aria-label="Add Agha Blue to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=agha-blue">Agha Blue</a></h3>
+              <span class="hoa-card__price">₹2,880</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 96%" role="img" aria-label="Rated 4.8 out of 5"></span>
+              <span class="hoa-card__count">(128)</span><span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>₹3,600</s><span class="hoa-card__off">20% off</span></span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="woody" data-hoa-card data-product-id="oud-of-dark-paradise" data-title="OUD OF DARK PARADISE" data-image="assets/hoa-product-dark-paradise-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="woody" data-hoa-card data-product-id="oud-of-dark-paradise" data-title="OUD OF DARK PARADISE">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=oud-of-dark-paradise" aria-label="Oud of Dark Paradise">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -514,19 +592,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Woody</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag">Woody</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=oud-of-dark-paradise"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="oud-of-dark-paradise" aria-label="Add Oud of Dark Paradise to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=oud-of-dark-paradise">Oud of Dark Paradise</a></h3>
+              <span class="hoa-card__price">₹3,199</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 92%" role="img" aria-label="Rated 4.6 out of 5"></span>
+              <span class="hoa-card__count">(86)</span><span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>₹3,999</s><span class="hoa-card__off">20% off</span></span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="floral" data-hoa-card data-product-id="maha" data-title="MAHA" data-image="assets/hoa-product-maha-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="floral" data-hoa-card data-product-id="maha" data-title="MAHA">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=maha" aria-label="Maha">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -542,19 +622,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Floral</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag">Floral</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=maha"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="maha" aria-label="Add Maha to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=maha">Maha</a></h3>
+              <span class="hoa-card__price">₹1,999</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 94%" role="img" aria-label="Rated 4.7 out of 5"></span>
+              <span class="hoa-card__count">(57)</span><span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>₹2,499</s><span class="hoa-card__off">20% off</span></span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="fresh" data-hoa-card data-product-id="sea-smoke" data-title="SEA SMOKE" data-image="assets/hoa-product-sea-smoke-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="fresh" data-hoa-card data-product-id="sea-smoke" data-title="SEA SMOKE">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=sea-smoke" aria-label="Sea Smoke">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -570,19 +652,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Fresh</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag">Fresh</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=sea-smoke"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="sea-smoke" aria-label="Add Sea Smoke to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=sea-smoke">Sea Smoke</a></h3>
+              <span class="hoa-card__price">₹1,999</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 90%" role="img" aria-label="Rated 4.5 out of 5"></span>
+              <span class="hoa-card__count">(23)</span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="aromatic" data-hoa-card data-product-id="tobacco-enigma" data-title="TOBACCO ENIGMA" data-image="assets/hoa-product-tobacco-enigma-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="aromatic" data-hoa-card data-product-id="tobacco-enigma" data-title="TOBACCO ENIGMA">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=tobacco-enigma" aria-label="Tobacco Enigma">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -598,19 +682,21 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Aromatic</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag hoa-card__tag--best">Best seller</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=tobacco-enigma"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="tobacco-enigma" aria-label="Add Tobacco Enigma to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=tobacco-enigma">Tobacco Enigma</a></h3>
+              <span class="hoa-card__price">₹4,900</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 98%" role="img" aria-label="Rated 4.9 out of 5"></span>
+              <span class="hoa-card__count">(312)</span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
-          </article><article class="hoa-card" data-family="floral" data-hoa-card data-product-id="shamamah" data-title="SHAMAMAH" data-image="assets/hoa-product-shamamah-sm.webp" data-price="">
+          </article><article class="hoa-card" data-family="floral" data-hoa-card data-product-id="shamamah" data-title="SHAMAMAH">
             <div class="hoa-card__visual">
             <a class="hoa-card__media" href="/product.html?p=shamamah" aria-label="Shamamah">
               <span class="hoa-card__img hoa-card__img--product"><img
@@ -626,17 +712,19 @@
     sizes="(min-width: 1101px) 25vw, 50vw"
     width="1200" height="1607"
     alt=""
-    loading="lazy" decoding="async"></span>
-              <span class="hoa-card__tag">Floral</span>
-            </a>
+    loading="lazy" decoding="async"></span><span class="hoa-card__tag">Floral</span></a>
             <div class="hoa-card__add">
-              <a class="hoa-btn hoa-btn--small" href="/product.html?p=shamamah"><span>Discover</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-</a>
+              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="shamamah" aria-label="Add Shamamah to bag"><span>Add to bag</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</button>
             </div>
             </div>
             <div class="hoa-card__row">
               <h3 class="hoa-card__title"><a href="/product.html?p=shamamah">Shamamah</a></h3>
+              <span class="hoa-card__price">₹1,199</span>
             </div>
+            <p class="hoa-card__sub">
+              <span class="hoa-cstars" style="--fill: 86%" role="img" aria-label="Rated 4.3 out of 5"></span>
+              <span class="hoa-card__count">(9)</span><span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>₹1,499</s><span class="hoa-card__off">20% off</span></span></p>
             <p class="hoa-card__family">Eau de Parfum</p>
           </article><article class="hoa-card hoa-card--feature" data-family="all" data-hoa-card id="discovery">
         <a class="hoa-card__media" href="/shop.html">
@@ -1106,9 +1194,9 @@
     </div>
 
     <div class="hoa-coupon__body">
-      <p class="hoa-coupon__eyebrow">A little gift for you</p>
-      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
-      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+      <p class="hoa-coupon__eyebrow">Welcome to Agha</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% off <em>your first order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Copy your code, then add it in your bag before checkout.</p>
 
       <div class="hoa-coupon__code" aria-label="Your discount code">
         <span class="hoa-coupon__code-label">Your code</span>
@@ -1116,8 +1204,8 @@
       </div>
 
       <div class="hoa-coupon__actions">
-        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
-        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>COPY CODE</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
     </div>

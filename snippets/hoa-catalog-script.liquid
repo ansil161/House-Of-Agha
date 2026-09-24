@@ -1,0 +1,5 @@
+{%- comment -%}
+  Embeds the mock catalog (snippets/hoa-catalog-data.liquid) for assets/hoa-commerce.js.
+  Rendered once, sitewide, by layout/theme.liquid — before theme.js.
+{%- endcomment -%}
+<script type="application/json" id="hoa-catalog-data">{% render 'hoa-catalog-data' %}</script>

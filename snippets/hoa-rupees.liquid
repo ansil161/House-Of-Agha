@@ -1,0 +1,12 @@
+{%- comment -%}
+  Whole rupees with a thousands separator, e.g. 4500 -> ₹4,500. Used for the mock catalog, where prices are plain numbers
+  (Shopify prices arrive in minor units and go through | money instead).
+  Use: {% capture t %}{% render 'hoa-rupees', n: 4500 %}{% endcapture %}
+{%- endcomment -%}
+{%- assign n_i = n | plus: 0 -%}
+{%- assign k = n_i | divided_by: 1000 | floor -%}
+{%- assign k_base = k | times: 1000 -%}
+{%- assign rem = n_i | minus: k_base -%}
+{%- assign rem_s = rem | append: '' -%}
+{%- if rem < 10 -%}{%- assign rem_s = rem_s | prepend: '00' -%}{%- elsif rem < 100 -%}{%- assign rem_s = rem_s | prepend: '0' -%}{%- endif -%}
+{%- if k > 0 -%}₹{{ k }},{{ rem_s }}{%- else -%}₹{{ rem }}{%- endif -%}

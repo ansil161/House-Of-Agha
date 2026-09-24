@@ -16,12 +16,16 @@
   <!-- House of Agha design system (header + homepage sections) -->
   {{ 'hoa-home.css' | asset_url | stylesheet_tag }}
   {{ 'hoa-coupon.css' | asset_url | stylesheet_tag }}
+  {{ 'hoa-commerce.css' | asset_url | stylesheet_tag }}
 
   <!-- JS Assets -->
   {% render 'agha-wishlist-config' %}
   <script src="{{ 'agha-wishlist.js' | asset_url }}" defer></script>
   {{ 'agha-wishlist-drawer.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'agha-wishlist-drawer.js' | asset_url }}" defer></script>
+  <!-- Mock catalog + pricing engine: must load before theme.js (the bag and product data read window.HOA) -->
+  {% render 'hoa-catalog-script' %}
+  <script src="{{ 'hoa-commerce.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
   <script src="{{ 'hoa-coupon.js' | asset_url }}" defer></script>

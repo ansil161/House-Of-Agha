@@ -15,6 +15,7 @@ engine.registerFilter('handleize', (v) => String(v || '').toLowerCase().trim().r
 engine.registerFilter('money', (v) => '₹' + Number(v || 0).toLocaleString('en-IN'));
 engine.registerFilter('image_url', (v) => v);
 engine.registerFilter('image_tag', (v) => `<img src="${v}" alt="">`);
+engine.registerFilter('parse_json', (v) => JSON.parse(v));
 engine.registerFilter('placeholder_svg_tag', () => '<svg></svg>');
 engine.registerFilter('shopify_asset_url', () => '');
 engine.registerFilter('script_tag', () => '');
@@ -252,9 +253,16 @@ async function renderTemplate(name, templateGlobals) {
   const couponHtml = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-coupon-popup.liquid'), 'utf8'), globals)).trim();
   const couponBlock = '  <!-- Welcome coupon popup · snippets/hoa-coupon-popup.liquid (rendered by the preview build) -->\n  ' + couponHtml + '\n';
   const couponCss = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-coupon\.css">\n/;
-  const couponJs = /[ \t]*<script src="\/?assets\/hoa-coupon\.js" defer><\/script>\n/;
+  const couponJs = /[ \t]*<script src="\/?assets\/hoa-coupon\.js" defer><\/script>\n/g;
   const couponBlockRe = /[ \t]*<!-- Welcome coupon popup[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\n/;
   const all = fs.readdirSync(THEME).filter((f) => f.endsWith('.html'));
+  // Editors / git can leave CRLF in the page shells, which breaks the line-based strips below and
+  // doubles the injected scripts (wishlist drawer then opens and closes on one click). Normalise first.
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    const raw = fs.readFileSync(file, 'utf8');
+    if (raw.includes('\r\n')) fs.writeFileSync(file, raw.replace(/\r\n/g, '\n'));
+  }
   for (const f of all) {
     const file = path.join(THEME, f);
     let html = fs.readFileSync(file, 'utf8');
@@ -267,6 +275,26 @@ async function renderTemplate(name, templateGlobals) {
     fs.writeFileSync(file, html);
   }
   console.log('coupon popup on', all.length, 'pages');
+
+  // Mock catalog + commerce layer (snippets/hoa-catalog-script.liquid, assets/hoa-commerce.js/.css).
+  // layout/theme.liquid loads them on every page, before theme.js, so mirror that in each preview page.
+  const catalogScript = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-catalog-script.liquid'), 'utf8'), globals)).trim();
+  const catalogRe = /[ \t]*<script type="application\/json" id="hoa-catalog-data">[\s\S]*?<\/script>\n/;
+  const commerceJsRe = /[ \t]*<script src="\/?assets\/hoa-commerce\.js" defer><\/script>\n/;
+  const commerceCssRe = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-commerce\.css">\n/;
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    let html = fs.readFileSync(file, 'utf8');
+    html = html.replace(catalogRe, '').replace(commerceJsRe, '').replace(commerceCssRe, '');
+    const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+    const block = '  ' + catalogScript + '\n  <script src="' + pre + 'assets/hoa-commerce.js" defer></script>\n';
+    const themeJs = new RegExp('([ \\t]*<script src="' + pre + 'assets/theme\\.js")');
+    if (!themeJs.test(html)) { console.warn('no theme.js in', f); continue; }
+    html = html.replace(themeJs, (m) => block + m)
+      .replace('</head>', () => '  <link rel="stylesheet" href="' + pre + 'assets/hoa-commerce.css">\n</head>');
+    fs.writeFileSync(file, html);
+  }
+  console.log('commerce layer on', all.length, 'pages');
 
   // Wishlist drawer (snippets/wishlist-drawer.liquid) — layout/theme.liquid renders it on every page.
   // The preview also loads assets/wishlist-preview.js, which fakes the customer, storage and product

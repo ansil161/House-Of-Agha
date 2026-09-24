@@ -15,6 +15,9 @@
     </div>
     <div class="hoa-shop-head__side">
       {%- if s.text != blank -%}<p class="hoa-shop-head__text">{{ s.text }}</p>{%- endif -%}
+      {%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+      {%- assign catalog = catalog_json | parse_json -%}
+      <p class="hoa-offer-note hoa-shop-head__offer">{{ catalog.settings.messages.shipping }}<span aria-hidden="true"> &middot; </span>{{ catalog.settings.messages.tiers }}</p>
       {%- if s.link_1_label != blank or s.link_2_label != blank -%}
       <ul class="hoa-shop-head__links">
         {%- if s.link_1_label != blank -%}

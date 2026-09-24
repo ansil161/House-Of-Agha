@@ -9,6 +9,8 @@
   var seen = false;
   try { seen = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
   if (seen) return;
+  // Already applied in the bag: the offer is taken, so don't offer it again.
+  if (window.HOA && window.HOA.ready && window.HOA.coupon.code()) return;
 
   var card = root.querySelector('.hoa-coupon__card');
   var copyBtn = root.querySelector('[data-coupon-copy]');
@@ -80,12 +82,12 @@
         var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
         return;
       }
-      copyBtn.textContent = 'Copied!';
+      copyBtn.textContent = 'COPIED';
       copyBtn.classList.add('is-copied');
-      status.textContent = 'Code ' + code + ' copied to clipboard';
+      status.textContent = 'Code ' + code + ' copied. Add it in your bag before checkout.';
       clearTimeout(copyTimer);
       copyTimer = setTimeout(function () {
-        copyBtn.textContent = 'Copy Code';
+        copyBtn.textContent = 'COPY CODE';
         copyBtn.classList.remove('is-copied');
         status.textContent = '';
       }, 2200);

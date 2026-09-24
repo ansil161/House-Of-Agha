@@ -12,13 +12,82 @@
   <link rel="stylesheet" href="assets/hoa-shop.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script type="application/json" id="hoa-catalog-data">{
+  "currency": "INR",
+  "settings": {
+    "freeShippingThreshold": 5000,
+    "lowStockThreshold": 5,
+    "quantityTiers": [
+      { "qty": 2, "percent": 10 },
+      { "qty": 3, "percent": 15 }
+    ],
+    "messages": {
+      "shipping": "Complimentary shipping on orders above ₹5,000",
+      "tiers": "Save more when you explore two fragrances",
+      "discover": "Discover your signature scent"
+    },
+    "trust": ["Secure checkout", "Returns within 7 days", "Authentic and batch-numbered"],
+    "returnsText": "Unopened flacons can be returned within 7 days"
+  },
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "Welcome offer",
+      "description": "10% off your first order",
+      "stackable": true
+    }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
+      "image": "assets/hoa-product-oud-fury-sm.webp", "regularPrice": 5200, "salePrice": 4500,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
+      "image": "assets/hoa-product-agha-blue-sm.webp", "regularPrice": 3600, "salePrice": 2880,
+      "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
+      "image": "assets/hoa-product-dark-paradise-sm.webp", "regularPrice": 3999, "salePrice": 3199,
+      "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
+    { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
+      "image": "assets/hoa-product-maha-sm.webp", "regularPrice": 2499, "salePrice": 1999,
+      "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
+      "image": "assets/hoa-product-sea-smoke-sm.webp", "regularPrice": 1999, "salePrice": null,
+      "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
+      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "regularPrice": 4900, "salePrice": null,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
+    { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
+      "image": "assets/hoa-product-shamamah-sm.webp", "regularPrice": 1499, "salePrice": 1199,
+      "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
+  ],
+  "bundles": [
+    { "id": "discovery-set", "kind": "set", "handle": "discovery-set", "name": "The Discovery Set",
+      "tagline": "Three signature fragrances, 5 ml each",
+      "members": ["oud-fury", "agha-blue", "sea-smoke"],
+      "image": "assets/discovery_box.jpg", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
+    { "id": "signature", "kind": "curated", "name": "The Signature Collection",
+      "tagline": "Our three best sellers, together",
+      "members": ["oud-fury", "tobacco-enigma", "agha-blue"] }
+  ],
+  "pairs": {
+    "oud-fury": "tobacco-enigma",
+    "tobacco-enigma": "oud-fury",
+    "agha-blue": "sea-smoke",
+    "sea-smoke": "agha-blue",
+    "maha": "shamamah",
+    "shamamah": "maha",
+    "oud-of-dark-paradise": "agha-blue"
+  }
+}
+</script>
+  <script src="assets/hoa-commerce.js" defer></script>
   <script src="assets/theme.js" defer></script>
   <script src="assets/hoa-shop.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
-  <script src="assets/wishlist-preview.js" defer></script>
-  <script src="assets/agha-wishlist.js" defer></script>
-  <script src="assets/agha-wishlist-drawer.js" defer></script>
-  <script src="assets/hoa-coupon.js" defer></script>
+  <link rel="stylesheet" href="assets/hoa-commerce.css">
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
   <script src="assets/agha-wishlist-drawer.js" defer></script>
@@ -74,7 +143,7 @@
       <p class="hoa-shop-head__crumb"><a href="/">Home</a><span aria-hidden="true">/</span>Shop</p>
       <h1 class="hoa-shop-head__title">All fragrances<sup class="hoa-shop-head__count" data-hoa-total></sup></h1>
     </div>
-    <div class="hoa-shop-head__side"><p class="hoa-shop-head__text">Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family.</p></div>
+    <div class="hoa-shop-head__side"><p class="hoa-shop-head__text">Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family.</p><p class="hoa-offer-note hoa-shop-head__offer">Complimentary shipping on orders above ₹5,000<span aria-hidden="true"> &middot; </span>Save more when you explore two fragrances</p></div>
   </div>
 </section>
 
@@ -173,8 +242,8 @@
   <div class="hoa-pc__info">
     <p class="hoa-pc__meta"><span class="hoa-pc__chip">Woody</span><span class="hoa-pc__chip">Men</span></p>
     <h3 class="hoa-pc__name"><a href="/product.html?p=oud-fury">Oud Fury</a><span class="hoa-pc__gift-tag">Gift</span></h3>
-    <p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill: 96%" role="img" aria-label="Rated 4.8 out of 5"></span>
-        <span class="hoa-pc__count" aria-label="128 reviews">(128)</span></p>
+    <p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill: 98%" role="img" aria-label="Rated 4.9 out of 5"></span>
+        <span class="hoa-pc__count" aria-label="214 reviews">(214)</span></p>
     <p class="hoa-pc__price hoa-pc__price--offer"><span class="hoa-pc__now">₹4,500</span><s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>₹5,200</s>
           <span class="hoa-pc__off">13% off</span></p>
     <p class="hoa-pc__about">A woody Eau de Parfum from House of Agha.</p>
@@ -182,7 +251,7 @@
   </div>
 </article>
 <article class="hoa-pc" data-hoa-item data-for="men" data-family="fresh" data-gift="false" data-name="Agha Blue" data-title="AGHA BLUE" data-index="1" data-product-id="agha-blue"
-         data-image="assets/hoa-product-agha-blue-sm.webp" data-price="3600" data-price-text="₹3,600" data-best="true">
+         data-image="assets/hoa-product-agha-blue-sm.webp" data-price="2880" data-price-text="₹2,880" data-compare-text="₹3,600" data-offer="true" data-best="true">
   <div class="hoa-pc__visual">
     <a class="hoa-pc__media" href="/product.html?p=agha-blue" tabindex="-1" aria-hidden="true">
       <span class="hoa-pc__img hoa-pc__img--product"><img
@@ -204,9 +273,10 @@
   <div class="hoa-pc__info">
     <p class="hoa-pc__meta"><span class="hoa-pc__chip">Fresh</span><span class="hoa-pc__chip">Men</span></p>
     <h3 class="hoa-pc__name"><a href="/product.html?p=agha-blue">Agha Blue</a></h3>
-    <p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill: 98%" role="img" aria-label="Rated 4.9 out of 5"></span>
-        <span class="hoa-pc__count" aria-label="214 reviews">(214)</span></p>
-    <p class="hoa-pc__price"><span class="hoa-pc__now">₹3,600</span></p>
+    <p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill: 96%" role="img" aria-label="Rated 4.8 out of 5"></span>
+        <span class="hoa-pc__count" aria-label="128 reviews">(128)</span></p>
+    <p class="hoa-pc__price hoa-pc__price--offer"><span class="hoa-pc__now">₹2,880</span><s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>₹3,600</s>
+          <span class="hoa-pc__off">20% off</span></p>
     <p class="hoa-pc__about">A fresh Eau de Parfum from House of Agha.</p>
     <div class="hoa-pc__action"><button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add Agha Blue to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button></div>
   </div>
@@ -385,6 +455,20 @@
       <button type="button" class="hoa-btn" data-hoa-reset><span>Show all fragrances</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 </button>
     </div>
+  </div>
+</section>
+
+
+</div>
+
+    <!-- bundles · sections/hoa-shop-bundles.liquid -->
+    <div id="shopify-section-bundles" class="shopify-section hoa-shop-bundles-section"><section class="hoa-bundles" id="bundles" data-hoa-bundles aria-labelledby="bundles-bundles-title">
+  <div class="hoa-wrap">
+    <header class="hoa-bundles__head" data-hoa-reveal>
+      <p class="hoa-eyebrow">Sets & pairs</p>
+      <h2 class="hoa-bundles__title" id="bundles-bundles-title">Explore more than one</h2><p class="hoa-bundles__text">Choose two fragrances and save 10%, three and save 15%. Or begin with the Discovery Set.</p></header>
+    <div class="hoa-bundles__grid" data-hoa-bundles-grid></div>
+    <noscript><p class="hoa-bundles__text">Bundles need JavaScript to show their prices.</p></noscript>
   </div>
 </section>
 
@@ -649,9 +733,9 @@
     </div>
 
     <div class="hoa-coupon__body">
-      <p class="hoa-coupon__eyebrow">A little gift for you</p>
-      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% Off <em>Your First Order</em></h2>
-      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Use your exclusive code at checkout and discover your signature scent.</p>
+      <p class="hoa-coupon__eyebrow">Welcome to Agha</p>
+      <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% off <em>your first order</em></h2>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Copy your code, then add it in your bag before checkout.</p>
 
       <div class="hoa-coupon__code" aria-label="Your discount code">
         <span class="hoa-coupon__code-label">Your code</span>
@@ -659,8 +743,8 @@
       </div>
 
       <div class="hoa-coupon__actions">
-        <button type="button" class="hoa-coupon__copy" data-coupon-copy>Copy Code</button>
-        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>Shop Fragrances</a>
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy>COPY CODE</button>
+        <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
     </div>

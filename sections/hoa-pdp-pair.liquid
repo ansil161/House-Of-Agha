@@ -1,0 +1,16 @@
+{% comment %}
+  PDP · Pair it with
+  "Complete your collection": the paired fragrance and a two-bottle offer. Empty mount only: assets/hoa-commerce.js paints it
+  from the shared mock catalog (snippets/hoa-catalog-data.liquid: pairs + quantity tiers), using this product's handle.
+  Nothing is added without a click; the bag then applies the same "buy two" discount shown here.
+  Shopify later: point the pairing at a product metafield (a list of related products) and the offer at a real discount.
+{% endcomment %}
+<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="{{ product.handle }}" hidden></section>
+
+{% schema %}
+{
+  "name": "Agha PDP · Pair it with",
+  "settings": [],
+  "presets": [{ "name": "Agha PDP · Pair it with" }]
+}
+{% endschema %}

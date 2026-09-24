@@ -54,7 +54,7 @@
   assign compare_price = current_variant.compare_at_price
   assign save_pct = 0
   if compare_price > current_variant.price
-    assign save_pct = compare_price | minus: current_variant.price | times: 100 | divided_by: compare_price
+    assign save_pct = compare_price | minus: current_variant.price | times: 100.0 | divided_by: compare_price | round
   elsif pdp.discount_percent > 0 and pdp.discount_percent < 90
     assign save_pct = pdp.discount_percent
     assign price_share = 100 | minus: save_pct
@@ -139,7 +139,7 @@
           </div>
 
           {%- if family != blank -%}
-            <div class="pdp-stage__badge"><span class="pdp-chip pdp-chip--dot">{{ family }}</span></div>
+            <div class="pdp-stage__badge"><span class="pdp-chip pdp-chip--dot">{{ family }}</span>{% if product.tags contains 'best-seller' or product.tags contains 'Best Seller' %}<span class="pdp-chip pdp-chip--best">Best seller</span>{% endif %}</div>
           {%- endif -%}
           {%- if first_media -%}
             <button type="button" class="pdp-expand" data-pdp-expand aria-label="View images full screen">{% render 'agha-pdp-icon', icon: 'expand' %}</button>
@@ -195,7 +195,7 @@
         <div class="pdp-price" data-pdp-hero-item>
           <span class="pdp-price__amount" data-pdp-price>{{ current_variant.price | money }}</span>
           <s class="pdp-price__compare" data-pdp-compare{% unless on_sale %} hidden{% endunless %}>{{ compare_price | money }}</s>
-          <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}−{{ save_pct }}%{% endif %}</span>
+          <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}{{ save_pct }}% off{% endif %}</span>
           {%- if sale_message != blank -%}
             <span class="pdp-price__offer" data-pdp-offer{% unless on_sale %} hidden{% endunless %}>{{ sale_message }}</span>
           {%- endif -%}
@@ -204,6 +204,8 @@
             {%- if cart.taxes_included %}Inclusive of all taxes{% endif -%}
           </span>
         </div>
+        <p class="pdp-savings" data-pdp-savings data-pdp-hero-item{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}You save {{ compare_price | minus: current_variant.price | money }}{% endif %}</p>
+        <p class="hoa-offer-note pdp-offer-note" data-hoa-offer-note="tiers-pdp" data-pdp-hero-item></p>
 
         {%- form 'product', product, class: 'pdp-form', data-pdp-form: '', data-pdp-hero-item: '', novalidate: 'novalidate' -%}
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-pdp-variant-id>

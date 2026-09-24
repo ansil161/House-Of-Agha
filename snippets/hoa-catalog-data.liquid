@@ -1,0 +1,100 @@
+{%- comment -%}
+  HOUSE OF AGHA — MOCK CATALOG · the single source of truth for pricing and promotions.
+
+  Nothing here is real. It stands in for Shopify until the store is connected, and it is read by
+  BOTH sides so no page can disagree with another:
+    · Liquid sections  →  {% capture j %}{% render 'hoa-catalog-data' %}{% endcapture %}{% assign catalog = j | parse_json %}
+    · the browser      →  snippets/hoa-catalog-script.liquid embeds this JSON; assets/hoa-commerce.js
+                          normalises it (window.HOA) and prices the shop, product page, related
+                          products and the bag from it.
+
+  PRODUCT FIELDS (and what Shopify will supply later)
+    regularPrice   whole rupees. The "was" price when the product has an offer, otherwise simply
+                   the price (Shopify: compare_at_price, else price)
+    salePrice      the selling price when there is an offer, else null (Shopify: price)
+    isBestSeller   Shopify: a tag / metafield
+    rating, reviewCount   Shopify: reviews app or reviews.rating / reviews.rating_count metafields
+    inventory      Shopify: variant inventory_quantity
+  Derived, never stored (so they cannot drift): hasOffer, discountPercentage, price, savings.
+  A product has an offer only when salePrice is set AND lower than regularPrice.
+
+  PROMOTIONS
+    settings.quantityTiers     "buy more, save more": tier % applies to individual fragrance units
+                               in the bag (Shopify later: automatic discount / Function)
+    settings.freeShippingThreshold   the bag's free-shipping progress bar
+    coupons                    validated in the bag (Shopify later: discount codes)
+    bundles                    discovery-set is a standalone product with its own price; duo and
+                               signature add ordinary fragrance units, so the quantity tiers price them
+    pairs                      "Pair it with" suggestion per product
+  Keep this valid JSON (the Liquid parses it).
+{%- endcomment -%}
+{
+  "currency": "INR",
+  "settings": {
+    "freeShippingThreshold": 5000,
+    "lowStockThreshold": 5,
+    "quantityTiers": [
+      { "qty": 2, "percent": 10 },
+      { "qty": 3, "percent": 15 }
+    ],
+    "messages": {
+      "shipping": "Complimentary shipping on orders above ₹5,000",
+      "tiers": "Save more when you explore two fragrances",
+      "discover": "Discover your signature scent"
+    },
+    "trust": ["Secure checkout", "Returns within 7 days", "Authentic and batch-numbered"],
+    "returnsText": "Unopened flacons can be returned within 7 days"
+  },
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "Welcome offer",
+      "description": "10% off your first order",
+      "stackable": true
+    }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
+      "image": "{{ 'hoa-product-oud-fury-sm.webp' | asset_url }}", "regularPrice": 5200, "salePrice": 4500,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
+      "image": "{{ 'hoa-product-agha-blue-sm.webp' | asset_url }}", "regularPrice": 3600, "salePrice": 2880,
+      "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
+      "image": "{{ 'hoa-product-dark-paradise-sm.webp' | asset_url }}", "regularPrice": 3999, "salePrice": 3199,
+      "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
+    { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
+      "image": "{{ 'hoa-product-maha-sm.webp' | asset_url }}", "regularPrice": 2499, "salePrice": 1999,
+      "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
+      "image": "{{ 'hoa-product-sea-smoke-sm.webp' | asset_url }}", "regularPrice": 1999, "salePrice": null,
+      "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
+      "image": "{{ 'hoa-product-tobacco-enigma-sm.webp' | asset_url }}", "regularPrice": 4900, "salePrice": null,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
+    { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
+      "image": "{{ 'hoa-product-shamamah-sm.webp' | asset_url }}", "regularPrice": 1499, "salePrice": 1199,
+      "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
+  ],
+  "bundles": [
+    { "id": "discovery-set", "kind": "set", "handle": "discovery-set", "name": "The Discovery Set",
+      "tagline": "Three signature fragrances, 5 ml each",
+      "members": ["oud-fury", "agha-blue", "sea-smoke"],
+      "image": "{{ 'discovery_box.jpg' | asset_url }}", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
+    { "id": "signature", "kind": "curated", "name": "The Signature Collection",
+      "tagline": "Our three best sellers, together",
+      "members": ["oud-fury", "tobacco-enigma", "agha-blue"] }
+  ],
+  "pairs": {
+    "oud-fury": "tobacco-enigma",
+    "tobacco-enigma": "oud-fury",
+    "agha-blue": "sea-smoke",
+    "sea-smoke": "agha-blue",
+    "maha": "shamamah",
+    "shamamah": "maha",
+    "oud-of-dark-paradise": "agha-blue"
+  }
+}

@@ -23,7 +23,9 @@
   menu in the toolbar (preset ranges + custom min / max) filters on the selling price.
 {% endcomment %}
 
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
 {%- liquid
+  assign catalog = catalog_json | parse_json
   assign s = section.settings
   assign source = collection
   assign use_shopify = false
@@ -33,20 +35,14 @@
   assign families = s.families | split: ','
 
   comment
-    MOCK LINE-UP (preview only; replaced by Shopify products once the collection has some).
-    One row per product, fields in this order:
-      name | handle | family | asset suffix | wearer | gift-ready | regular price | sale price |
-      rating | review count | best seller | available
-    Prices are whole rupees. Regular price = the "was" price: give it the same value as the
-    sale price for a product with NO offer. The discount % is calculated by the card.
-    Mapping to Shopify later: regular <- compare_at_price, sale <- price.
-    Wearers are a first draft; confirm them before launch. Gift-ready is an unconfirmed
-    merchandising guess (confirm the real set with the user before launch).
-    Demo spread: offers (Oud Fury, Dark Paradise, Maha, Shamamah), no offer (Agha Blue,
-    Sea Smoke, Tobacco Enigma), best sellers (Oud Fury, Agha Blue, Tobacco Enigma), review
-    counts from 9 to 312, and at least one price in every filter range.
+    MOCK CATALOG (preview only; replaced by Shopify products once the collection has some).
+    The one mock source for names, prices, offers, ratings and best sellers is
+    snippets/hoa-catalog-data.liquid — the product page, bag and bundles read the same data, so a
+    product shows the same price everywhere. Mapping to Shopify later: regularPrice <- compare_at_price
+    or price, and salePrice <- price. The discount % is calculated by the card, never stored.
+    Wearers are a first draft, confirm them before launch. Gift-ready is an unconfirmed
+    merchandising guess, confirm the real set with the user before launch.
   endcomment
-  assign lineup = 'Oud Fury|oud-fury|Woody|oud-fury|men|true|5200|4500|4.8|128|true|true;Agha Blue|agha-blue|Fresh|agha-blue|men|false|3600|3600|4.9|214|true|true;Oud of Dark Paradise|oud-of-dark-paradise|Woody|dark-paradise|unisex|false|3999|3199|4.6|86|false|true;Maha|maha|Floral|maha|women|true|2499|1999|4.7|57|false|true;Sea Smoke|sea-smoke|Fresh|sea-smoke|unisex|true|1999|1999|4.5|23|false|true;Tobacco Enigma|tobacco-enigma|Aromatic|tobacco-enigma|men|false|4900|4900|4.9|312|true|true;Shamamah|shamamah|Floral|shamamah|women|false|1499|1199|4.3|9|false|true' | split: ';'
   assign interlude_after = 3
 -%}
 
@@ -222,35 +218,40 @@
           {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
         {%- endfor -%}
       {%- else -%}
-        {%- for row in lineup -%}
+        {%- for p in catalog.products -%}
           {%- liquid
-            assign f = row | split: '|'
-            assign p_asset = 'hoa-product-' | append: f[3]
-            assign m_asset = 'hoa-' | append: f[3] | append: '-portrait'
+            assign p_asset = 'hoa-product-' | append: p.asset
+            assign m_asset = 'hoa-' | append: p.asset | append: '-portrait'
             assign thumb_file = p_asset | append: '-sm.webp'
             assign thumb = thumb_file | asset_url
-            assign purl = '/products/' | append: f[1]
+            assign purl = '/products/' | append: p.handle
+            assign sale_v = p.salePrice | default: p.regularPrice
+            assign gift_v = p.gift | append: ''
+            assign is_available = true
+            if p.inventory == 0
+              assign is_available = false
+            endif
           -%}
           {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
           {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
           {%- render 'hoa-shop-card',
             index: forloop.index0,
-            handle: f[1],
+            handle: p.handle,
             url: purl,
-            name: f[0],
-            family: f[2],
-            wearer: f[4],
-            gift: f[5],
+            name: p.name,
+            family: p.family,
+            wearer: p.wearer,
+            gift: gift_v,
             img_main: img_main,
             img_mood: img_mood,
             thumb: thumb,
-            available: f[11],
-            sale_price: f[7],
-            regular_price: f[6],
-            rating: f[8],
-            review_count: f[9],
-            best_seller: f[10],
-            product_id: f[1]
+            available: is_available,
+            sale_price: sale_v,
+            regular_price: p.regularPrice,
+            rating: p.rating,
+            review_count: p.reviewCount,
+            best_seller: p.isBestSeller,
+            product_id: p.handle
           -%}
           {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
         {%- endfor -%}

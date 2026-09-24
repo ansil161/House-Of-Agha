@@ -1,0 +1,233 @@
+/* HOUSE OF AGHA — commerce layer styles (offers, bundles, bag, coupon field).
+   Pairs with assets/hoa-commerce.js. Deliberately quiet: paper, ink and one brass accent — no red,
+   no countdowns, no shouting badges. Loaded last so it can refine the bag in theme.css. */
+
+.hoa-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------------------------------------------------------------- shared price + stars */
+.hoa-cprice { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; font-variant-numeric: tabular-nums; }
+.hoa-cprice__now { font-weight: 600; letter-spacing: -0.02em; color: var(--hoa-ink, #141210); }
+.hoa-cprice__was { font-size: 0.82em; font-weight: 400; color: var(--hoa-mute, #857D72); }
+.hoa-cprice__off { font-size: 0.7em; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
+
+.hoa-cstars {
+  --fill: 0%;
+  font-size: 0.8rem; line-height: 1; letter-spacing: 0.08em;
+  background: linear-gradient(90deg, var(--hoa-brass, #B08D57) var(--fill), #d9d2c6 var(--fill));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.hoa-cstars::before { content: '\2605\2605\2605\2605\2605'; }
+
+/* One-line promotional note: quiet type, never a banner */
+.hoa-offer-note {
+  margin: 0; font: 500 0.7rem/1.5 var(--hoa-sans, sans-serif);
+  letter-spacing: 0.09em; text-transform: uppercase; color: var(--hoa-mute, #857D72);
+}
+.hoa-offer-note[hidden] { display: none; }
+.hoa-shop-head__offer { margin-top: 14px; max-width: 46ch; }
+.hoa-collection__note { margin: 6px 0 18px; }
+
+/* ---------------------------------------------------------------- home cards */
+.hoa-card__tag--best { color: #8a6a37; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.6rem; padding: 6px 11px; }
+.hoa-card__tag--best::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 7px; vertical-align: 1px; border-radius: 50%; background: var(--hoa-brass, #B08D57); }
+.hoa-card__sub { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; margin: -8px 0 0; min-height: 1.1rem; }
+.hoa-card__count { font-size: 0.72rem; color: var(--hoa-mute, #857D72); font-variant-numeric: tabular-nums; }
+.hoa-card__offer { display: inline-flex; align-items: baseline; gap: 8px; margin-left: auto; font-variant-numeric: tabular-nums; }
+.hoa-card__offer s { font-size: 0.8rem; color: var(--hoa-mute, #857D72); }
+.hoa-card__off { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
+.hoa-card__price { font-weight: 600; font-variant-numeric: tabular-nums; }
+.hoa-card .hoa-card__family { margin-top: -6px; }
+.hoa-card__add .hoa-btn.is-added { background: var(--hoa-paper, #F6F3EE); color: var(--hoa-ink, #141210); }
+@media (max-width: 767px) {
+  .hoa-card__offer { margin-left: 0; width: 100%; }
+  .hoa-card__sub { margin-top: -6px; }
+}
+
+/* ---------------------------------------------------------------- product page */
+.pdp-chip--best { color: #8a6a37; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.pdp-stage__badge { display: flex; flex-wrap: wrap; gap: 8px; }
+.pdp-price__save { text-transform: uppercase; }
+.pdp-savings { margin: 8px 0 0; font-size: 0.9rem; font-weight: 600; color: #8a6a37; letter-spacing: 0.01em; }
+.pdp-savings[hidden] { display: none; }
+.pdp-offer-note { margin: 10px 0 0; }
+.pdp-rel__price .hoa-cprice { gap: 0 8px; }
+.pdp-rel__price .hoa-cprice__now { font-weight: 500; }
+
+/* Pair it with */
+.hoa-pair { padding-block: clamp(48px, 7vw, 96px); }
+.hoa-pair[hidden] { display: none; }
+.hoa-pair__card {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: clamp(20px, 3vw, 44px);
+  padding: clamp(18px, 2.4vw, 32px); border: 1px solid var(--hoa-line, rgba(20,18,16,.12)); border-radius: 4px; background: var(--hoa-paper-2, #EFEBE4);
+}
+.hoa-pair__imgs { display: flex; align-items: center; gap: 12px; }
+.hoa-pair__img { display: block; width: clamp(84px, 11vw, 132px); aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; background: #fff; }
+.hoa-pair__img img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+.hoa-pair__plus { font: 300 1.6rem/1 var(--hoa-sans, sans-serif); color: var(--hoa-mute, #857D72); }
+.hoa-pair__names { margin: 0 0 6px; font: 600 clamp(1.05rem, 1.6vw, 1.3rem)/1.2 var(--hoa-sans, sans-serif); letter-spacing: -0.02em; color: var(--hoa-ink, #141210); }
+.hoa-pair__note { margin: 0 0 12px; font-size: 0.84rem; color: var(--hoa-mute, #857D72); }
+.hoa-pair__act { display: flex; flex-direction: column; align-items: stretch; gap: 12px; min-width: 190px; }
+.hoa-pair__more { text-align: center; font: 500 0.78rem var(--hoa-sans, sans-serif); color: var(--hoa-ink, #141210); text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 767px) {
+  .hoa-pair__card { grid-template-columns: 1fr; gap: 16px; }
+  .hoa-pair__act { min-width: 0; }
+}
+
+/* ---------------------------------------------------------------- shop bundles */
+.hoa-bundles { padding: clamp(64px, 9vw, 130px) 0; background: var(--hoa-paper, #F6F3EE); scroll-margin-top: 90px; }
+.hoa-bundles__head { max-width: 640px; margin-bottom: clamp(28px, 4vw, 52px); }
+.hoa-bundles__title { margin: 8px 0 12px; font: 400 clamp(2rem, 4vw, 3.2rem)/1.06 var(--hoa-serif, Georgia, serif); letter-spacing: -0.01em; color: var(--hoa-ink, #141210); text-transform: none; }
+.hoa-bundles__text { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2, #3B3631); }
+.hoa-bundles__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); align-items: stretch; }
+.hoa-bundle {
+  display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+  border: 1px solid var(--hoa-line, rgba(20,18,16,.12)); border-radius: 4px; background: #fff;
+}
+.hoa-bundle__media { aspect-ratio: 4 / 3; overflow: hidden; background: var(--hoa-paper-2, #EFEBE4); }
+.hoa-bundle__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--hoa-ease, ease); }
+.hoa-bundle:hover .hoa-bundle__media img { transform: scale(1.03); }
+.hoa-bundle__body { display: flex; flex-direction: column; flex: 1; gap: 10px; padding: clamp(18px, 2vw, 26px); }
+.hoa-bundle__eyebrow { margin: 0; font: 600 0.64rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.18em; text-transform: uppercase; color: #8a6a37; }
+.hoa-bundle__title { margin: 0; font: 600 1.25rem/1.15 var(--hoa-sans, sans-serif); letter-spacing: -0.025em; text-transform: none; color: var(--hoa-ink, #141210); }
+.hoa-bundle__text { margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--hoa-mute, #857D72); }
+.hoa-bundle__names { margin: 0; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--hoa-ink-2, #3B3631); }
+.hoa-bundle__price { margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; min-height: 2.4rem; font-size: 1.15rem; }
+.hoa-bundle__save { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
+.hoa-bundle__hint { font-size: 0.82rem; font-weight: 400; color: var(--hoa-mute, #857D72); }
+.hoa-bundle__stack { display: flex; }
+.hoa-bundle__thumb { width: 64px; height: 80px; object-fit: cover; border-radius: 2px; background: var(--hoa-paper-2, #EFEBE4); border: 2px solid #fff; mix-blend-mode: normal; }
+.hoa-bundle__thumb + .hoa-bundle__thumb { margin-left: -14px; }
+.hoa-bundle__cta, .hoa-pair__act .hoa-bundle__cta {
+  display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 14px 20px; cursor: pointer;
+  border: 1px solid var(--hoa-ink, #141210); border-radius: 999px; background: var(--hoa-ink, #141210); color: var(--hoa-paper, #F6F3EE);
+  font: 600 0.72rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.14em; text-transform: uppercase;
+  transition: background-color 0.4s var(--hoa-ease, ease), color 0.4s var(--hoa-ease, ease), transform 0.2s;
+}
+.hoa-bundle__cta:hover:not(:disabled) { background: transparent; color: var(--hoa-ink, #141210); }
+.hoa-bundle__cta:active:not(:disabled) { transform: scale(0.98); }
+.hoa-bundle__cta:disabled { background: var(--hoa-stone, #E4DED5); border-color: var(--hoa-stone, #E4DED5); color: var(--hoa-mute, #857D72); cursor: not-allowed; }
+.hoa-bundle__cta.is-added { background: var(--hoa-brass, #B08D57); border-color: var(--hoa-brass, #B08D57); color: var(--hoa-night, #0C0A08); }
+.hoa-bundle:focus-within, .hoa-pair__card:focus-within { border-color: var(--hoa-ink, #141210); }
+
+.hoa-duo { display: flex; flex-wrap: wrap; gap: 8px; }
+.hoa-duo__opt {
+  padding: 8px 13px; cursor: pointer; border: 1px solid var(--hoa-line, rgba(20,18,16,.18)); border-radius: 999px; background: transparent;
+  font: 500 0.78rem/1 var(--hoa-sans, sans-serif); color: var(--hoa-ink, #141210);
+  transition: background-color 0.3s var(--hoa-ease, ease), color 0.3s var(--hoa-ease, ease), border-color 0.3s;
+}
+.hoa-duo__opt:hover { border-color: var(--hoa-ink, #141210); }
+.hoa-duo__opt[aria-pressed='true'] { background: var(--hoa-ink, #141210); border-color: var(--hoa-ink, #141210); color: var(--hoa-paper, #F6F3EE); }
+
+@media (max-width: 1023px) { .hoa-bundles__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hoa-bundle--sig { grid-column: 1 / -1; } }
+@media (max-width: 639px) { .hoa-bundles__grid { grid-template-columns: 1fr; } .hoa-bundle--sig { grid-column: auto; } .hoa-bundle__media { aspect-ratio: 16 / 10; } }
+
+/* ---------------------------------------------------------------- bag */
+.cart-drawer-footer { max-height: 64%; overflow-y: auto; overscroll-behavior: contain; }
+.cart-count.is-bump { animation: hoa-bump 0.5s var(--hoa-ease, ease); }
+@keyframes hoa-bump { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+.bag-ship { padding: 12px 14px 14px; border: 1px solid var(--color-border-light, rgba(0,0,0,.08)); border-radius: 18px; background: var(--color-bg-secondary, #f4f1ec); }
+.bag-ship__text { margin: 0 0 9px; font-size: 0.8rem; line-height: 1.35; color: var(--color-muted, #6b665f); }
+.bag-ship__text b { color: var(--color-black, #141210); font-weight: 600; }
+.bag-ship__track { height: 4px; border-radius: 4px; overflow: hidden; background: rgba(20, 18, 16, 0.1); }
+.bag-ship__fill { display: block; width: 100%; height: 100%; border-radius: 4px; background: var(--hoa-brass, #B08D57); transform-origin: left center; transition: transform 0.8s var(--hoa-ease, cubic-bezier(.22,1,.36,1)); }
+.bag-ship.is-free .bag-ship__fill { background: #8a6a37; }
+.bag-nudge { margin: 0; padding: 0 4px; font-size: 0.78rem; color: var(--color-muted, #6b665f); }
+
+.bag-offer, .bag-cross { padding: 14px; border: 1px solid var(--color-border-light, rgba(0,0,0,.08)); border-radius: 20px; background: #fff; }
+.bag-offer { background: var(--color-bg-secondary, #f4f1ec); border-style: dashed; }
+.bag-offer__eyebrow { margin: 0 0 10px; font: 600 0.62rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.18em; text-transform: uppercase; color: #8a6a37; }
+.bag-offer__row, .bag-cross__row { display: flex; align-items: center; gap: 12px; }
+.bag-offer__row img, .bag-cross__row img { width: 48px; height: 60px; object-fit: cover; border-radius: 10px; background: #fff; flex: none; }
+.bag-offer__copy { flex: 1; min-width: 0; }
+.bag-offer__title { margin: 0; font-size: 0.9rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--color-black, #141210); }
+.bag-offer__sub { margin: 3px 0 0; font-size: 0.76rem; line-height: 1.35; color: var(--color-muted, #6b665f); }
+.bag-cross__price { margin: 3px 0 0; font-size: 0.82rem; }
+.bag-offer__cta {
+  display: flex; align-items: center; justify-content: center; margin-top: 12px; padding: 11px 16px; border-radius: 999px;
+  border: 1px solid var(--color-black, #141210); color: var(--color-black, #141210); text-decoration: none;
+  font: 600 0.68rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.14em; text-transform: uppercase; transition: background-color 0.3s, color 0.3s;
+}
+.bag-offer__cta:hover { background: var(--color-black, #141210); color: #fff; }
+.bag-cross__add {
+  flex: none; padding: 9px 16px; cursor: pointer; border-radius: 999px; border: 1px solid var(--color-black, #141210); background: transparent; color: var(--color-black, #141210);
+  font: 600 0.68rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.14em; text-transform: uppercase; transition: background-color 0.3s, color 0.3s;
+}
+.bag-cross__add:hover { background: var(--color-black, #141210); color: #fff; }
+.bag-cross__add.is-added { background: var(--hoa-brass, #B08D57); border-color: var(--hoa-brass, #B08D57); color: #0C0A08; }
+.bag-empty__cta { display: inline-block; margin-top: 18px; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--color-black, #141210); color: var(--color-black, #141210); text-decoration: none; font: 600 0.68rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.14em; text-transform: uppercase; }
+.bag-empty__cta:hover { background: var(--color-black, #141210); color: #fff; }
+
+/* Coupon */
+.cart-drawer-footer.is-empty .bag-coupon, .cart-drawer-footer.is-empty .bag-trust { display: none; }
+.bag-coupon { margin: 0 0 14px; }
+.bag-coupon__toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; font: 500 0.82rem var(--hoa-sans, sans-serif); color: var(--color-black, #141210); }
+.bag-coupon__toggle svg { width: 10px; height: 6px; transition: transform 0.3s; }
+.bag-coupon__toggle[aria-expanded='true'] svg { transform: rotate(180deg); }
+.bag-coupon__form { display: flex; gap: 8px; margin-top: 10px; }
+.bag-coupon__form[hidden] { display: none; }
+.bag-coupon__input {
+  flex: 1; min-width: 0; padding: 11px 14px; border: 1px solid var(--color-border, rgba(0,0,0,.18)); border-radius: 12px; background: #fff; color: var(--color-black, #141210);
+  font: 600 0.82rem var(--hoa-sans, sans-serif); letter-spacing: 0.14em; text-transform: uppercase;
+}
+.bag-coupon__input::placeholder { font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: var(--color-muted, #857D72); }
+.bag-coupon__input:focus-visible { outline: 2px solid var(--hoa-brass, #B08D57); outline-offset: 1px; }
+.bag-coupon__input.is-error { border-color: #9a4a3a; animation: hoa-shake 0.4s; }
+@keyframes hoa-shake { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+.bag-coupon__apply { padding: 0 18px; cursor: pointer; border: 1px solid var(--color-black, #141210); border-radius: 12px; background: var(--color-black, #141210); color: #fff; font: 600 0.7rem var(--hoa-sans, sans-serif); letter-spacing: 0.12em; text-transform: uppercase; }
+.bag-coupon__apply:hover { background: transparent; color: var(--color-black, #141210); }
+.bag-coupon__msg { margin: 6px 2px 0; min-height: 0; font-size: 0.76rem; color: var(--color-muted, #6b665f); }
+.bag-coupon__msg:empty { display: none; }
+.bag-coupon__msg.is-error { color: #9a4a3a; }
+.bag-coupon__applied { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--hoa-brass, #B08D57); border-radius: 14px; background: rgba(176, 141, 87, 0.08); }
+.bag-coupon__applied.is-new { animation: hoa-settle 0.6s var(--hoa-ease, ease); }
+@keyframes hoa-settle { 0% { transform: scale(0.97); background: rgba(176, 141, 87, 0.28); } 100% { transform: none; } }
+.bag-coupon__tick { display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--hoa-brass, #B08D57); color: #0C0A08; }
+.bag-coupon__what { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.bag-coupon__what b { font: 600 0.82rem var(--hoa-sans, sans-serif); letter-spacing: 0.14em; color: var(--color-black, #141210); }
+.bag-coupon__what small { font-size: 0.72rem; color: var(--color-muted, #6b665f); }
+.bag-coupon__remove { flex: none; padding: 4px 2px; border: 0; background: none; cursor: pointer; font: 500 0.76rem var(--hoa-sans, sans-serif); color: var(--color-muted, #6b665f); text-decoration: underline; text-underline-offset: 3px; }
+.bag-coupon__remove:hover { color: var(--color-black, #141210); }
+
+/* Summary */
+.cart-summary__row--save dt { color: #8a6a37; }
+.cart-summary__row--save dd { color: #8a6a37; }
+.cart-summary__row--saved { padding: 8px 12px; border-radius: 12px; background: rgba(176, 141, 87, 0.12); color: #6f552b; font-weight: 600; }
+.cart-summary__row--saved dd { color: #6f552b; font-weight: 600; }
+.cart-total-price.is-flash, .cart-summary__row--saved.is-flash { animation: hoa-flash 0.7s var(--hoa-ease, ease); }
+@keyframes hoa-flash { 0% { opacity: 0.35; transform: translateY(3px); } 100% { opacity: 1; transform: none; } }
+.bag-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin: 0 0 14px; padding: 0; list-style: none; font: 500 0.66rem/1.4 var(--hoa-sans, sans-serif); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted, #6b665f); }
+.bag-trust li + li::before { content: '\00b7'; margin-right: 14px; }
+
+@media (max-height: 700px) {
+  .cart-drawer-header { padding: 16px 20px 10px; }
+  /* short screens: the whole drawer scrolls as one, the checkout button stays pinned to the bottom */
+  .cart-drawer { overflow-y: auto; }
+  .cart-drawer-body { flex: none; overflow: visible; }
+  .cart-drawer-footer { flex: none; padding: 10px 16px 12px; max-height: none; overflow: visible; }
+  .cart-summary { gap: 3px; margin-bottom: 8px; }
+  .cart-summary__row { font-size: 0.78rem; }
+  .cart-summary__row--total { padding-top: 6px; }
+  .cart-summary__row--total dd { font-size: 1.05rem; }
+  .cart-summary__row--saved { padding: 4px 10px; }
+  .bag-coupon { margin-bottom: 6px; }
+  .cart-checkout { padding: 12px 16px; }
+  .cart-continue { margin-top: 6px; }
+}
+@media (max-height: 760px) {
+  .cart-drawer-footer { padding: 14px 18px 16px; max-height: 68%; }
+  .cart-summary { gap: 6px; margin-bottom: 12px; }
+  .bag-trust { display: none; }
+  .bag-coupon { margin-bottom: 10px; }
+}
+@media (max-width: 479px) {
+  .bag-offer__row img, .bag-cross__row img { width: 42px; height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bag-ship__fill, .cart-count.is-bump, .bag-coupon__applied.is-new, .cart-total-price.is-flash, .cart-summary__row--saved.is-flash, .bag-coupon__input.is-error { animation: none; transition: none; }
+}
+
+/* The footer can scroll on short screens; keep the checkout button in view at all times */
+.cart-drawer-footer .cart-checkout { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -10px 14px -6px #fff; }

@@ -6,7 +6,7 @@
 // product data + metafields (custom.tagline, custom.family, custom.top_notes, …).
 const AGHA_PRODUCTS = {
   // Real House of Agha line-up. Photography from the brand's Drive folder (see HOA-ASSETS.md).
-  // PREVIEW-ONLY placeholder prices (same mock figures as the shop cards); on Shopify prices come from the product variants.
+  // The prices below are overwritten from the shared catalog (see applyToPreviewProducts); on Shopify they come from the product variants.
   'oud-fury': {
     title: "OUD FURY",
     family: "Woody",
@@ -72,7 +72,7 @@ const AGHA_PRODUCTS = {
     sizes: { 'Eau de Parfum': 4700 },
     reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]
   },
-  // Older placeholder catalogue, still used by shop.html.
+  // Older placeholder catalogue (not priced by the shared catalog).
   'oud-royal': {
     title: 'OUD ROYAL',
     family: 'Woody & Oud',
@@ -140,6 +140,10 @@ const AGHA_PRODUCTS = {
     }
   }
 };
+
+// Prices, offers and review figures for the House of Agha line-up come from the one mock catalog
+// (snippets/hoa-catalog-data.liquid → assets/hoa-commerce.js), never from the figures above.
+if (window.HOA && window.HOA.ready) window.HOA.applyToPreviewProducts(AGHA_PRODUCTS);
 
 const slugify = (text) => (text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -399,13 +403,24 @@ const AghaStore = {
     this.toggleCartDrawer(true);
   },
 
+  // Several units at once (bundles): one bag update, one drawer opening
+  addItems(items) {
+    items.forEach(i => this.cart.push(i));
+    this.updateCartUI();
+    this.toggleCartDrawer(true);
+  },
+
   removeFromCart(index) {
     this.cart.splice(index, 1);
     this.updateCartUI();
   },
 
-  // One bag line per product+size+price; the cart array holds one entry per unit.
-  cartKey(item) { return [item.title, item.size, item.price].join('|'); },
+  // One bag line per product+size; the cart array holds one entry per unit. Known products are priced
+  // from the shared catalog (assets/hoa-commerce.js), so the key must not include a price.
+  cartKey(item) {
+    const known = window.HOA && window.HOA.ready ? (item.handle && window.HOA.product(item.handle)) || (item.title && window.HOA.byName(item.title)) : null;
+    return known ? known.handle + '|' + (item.size || '') : 'legacy:' + item.title + '|' + item.size;
+  },
 
   changeQty(key, delta) {
     if (delta > 0) {
@@ -448,88 +463,11 @@ const AghaStore = {
     } catch (e) {}
   },
 
+  // The bag is painted by the commerce layer (assets/hoa-commerce.js): lines, offers, quantity tier,
+  // coupon, free-shipping progress and totals all come from one pricing function.
   updateCartUI() {
     this.saveCart();
-    const total = this.cart.length;
-    document.querySelectorAll('.cart-count').forEach(el => el.textContent = total);
-
-    const body = document.querySelector('.cart-drawer-body');
-    if (!body) return;
-    const e = (v) => this.escapeHtml(v);
-
-    const lines = [];
-    this.cart.forEach(item => {
-      const key = this.cartKey(item);
-      const line = lines.find(l => l.key === key);
-      if (line) line.qty += 1; else lines.push({ key, item, qty: 1 });
-    });
-
-    let subtotal = 0;
-    let saved = 0;
-    let sample = '';
-    lines.forEach(({ item, qty }) => {
-      const p = this.parseMoney(item.price);
-      subtotal += p * qty;
-      if (item.compare) saved += Math.max(0, this.parseMoney(item.compare) - p) * qty;
-      if (!sample) sample = item.price;
-    });
-
-    const footer = document.querySelector('.cart-drawer-footer');
-    if (footer) footer.classList.toggle('is-empty', total === 0);
-    // Summary: total at full price, offer discount, then what the customer pays
-    const money = (n) => this.formatMoney(n, sample || '₹');
-    const mrp = subtotal + saved;
-    const pct = mrp > 0 ? Math.round((saved / mrp) * 100) : 0;
-    document.querySelectorAll('[data-cart-count-label]').forEach(el => el.textContent = total ? `(${total}) · ${money(subtotal)}` : '');
-    const summary = document.querySelector('.cart-summary');
-    if (summary) {
-      summary.innerHTML = (saved > 0 ? `
-        <div class="cart-summary__row"><dt>Total price</dt><dd><s>${money(mrp)}</s></dd></div>
-        <div class="cart-summary__row cart-summary__row--save"><dt>Offer discount${pct ? ` (${pct}% off)` : ''}</dt><dd>&minus;${money(saved)}</dd></div>` : '') + `
-        <div class="cart-summary__row"><dt>Shipping</dt><dd>Complimentary</dd></div>
-        <div class="cart-summary__row cart-summary__row--total"><dt>${saved > 0 ? 'You pay' : 'Total'}</dt><dd class="cart-total-price">${money(subtotal)}</dd></div>`;
-    }
-    const checkout = document.querySelector('[data-cart-checkout]');
-    if (checkout) checkout.setAttribute('aria-disabled', String(total === 0));
-
-    if (total === 0) {
-      body.innerHTML = `
-        <div class="cart-empty">
-          <p class="cart-empty__title">Your bag is empty</p>
-          <p class="cart-empty__text">Explore our signature fragrances to select your scent.</p>
-        </div>`;
-      return;
-    }
-
-    body.innerHTML = lines.map(({ key, item, qty }) => {
-      const p = this.parseMoney(item.price);
-      const cmp = item.compare ? this.parseMoney(item.compare) : 0;
-      const off = cmp > p ? Math.round((1 - p / cmp) * 100) : 0;
-      return `
-      <article class="cart-line" data-key="${e(key)}">
-        <div class="cart-line__media">${item.image ? `<img src="${e(item.image)}" alt="${e(item.title)}">` : ''}</div>
-        <div class="cart-line__info">
-          <div class="cart-line__top">
-            <h4 class="cart-line__title">${e(item.title)}</h4>
-            <button type="button" class="cart-line__remove" data-cart-act="remove" aria-label="Remove ${e(item.title)}">
-              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-            </button>
-          </div>
-          <p class="cart-line__meta">${e(item.size || 'Eau de Parfum')}</p>
-          <div class="cart-line__prices">
-            ${cmp > p ? `<s class="cart-line__was">${e(this.formatMoney(cmp * qty, item.price))}</s>` : ''}
-            <span class="cart-line__price">${e(this.formatMoney(p * qty, item.price))}</span>
-            ${cmp > p ? `<span class="cart-line__off">${off}% off</span>` : ''}
-          </div>
-          ${qty > 1 ? `<p class="cart-line__each">${e(item.price)} each</p>` : ''}
-          <div class="cart-qty" role="group" aria-label="Quantity for ${e(item.title)}">
-            <button type="button" data-cart-act="dec" aria-label="Decrease quantity">&minus;</button>
-            <span class="cart-qty__n" aria-live="polite">${qty}</span>
-            <button type="button" data-cart-act="inc" aria-label="Increase quantity">+</button>
-          </div>
-        </div>
-      </article>`;
-    }).join('');
+    if (window.HOA && window.HOA.ready) window.HOA.renderBag(this);
   },
 
   openQuickView(product) {

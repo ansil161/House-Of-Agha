@@ -8,7 +8,7 @@
           "settings": {
             "icon": "delivery",
             "title": "Complimentary shipping",
-            "text": "On every flacon, wrapped in matte black hardboard."
+            "text": "On orders above ₹5,000, wrapped in matte black hardboard."
           }
         },
         "sample": {
@@ -47,7 +47,7 @@
         "caption_right": "35% oil concentration",
         "show_dynamic_checkout": true,
         "show_delivery": true,
-        "free_shipping_text": "Complimentary shipping on every flacon.",
+        "free_shipping_text": "Complimentary shipping on orders above ₹5,000.",
         "authenticity_title": "Numbered and batch-coded",
         "authenticity_text": "Every flacon is laser-engraved with its batch code and compounding date."
       }
@@ -178,6 +178,10 @@
         "heading": "How it wears",
         "focal_x": 0
       }
+    },
+    "pair": {
+      "type": "hoa-pdp-pair",
+      "settings": {}
     },
     "reviews": {
       "type": "agha-pdp-reviews",

@@ -748,3 +748,34 @@
   .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.52rem; letter-spacing: 0.06em; gap: 4px; }
   .hoa-pc__tag--best::before { font-size: 0.6rem; }
 }
+
+/* ==========================================================================
+   Toolbar polish: Sort as a pill matching Price (the bare select left a wide gap before its arrow),
+   even spacing at the pill's right end, and a two-row layout at mid widths where one row of
+   controls (~1250px) no longer fits and squeezed the family chips.
+   ========================================================================== */
+.hoa-shop-bar__end { gap: 10px; padding-right: 2px; }
+.hoa-sort {
+  gap: 6px; padding: 0 12px 0 14px; height: 34px;
+  border: 1px solid var(--hoa-line); border-radius: 999px; background: rgba(255, 255, 255, 0.5);
+}
+.hoa-sort .hoa-shop-bar__label { margin-right: 0; }
+.hoa-sort select { field-sizing: content; padding-right: 16px; background-position: right 0 center; }
+.hoa-sort:hover { border-color: rgba(20, 18, 16, 0.4); }
+.hoa-sort:focus-within { border-color: var(--hoa-ink); }
+.hoa-sort select:focus-visible { outline: none; }
+.hoa-fview { align-self: center; }
+
+@media (min-width: 1100px) and (max-width: 1399px) {
+  .hoa-shop-bar { border-radius: 32px; }
+  .hoa-shop-bar__inner { flex-wrap: wrap; gap: 0; }
+  .hoa-shop-bar__end { margin-left: 16px; }
+  .hoa-shop-bar__group--for { min-height: 56px; order: 1; flex: 1 1 0; }
+  .hoa-shop-bar__end { order: 2; }
+  /* basis just under full width forces the break: tabs + controls on row 1, family + gift on row 2 */
+  .hoa-shop-bar__group--family { order: 3; flex: 1 1 calc(100% - 200px); padding: 10px 0; border-left: 0; border-top: 1px solid var(--hoa-line); }
+  .hoa-shop-bar__group--gift { order: 3; padding: 10px 0 10px 16px; border-left: 0; border-top: 1px solid var(--hoa-line); }
+}
+@media (max-width: 767px) {
+  .hoa-sort { padding: 0 10px 0 12px; }
+}

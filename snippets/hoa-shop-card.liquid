@@ -110,7 +110,7 @@
   </div>
   <div class="hoa-pc__info">
     <p class="hoa-pc__meta"><span class="hoa-pc__chip">{{ family }}</span><span class="hoa-pc__chip">{{ wearer | capitalize }}</span></p>
-    <h3 class="hoa-pc__name"><a href="{{ url }}">{{ name }}</a>{%- if gift == 'true' -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
+    <h3 class="hoa-pc__name"><a href="{{ url }}">{{ name }}</a>{%- if gift == 'true' or gift == true -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
     <p class="hoa-pc__rating">
       {%- if has_reviews -%}
         <span class="hoa-pc__stars" style="--fill: {{ fill }}%" role="img" aria-label="Rated {{ rating_n }} out of 5"></span>
