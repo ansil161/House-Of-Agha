@@ -1761,3 +1761,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-footer .footer-links a, .hoa-footer__submit, .hoa-footer__submit svg { transition: none; }
   .hoa-footer .footer-links a:hover { transform: none; }
 }
+
+/* Shop page only: no giant outlined wordmark in the footer */
+.hoa-shop-page .hoa-footer__mark { display: none; }
