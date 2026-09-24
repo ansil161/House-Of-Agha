@@ -1841,3 +1841,6 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   .cart-drawer { top: 8px; right: 8px; width: calc(100% - 16px); height: calc(100% - 16px); border-radius: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .cart-line { animation: none; } }
+
+.cart-line__each { margin: 3px 0 0; font-size: 0.72rem; color: var(--color-muted); }
+.cart-summary__row s { color: var(--color-muted); }

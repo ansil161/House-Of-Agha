@@ -452,7 +452,6 @@ const AghaStore = {
     this.saveCart();
     const total = this.cart.length;
     document.querySelectorAll('.cart-count').forEach(el => el.textContent = total);
-    document.querySelectorAll('[data-cart-count-label]').forEach(el => el.textContent = total ? `(${total})` : '');
 
     const body = document.querySelector('.cart-drawer-body');
     if (!body) return;
@@ -477,13 +476,18 @@ const AghaStore = {
 
     const footer = document.querySelector('.cart-drawer-footer');
     if (footer) footer.classList.toggle('is-empty', total === 0);
-    const totalEl = document.querySelector('.cart-total-price');
-    if (totalEl) totalEl.textContent = this.formatMoney(subtotal, sample || '₹');
-    const saveRow = document.querySelector('[data-cart-save]');
-    if (saveRow) {
-      saveRow.hidden = saved <= 0;
-      const amt = saveRow.querySelector('.cart-save-amount');
-      if (amt) amt.textContent = this.formatMoney(saved, sample || '₹');
+    // Summary: total at full price, offer discount, then what the customer pays
+    const money = (n) => this.formatMoney(n, sample || '₹');
+    const mrp = subtotal + saved;
+    const pct = mrp > 0 ? Math.round((saved / mrp) * 100) : 0;
+    document.querySelectorAll('[data-cart-count-label]').forEach(el => el.textContent = total ? `(${total}) · ${money(subtotal)}` : '');
+    const summary = document.querySelector('.cart-summary');
+    if (summary) {
+      summary.innerHTML = (saved > 0 ? `
+        <div class="cart-summary__row"><dt>Total price</dt><dd><s>${money(mrp)}</s></dd></div>
+        <div class="cart-summary__row cart-summary__row--save"><dt>Offer discount${pct ? ` (${pct}% off)` : ''}</dt><dd>&minus;${money(saved)}</dd></div>` : '') + `
+        <div class="cart-summary__row"><dt>Shipping</dt><dd>Complimentary</dd></div>
+        <div class="cart-summary__row cart-summary__row--total"><dt>${saved > 0 ? 'You pay' : 'Total'}</dt><dd class="cart-total-price">${money(subtotal)}</dd></div>`;
     }
     const checkout = document.querySelector('[data-cart-checkout]');
     if (checkout) checkout.setAttribute('aria-disabled', String(total === 0));
@@ -513,9 +517,11 @@ const AghaStore = {
           </div>
           <p class="cart-line__meta">${e(item.size || 'Eau de Parfum')}</p>
           <div class="cart-line__prices">
+            ${cmp > p ? `<s class="cart-line__was">${e(this.formatMoney(cmp * qty, item.price))}</s>` : ''}
             <span class="cart-line__price">${e(this.formatMoney(p * qty, item.price))}</span>
-            ${cmp > p ? `<s class="cart-line__was">${e(this.formatMoney(cmp * qty, item.price))}</s><span class="cart-line__off">${off}% off</span>` : ''}
+            ${cmp > p ? `<span class="cart-line__off">${off}% off</span>` : ''}
           </div>
+          ${qty > 1 ? `<p class="cart-line__each">${e(item.price)} each</p>` : ''}
           <div class="cart-qty" role="group" aria-label="Quantity for ${e(item.title)}">
             <button type="button" data-cart-act="dec" aria-label="Decrease quantity">&minus;</button>
             <span class="cart-qty__n" aria-live="polite">${qty}</span>
