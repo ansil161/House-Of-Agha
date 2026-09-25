@@ -108,7 +108,7 @@
       if (skip) return;
       d.classList.add('hoa-intro-active');
       var l = document.createElement('link');
-      l.rel = 'preload'; l.as = 'image'; l.crossOrigin = 'anonymous'; l.href = 'assets/hoa-product-oud-fury.webp';
+      l.rel = 'preload'; l.as = 'image'; l.crossOrigin = 'anonymous'; l.href = 'assets/hoa-bottle-blueprint.svg';
       document.head.appendChild(l);
       setTimeout(function () {
         if (d.classList.contains('hoa-intro-active')) { d.classList.remove('hoa-intro-active'); document.dispatchEvent(new Event('hoa:intro-reveal')); }
@@ -128,8 +128,8 @@
   <div class="hoa-intro__stage">
     <div class="hoa-intro__bottle" data-intro-bottle>
       <div class="hoa-intro__float" data-intro-float>
-        <img class="hoa-intro__body" data-intro-body src="assets/hoa-product-oud-fury.webp" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async" fetchpriority="high">
-        <img class="hoa-intro__cap" data-intro-cap src="assets/hoa-product-oud-fury.webp" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async">
+        <img class="hoa-intro__body" data-intro-body src="assets/hoa-bottle-blueprint.svg" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async" fetchpriority="high">
+        <img class="hoa-intro__cap" data-intro-cap src="assets/hoa-bottle-blueprint.svg" crossorigin="anonymous" alt="" width="1200" height="1500" decoding="async">
       </div>
     </div>
     <canvas class="hoa-intro__mist" data-intro-canvas></canvas>

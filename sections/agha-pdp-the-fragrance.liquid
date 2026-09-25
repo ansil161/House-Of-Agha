@@ -116,15 +116,25 @@
         {%- for b in left_blocks -%}
           {%- assign parts = b | split: '¦' -%}
           <li class="pdp-tf__block" data-pdp-tf-block data-side="left">
-            <span class="pdp-tf__block-icon">{% render 'agha-pdp-icon', icon: parts[0] %}</span>
-            <span class="pdp-tf__block-copy">
+            {%- if parts[2] != blank -%}
               <span class="pdp-tf__block-title">{{ parts[1] }}</span>
-              {%- if parts[2] != blank -%}<span class="pdp-tf__block-text">{{ parts[2] }}</span>{%- endif -%}
-            </span>
+              <span class="pdp-tf__notes">
+                {%- assign note_names = parts[2] | split: ',' -%}
+                {%- for note in note_names -%}
+                  {%- assign note_name = note | strip -%}
+                  <span class="pdp-tf__note">
+                    <img class="pdp-tf__note-img" src="{% render 'agha-note-image', name: note_name %}" alt="" width="64" height="64" loading="lazy" onerror="this.style.visibility='hidden'">
+                    <span class="pdp-tf__note-name">{{ note_name }}</span>
+                  </span>
+                {%- endfor -%}
+              </span>
+            {%- else -%}
+              <span class="pdp-tf__block-icon">{% render 'agha-pdp-icon', icon: parts[0] %}</span>
+              <span class="pdp-tf__block-copy"><span class="pdp-tf__block-title">{{ parts[1] }}</span></span>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ol>
-
       <div class="pdp-tf__center">
         <div class="pdp-tf__aura" aria-hidden="true">
           <svg class="pdp-tf__rings" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="298"/><circle cx="300" cy="300" r="250"/><circle cx="300" cy="300" r="200"/></svg><svg class="pdp-tf__wave pdp-tf__wave--inner pdp-tf__wave--left" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M200 20C140 80 160 140 110 190 60 240 90 300 60 360" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg><svg class="pdp-tf__wave pdp-tf__wave--inner pdp-tf__wave--right" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M20 20C80 80 60 140 110 190 160 240 130 300 160 360" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg><span class="pdp-tf__glyph" style="--x:16%; --y:20%; --s:34px; --r:-20deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3C24 10 24 22 16 29 8 22 8 10 16 3Z"/><path d="M16 8v18"/></svg></span><span class="pdp-tf__glyph" style="--x:82%; --y:16%; --s:32px; --r:30deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27C5 12 14 5 27 5 27 19 19 27 5 27Z"/><path d="M5 27L20 12"/></svg></span><span class="pdp-tf__glyph" style="--x:6%; --y:62%; --s:36px; --r:-10deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 29V6"/><path d="M16 10c-5-1-7-4-7-6M16 10c5-1 7-4 7-6M16 17c-5-1-8-4-8-7M16 17c5-1 8-4 8-7M16 24c-4-1-6-3-6-5M16 24c4-1 6-3 6-5"/></svg></span><span class="pdp-tf__glyph" style="--x:90%; --y:56%; --s:34px; --r:10deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6C12 8 10 16 16 18 22 20 22 26 28 28"/><path d="M4 12C10 13 9 20 15 22" opacity=".6"/></svg></span><span class="pdp-tf__glyph" style="--x:24%; --y:88%; --s:28px; --r:0deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="4"/><circle cx="21" cy="10" r="3"/><circle cx="17" cy="21" r="4.5"/></svg></span><span class="pdp-tf__glyph" style="--x:76%; --y:90%; --s:30px; --r:160deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3C24 10 24 22 16 29 8 22 8 10 16 3Z"/><path d="M16 8v18"/></svg></span><span class="pdp-tf__glyph" style="--x:32%; --y:8%; --s:26px; --r:-40deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27C5 12 14 5 27 5 27 19 19 27 5 27Z"/><path d="M5 27L20 12"/></svg></span><span class="pdp-tf__glyph" style="--x:68%; --y:6%; --s:28px; --r:-20deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6C12 8 10 16 16 18 22 20 22 26 28 28"/><path d="M4 12C10 13 9 20 15 22" opacity=".6"/></svg></span>

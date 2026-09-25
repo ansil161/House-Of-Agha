@@ -126,6 +126,8 @@
   // The studio photograph sits on pure white. Un-multiply it (alpha from the darkest channel) so the bottle is
   // a true cut-out that can float, fade and lift over the homepage. Any failure falls back to CSS multiply.
   function keyBottle() {
+    // the blueprint drawing is already line art on a transparent ground: nothing to key out
+    if (/\.svg(\?|$)/.test(body.currentSrc || body.src || '')) return Promise.resolve();
     try {
       var W = 900, H = 1125;
       var c = document.createElement('canvas');

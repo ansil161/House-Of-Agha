@@ -2419,6 +2419,19 @@ html:has(.pdp) body {
   color: var(--pdp-ink);
 }
 .pdp-tf__block-icon svg { width: 34px; height: 34px; stroke-width: 1.25; }
+
+/* Notes: small round pictures with their names, instead of a single icon */
+.pdp-tf__notes { display: flex; justify-content: center; gap: clamp(10px, 1.4vw, 18px); }
+.pdp-tf__note { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 84px; }
+.pdp-tf__note-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--pdp-soft-2);
+}
+.pdp-tf__note-name { font-size: 0.76rem; font-weight: 600; line-height: 1.2; color: var(--pdp-ink); }
+.pdp-tf__block:has(.pdp-tf__notes) { max-width: 370px; }
 .pdp-tf__block-copy { display: grid; gap: 6px; }
 .pdp-tf__block-title {
   font-family: var(--font-sans);

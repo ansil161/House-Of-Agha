@@ -16,7 +16,7 @@
       if (skip) return;
       d.classList.add('hoa-intro-active');
       var l = document.createElement('link');
-      l.rel = 'preload'; l.as = 'image'; l.crossOrigin = 'anonymous'; l.href = '{{ 'hoa-product-oud-fury.webp' | asset_url }}';
+      l.rel = 'preload'; l.as = 'image'; l.crossOrigin = 'anonymous'; l.href = '{{ 'hoa-bottle-blueprint.svg' | asset_url }}';
       document.head.appendChild(l);
       setTimeout(function () {
         if (d.classList.contains('hoa-intro-active')) { d.classList.remove('hoa-intro-active'); document.dispatchEvent(new Event('hoa:intro-reveal')); }

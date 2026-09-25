@@ -1,0 +1,25 @@
+{%- comment -%}
+  Small picture for one fragrance note. Param: name ("Damask rose", "Assam agarwood" …).
+  Looks for assets/note-<key>.jpg where <key> is matched by keyword (rose, oud, musk …), else the
+  handleized name. Placeholder photos for now (Wikimedia Commons); replace by uploading a file with
+  the same name. Outputs the URL only.
+{%- endcomment -%}
+{%- assign n = name | downcase -%}
+{%- liquid
+  if n contains 'rose'
+    assign key = 'rose'
+  elsif n contains 'iris'
+    assign key = 'iris'
+  elsif n contains 'pepper'
+    assign key = 'pepper'
+  elsif n contains 'oud' or n contains 'agar'
+    assign key = 'oud'
+  elsif n contains 'musk'
+    assign key = 'musk'
+  elsif n contains 'sandal'
+    assign key = 'sandalwood'
+  else
+    assign key = n | handleize
+  endif
+-%}
+{{- 'note-' | append: key | append: '.jpg' | asset_url -}}

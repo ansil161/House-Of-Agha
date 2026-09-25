@@ -440,11 +440,28 @@
               ${text ? `<span class="pdp-tf__block-text">${esc(text)}</span>` : ''}
             </span>
           </li>`;
+  const noteKey = (name) => {
+    const n = name.toLowerCase();
+    if (n.includes('rose')) return 'rose';
+    if (n.includes('iris')) return 'iris';
+    if (n.includes('pepper')) return 'pepper';
+    if (n.includes('oud') || n.includes('agar')) return 'oud';
+    if (n.includes('musk')) return 'musk';
+    if (n.includes('sandal')) return 'sandalwood';
+    return n.trim().replace(/[^a-z0-9]+/g, '-');
+  };
+  const tfNotesBlock = (title, list) => `
+          <li class="pdp-tf__block" data-pdp-tf-block data-side="left">
+            <span class="pdp-tf__block-title">${esc(title)}</span>
+            <span class="pdp-tf__notes">${list.split(',').map((x) => x.trim()).filter(Boolean).map((x) => `
+              <span class="pdp-tf__note"><img class="pdp-tf__note-img" src="/assets/note-${noteKey(x)}.jpg" alt="" width="64" height="64" loading="lazy" onerror="this.style.visibility='hidden'"><span class="pdp-tf__note-name">${esc(x)}</span></span>`).join('')}
+            </span>
+          </li>`;
   const tfLeft = [
     ['leaf', 'Top notes', tfTop],
     ['flower', 'Heart notes', tfHeart],
     ['wood', 'Base notes', tfBase]
-  ].filter(([, , text]) => text).map(([ic, title, text]) => tfBlock(ic, title, text, 'left'));
+  ].filter(([, , text]) => text).map(([ic, title, text]) => tfNotesBlock(title, text));
 
   const CLAIM_ICON = (label) => {
     const l = label.toLowerCase();
