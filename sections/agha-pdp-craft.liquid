@@ -1,9 +1,16 @@
 {% comment %}
   AGHA PDP — 05 CRAFT
   How the product is made, as numbered step cards joined by a progress line.
+  Heritage backdrop: Deccan jaali / rosette line pattern (assets/pdx-heritage.svg) on the top and bottom
+  edges, styled at the end of assets/pdp-editorial.css.
 {% endcomment %}
+{{ 'pdp-editorial.css' | asset_url | stylesheet_tag }}
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdx-js');
+</script>
+<script src="{{ 'pdp-editorial.js' | asset_url }}" defer></script>
 {%- if section.blocks.size > 0 -%}
-<section class="pdp pdp-section pdp-craft" data-pdp-craft>
+<section class="pdp pdp-section pdp-craft" data-pdp-craft style="--pdx-heritage: url('{{ 'pdx-heritage.svg' | asset_url }}')">
   <div class="container">
     <header class="pdp-heading" data-pdp-reveal>
       <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>

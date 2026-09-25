@@ -272,3 +272,58 @@
   transition: opacity 0.7s var(--pdx-ease);
   transition-delay: calc(0.2s + var(--i, 0) * 0.06s);
 }
+
+/* ==========================================================================
+   "How it's made" — Deccan jaali / rosette pattern along the top and bottom edges.
+   Line art from assets/pdx-heritage.svg (one tiny SVG, no raster). Content stays on clean ivory.
+   ========================================================================== */
+.pdp-craft {
+  --pdx-heritage: url('pdx-heritage.svg');
+  position: relative;
+  overflow: hidden;
+  background: #fbf7ee;
+  isolation: isolate;
+}
+.pdp-craft::before,
+.pdp-craft::after {
+  content: '';
+  position: absolute;
+  left: -60px;
+  right: -60px;
+  height: clamp(120px, 22vw, 230px);
+  background: var(--pdx-heritage) repeat-x;
+  background-size: 240px 240px;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent);
+  mask-image: linear-gradient(to bottom, #000 30%, transparent);
+}
+.pdp-craft::before { top: -70px; background-position: 0 0; }
+.pdp-craft::after { bottom: -70px; background-position: 120px 100%; transform: scaleY(-1); }
+
+@media (max-width: 900px) {
+  .pdp-craft::before,
+  .pdp-craft::after { background-size: 180px 180px; opacity: 0.13; height: 110px; }
+}
+@media (max-width: 640px) {
+  .pdp-craft::before,
+  .pdp-craft::after { background-size: 150px 150px; opacity: 0.12; height: 84px; top: auto; }
+  .pdp-craft::before { top: -50px; }
+  .pdp-craft::after { bottom: -50px; }
+}
+
+/* Motion: the pattern fades in slowly and drifts a few pixels; both off for reduced motion. */
+.pdx-js .pdp-craft::before,
+.pdx-js .pdp-craft::after { opacity: 0; }
+.pdx-js .pdp-craft.is-in::before,
+.pdx-js .pdp-craft.is-in::after {
+  opacity: 0.16;
+  transition: opacity 2.4s var(--pdx-ease, ease);
+  animation: pdx-drift 60s ease-in-out infinite alternate;
+}
+@keyframes pdx-drift { to { background-position-x: 34px; } }
+@media (max-width: 900px) {
+  .pdx-js .pdp-craft.is-in::before,
+  .pdx-js .pdp-craft.is-in::after { opacity: 0.12; }
+}

@@ -30,7 +30,7 @@
   };
 
   const init = () => {
-    const sections = document.querySelectorAll('.pdx:not([data-pdx-ready])');
+    const sections = document.querySelectorAll('.pdx:not([data-pdx-ready]), .pdp-craft:not([data-pdx-ready])');
     if (!sections.length) return;
     sections.forEach((s) => s.setAttribute('data-pdx-ready', ''));
     if (reduce.matches || !('IntersectionObserver' in window)) { sections.forEach(reveal); return; }
