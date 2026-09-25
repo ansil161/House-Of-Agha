@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="rotate(-16 600 800)">
+    <!-- cap -->
+    <path d="M538 196 L664 190 L670 288 L544 294 Z"/>
+    <!-- neck -->
+    <path d="M556 294 L552 402 M652 290 L648 400"/>
+    <!-- body -->
+    <path d="M552 402 C400 424 236 560 232 760 C228 960 380 1096 606 1100 C830 1094 972 960 966 756 C960 556 796 426 648 400"/>
+    <!-- liquid -->
+    <path d="M290 800 C370 756 450 838 552 796 S728 756 818 798 S916 790 930 768 C926 930 810 1020 606 1024 C400 1018 296 930 290 800 Z"/>
+    <!-- spray -->
+    <path d="M716 170 L772 146 M722 220 L788 216 M706 118 L742 84"/>
+  </g>
+</svg>

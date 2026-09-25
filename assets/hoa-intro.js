@@ -94,7 +94,7 @@
   /* ------------------------------------------------------------------ */
   var mobile = window.matchMedia('(max-width: 767px)').matches;
   var CAP_SPLIT = 0.287;      // the cap ends at 28.7% of the photograph's height
-  var NOZZLE = { x: 0.6, y: 0.185 }; // where the mist leaves, as a fraction of the bottle image
+  var NOZZLE = { x: 0.38, y: 0.17 }; // where the mist leaves, as a fraction of the bottle image
 
   var tablet = window.matchMedia('(min-width: 768px) and (max-width: 1024px)').matches;
   // The bottle's travel, as fractions of the viewport width (image centre): shorter on tablet and phones
