@@ -49,14 +49,14 @@
           {%- for block in section.blocks -%}
             {%- if block.settings.term != blank and block.settings.value != blank -%}
               <div class="pdp-spec" {{ block.shopify_attributes }}>
-                <dt>{{ block.settings.term }}</dt>
+                <dt>{% render 'pdp-spec-icon', name: block.settings.icon %}<span>{{ block.settings.term }}</span></dt>
                 <dd>{{ block.settings.value }}{%- if block.settings.note != blank -%}<small>{{ block.settings.note }}</small>{%- endif -%}</dd>
               </div>
             {%- endif -%}
           {%- endfor -%}
-          {%- if net_volume != blank -%}<div class="pdp-spec"><dt>{{ section.settings.volume_label }}</dt><dd>{{ net_volume }}</dd></div>{%- endif -%}
-          {%- if weight != blank -%}<div class="pdp-spec"><dt>{{ section.settings.weight_label }}</dt><dd>{{ weight }}</dd></div>{%- endif -%}
-          {%- if dimensions != blank -%}<div class="pdp-spec"><dt>{{ section.settings.dimensions_label }}</dt><dd>{{ dimensions }}</dd></div>{%- endif -%}
+          {%- if net_volume != blank -%}<div class="pdp-spec"><dt>{% render 'pdp-spec-icon', name: 'drop' %}<span>{{ section.settings.volume_label }}</span></dt><dd>{{ net_volume }}</dd></div>{%- endif -%}
+          {%- if weight != blank -%}<div class="pdp-spec"><dt>{% render 'pdp-spec-icon', name: 'scale' %}<span>{{ section.settings.weight_label }}</span></dt><dd>{{ weight }}</dd></div>{%- endif -%}
+          {%- if dimensions != blank -%}<div class="pdp-spec"><dt>{% render 'pdp-spec-icon', name: 'ruler' %}<span>{{ section.settings.dimensions_label }}</span></dt><dd>{{ dimensions }}</dd></div>{%- endif -%}
         </dl>
       {%- endif -%}
       {%- if has_ing or has_care -%}
@@ -99,6 +99,18 @@
       "name": "Specification",
       "settings": [
         { "type": "text", "id": "term", "label": "Term", "default": "Concentration" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "sparkle", "options": [
+          { "value": "drop", "label": "Drop" },
+          { "value": "hourglass", "label": "Hourglass" },
+          { "value": "bottle", "label": "Bottle" },
+          { "value": "box", "label": "Box" },
+          { "value": "scale", "label": "Scale" },
+          { "value": "ruler", "label": "Ruler" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "shield", "label": "Shield" },
+          { "value": "sparkle", "label": "Sparkle" },
+          { "value": "none", "label": "None" }
+        ] },
         { "type": "text", "id": "value", "label": "Value" },
         { "type": "text", "id": "note", "label": "Note" }
       ]

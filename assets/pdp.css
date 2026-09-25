@@ -1517,6 +1517,8 @@ html:has(.pdp) body {
   align-items: start;
 }
 
+.pdp-reviews__grid--list { grid-template-columns: minmax(0, 1fr); }
+
 .pdp-reviews__summary {
   position: sticky;
   top: calc(var(--pdp-header-offset) + 24px);
@@ -2626,6 +2628,20 @@ html:has(.pdp) body {
   text-transform: uppercase;
   color: var(--pdp-muted);
   padding-top: 0.4em;
+}
+
+.pdp-spec dt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pdp-spec__icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -0.2em;
+  color: var(--pdp-ink-soft);
 }
 
 .pdp-spec dd {

@@ -560,8 +560,8 @@
         <span class="pdp-eyebrow">Reviews</span>
         <h2>What patrons say</h2>
       </header>
-      <div class="pdp-reviews__grid">
-        <div class="pdp-reviews__summary" data-pdp-reveal>
+      <div class="pdp-reviews__grid pdp-reviews__grid--list">
+        <div class="pdp-reviews__summary" data-pdp-reveal hidden>
           <span class="pdp-eyebrow">Average rating</span>
           ${rating ? `
             <p class="pdp-reviews__score">${rating.toFixed(1)}</p>
@@ -584,6 +584,70 @@
       </div>
     </div>
   </section>`;
+
+
+  /* ------------------------------------------------ Why we are better (mirrors sections/agha-pdp-why.liquid) */
+  const pdxIcon = (name) => {
+    const paths = {
+      badge: '<path d="M32 2 L37.4 5.7 L44 5.2 L46.8 11.2 L52.8 14 L52.3 20.6 L56 26 L52.3 31.4 L52.8 38 L46.8 40.8 L44 46.8 L37.4 46.3 L32 50 L26.6 46.3 L20 46.8 L17.2 40.8 L11.2 38 L11.7 31.4 L8 26 L11.7 20.6 L11.2 14 L17.2 11.2 L20 5.2 L26.6 5.7 Z"/><circle cx="32" cy="26" r="15"/><path d="M25 26l5 5 9-10"/><path d="M23 47l-5 14 9-4 5 5V50M41 47l5 14-9-4"/>',
+      bottle: '<rect x="25" y="4" width="14" height="9"/><path d="M22 13h20v6H22z"/><rect x="16" y="19" width="32" height="41"/><rect x="22" y="29" width="20" height="24"/><path d="M22 43h20"/>',
+      hourglass: '<path d="M14 6h36M14 58h36M18 6c0 12 14 16 14 26S18 46 18 58M46 6c0 12-14 16-14 26s14 14 14 26"/><path d="M24 52c4-2 12-2 16 0M28 14h8"/>',
+      ifra: '<path d="M11 46A26 26 0 1 1 22 55"/><text x="32" y="40" text-anchor="middle" font-family="Georgia, \'Times New Roman\', serif" font-size="20" fill="currentColor" stroke="none">ifra</text>'
+    };
+    return `<svg class="pdx-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths[name]}</svg>`;
+  };
+  const whyItems = [
+    ['badge', 'Certified<br>perfumers', 'Hong Kong<br>School of Perfumery'],
+    ['bottle', '35% pure<br>parfum', 'Extrait de parfum'],
+    ['hourglass', 'Aged for<br>weeks', 'Smooth and refined'],
+    ['ifra', 'IFRA<br>certified', 'High-grade, skin safe']
+  ];
+  const whySection = `
+  <section class="pdx pdx-why" data-pdx-why>
+    <div class="pdx-wrap">
+      <h2 class="pdx-heading" data-pdx-in>Why we are better</h2>
+      <div class="pdx-why__grid">
+        ${whyItems.map((w, i) => `<div class="pdx-why__item" style="--i: ${i}"><span class="pdx-why__icon">${pdxIcon(w[0])}</span><h3 class="pdx-why__title">${w[1]}</h3><p class="pdx-why__text">${w[2]}</p></div>`).join('')}
+      </div>
+    </div>
+  </section>`;
+
+  /* ------------------------------------------- Customer reviews summary (mirrors sections/agha-pdp-review-summary.liquid) */
+  // Preview only: the split of ratings is derived from the mock average + count, and the photo strip reuses product shots.
+  const dist = (() => {
+    if (!rating || !reviewCount) return null;
+    const w = [5, 4, 3, 2, 1].map((k) => Math.exp(-1.4 * Math.pow(k - rating, 2)));
+    const sum = w.reduce((a, b) => a + b, 0);
+    const n = w.map((x) => Math.floor((x / sum) * reviewCount));
+    let left = reviewCount - n.reduce((a, b) => a + b, 0);
+    for (let i = 0; left > 0; i = (i + 1) % 5, left--) n[i] += 1;
+    return n;
+  })();
+  const reviewSummary = rating ? `
+  <section class="pdx pdx-rev" data-pdx-rev>
+    <div class="pdx-wrap">
+      <h2 class="pdx-heading" data-pdx-in>Customer reviews</h2>
+      <div class="pdx-rev__board">
+        <div class="pdx-rev__score" data-pdx-in>
+          <span class="pdx-stars" role="img" aria-label="Rated ${rating.toFixed(2)} out of 5"><span class="pdx-stars__fill" style="width: ${(rating / 5) * 100}%"></span></span>
+          <p class="pdx-rev__num"><span data-pdx-count="${rating.toFixed(2)}">${rating.toFixed(2)}</span> out of 5</p>
+          <p class="pdx-rev__based">Based on ${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'}</p>
+        </div>
+        <ul class="pdx-rev__dist" aria-label="Rating distribution" data-pdx-in>
+          ${[5, 4, 3, 2, 1].map((star, i) => `<li style="--i: ${i}"><span class="pdx-rev__row-stars" aria-label="${star} star"><span class="pdx-on">${'★'.repeat(star)}</span>${star < 5 ? `<span class="pdx-off">${'☆'.repeat(5 - star)}</span>` : ''}</span><span class="pdx-rev__bar"><i style="width: ${((dist[i] / reviewCount) * 100).toFixed(1)}%"></i></span><span class="pdx-rev__n">${dist[i]}</span></li>`).join('')}
+        </ul>
+        <div class="pdx-rev__cta" data-pdx-in><a class="pdx-btn" href="#pdp-reviews" data-pdx-write>Write a review</a></div>
+      </div>
+      ${images && images.length ? `
+      <div class="pdx-rev__media" data-pdx-in>
+        <p class="pdx-rev__media-label">Customer photos &amp; videos</p>
+        <div class="pdx-rev__strip">
+          ${images.slice(0, 7).map((src, i) => `<figure class="pdx-rev__thumb" style="--i: ${i}"><img src="${src}" alt="Customer photo" loading="lazy" width="72" height="72"></figure>`).join('')}
+          <a class="pdx-rev__more" href="#pdp-reviews">See more</a>
+        </div>
+      </div>` : ''}
+    </div>
+  </section>` : '';
 
   /* ----------------------------------------------------------------- 07 FAQ */
   const faqs = [
@@ -708,7 +772,12 @@
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)
   const pair = '<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="' + handle + '" hidden></section>';
 
-  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + reels + reviewsSection + faq + pair + related + finale;
+  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + whySection + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
+  // Summary "Write a review" reuses the existing review form / sign-in link above.
+  root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
+    const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');
+    if (target) { e.preventDefault(); target.click(); }
+  });
   window.HOA?.initPair?.();
   window.AghaPDP?.init();
   if (reels) {

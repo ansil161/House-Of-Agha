@@ -1,0 +1,19 @@
+{%- comment -%} Editorial line icon (one stroke weight, 64px grid). Usage: render 'pdx-icon', name: 'badge' {%- endcomment -%}
+<svg class="pdx-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{%- case name -%}
+  {%- when 'badge' -%}
+    <path d="M32 2 L37.4 5.7 L44 5.2 L46.8 11.2 L52.8 14 L52.3 20.6 L56 26 L52.3 31.4 L52.8 38 L46.8 40.8 L44 46.8 L37.4 46.3 L32 50 L26.6 46.3 L20 46.8 L17.2 40.8 L11.2 38 L11.7 31.4 L8 26 L11.7 20.6 L11.2 14 L17.2 11.2 L20 5.2 L26.6 5.7 Z"/><circle cx="32" cy="26" r="15"/><path d="M25 26l5 5 9-10"/><path d="M23 47l-5 14 9-4 5 5V50M41 47l5 14-9-4"/>
+  {%- when 'bottle' -%}
+    <rect x="25" y="4" width="14" height="9"/><path d="M22 13h20v6H22z"/><rect x="16" y="19" width="32" height="41"/><rect x="22" y="29" width="20" height="24"/><path d="M22 43h20"/>
+  {%- when 'hourglass' -%}
+    <path d="M14 6h36M14 58h36M18 6c0 12 14 16 14 26S18 46 18 58M46 6c0 12-14 16-14 26s14 14 14 26"/><path d="M24 52c4-2 12-2 16 0M28 14h8"/>
+  {%- when 'ifra' -%}
+    <path d="M11 46A26 26 0 1 1 22 55"/><text x="32" y="40" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="400" fill="currentColor" stroke="none">ifra</text>
+  {%- when 'leaf' -%}
+    <path d="M12 52C12 26 26 10 54 10c0 28-14 42-40 42"/><path d="M12 52c6-14 16-24 28-30"/>
+  {%- when 'drop' -%}
+    <path d="M32 6s18 20 18 34a18 18 0 0 1-36 0C14 26 32 6 32 6z"/><path d="M24 42a8 8 0 0 0 7 8"/>
+  {%- when 'shield' -%}
+    <path d="M32 5l22 8v18c0 14-9 24-22 28C19 55 10 45 10 31V13z"/><path d="M22 32l7 7 13-14"/>
+{%- endcase -%}
+</svg>

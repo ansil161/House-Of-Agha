@@ -23,7 +23,7 @@
     </p>
     <div class="hoa-manifesto__row" data-hoa-reveal>
       <p class="hoa-lede">{{ s.body }}</p>
-      <a class="hoa-link" href="{{ s.link_url | default: '/pages/the-house' }}">{{ s.link_label }}</a>
+      <a class="hoa-btn" href="{{ s.link_url | default: '/pages/the-house' }}"><span>{{ s.link_label }}</span>{% render 'hoa-btn-icon' %}</a>
     </div>
   </div>
 

@@ -1,0 +1,126 @@
+{% comment %}
+  AGHA PDP — CUSTOMER REVIEWS (summary dashboard)
+  Rating, distribution, "Write a review" and a strip of customer photos / videos.
+  Data: snippets/agha-pdp-data.liquid — real reviews.rating / reviews.rating_count metafields and
+  custom.rating_breakdown first; demo numbers only in mock mode (and tagged "Demo").
+  Customer media are blocks (real customer photos / videos only). The review list itself stays in
+  agha-pdp-reviews, placed below this section (tick "Hide summary" there so the score isn't repeated).
+  Write a review: opens the URL below (your review app's form). Empty = scrolls to the review list.
+{% endcomment %}
+{{ 'pdp-editorial.css' | asset_url | stylesheet_tag }}
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdx-js');
+</script>
+<script src="{{ 'pdp-editorial.js' | asset_url }}" defer></script>
+
+{%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
+{%- assign pdp = pdp_json | parse_json -%}
+{%- liquid
+  assign rating_val = pdp.reviews.rating
+  assign rating_scale = pdp.reviews.scale_max | default: 5
+  assign rating_count = pdp.reviews.count | default: 0
+  assign breakdown = pdp.reviews.breakdown
+  assign bd_total = 0
+  if breakdown != blank
+    for star in (1..5)
+      assign star_key = star | append: ''
+      assign bd_total = bd_total | plus: breakdown[star_key]
+    endfor
+  endif
+  assign has_media = false
+  for block in section.blocks
+    if block.settings.image != blank or block.settings.video != blank
+      assign has_media = true
+    endif
+  endfor
+  assign write_url = section.settings.write_review_url | default: '#pdp-reviews'
+-%}
+{%- if rating_val > 0 or has_media -%}
+<section class="pdx pdx-rev" data-pdx-rev>
+  <div class="pdx-wrap">
+    <h2 class="pdx-heading" data-pdx-in>{{ section.settings.heading }}</h2>
+
+    {%- if rating_val > 0 -%}
+      {%- assign rating_pct = rating_val | divided_by: rating_scale | times: 100 -%}
+      <div class="pdx-rev__board">
+        <div class="pdx-rev__score" data-pdx-in>
+          <span class="pdx-stars" role="img" aria-label="Rated {{ rating_val | round: 2 }} out of {{ rating_scale }}"><span class="pdx-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+          <p class="pdx-rev__num"><span data-pdx-count="{{ rating_val | round: 2 }}">{{ rating_val | round: 2 }}</span> out of {{ rating_scale }}</p>
+          <p class="pdx-rev__based">Based on {{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}{% if pdp.reviews.mock %} <span class="pdp-demo-tag">Demo</span>{% endif %}</p>
+        </div>
+
+        {%- if bd_total > 0 -%}
+          <ul class="pdx-rev__dist" aria-label="Rating distribution" data-pdx-in>
+            {%- for star in (1..5) reversed -%}
+              {%- assign star_key = star | append: '' -%}
+              {%- assign star_n = breakdown[star_key] | default: 0 | plus: 0 -%}
+              {%- assign star_pct = star_n | times: 100.0 | divided_by: bd_total | round: 1 -%}
+              {%- assign empty_n = 5 | minus: star -%}
+              <li style="--i: {{ forloop.index0 }}">
+                <span class="pdx-rev__row-stars" aria-label="{{ star }} star"><span class="pdx-on">{% for i in (1..star) %}★{% endfor %}</span>{% if empty_n > 0 %}<span class="pdx-off">{% for i in (1..empty_n) %}☆{% endfor %}</span>{% endif %}</span>
+                <span class="pdx-rev__bar"><i style="width: {{ star_pct }}%"></i></span>
+                <span class="pdx-rev__n">{{ star_n }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <div class="pdx-rev__cta" data-pdx-in>
+          <a class="pdx-btn" href="{{ write_url }}">{{ section.settings.write_review_label }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if has_media -%}
+      <div class="pdx-rev__media" data-pdx-in>
+        <p class="pdx-rev__media-label">{{ section.settings.media_label }}</p>
+        <div class="pdx-rev__strip">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.image != blank or block.settings.video != blank -%}
+              <figure class="pdx-rev__thumb" style="--i: {{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                {%- if block.settings.video != blank -%}
+                  {{ block.settings.video | video_tag: image_size: '200x200', controls: false, muted: true, loop: true, playsinline: true, preload: 'none' }}
+                  <span class="pdx-rev__play" aria-hidden="true"></span>
+                {%- else -%}
+                  {{ block.settings.image | image_url: width: 240 | image_tag: widths: '120, 180, 240', sizes: '72px', loading: 'lazy', alt: block.settings.alt | default: 'Customer photo' }}
+                {%- endif -%}
+              </figure>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if section.settings.see_more_label != blank -%}
+            <a class="pdx-rev__more" href="{{ section.settings.see_more_url | default: '#pdp-reviews' }}">{{ section.settings.see_more_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Agha PDP · Review summary",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Customer reviews" },
+    { "type": "header", "content": "Write a review" },
+    { "type": "text", "id": "write_review_label", "label": "Button label", "default": "Write a review" },
+    { "type": "url", "id": "write_review_url", "label": "Review form link", "info": "Your review app's form. Empty scrolls to the review list." },
+    { "type": "header", "content": "Customer media" },
+    { "type": "text", "id": "media_label", "label": "Label", "default": "Customer photos & videos" },
+    { "type": "text", "id": "see_more_label", "label": "See more label", "default": "See more" },
+    { "type": "url", "id": "see_more_url", "label": "See more link", "info": "Empty scrolls to the review list." }
+  ],
+  "blocks": [
+    {
+      "type": "media",
+      "name": "Customer photo / video",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Real customer content only." },
+        { "type": "video", "id": "video", "label": "Video (optional, replaces the photo)" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Agha PDP · Review summary" }]
+}
+{% endschema %}

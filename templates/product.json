@@ -67,6 +67,7 @@
           "type": "spec",
           "settings": {
             "term": "Concentration",
+            "icon": "drop",
             "value": "Extrait de parfum · 35%",
             "note": "Where most houses dilute to 12–15%, every AGHA extrait is compounded at 35% oil."
           }
@@ -75,6 +76,7 @@
           "type": "spec",
           "settings": {
             "term": "Maceration",
+            "icon": "hourglass",
             "value": "90 days",
             "note": "Rested in temperature-stabilised vaults before bottling."
           }
@@ -83,6 +85,7 @@
           "type": "spec",
           "settings": {
             "term": "Flacon",
+            "icon": "bottle",
             "value": "Individually numbered",
             "note": "Laser-engraved with its batch code and compounding date."
           }
@@ -91,6 +94,7 @@
           "type": "spec",
           "settings": {
             "term": "Packaging",
+            "icon": "box",
             "value": "Matte black hardboard",
             "note": "Hand-wrapped, with a 5 ml sample inside."
           }
@@ -183,9 +187,24 @@
       "type": "hoa-pdp-pair",
       "settings": {}
     },
+    "why": {
+      "type": "agha-pdp-why",
+      "blocks": {
+        "certified": { "type": "benefit", "settings": { "icon": "badge", "title": "Certified\nperfumers", "text": "Hong Kong\nSchool of Perfumery" } },
+        "parfum": { "type": "benefit", "settings": { "icon": "bottle", "title": "35% pure\nparfum", "text": "Extrait de parfum" } },
+        "aged": { "type": "benefit", "settings": { "icon": "hourglass", "title": "Aged for\nweeks", "text": "Smooth and refined" } },
+        "ifra": { "type": "benefit", "settings": { "icon": "ifra", "title": "IFRA\ncertified", "text": "High-grade, skin safe" } }
+      },
+      "block_order": ["certified", "parfum", "aged", "ifra"],
+      "settings": {}
+    },
+    "review_summary": {
+      "type": "agha-pdp-review-summary",
+      "settings": {}
+    },
     "reviews": {
       "type": "agha-pdp-reviews",
-      "settings": {}
+      "settings": { "hide_summary": true }
     },
     "faq": {
       "type": "agha-pdp-faq",
@@ -313,11 +332,13 @@
     "story",
     "the_fragrance",
     "details",
+    "why",
     "composition",
     "craft",
     "experience",
     "fragrance_notes",
     "reels",
+    "review_summary",
     "reviews",
     "faq",
     "related",

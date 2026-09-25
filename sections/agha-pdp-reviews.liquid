@@ -50,7 +50,8 @@
       <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
       <h2>{{ section.settings.heading }}</h2>
     </header>
-    <div class="pdp-reviews__grid">
+    <div class="pdp-reviews__grid{% if section.settings.hide_summary %} pdp-reviews__grid--list{% endif %}">
+      {%- unless section.settings.hide_summary -%}
       <div class="pdp-reviews__summary" data-pdp-reveal>
         <span class="pdp-eyebrow">Average rating</span>
         {%- if rating_val > 0 -%}
@@ -75,6 +76,7 @@
           <a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="{{ section.settings.write_review_url }}">{{ section.settings.write_review_label }}</a>
         {%- endif -%}
       </div>
+      {%- endunless -%}
 
       <div class="pdp-reviews__list">
         {%- if featured_count > 1 -%}
@@ -154,6 +156,7 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "What patrons say" },
     { "type": "text", "id": "empty_text", "label": "Empty state text", "default": "Be the first to tell us how it wears on you." },
+    { "type": "checkbox", "id": "hide_summary", "label": "Hide summary", "info": "Use when the Review summary section sits above this one.", "default": false },
     { "type": "header", "content": "Write a review" },
     { "type": "url", "id": "write_review_url", "label": "Review form link", "info": "Your review app's form or a contact page. The button shows only when set." },
     { "type": "text", "id": "write_review_label", "label": "Button label", "default": "Write a review" }
