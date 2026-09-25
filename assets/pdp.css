@@ -3373,3 +3373,10 @@ html:has(.pdp) body {
 .pdp-offer__flag { background: var(--pdp-gold); }
 .pdp-offer__price b { color: var(--pdp-ink); }
 .pdp-offer.is-selected .pdp-offer__price b { color: var(--pdp-gold); }
+
+/* More views: fills the space under the gallery beside the taller buy box */
+.pdp-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.pdp-more__tile { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; background: var(--pdp-soft); border-radius: 3px; }
+.pdp-more__tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-editorial, ease); }
+@media (hover: hover) { .pdp-more__tile:hover img { transform: scale(1.03); } }
+@media (max-width: 768px) { .pdp-more { gap: 8px; margin-top: 10px; } }

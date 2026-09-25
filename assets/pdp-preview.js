@@ -108,6 +108,9 @@
           <div class="pdp-thumbs" role="group" aria-label="Product images">
             ${images.map((src, i) => `<button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${images.length}" aria-current="${i === 0 ? 'true' : 'false'}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
           </div>` : ''}
+          <div class="pdp-more" aria-label="More views">
+            ${images.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
+          </div>
         </div>
 
         <div class="pdp-info">

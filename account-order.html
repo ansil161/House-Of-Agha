@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="assets/hoa-home.css">
   <link rel="stylesheet" href="assets/agha-wishlist-drawer.css">
   <link rel="stylesheet" href="assets/hoa-coupon.css">
+  <link rel="stylesheet" href="assets/hoa-smart.css">
   <link rel="stylesheet" href="assets/hoa-account.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -87,6 +88,7 @@
   <script src="assets/theme.js" defer></script>
   <script src="assets/hoa-account.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
+  <script src="assets/hoa-smart.js" defer></script>
   <link rel="stylesheet" href="assets/hoa-commerce.css">
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
@@ -371,6 +373,29 @@
         <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
+    </div>
+  </div>
+</div>
+  <!-- Smart conversion popup · snippets/hoa-smart-popup.liquid (rendered by the preview build) -->
+  <div class="hoa-smart" data-hoa-smart hidden>
+  <div class="hoa-smart__scrim" data-smart-close></div>
+  <div class="hoa-smart__card" role="dialog" aria-modal="true" aria-labelledby="hoa-smart-title" aria-describedby="hoa-smart-desc" tabindex="-1">
+    <button type="button" class="hoa-smart__close" data-smart-close aria-label="Close">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+    </button>
+
+    <div class="hoa-smart__media" aria-hidden="true">
+      <img src="assets/hoa-oud-fury-smoke-sm.webp" alt="" width="640" height="800" loading="lazy" decoding="async">
+    </div>
+
+    <div class="hoa-smart__body">
+      <p class="hoa-smart__eyebrow" data-smart-eyebrow data-exit="Agha" data-scroll="Still exploring?">Agha</p>
+      <h2 class="hoa-smart__title" id="hoa-smart-title" data-smart-title data-exit="Before You Leave" data-scroll="Find your signature scent">Before You Leave</h2>
+      <p class="hoa-smart__desc" id="hoa-smart-desc" data-smart-desc data-exit="Your signature scent might be closer than you think." data-scroll="A few minutes with our fragrances is all it takes.">Your signature scent might be closer than you think.</p>
+      <div class="hoa-smart__actions">
+        <a class="hoa-smart__cta" href="/collections/all" data-smart-cta>Explore the Collection</a>
+        <button type="button" class="hoa-smart__later" data-smart-close>Continue Browsing</button>
+      </div>
     </div>
   </div>
 </div>

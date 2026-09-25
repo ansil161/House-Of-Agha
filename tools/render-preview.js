@@ -276,6 +276,9 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('coupon popup on', all.length, 'pages');
 
+@@SMART@@
+  console.log('smart popup on', all.length, 'pages');
+
   // Mock catalog + commerce layer (snippets/hoa-catalog-script.liquid, assets/hoa-commerce.js/.css).
   // layout/theme.liquid loads them on every page, before theme.js, so mirror that in each preview page.
   const catalogScript = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/hoa-catalog-script.liquid'), 'utf8'), globals)).trim();

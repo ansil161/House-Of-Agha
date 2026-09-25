@@ -17,6 +17,7 @@
   {{ 'hoa-home.css' | asset_url | stylesheet_tag }}
   {{ 'hoa-coupon.css' | asset_url | stylesheet_tag }}
   {{ 'hoa-commerce.css' | asset_url | stylesheet_tag }}
+  {{ 'hoa-smart.css' | asset_url | stylesheet_tag }}
   {%- if template.name == 'index' and settings.enable_home_intro -%}
     {% render 'hoa-intro-head' %}
     {{ 'hoa-intro.css' | asset_url | stylesheet_tag }}
@@ -33,6 +34,7 @@
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
   <script src="{{ 'hoa-coupon.js' | asset_url }}" defer></script>
+  <script src="{{ 'hoa-smart.js' | asset_url }}" defer></script>
   {%- if template.name == 'index' -%}
     <link rel="preload" as="image" href="{{ 'hoa-hero-oud-fury.webp' | asset_url }}" media="(min-width: 768px)" fetchpriority="high">
     <link rel="preload" as="image" href="{{ 'hoa-oud-fury-portrait-sm.webp' | asset_url }}" media="(max-width: 767px)" fetchpriority="high">
@@ -82,6 +84,7 @@
   {% render 'wishlist-drawer' %}
   {% render 'quick-view-modal' %}
   {% render 'hoa-coupon-popup' %}
+  {% render 'hoa-smart-popup' %}
 
 </body>
 </html>

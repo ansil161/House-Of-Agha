@@ -156,6 +156,28 @@
             {%- endfor -%}
           </div>
         {%- endif -%}
+        {%- comment -%}
+          "More views": fills the column under the gallery while the buy box is taller. Uses the four
+          optional pictures below (lifestyle / detail shots) or, when none are set, the product's other media.
+        {%- endcomment -%}
+        {%- assign extra_ids = 'extra_image_1,extra_image_2,extra_image_3,extra_image_4' | split: ',' -%}
+        {%- capture more_html -%}
+          {%- for id in extra_ids -%}
+            {%- assign extra = section.settings[id] -%}
+            {%- if extra != blank -%}
+              <figure class="pdp-more__tile">{{ extra | image_url: width: 700 | image_tag: widths: '350, 525, 700', sizes: '(min-width: 1024px) 24vw, 46vw', loading: 'lazy', alt: product.title }}</figure>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if more_html contains 'pdp-more__tile' -%}
+          <div class="pdp-more" aria-label="More views">{{ more_html }}</div>
+        {%- elsif media_count > 1 -%}
+          <div class="pdp-more" aria-label="More views">
+            {%- for media in product.media offset: 1 limit: 4 -%}
+              <figure class="pdp-more__tile">{{ media.preview_image | image_url: width: 700 | image_tag: widths: '350, 525, 700', sizes: '(min-width: 1024px) 24vw, 46vw', loading: 'lazy', alt: product.title }}</figure>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
 
       <div class="pdp-info">
@@ -497,6 +519,11 @@
       "name": "Benefit",
       "limit": 6,
       "settings": [
+    { "type": "header", "content": "More views (under the gallery)" },
+    { "type": "image_picker", "id": "extra_image_1", "label": "Extra image 1" },
+    { "type": "image_picker", "id": "extra_image_2", "label": "Extra image 2" },
+    { "type": "image_picker", "id": "extra_image_3", "label": "Extra image 3" },
+    { "type": "image_picker", "id": "extra_image_4", "label": "Extra image 4" },
     { "type": "text", "id": "offer_heading", "label": "Offer selector heading", "default": "Choose your set" },
     { "type": "text", "id": "offer_unit", "label": "Offer unit (singular)", "default": "bottle", "info": "Shown as \"2 bottles\" on each offer. Offers and savings come from the quantity tiers in the catalog data." },
         {

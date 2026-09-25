@@ -717,32 +717,31 @@
   font-size: 0.72rem; line-height: 1; letter-spacing: 0;
 }
 
-/* Grid cards: price and about on the left, the cart button on the right */
-.hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto auto auto 1fr;
-  grid-template-areas: 'meta meta' 'name name' 'rating rating' 'price action' 'about action';
-  column-gap: 12px;
-  align-items: start;
+/* Grid cards: one structured info stack (meta, name, rating, price, about) with a full-width cart button anchoring the bottom */
+.hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info { display: flex; flex-direction: column; gap: 0; padding: 12px 10px 10px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__name { margin-top: 4px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__rating { margin: 6px 0 0; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__price { margin: 10px 0 0; gap: 2px 8px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__now { font-size: 1.3rem; font-weight: 700; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__about { margin: 8px 0 0; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__action { display: block; margin-top: auto; padding-top: 14px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__about { margin-bottom: 14px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__action { border-top: 1px solid var(--hoa-line); margin-top: auto; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__action form { display: block; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta {
+  width: 100%; height: 46px; padding: 0 18px; justify-content: center;
+  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  background: var(--hoa-ink); border-color: var(--hoa-ink); color: #fff; box-shadow: none;
 }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__meta { grid-area: meta; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__name { grid-area: name; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__rating { grid-area: rating; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__price { grid-area: price; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__about { grid-area: about; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__action { grid-area: action; align-self: end; justify-content: flex-end; margin: 0; padding: 4px 0 0; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__action form { justify-content: flex-end; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta { padding: 10px 16px; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta:hover { background: #3a342d; border-color: #3a342d; transform: none; box-shadow: none; }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta:disabled { background: var(--hoa-stone); border-color: var(--hoa-stone); color: var(--hoa-mute); }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta.is-added { background: #fff; color: var(--hoa-ink); }
+.hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost:disabled { width: 100%; }
 
 @media (max-width: 767px) {
-  /* narrow cards: the cart button becomes a round bag icon on the right */
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta { width: 40px; height: 40px; padding: 0; justify-content: center; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta svg { width: 17px; height: 17px; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost { width: auto; padding: 0 12px; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost span { position: static; width: auto; height: auto; clip-path: none; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__action { padding-top: 0; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info { padding: 10px 6px 8px; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__now { font-size: 1.1rem; }
+  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta { height: 42px; font-size: 0.64rem; letter-spacing: 0.1em; padding: 0 10px; }
 }
 @media (max-width: 767px) {
   .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.52rem; letter-spacing: 0.06em; gap: 4px; }

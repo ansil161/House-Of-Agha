@@ -363,6 +363,7 @@
       body.innerHTML = '<div class="cart-empty"><p class="cart-empty__title">Your bag is empty</p><p class="cart-empty__text">Explore our signature fragrances to select your scent.</p>' +
         '<a class="bag-empty__cta" href="/collections/all" data-bag-continue>Explore fragrances</a></div>';
       ui.last = { units: 0, total: 0, saved: 0 };
+      document.dispatchEvent(new CustomEvent('hoa:bag-rendered'));
       return;
     }
 
@@ -386,6 +387,7 @@
     }
     renderCoupon();
     ui.last = { units: total, total: q.total, saved: q.totalSavings };
+    document.dispatchEvent(new CustomEvent('hoa:bag-rendered')); // assets/hoa-smart.js adds its recommendation
   }
 
   function bindDrawer() {
