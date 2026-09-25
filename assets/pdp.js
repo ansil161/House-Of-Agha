@@ -787,24 +787,16 @@
         const wide = window.matchMedia('(min-width: 769px)').matches;
         const left = $$('.pdp-tf__col--left [data-pdp-tf-block]', sec);
         const right = $$('.pdp-tf__col--right [data-pdp-tf-block]', sec);
-        const waves = $$('.pdp-tf__wave path', sec);
-        const particles = $$('.pdp-tf__particle', sec);
+        const particles = $$('.pdp-tf__particle, .pdp-tf__glyph', sec);
         if (!visual && !left.length && !right.length) return;
 
         if (visual) gsap.set(visual, { autoAlpha: 0, scale: 0.92 });
-        left.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? 16 : 0, y: wide ? 0 : 14 }));
-        right.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? -16 : 0, y: wide ? 0 : 14 }));
-        if (waves.length) {
-          waves.forEach((p) => {
-            const len = p.getTotalLength();
-            gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-          });
-        }
+        left.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? -34 : 0, y: wide ? 0 : 14 }));
+        right.forEach((b) => gsap.set(b, { autoAlpha: 0, x: wide ? 34 : 0, y: wide ? 0 : 14 }));
         if (particles.length) gsap.set(particles, { autoAlpha: 0 });
 
         const tl = gsap.timeline({ scrollTrigger: { trigger: $('.pdp-tf__stage', sec) || sec, start: 'top 78%', once: true } });
         if (visual) tl.to(visual, { autoAlpha: 1, scale: 1, duration: 1.4, ease: 'power2.out', clearProps: 'transform' }, 0);
-        if (waves.length) tl.to(waves, { strokeDashoffset: 0, duration: 1.8, ease: 'power1.inOut', clearProps: 'strokeDasharray' }, 0.1);
         if (particles.length) tl.to(particles, { autoAlpha: 1, duration: 1.4, stagger: 0.08, ease: 'power1.out', clearProps: 'visibility' }, 0.4);
         if (left.length) tl.to(left, { autoAlpha: 1, x: 0, y: 0, duration: 1, stagger: 0.15, ease, clearProps: 'transform' }, 0.3);
         if (right.length) tl.to(right, { autoAlpha: 1, x: 0, y: 0, duration: 1, stagger: 0.15, ease, clearProps: 'transform' }, 0.45);

@@ -2198,26 +2198,37 @@ html:has(.pdp) body {
 /* ==========================================================================
    DISCOVER THE FRAGRANCE — notes arranged around the product
    sections/agha-pdp-fragrance-notes.liquid · snippets/agha-pdp-fnote.liquid
-   Desktop/tablet: image in the centre, three facts either side, each joined to the
-   image by a hairline. Mobile: image, then one scannable list.
+   One dense composition: a big title, a large product in the middle and three facts either
+   side, each stacked icon → title → short description and set close to the product.
+   Mobile: title, product, then the six facts as a compact two-column grid.
    ========================================================================== */
+.pdp-fnotes .pdp-heading { max-width: 900px; margin-bottom: clamp(20px, 3vw, 40px); }
+.pdp-fnotes .pdp-heading h2 {
+  margin-top: 10px;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.pdp-fnotes .pdp-heading p { margin-top: 12px; font-size: 0.86rem; color: var(--pdp-muted); }
+
 .pdp-fnotes__stage {
-  --fn-gap: clamp(36px, 5vw, 88px);
+  --fn-gap: clamp(12px, 2.2vw, 32px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 1.25fr) minmax(0, 1fr);
   grid-template-rows: repeat(3, auto);
   grid-template-areas:
     'l1 img r1'
     'l2 img r2'
     'l3 img r3';
   column-gap: var(--fn-gap);
-  row-gap: clamp(28px, 3.2vw, 48px);
+  row-gap: clamp(28px, 3.4vw, 48px);
   align-items: center;
-  max-width: 1240px;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
-/* Centre image: an arch on warm paper; studio shots blend into it */
+/* Centre image: an arch on warm paper, the bottle enlarged to fill it */
 .pdp-fnotes__image {
   grid-area: img;
   align-self: center;
@@ -2225,7 +2236,7 @@ html:has(.pdp) body {
   position: relative;
   margin: 0;
   min-height: 0;
-  aspect-ratio: 4 / 5.2;
+  aspect-ratio: 4 / 5.4;
   border-radius: 999px 999px var(--pdp-radius-sm) var(--pdp-radius-sm);
   overflow: hidden;
   background: var(--pdp-soft-2);
@@ -2237,100 +2248,99 @@ html:has(.pdp) body {
   height: 100%;
   object-fit: cover;
   mix-blend-mode: multiply;
+  transform: scale(1.28);
+  transform-origin: 50% 55%;
 }
 
-/* A fact: icon, label, value, one quiet line */
+/* A fact: icon, title, description — centred, leaning toward the product */
 .pdp-fnote {
   position: relative;
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   min-width: 0;
+  width: 100%;
+  max-width: 230px;
+  text-align: center;
 }
-.pdp-fnote--left { flex-direction: row-reverse; text-align: right; }
+.pdp-fnote--left { justify-self: end; }
+.pdp-fnote--right { justify-self: start; }
 .pdp-fnote__icon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   display: grid;
   place-items: center;
   border: 1px solid var(--pdp-line);
   border-radius: 50%;
-  color: var(--pdp-ink-soft);
+  color: var(--pdp-ink);
   background: #fff;
 }
-.pdp-fnote__icon svg { width: 18px; height: 18px; }
-.pdp-fnote__body { min-width: 0; max-width: 300px; }
-.pdp-fnote--left .pdp-fnote__body { margin-left: auto; }
+.pdp-fnote__icon svg { width: 28px; height: 28px; stroke-width: 1.3; }
+.pdp-fnote__body { min-width: 0; max-width: 230px; margin-inline: auto; }
 .pdp-fnote__label {
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
   font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  line-height: 1.3;
-  color: var(--pdp-muted);
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.25;
+  color: var(--pdp-ink);
 }
 .pdp-fnote__value {
   margin-top: 8px;
-  font-family: var(--font-serif);
-  font-size: clamp(1.1rem, 1.35vw, 1.35rem);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--pdp-ink);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--pdp-ink-soft);
 }
-.pdp-fnote__note:not(:last-child)::after { content: ' · '; color: var(--pdp-muted); }
-.pdp-fnote__detail { margin-top: 4px; font-size: 0.82rem; color: var(--pdp-ink-soft); }
-.pdp-fnote__text { margin-top: 6px; font-size: 0.84rem; line-height: 1.55; color: var(--pdp-muted); }
-
-/* Hairline from the icon towards the image */
-.pdp-fnote__rule {
-  position: absolute;
-  top: 20px;
-  width: calc(var(--fn-gap) * 0.72);
-  height: 1px;
-  background: var(--pdp-line);
-  transform-origin: var(--fn-origin, left) center;
-}
-.pdp-fnote--left .pdp-fnote__rule { right: calc(var(--fn-gap) * -0.86); --fn-origin: left; }
-.pdp-fnote--right .pdp-fnote__rule { left: calc(var(--fn-gap) * -0.86); --fn-origin: right; }
+.pdp-fnote__note:not(:last-child)::after { content: ', '; color: inherit; }
+.pdp-fnote__detail { margin-top: 2px; font-size: 0.78rem; color: var(--pdp-ink-soft); }
+.pdp-fnote__text { margin-top: 4px; font-size: 0.76rem; line-height: 1.45; color: var(--pdp-muted); }
+.pdp-fnote__rule { display: none; }
 
 /* Tablet: same composition, tighter */
 @media (max-width: 1100px) {
   .pdp-fnotes__stage {
-    --fn-gap: clamp(24px, 3.4vw, 40px);
-    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.8fr) minmax(0, 1fr);
-    row-gap: 28px;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 1.4fr) minmax(0, 1fr);
+    row-gap: 24px;
   }
-  .pdp-fnote { gap: 12px; }
-  .pdp-fnote__icon { width: 34px; height: 34px; }
-  .pdp-fnote__icon svg { width: 16px; height: 16px; }
-  .pdp-fnote__rule { top: 17px; }
-  .pdp-fnote__value { font-size: 1.02rem; }
-  .pdp-fnote__text { font-size: 0.78rem; }
+  .pdp-fnote { gap: 10px; }
+  .pdp-fnote__icon { width: 50px; height: 50px; }
+  .pdp-fnote__icon svg { width: 24px; height: 24px; }
+  .pdp-fnote { max-width: 170px; }
+  .pdp-fnote__body { max-width: 170px; }
 }
 
-/* Mobile: image first, then one list in reading order */
+/* Mobile: title, product, then the six facts as a compact two-column grid */
 @media (max-width: 768px) {
-  .pdp-fnotes__stage { display: block; }
+  .pdp-fnotes__stage {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: none;
+    column-gap: 16px;
+    row-gap: 28px;
+    align-items: start;
+  }
   .pdp-fnotes__image {
-    width: min(78vw, 360px);
-    margin: 0 auto 28px;
+    grid-area: auto;
+    grid-column: 1 / -1;
+    width: min(86vw, 380px);
+    margin: 0 auto 8px;
   }
   .pdp-fnote,
-  .pdp-fnote--left {
+  .pdp-fnote--left,
+  .pdp-fnote--right {
     grid-area: auto !important;
-    flex-direction: row;
-    text-align: left;
-    gap: 14px;
-    padding: 18px 0;
-    border-top: 1px solid var(--pdp-line);
+    justify-self: stretch;
+    max-width: none;
+    padding: 0;
+    border: 0;
   }
-  .pdp-fnote:last-child { border-bottom: 1px solid var(--pdp-line); }
-  .pdp-fnote--left .pdp-fnote__body { margin-left: 0; }
+  .pdp-fnote__icon { width: 48px; height: 48px; }
+  .pdp-fnote__icon svg { width: 22px; height: 22px; }
   .pdp-fnote__body { max-width: none; }
-  .pdp-fnote__rule { display: none; }
-  .pdp-fnote__value { font-size: 1.1rem; margin-top: 6px; }
 }
 
 /* ==========================================================================
@@ -2344,96 +2354,126 @@ html:has(.pdp) body {
    as a rigid grid.
    ========================================================================== */
 .pdp-tf__head {
-  max-width: 620px;
-  margin: 0 auto clamp(40px, 5vw, 72px);
+  max-width: 820px;
+  margin: 0 auto clamp(4px, 1vw, 16px);
   text-align: center;
 }
 .pdp-tf__title {
-  margin-top: 14px;
+  margin-top: 10px;
   font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 4vw, 4rem);
+  font-size: clamp(3.2rem, 7vw, 6.2rem);
   font-weight: 500;
   font-style: normal;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  line-height: 1;
+  letter-spacing: -0.015em;
   color: var(--pdp-ink);
 }
 .pdp-tf__sub {
   margin-top: 12px;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--pdp-ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--pdp-muted);
 }
 
 .pdp-tf__stage {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.78fr) minmax(280px, 1.3fr) minmax(0, 0.78fr);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 1.15fr) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(4px, 1vw, 20px);
-  max-width: 1320px;
+  gap: 0;
+  max-width: 1180px;
   margin: 0 auto;
 }
 .pdp-tf__col {
   display: grid;
-  gap: clamp(28px, 4vw, 52px);
+  gap: clamp(30px, 3.6vw, 56px);
   margin: 0;
   padding: 0;
   list-style: none;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* One item: icon, then its bold title, then a small description — in that order,
-   centred, positioned near the bottle on its side, each sitting at a slightly
-   different height so the column feels placed, not gridded */
+/* One item: a ringed line icon, a bold title, a readable description. Each block sits
+   close to the bottle on its side, at a slightly different height, and a fine rule
+   reaches from it toward the bottle so the information points at the product. */
 .pdp-tf__block {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 9px;
-  max-width: 170px;
+  gap: 14px;
+  max-width: 250px;
 }
-.pdp-tf__col--left .pdp-tf__block { justify-self: end; }
-.pdp-tf__col--right .pdp-tf__block { justify-self: start; }
-.pdp-tf__col--left .pdp-tf__block:nth-child(2) { transform: translateY(-10px); }
-.pdp-tf__col--left .pdp-tf__block:nth-child(3) { transform: translateY(6px); }
-.pdp-tf__col--right .pdp-tf__block:nth-child(1) { transform: translateY(8px); }
-.pdp-tf__col--right .pdp-tf__block:nth-child(3) { transform: translateY(-6px); }
+.pdp-tf__col--left .pdp-tf__block { justify-self: end; margin-right: clamp(0px, 1vw, 16px); }
+.pdp-tf__col--right .pdp-tf__block { justify-self: start; margin-left: clamp(0px, 1vw, 16px); }
 
 .pdp-tf__block-icon {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: 68px;
+  height: 68px;
+  border: 1px solid var(--pdp-clay);
+  border-radius: 50%;
   color: var(--pdp-ink);
 }
-.pdp-tf__block-icon svg { width: 15px; height: 15px; }
-.pdp-tf__block-copy { display: grid; gap: 5px; }
+.pdp-tf__block-icon svg { width: 34px; height: 34px; stroke-width: 1.25; }
+.pdp-tf__block-copy { display: grid; gap: 6px; }
 .pdp-tf__block-title {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.3;
+  letter-spacing: 0;
+  line-height: 1.25;
   color: var(--pdp-ink);
 }
 .pdp-tf__block-text {
-  font-size: 0.7rem;
-  line-height: 1.5;
-  letter-spacing: 0.01em;
+  max-width: 200px;
+  margin-inline: auto;
+  font-size: 0.8rem;
+  line-height: 1.45;
   color: var(--pdp-ink-soft);
 }
+/* Pointer rule toward the bottle */
+.pdp-tf__block::after {
+  content: none;
+  position: absolute;
+  top: 27px;
+  width: clamp(24px, 4vw, 64px);
+  height: 1px;
+  background: var(--pdp-clay);
+  opacity: 0.8;
+}
+.pdp-tf__col--left .pdp-tf__block::after { left: calc(100% + 6px); }
+.pdp-tf__col--right .pdp-tf__block::after { right: calc(100% + 6px); }
 
-/* Centre: the bottle, enlarged, unboxed — no card, no panel, just a soft
-   ambient shadow beneath it, with a faint trail and a few particles around */
+/* Centre: the bottle, large and unboxed, sitting inside fine concentric rings with
+   ingredient details and scent curves around it — all decoration is aria-hidden */
 .pdp-tf__center { position: relative; }
-.pdp-tf__aura { position: absolute; inset: -8% -14%; pointer-events: none; overflow: visible; }
-.pdp-tf__wave { position: absolute; top: 0; width: 30%; height: 100%; color: var(--pdp-clay); opacity: 0.4; }
+.pdp-tf__aura { position: absolute; z-index: 2; mix-blend-mode: multiply; /* lines fade out over the dark bottle, stay on the white page */ inset: 4% 0; pointer-events: none; overflow: visible; }
+.pdp-tf__rings,
+.pdp-tf__wave { display: none; }
+.pdp-tf__rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(120%, 720px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  color: #c4ad86;
+}
+.pdp-tf__rings circle { fill: none; stroke: currentColor; vector-effect: non-scaling-stroke; }
+.pdp-tf__rings circle:nth-child(1) { stroke-width: 1; opacity: 0.8; }
+.pdp-tf__rings circle:nth-child(2) { stroke-width: 1.2; opacity: 0.7; stroke-dasharray: 2 8; stroke-linecap: round; }
+.pdp-tf__rings circle:nth-child(3) { stroke-width: 1; opacity: 0.5; }
+.pdp-tf__wave { position: absolute; top: 0; width: 34%; height: 100%; color: #c4ad86; opacity: 0.9; }
 .pdp-tf__wave--left { left: 0; }
 .pdp-tf__wave--right { right: 0; }
 .pdp-tf__wave path { vector-effect: non-scaling-stroke; }
+.pdp-tf__wave--inner { top: 6%; height: 88%; width: 26%; opacity: 0.5; }
+.pdp-tf__wave--inner.pdp-tf__wave--left { left: 10%; }
+.pdp-tf__wave--inner.pdp-tf__wave--right { right: 10%; }
 .pdp-tf__particle {
   position: absolute;
   top: var(--y);
@@ -2442,32 +2482,61 @@ html:has(.pdp) body {
   height: var(--s);
   border-radius: 50%;
   background: var(--pdp-clay);
-  opacity: 0.5;
+  opacity: 0.7;
   animation: pdp-tf-drift 7s ease-in-out infinite;
   animation-delay: var(--d);
 }
 @keyframes pdp-tf-drift {
-  0%, 100% { transform: translateY(0); opacity: 0.35; }
-  50% { transform: translateY(-10px); opacity: 0.6; }
+  0%, 100% { transform: translateY(0); opacity: 0.45; }
+  50% { transform: translateY(-10px); opacity: 0.8; }
+}
+/* Small ingredient details: petal, leaf, saffron thread, pepper, sprig */
+.pdp-tf__glyph {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  width: var(--s, 30px);
+  height: var(--s, 30px);
+  color: #a98f66;
+  opacity: 0.7;
+  transform: rotate(var(--r, 0deg));
+}
+.pdp-tf__glyph svg { display: block; width: 100%; height: 100%; }
+/* Leaves and petals sway and drift gently, each on its own rhythm */
+.pdp-tf__glyph {
+  transform-origin: 50% 90%;
+  animation: pdp-tf-sway 6.5s ease-in-out infinite;
+}
+.pdp-tf__glyph:nth-of-type(2n) { animation-duration: 8s; animation-direction: alternate-reverse; }
+.pdp-tf__glyph:nth-of-type(3n) { animation-duration: 7.2s; animation-delay: -2s; }
+.pdp-tf__glyph:nth-of-type(4n) { animation-delay: -4s; }
+@keyframes pdp-tf-sway {
+  0%, 100% { transform: translate(0, 0) rotate(calc(var(--r, 0deg) - 7deg)); }
+  50% { transform: translate(4px, -12px) rotate(calc(var(--r, 0deg) + 7deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdp-tf__glyph { animation: none; }
 }
 
 .pdp-tf__visual {
   position: relative;
   z-index: 1;
   margin: 0 auto;
-  width: min(100%, 420px);
-  aspect-ratio: 4 / 5.4;
+  width: min(100%, 560px);
+  aspect-ratio: 1 / 1.22;
   display: grid;
   place-items: center;
 }
 .pdp-tf__float { position: relative; z-index: 1; display: block; width: 100%; height: 100%; animation: pdp-tf-float 6s ease-in-out infinite; }
 @keyframes pdp-tf-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-.pdp-tf__frame { display: block; width: 100%; height: 100%; }
+.pdp-tf__frame { display: block; width: 100%; height: 100%; overflow: hidden; }
 .pdp-tf__frame img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   mix-blend-mode: multiply;
+  /* studio shots leave wide white margins: enlarge so the bottle itself fills the composition */
+  transform: scale(1.32);
 }
 /* A soft ambient shadow under the bottle only — not a filter traced around the whole
    (opaque, alpha-less) product photo, which would draw a visible rectangle */
@@ -2476,54 +2545,68 @@ html:has(.pdp) body {
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: 4%;
-  width: 52%;
-  height: 9%;
+  bottom: 3%;
+  width: 56%;
+  height: 8%;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(43, 37, 33, 0.22), rgba(43, 37, 33, 0) 72%);
-  filter: blur(7px);
+  background: radial-gradient(ellipse at center, rgba(43, 37, 33, 0.26), rgba(43, 37, 33, 0) 72%);
+  filter: blur(8px);
   pointer-events: none;
 }
 
 /* Closing line: thin rule, then the product name and family, quietly */
 .pdp-tf__caption {
-  margin: clamp(48px, 6vw, 88px) auto 0;
-  padding-top: clamp(22px, 3vw, 32px);
-  max-width: 1320px;
+  margin: clamp(16px, 2vw, 28px) auto 0;
+  padding-top: clamp(18px, 2.4vw, 26px);
+  max-width: 1180px;
   border-top: 1px solid var(--pdp-line);
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.04em;
   color: var(--pdp-muted);
 }
-.pdp-tf__caption-name { font-family: var(--font-serif); font-size: 0.95rem; letter-spacing: 0; color: var(--pdp-ink-soft); }
+.pdp-tf__caption-name { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: 0; color: var(--pdp-ink-soft); }
 .pdp-tf__caption-sep { margin: 0 10px; opacity: 0.5; }
 
-/* Tablet: tighter columns, smaller bottle */
+/* Tablet: two-sided composition kept, bottle a little smaller */
 @media (max-width: 1100px) {
-  .pdp-tf__stage { grid-template-columns: minmax(0, 0.82fr) minmax(220px, 1.1fr) minmax(0, 0.82fr); gap: 4px; }
-  .pdp-tf__col { gap: clamp(22px, 3vw, 36px); }
-  .pdp-tf__block { max-width: 150px; }
-  .pdp-tf__visual { width: min(100%, 320px); }
+  .pdp-tf__stage { grid-template-columns: minmax(0, 1fr) minmax(260px, 1.1fr) minmax(0, 1fr); gap: 0; }
+  .pdp-tf__col { gap: clamp(24px, 4vw, 40px); }
+  .pdp-tf__block { max-width: 190px; gap: 10px; }
+  .pdp-tf__block-icon { width: 56px; height: 56px; }
+  .pdp-tf__block-icon svg { width: 28px; height: 28px; }
+  .pdp-tf__block-title { font-size: 1.1rem; }
+  .pdp-tf__block-text { max-width: 170px; font-size: 0.76rem; }
+  .pdp-tf__visual { width: min(100%, 440px); }
+  .pdp-tf__aura { inset: -4% -12%; }
 }
 
-/* Mobile: the bottle stays the primary visual, placed first; notes then claims
-   read below it, each still leaning as a compact row rather than a plain list */
-@media (max-width: 768px) {
-  .pdp-tf__stage { display: flex; flex-direction: column; gap: clamp(36px, 8vw, 52px); }
-  .pdp-tf__center { order: -1; }
-  .pdp-tf__visual { width: min(72vw, 320px); }
-  .pdp-tf__col { gap: clamp(22px, 5vw, 32px); justify-items: center; }
+/* Mobile: title, then a big bottle, then the notes and claims as a clean sequence */
+@media (max-width: 900px) {
+  .pdp-tf__stage { display: flex; flex-direction: column; gap: clamp(28px, 7vw, 44px); }
+  .pdp-tf__center { order: -1; width: 100%; }
+  .pdp-tf__visual { width: min(92vw, 440px); }
+  .pdp-tf__col { gap: 26px; justify-items: center; width: 100%; }
   .pdp-tf__col--left .pdp-tf__block,
   .pdp-tf__col--right .pdp-tf__block {
     justify-self: center;
     flex-direction: row;
+    align-items: center;
     text-align: left;
     transform: none;
-    max-width: 300px;
+    margin: 0;
+    gap: 16px;
+    max-width: 320px;
+    width: 100%;
   }
-  .pdp-tf__aura { inset: -4% -8%; }
-  .pdp-tf__wave { width: 22%; opacity: 0.3; }
+  .pdp-tf__block-icon { width: 56px; height: 56px; }
+  .pdp-tf__block-title { font-size: 1.1rem; }
+  .pdp-tf__block-text { max-width: none; font-size: 0.82rem; }
+  .pdp-tf__aura { inset: 6% 0; }
+  .pdp-tf__rings { display: none; }
+  .pdp-tf__wave { width: 26%; opacity: 0.5; }
+  .pdp-tf__wave--inner { display: none; }
+  .pdp-tf__glyph:nth-of-type(n + 5) { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
