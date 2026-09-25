@@ -276,7 +276,6 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('coupon popup on', all.length, 'pages');
 
-@@SMART@@
   console.log('smart popup on', all.length, 'pages');
 
   // Mock catalog + commerce layer (snippets/hoa-catalog-script.liquid, assets/hoa-commerce.js/.css).

@@ -25,7 +25,38 @@
   letter-spacing: 0.09em; text-transform: uppercase; color: var(--hoa-mute, #857D72);
 }
 .hoa-offer-note[hidden] { display: none; }
-.hoa-shop-head__offer { margin-top: 14px; max-width: 46ch; }
+.hoa-shop-head__offer { margin-top: 0; max-width: 46ch; }
+
+/* Shop head: offers slide across on their own, seamless loop. Paper, ink and hairlines only. */
+.hoa-offer-marquee {
+  overflow: hidden; margin-top: clamp(20px, 2.4vw, 32px); padding: 16px 0;
+  background: #0a0908;
+  border-block: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.hoa-offer-marquee__track {
+  display: flex; width: max-content; margin: 0; padding: 0; list-style: none;
+  animation: hoa-offer-slide 46s linear infinite;
+}
+.hoa-offer-marquee:hover .hoa-offer-marquee__track { animation-play-state: paused; }
+@keyframes hoa-offer-slide { to { transform: translateX(-25%); } }
+.hoa-offer-slide { display: flex; align-items: center; gap: 12px; flex: none; padding: 0 clamp(24px, 3.4vw, 52px); position: relative; }
+.hoa-offer-slide::after { content: ''; position: absolute; right: 0; top: 50%; width: 1px; height: 18px; margin-top: -9px; background: rgba(255, 255, 255, 0.16); }
+.hoa-offer-slide { --tone: #5b7fe8; }
+.hoa-offer-slide:nth-child(4n+2) { --tone: #2fb0bf; }
+.hoa-offer-slide:nth-child(4n+3) { --tone: #d0697c; }
+.hoa-offer-slide:nth-child(4n+4) { --tone: #a3b866; }
+.hoa-offer-slide__ico { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #0a0908; background: var(--tone); }
+.hoa-offer-slide__ico svg { width: 18px; height: 18px; }
+.hoa-offer-slide__ico svg * { stroke-width: 1.4; }
+.hoa-offer-slide__txt { display: flex; align-items: baseline; gap: 10px; white-space: nowrap; font-size: 0.86rem; color: rgba(246, 243, 238, 0.68); }
+.hoa-offer-slide__txt b { font: 600 0.68rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone); }
+.hoa-offer-slide__txt em { font-style: normal; font-weight: 700; letter-spacing: 0.1em; color: var(--tone); }
+@media (prefers-reduced-motion: reduce) {
+  .hoa-offer-marquee { overflow-x: auto; }
+  .hoa-offer-marquee__track { animation: none; }
+}
 .hoa-collection__note { margin: 6px 0 18px; }
 
 /* ---------------------------------------------------------------- home cards */

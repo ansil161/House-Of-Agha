@@ -17,7 +17,6 @@
       {%- if s.text != blank -%}<p class="hoa-shop-head__text">{{ s.text }}</p>{%- endif -%}
       {%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
       {%- assign catalog = catalog_json | parse_json -%}
-      <p class="hoa-offer-note hoa-shop-head__offer">{{ catalog.settings.messages.shipping }}<span aria-hidden="true"> &middot; </span>{{ catalog.settings.messages.tiers }}</p>
       {%- if s.link_1_label != blank or s.link_2_label != blank -%}
       <ul class="hoa-shop-head__links">
         {%- if s.link_1_label != blank -%}
@@ -29,6 +28,22 @@
       </ul>
       {%- endif -%}
     </div>
+  </div>
+  {%- assign tiers = catalog.settings.quantityTiers -%}
+  {%- assign coupon = catalog.coupons | first -%}
+  {%- capture offer_items -%}
+    <li class="hoa-offer-slide"><span class="hoa-offer-slide__ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3v3h-7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="17" r="1.8" stroke="currentColor" stroke-width="1.5"/></svg></span><span class="hoa-offer-slide__txt"><b>Complimentary shipping</b><span>on orders above &#8377;{{ catalog.settings.freeShippingThreshold | divided_by: 1000 }},{{ catalog.settings.freeShippingThreshold | modulo: 1000 | plus: 1000 | append: '' | slice: 1, 3 }}</span></span></li>
+    {%- for t in tiers -%}
+      <li class="hoa-offer-slide"><span class="hoa-offer-slide__ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5l14 14M7 8.5a1.7 1.7 0 1 0 0-.01M17 18a1.7 1.7 0 1 0 0-.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="hoa-offer-slide__txt"><b>Save {{ t.percent }}%</b><span>when you buy {{ t.qty }} fragrances</span></span></li>
+    {%- endfor -%}
+    {%- if coupon -%}
+      <li class="hoa-offer-slide"><span class="hoa-offer-slide__ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 9V6.5h17V9a2.5 2.5 0 0 0 0 5.5V17h-17v-2.5A2.5 2.5 0 0 0 3.5 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span class="hoa-offer-slide__txt"><b>{{ coupon.description }}</b><span>use code <em>{{ coupon.code }}</em></span></span></li>
+    {%- endif -%}
+  {%- endcapture -%}
+  <div class="hoa-offer-marquee" role="region" aria-label="Current offers">
+    <ul class="hoa-offer-marquee__track">
+      {{ offer_items }}{{ offer_items }}{{ offer_items }}{{ offer_items }}
+    </ul>
   </div>
 </section>
 
