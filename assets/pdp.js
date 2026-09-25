@@ -72,6 +72,10 @@
     const counter = $('[data-pdp-count]', main);
     const bar = $('[data-pdp-bar]', main);
     const n = slides.length;
+    // Thumbnail gallery: one large frame + a strip of thumbnails; no wall / swipe strip behaviour
+    const thumbMode = Boolean(story && story.hasAttribute('data-pdp-thumbs'));
+    const thumbBtns = $$('[data-pdp-thumb]', main);
+    const wallMode = () => !thumbMode && window.matchMedia('(min-width: 769px)').matches;
     const shapes = slotShapes(n);
     const slotOf = slides.map((_, i) => i); // slotOf[i] = the slot slide i sits in (0 = main)
     let mainIndex = 0; // slide in slot 0 (wall)
@@ -113,6 +117,10 @@
     const markActive = (index) => {
       current = index;
       slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      thumbBtns.forEach((b, i) => {
+        b.classList.toggle('is-active', i === index);
+        b.setAttribute('aria-current', i === index ? 'true' : 'false');
+      });
       if (counter) counter.textContent = pad(index + 1);
       // Play only the videos that can be seen
       slides.forEach((s, i) => {
@@ -193,14 +201,14 @@
         return;
       }
       markActive(index);
-      if (scroll && track) {
+      if (scroll && track && !thumbMode) {
         const el = slides[index];
         track.scrollTo({ left: el.offsetLeft - (parseFloat(getComputedStyle(track).paddingLeft) || 0), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
       }
     };
 
     // Phones: the visible image is the one most on screen; the bar follows the strip's scroll
-    if (story && n > 1 && 'IntersectionObserver' in window) {
+    if (story && n > 1 && !thumbMode && 'IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         if (wallMode()) return;
         const best = entries.filter((e) => e.isIntersecting).sort((x, y) => y.intersectionRatio - x.intersectionRatio)[0];
@@ -240,6 +248,7 @@
       });
     });
 
+    thumbBtns.forEach((b, i) => listen(b, 'click', () => setActive(i)));
     paint();
     markActive(0);
     listen(window.matchMedia('(min-width: 769px)'), 'change', () => { settle(); paint(); markActive(wallMode() ? mainIndex : current); });

@@ -3191,3 +3191,185 @@ html:has(.pdp) body {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   PRODUCT DETAIL — thumbnail gallery + one purchase panel with Single / Duo / Trio offers
+   (sections/agha-pdp-main.liquid · assets/pdp-buybox.js). Flat and compact: hairlines, small radii.
+   ========================================================================== */
+
+/* Gallery: one large frame, a strip of thumbnails beneath */
+.pdp-hero__grid:has([data-pdp-thumbs]) {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+}
+.pdp-story[data-pdp-thumbs] .pdp-stage__track {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--pdp-soft);
+}
+.pdp-story[data-pdp-thumbs] .pdp-slide,
+.pdp-story[data-pdp-thumbs] .pdp-slide:first-child {
+  position: absolute;
+  inset: 0;
+  flex: none;
+  grid-column: auto;
+  aspect-ratio: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+.pdp-story[data-pdp-thumbs] .pdp-slide.is-active {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease;
+  cursor: zoom-in;
+}
+.pdp-story[data-pdp-thumbs] .pdp-story__progress { display: none; }
+
+.pdp-thumbs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 84px;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.pdp-thumbs::-webkit-scrollbar { display: none; }
+.pdp-thumb {
+  position: relative;
+  padding: 0;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--pdp-line);
+  border-radius: 3px;
+  background: var(--pdp-soft);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+.pdp-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pdp-thumb:hover { opacity: 1; }
+.pdp-thumb.is-active {
+  opacity: 1;
+  border-color: var(--pdp-ink);
+  box-shadow: inset 0 0 0 1px var(--pdp-ink);
+}
+.pdp-thumb:focus-visible { outline: 2px solid var(--pdp-ink); outline-offset: 2px; }
+
+/* Purchase panel: one interface, separated by thin dividers instead of separate cards */
+.pdp-info .pdp-price { padding-top: 16px; border-top: 1px solid var(--pdp-line); }
+.pdp-info .pdp-form { margin-top: 14px !important; gap: 14px; }
+
+/* Offer selector */
+.pdp-offers { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+.pdp-offers[hidden] { display: none; }
+.pdp-offers__legend {
+  margin-bottom: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pdp-muted);
+}
+.pdp-offers__list { display: grid; gap: 8px; }
+.pdp-offer {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border: 1px solid var(--pdp-line);
+  border-radius: 4px;
+  background: var(--color-white);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease-editorial, ease);
+}
+.pdp-offer input { position: absolute; opacity: 0; pointer-events: none; }
+.pdp-offer:hover { border-color: #b9b2a8; transform: translateY(-1px); }
+.pdp-offer.is-selected {
+  border-color: var(--pdp-ink);
+  background: var(--pdp-soft);
+  box-shadow: inset 0 0 0 1px var(--pdp-ink);
+}
+.pdp-offer:has(input:focus-visible) { outline: 2px solid var(--pdp-ink); outline-offset: 2px; }
+.pdp-offer:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+.pdp-offer__radio {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #b9b2a8;
+  border-radius: 50%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.pdp-offer.is-selected .pdp-offer__radio {
+  border-color: var(--pdp-ink);
+  background: var(--pdp-ink);
+  box-shadow: inset 0 0 0 3.5px var(--color-white);
+}
+.pdp-offer__body { display: grid; gap: 2px; min-width: 0; }
+.pdp-offer__name { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.01em; line-height: 1.2; }
+.pdp-offer__meta { font-size: 0.76rem; color: var(--pdp-muted); }
+.pdp-offer__price { display: grid; justify-items: end; gap: 1px; font-variant-numeric: tabular-nums; }
+.pdp-offer__price b { font-size: 1.02rem; font-weight: 600; }
+.pdp-offer__price s { font-size: 0.76rem; color: var(--pdp-muted); }
+.pdp-offer__flag {
+  position: absolute;
+  top: -9px;
+  right: 14px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: var(--pdp-ink);
+  color: var(--color-white);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pdp-offers--still .pdp-offer { transition: none; }
+.pdp-offers--still .pdp-offer:hover { transform: none; }
+
+/* Tablet / phone */
+@media (max-width: 1023px) {
+  .pdp-hero__grid:has([data-pdp-thumbs]) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; }
+  .pdp-thumbs { grid-auto-columns: 68px; }
+}
+@media (max-width: 768px) {
+  .pdp-story[data-pdp-thumbs] .pdp-stage__track { aspect-ratio: 1 / 1.05; margin-inline: 0; }
+  .pdp-thumbs { grid-auto-columns: 64px; gap: 6px; }
+  .pdp-offer { padding: 14px; }
+  .pdp-info .pdp-price { padding-top: 14px; }
+}
+
+/* Flatter size tiles and a little more air for the "Best value" flag, to match the offer rows */
+.pdp-info .pdp-tile { padding: 10px 14px; border-radius: 4px; }
+.pdp-info .pdp-tile__value { font-size: 1.05rem; }
+.pdp-offers__list { gap: 12px; }
+
+/* Offer selector: a little colour and small bottle icons. Accent = warm gold + a calm green for savings. */
+.pdp-offer { --pdp-gold: #a8842f; --pdp-gold-soft: #f6efdd; grid-template-columns: auto auto minmax(0, 1fr) auto; }
+.pdp-offer__icon { display: inline-flex; align-items: flex-end; gap: 2px; color: var(--pdp-muted); transition: color 0.2s ease; }
+.pdp-offer__icon svg { width: 12px; height: 18px; }
+.pdp-offer.is-selected .pdp-offer__icon { color: var(--pdp-gold); }
+.pdp-offer.is-selected { background: var(--pdp-gold-soft); border-color: var(--pdp-ink); }
+.pdp-offer__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.pdp-offer__save {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 7px 1px 5px;
+  border-radius: 2px;
+  background: #e6f0e9;
+  color: var(--pdp-success);
+  font-style: normal;
+  font-weight: 600;
+}
+.pdp-offer__save svg { width: 11px; height: 11px; }
+.pdp-offer__flag { background: var(--pdp-gold); }
+.pdp-offer__price b { color: var(--pdp-ink); }
+.pdp-offer.is-selected .pdp-offer__price b { color: var(--pdp-gold); }

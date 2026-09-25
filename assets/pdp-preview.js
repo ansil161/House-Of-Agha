@@ -85,7 +85,7 @@
 
       <div class="pdp-hero__grid">
         <!-- Product visual story: mirrors sections/agha-pdp-main.liquid -->
-        <div class="pdp-media pdp-story${images.length < 2 ? ' pdp-story--single' : ''}" data-pdp-story style="--pdp-n: ${images.length}">
+        <div class="pdp-media pdp-story${images.length < 2 ? ' pdp-story--single' : ''}" data-pdp-story data-pdp-thumbs style="--pdp-n: ${images.length}">
           <div class="pdp-stage" data-pdp-stage>
             <div class="pdp-stage__inner" data-pdp-stage-inner>
               <div class="pdp-stage__track" data-pdp-track>
@@ -104,6 +104,10 @@
               <span class="pdp-story__bar"><i data-pdp-bar></i></span>
             </div>` : ''}
           </div>
+          ${images.length > 1 ? `
+          <div class="pdp-thumbs" role="group" aria-label="Product images">
+            ${images.map((src, i) => `<button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${images.length}" aria-current="${i === 0 ? 'true' : 'false'}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+          </div>` : ''}
         </div>
 
         <div class="pdp-info">
@@ -145,6 +149,11 @@
                     <span class="pdp-tile__price">${money(v.price == null ? null : v.price / 100)}</span>
                   </label>`).join('')}
               </div>
+            </fieldset>
+
+            <fieldset class="pdp-offers" data-pdp-offers data-unit="bottle" hidden>
+              <legend class="pdp-offers__legend"><span>Choose your set</span></legend>
+              <div class="pdp-offers__list" data-pdp-offers-list></div>
             </fieldset>
 
             <div class="pdp-buy">

@@ -15,6 +15,7 @@
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdp-js');
 </script>
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
+<script src="{{ 'pdp-buybox.js' | asset_url }}" defer></script>
 
 {%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
 {%- assign pdp = pdp_json | parse_json -%}
@@ -95,7 +96,7 @@
         Without JS or with reduced motion it is simply a column of large images.
       {%- endcomment -%}
       {%- assign story_n = media_count | at_least: 1 -%}
-      <div class="pdp-media pdp-story{% if story_n < 2 %} pdp-story--single{% endif %}" data-pdp-story style="--pdp-n: {{ story_n }}">
+      <div class="pdp-media pdp-story{% if story_n < 2 %} pdp-story--single{% endif %}" data-pdp-story data-pdp-thumbs style="--pdp-n: {{ story_n }}">
         <div class="pdp-stage" data-pdp-stage>
           <div class="pdp-stage__inner" data-pdp-stage-inner>
             <div class="pdp-stage__track" data-pdp-track>
@@ -146,6 +147,15 @@
             </div>
           {%- endif -%}
         </div>
+        {%- if media_count > 1 -%}
+          <div class="pdp-thumbs" role="group" aria-label="Product images">
+            {%- for media in product.media -%}
+              <button type="button" class="pdp-thumb{% if forloop.first %} is-active{% endif %}" data-pdp-thumb="{{ forloop.index0 }}" aria-label="Show image {{ forloop.index }} of {{ media_count }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+                {{ media.preview_image | image_url: width: 176 | image_tag: widths: '88, 132, 176', sizes: '88px', loading: 'lazy', alt: '' }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
 
       <div class="pdp-info">
@@ -247,6 +257,11 @@
               </div>
             </fieldset>
           {%- endif -%}
+
+          <fieldset class="pdp-offers" data-pdp-offers data-unit="{{ section.settings.offer_unit | default: 'bottle' }}" hidden>
+            <legend class="pdp-offers__legend"><span>{{ section.settings.offer_heading | default: 'Choose your set' }}</span></legend>
+            <div class="pdp-offers__list" data-pdp-offers-list></div>
+          </fieldset>
 
           <div class="pdp-buy">
             <div class="pdp-qty" data-pdp-qty>
@@ -482,6 +497,8 @@
       "name": "Benefit",
       "limit": 6,
       "settings": [
+    { "type": "text", "id": "offer_heading", "label": "Offer selector heading", "default": "Choose your set" },
+    { "type": "text", "id": "offer_unit", "label": "Offer unit (singular)", "default": "bottle", "info": "Shown as \"2 bottles\" on each offer. Offers and savings come from the quantity tiers in the catalog data." },
         {
           "type": "select",
           "id": "icon",
