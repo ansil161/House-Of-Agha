@@ -52,10 +52,10 @@
       <a class="hoa-shop-interlude__media" href="{{ s.interlude_url | default: '/products/sea-smoke' }}">
         {%- render 'hoa-img', name: s.interlude_asset, image: s.interlude_image, w: 1200, h: 1200, alt: s.interlude_alt, sizes: '(min-width: 1000px) 62vw, 100vw' -%}
       </a>
-      <figcaption class="hoa-pc__info hoa-shop-interlude__cap">
-        <p class="hoa-pc__name">{{ s.interlude_caption }}</p>
-        <p class="hoa-pc__meta"><span>{{ s.interlude_note }}</span></p>
-        <p class="hoa-pc__price"><a href="{{ s.interlude_url | default: '/products/sea-smoke' }}">{{ s.interlude_link }}<span aria-hidden="true">&rarr;</span></a></p>
+      <figcaption class="hoa-shop-interlude__cap">
+        <p class="hoa-shop-interlude__name">{{ s.interlude_caption }}</p>
+        <p class="hoa-shop-interlude__meta">{{ s.interlude_note }}</p>
+        <p class="hoa-shop-interlude__link"><a href="{{ s.interlude_url | default: '/products/sea-smoke' }}">{{ s.interlude_link }}<span aria-hidden="true">&rarr;</span></a></p>
       </figcaption>
     </figure>
   {%- endif -%}

@@ -877,54 +877,15 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 
 .hoa-collection__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: clamp(28px, 3vw, 44px) clamp(10px, 1.2vw, 18px);
 }
+/* Discovery tile only: product cards use .hoa-pc (hoa-card.css) */
 .hoa-card { display: flex; flex-direction: column; gap: 14px; }
 .hoa-card.is-hidden { display: none; }
-.hoa-card__visual { position: relative; overflow: hidden; border-radius: var(--hoa-radius); }
-.hoa-card__media {
-  position: relative;
-  display: block;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: var(--hoa-radius);
-  background: var(--hoa-paper-2);
-}
+.hoa-card__media { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--hoa-radius); background: var(--hoa-paper-2); }
 .hoa-card__img { position: absolute; inset: 0; }
 .hoa-card__img img { width: 100%; height: 100%; object-fit: cover; }
-.hoa-card__img--product img { mix-blend-mode: multiply; object-fit: cover; transition: transform 1.2s var(--hoa-ease); }
-.hoa-card__visual:hover .hoa-card__img--product img { transform: scale(1.03); }
-.hoa-card__img--mood { opacity: 0; transition: opacity 0.8s var(--hoa-ease); }
-.hoa-card__img--mood img { transform: scale(1.08); transition: transform 1.6s var(--hoa-ease); }
-.hoa-card__tag {
-  position: absolute; top: 12px; left: 12px; z-index: 2;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(246, 243, 238, 0.86);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--hoa-ink);
-}
-.hoa-card__add {
-  position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2;
-  margin: 0;
-  transform: translateY(calc(100% + 16px));
-  transition: transform 0.7s var(--hoa-ease);
-}
-.hoa-card__add .hoa-btn { width: 100%; justify-content: space-between; }
-@media (hover: hover) {
-  .hoa-card__visual:hover .hoa-card__img--mood { opacity: 1; }
-  .hoa-card__visual:hover .hoa-card__img--mood img { transform: scale(1); }
-  .hoa-card:hover .hoa-card__add,
-  .hoa-card:focus-within .hoa-card__add { transform: none; }
-}
-.hoa-card__row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.hoa-card__title { font-family: var(--hoa-sans); font-size: 1.02rem; font-weight: 500; letter-spacing: -0.015em; text-transform: none; margin: 0; }
-.hoa-card__title a { color: inherit; text-decoration: none; }
-.hoa-card__price { font-size: 0.95rem; color: var(--hoa-ink); white-space: nowrap; }
-.hoa-card__family { margin-top: -10px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hoa-mute); }
 
 .hoa-card--feature { position: relative; }
 .hoa-card--feature .hoa-card__media { background: var(--hoa-night); }
@@ -967,11 +928,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-tabs::-webkit-scrollbar { display: none; }
   .hoa-tab { font-size: 2rem; white-space: nowrap; }
   .hoa-collection__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 10px; }
-  .hoa-card__row { flex-direction: column; gap: 2px; }
-  .hoa-card__family { margin-top: -8px; }
-  .hoa-card__add { transform: none; left: 8px; right: 8px; bottom: 8px; }
-  .hoa-card__add .hoa-btn { padding: 4px 4px 4px 12px; font-size: 0.72rem; }
-  .hoa-card__add .hoa-btn__icon { width: 24px; height: 24px; }
   .hoa-card--feature { grid-column: span 2; }
   .hoa-card--feature .hoa-card__media { aspect-ratio: 16 / 12; }
 }
@@ -1620,8 +1576,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-tab { min-height: 44px; padding-inline: 6px; }
   .hoa-ftag { min-height: 40px; padding-inline: 14px; display: inline-flex; align-items: center; }
   .hoa-fview .hoa-fview__btn { width: 40px; height: 40px; }  /* .hoa-fview prefix: hoa-shop.css loads later and would win */
-  .hoa-pc .hoa-pc__cta { min-height: 40px; }
-  .hoa-pc .hoa-pc__like::after { content: ''; position: absolute; inset: -7px; }
   .footer-links a { display: inline-block; padding-block: 6px; }
   select[data-hoa-sort] { min-height: 40px; }
   .modal-close-btn { width: 44px; height: 44px; top: 8px; right: 8px; display: grid; place-items: center; }

@@ -278,7 +278,8 @@
         setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
       };
       if (formData && window.Shopify && window.Shopify.routes) {
-        btn.disabled = true;
+        if (btn.getAttribute('aria-busy') === 'true') return;
+        btn.classList.add('is-loading'); btn.setAttribute('aria-busy', 'true');
         fetch(window.Shopify.routes.root + 'cart/add.js', {
           method: 'POST',
           headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
@@ -288,7 +289,7 @@
           done();
         }).catch(function () {
           if (bag && bag.showToast) bag.showToast('We could not add this to your bag.');
-        }).then(function () { btn.disabled = false; });
+        }).then(function () { btn.classList.remove('is-loading'); btn.removeAttribute('aria-busy'); });
       } else {
         done();
       }

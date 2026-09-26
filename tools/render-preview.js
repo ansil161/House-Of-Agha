@@ -284,16 +284,17 @@ async function renderTemplate(name, templateGlobals) {
   const catalogRe = /[ \t]*<script type="application\/json" id="hoa-catalog-data">[\s\S]*?<\/script>\n/;
   const commerceJsRe = /[ \t]*<script src="\/?assets\/hoa-commerce\.js" defer><\/script>\n/;
   const commerceCssRe = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-commerce\.css">\n/;
+  const cardCssRe = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-card\.css">\n/;
   for (const f of all) {
     const file = path.join(THEME, f);
     let html = fs.readFileSync(file, 'utf8');
-    html = html.replace(catalogRe, '').replace(commerceJsRe, '').replace(commerceCssRe, '');
+    html = html.replace(catalogRe, '').replace(commerceJsRe, '').replace(commerceCssRe, '').replace(cardCssRe, '');
     const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
     const block = '  ' + catalogScript + '\n  <script src="' + pre + 'assets/hoa-commerce.js" defer></script>\n';
     const themeJs = new RegExp('([ \\t]*<script src="' + pre + 'assets/theme\\.js")');
     if (!themeJs.test(html)) { console.warn('no theme.js in', f); continue; }
     html = html.replace(themeJs, (m) => block + m)
-      .replace('</head>', () => '  <link rel="stylesheet" href="' + pre + 'assets/hoa-commerce.css">\n</head>');
+      .replace('</head>', () => '  <link rel="stylesheet" href="' + pre + 'assets/hoa-card.css">\n  <link rel="stylesheet" href="' + pre + 'assets/hoa-commerce.css">\n</head>');
     fs.writeFileSync(file, html);
   }
   console.log('commerce layer on', all.length, 'pages');

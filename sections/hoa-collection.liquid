@@ -52,57 +52,65 @@
         {%- for product in source.products limit: s.limit -%}
           {%- liquid
             assign fam = product.metafields.custom.family.value | default: product.type
+            assign wearer = product.metafields.custom.gender.value | downcase
+            if wearer == blank
+              for t in product.tags
+                assign tl = t | downcase | remove: 'gender:' | remove: 'for ' | strip
+                if tl == 'men' or tl == 'women' or tl == 'unisex'
+                  assign wearer = tl
+                  break
+                endif
+              endfor
+            endif
+            if wearer == 'man' or wearer == 'male' or wearer == 'him'
+              assign wearer = 'men'
+            elsif wearer == 'woman' or wearer == 'female' or wearer == 'her'
+              assign wearer = 'women'
+            endif
             assign variant = product.selected_or_first_available_variant
-            if product.price_varies
-              assign price = product.price_min | money | prepend: 'From '
-            else
-              assign price = product.price | money
-            endif
             assign mood = product.media[1].preview_image
-            assign was_txt = ''
-            assign off_pct = 0
+            assign sale_rupees = product.price | divided_by: 100
+            assign regular_rupees = ''
+            assign regular_txt = ''
             if product.compare_at_price > product.price and product.price_varies == false
-              assign was_txt = product.compare_at_price | money
-              assign off_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+              assign regular_rupees = product.compare_at_price | divided_by: 100
+              assign regular_txt = product.compare_at_price | money
             endif
-            assign is_best = false
+            assign sale_txt = product.price | money
+            if product.price_varies
+              assign sale_txt = product.price_min | money | prepend: 'From '
+            endif
+            assign best = false
             if product.tags contains 'best-seller' or product.tags contains 'Best Seller'
-              assign is_best = true
+              assign best = true
             endif
+            assign thumb = product.featured_media.preview_image | image_url: width: 240
           -%}
-          <article class="hoa-card" data-family="{{ fam | handleize }}" data-hoa-card>
-            <div class="hoa-card__visual">
-            <a class="hoa-card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
-              <span class="hoa-card__img hoa-card__img--product">
-                {%- if product.featured_media -%}
-                  {{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '400, 600, 900', sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw', loading: 'lazy', alt: product.title }}
-                {%- endif -%}
-              </span>
-              {%- if mood -%}
-                <span class="hoa-card__img hoa-card__img--mood">{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}</span>
-              {%- endif -%}
-              {%- if is_best -%}<span class="hoa-card__tag hoa-card__tag--best">Best seller</span>{%- elsif fam != blank -%}<span class="hoa-card__tag">{{ fam }}</span>{%- endif -%}
-            </a>
-            <div class="hoa-card__add">
-              {%- if product.has_only_default_variant and variant.available -%}
-                {%- form 'product', product -%}
-                  <input type="hidden" name="id" value="{{ variant.id }}">
-                  <button type="submit" name="add" class="hoa-btn hoa-btn--small"><span>Add to bag</span>{% render 'hoa-btn-icon' %}</button>
-                {%- endform -%}
-              {%- elsif product.available -%}
-                <a class="hoa-btn hoa-btn--small" href="{{ product.url }}"><span>Choose size</span>{% render 'hoa-btn-icon' %}</a>
-              {%- endif -%}
-            </div>
-            </div>
-            <div class="hoa-card__row">
-              <h3 class="hoa-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
-              <span class="hoa-card__price">{% if product.available %}{{ price }}{% else %}Sold out{% endif %}</span>
-            </div>
-            {%- if was_txt != blank and product.available -%}
-              <p class="hoa-card__sub"><span class="hoa-card__offer"><s>{{ was_txt }}</s><span class="hoa-card__off">{{ off_pct }}% off</span></span></p>
-            {%- endif -%}
-            <p class="hoa-card__family">{{ s.product_label }}</p>
-          </article>
+          {%- capture img_main -%}{%- if product.featured_media -%}{{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw', loading: 'lazy', alt: product.title }}{%- endif -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- if mood -%}{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}{%- endcapture -%}
+          {%- render 'hoa-shop-card',
+            index: forloop.index0,
+            handle: product.handle,
+            url: product.url,
+            name: product.title,
+            family: fam,
+            wearer: wearer,
+            gift: false,
+            img_main: img_main,
+            img_mood: img_mood,
+            thumb: thumb,
+            available: product.available,
+            sale_price: sale_rupees,
+            regular_price: regular_rupees,
+            sale_text: sale_txt,
+            regular_text: regular_txt,
+            rating: product.metafields.reviews.rating.value.rating,
+            review_count: product.metafields.reviews.rating_count.value,
+            best_seller: best,
+            kind: s.product_label,
+            shopify_product: product,
+            variant_id: variant.id
+          -%}
         {%- endfor -%}
       {%- else -%}
         {%- for p in catalog.products -%}
@@ -110,43 +118,37 @@
             assign p_asset = 'hoa-product-' | append: p.asset
             assign m_asset = 'hoa-' | append: p.asset | append: '-portrait'
             assign p_alt = p.name | append: ' Eau de Parfum bottle'
-            assign has_offer = false
-            assign off_pct = 0
-            if p.salePrice and p.salePrice < p.regularPrice
-              assign has_offer = true
-              assign off_pct = p.regularPrice | minus: p.salePrice | times: 100.0 | divided_by: p.regularPrice | round
+            assign thumb_file = p_asset | append: '-sm.webp'
+            assign thumb = thumb_file | asset_url
+            assign purl = '/products/' | append: p.handle
+            assign sale_v = p.salePrice | default: p.regularPrice
+            assign is_available = true
+            if p.inventory == 0
+              assign is_available = false
             endif
-            assign now_n = p.salePrice | default: p.regularPrice
-            assign fill = p.rating | times: 20
           -%}
-          <article class="hoa-card" data-family="{{ p.family | handleize }}" data-hoa-card data-product-id="{{ p.handle }}" data-title="{{ p.name | upcase }}">
-            <div class="hoa-card__visual">
-            <a class="hoa-card__media" href="/products/{{ p.handle }}" aria-label="{{ p.name }}">
-              <span class="hoa-card__img hoa-card__img--product">
-                {%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: p_alt, sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw' -%}
-              </span>
-              <span class="hoa-card__img hoa-card__img--mood">
-                {%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1101px) 25vw, 50vw' -%}
-              </span>
-              {%- if p.isBestSeller -%}<span class="hoa-card__tag hoa-card__tag--best">Best seller</span>{%- else -%}<span class="hoa-card__tag">{{ p.family }}</span>{%- endif -%}
-            </a>
-            <div class="hoa-card__add">
-              <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="{{ p.handle }}" aria-label="Add {{ p.name | escape }} to bag"><span>Add to bag</span>{% render 'hoa-btn-icon' %}</button>
-            </div>
-            </div>
-            <div class="hoa-card__row">
-              <h3 class="hoa-card__title"><a href="/products/{{ p.handle }}">{{ p.name }}</a></h3>
-              <span class="hoa-card__price">{% capture now_t %}{% render 'hoa-rupees', n: now_n %}{% endcapture %}{{ now_t }}</span>
-            </div>
-            <p class="hoa-card__sub">
-              <span class="hoa-cstars" style="--fill: {{ fill }}%" role="img" aria-label="Rated {{ p.rating }} out of 5"></span>
-              <span class="hoa-card__count">({{ p.reviewCount }})</span>
-              {%- if has_offer -%}
-                <span class="hoa-card__offer"><s><span class="hoa-sr">Was </span>{% capture was_t %}{% render 'hoa-rupees', n: p.regularPrice %}{% endcapture %}{{ was_t }}</s><span class="hoa-card__off">{{ off_pct }}% off</span></span>
-              {%- endif -%}
-            </p>
-            <p class="hoa-card__family">{{ s.product_label }}</p>
-          </article>
+          {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: p_alt, sizes: '(min-width: 1101px) 25vw, (min-width: 768px) 33vw, 50vw' -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1101px) 25vw, 50vw' -%}{%- endcapture -%}
+          {%- render 'hoa-shop-card',
+            index: forloop.index0,
+            handle: p.handle,
+            url: purl,
+            name: p.name,
+            family: p.family,
+            wearer: p.wearer,
+            gift: false,
+            img_main: img_main,
+            img_mood: img_mood,
+            thumb: thumb,
+            available: is_available,
+            sale_price: sale_v,
+            regular_price: p.regularPrice,
+            rating: p.rating,
+            review_count: p.reviewCount,
+            best_seller: p.isBestSeller,
+            kind: s.product_label,
+            product_id: p.handle
+          -%}
         {%- endfor -%}
       {%- endif -%}
 

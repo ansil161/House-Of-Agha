@@ -1,5 +1,8 @@
 {%- comment -%}
-  SHOP · Product card (one component for every product on the shop page)
+  PRODUCT CARD · the one card for every product on the site
+  (shop grid + list, homepage collection, related products, mock catalog). Styles: assets/hoa-card.css.
+  The client twins are HOA.cardHtml (assets/hoa-commerce.js) and the recently viewed / wishlist
+  renderers, which build this same markup from product JSON.
 
   The card never reads a Shopify product itself for its offer / review / best-seller
   content: it takes plain values, so the data source can change without touching the
@@ -22,6 +25,10 @@
     sale_text, regular_text     optional display strings (Shopify passes | money output)
     rating (0-5), review_count  optional
     best_seller          true | false
+    badge                optional badge text (New, Limited, Featured); with shopify_product it is read
+                         from the product tags "new", "limited", "featured" when not passed
+    kind                 product type line under the button (blank = Eau de Parfum)
+    compact              true = ProductCardCompact (no cart button)
     product_id           mock line-up id (drives the local add-to-bag button)
     shopify_product, variant_id   optional; when given the button is a real product form
 {%- endcomment -%}
@@ -76,6 +83,26 @@
     assign was_text = ''
   endif
 
+  assign is_out = false
+  if available == false or available == 'false'
+    assign is_out = true
+  endif
+  assign is_best = false
+  if best_seller == 'true' or best_seller == true
+    assign is_best = true
+  endif
+  assign badge_text = badge
+  if badge_text == blank and shopify_product != blank
+    for t in shopify_product.tags
+      assign tl = t | downcase | strip
+      if tl == 'new' or tl == 'limited' or tl == 'featured'
+        assign badge_text = tl | capitalize
+        break
+      endif
+    endfor
+  endif
+  assign kind_text = kind | default: 'Eau de Parfum'
+
   assign rating_n = rating | plus: 0
   assign has_reviews = false
   if rating_n > 0 and review_count != blank
@@ -92,60 +119,74 @@
   endif
   assign about = article | append: ' ' | append: fam_lc | append: ' Eau de Parfum from House of Agha.'
 -%}
-<article class="hoa-pc" data-hoa-item data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
-         data-image="{{ thumb }}" data-price="{{ sale_n }}" data-price-text="{{ now_text | escape }}"{% if has_offer %} data-compare-text="{{ was_text | escape }}" data-offer="true"{% endif %}{% if best_seller == 'true' or best_seller == true %} data-best="true"{% endif %}>
+<article class="hoa-pc{% if compact == true or compact == 'true' %} hoa-pc--compact{% endif %}" data-hoa-item data-hoa-card data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
+         data-image="{{ thumb }}" data-price="{{ sale_n }}" data-price-text="{{ now_text | escape }}"{% if has_offer %} data-compare-text="{{ was_text | escape }}" data-offer="true"{% endif %}{% if is_best %} data-best="true"{% endif %}>
   <div class="hoa-pc__visual">
     <a class="hoa-pc__media" href="{{ url }}" tabindex="-1" aria-hidden="true">
       <span class="hoa-pc__img hoa-pc__img--product">{{ img_main }}</span>
       {%- if img_mood != blank -%}<span class="hoa-pc__img hoa-pc__img--mood">{{ img_mood }}</span>{%- endif -%}
     </a>
-    {%- if available == false or available == 'false' -%}
-      <p class="hoa-pc__tag">Sold out</p>
-    {%- elsif best_seller == 'true' or best_seller == true -%}
+    {%- if is_best -%}
       <p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>
+    {%- elsif badge_text != blank -%}
+      <p class="hoa-pc__tag">{{ badge_text }}</p>
     {%- endif -%}
     <button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save {{ name | escape }} to your wishlist" data-hoa-like data-key="{{ handle }}" data-wishlist-toggle data-wishlist-handle="{{ handle }}"{% if variant_id != blank %} data-wishlist-variant="{{ variant_id }}"{% endif %} data-wishlist-title="{{ name | escape }}">
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
     </button>
-  </div>
-  <div class="hoa-pc__info">
-    <p class="hoa-pc__meta"><span class="hoa-pc__chip">{{ family }}</span><span class="hoa-pc__chip">{{ wearer | capitalize }}</span></p>
-    <h3 class="hoa-pc__name"><a href="{{ url }}">{{ name }}</a>{%- if gift == 'true' or gift == true -%}<span class="hoa-pc__gift-tag">Gift</span>{%- endif -%}</h3>
-    <p class="hoa-pc__rating">
-      {%- if has_reviews -%}
-        <span class="hoa-pc__stars" style="--fill: {{ fill }}%" role="img" aria-label="Rated {{ rating_n }} out of 5"></span>
-        <span class="hoa-pc__count" aria-label="{{ review_count }} reviews">({{ review_count }})</span>
-      {%- endif -%}
-    </p>
-    <p class="hoa-pc__price{% if has_offer %} hoa-pc__price--offer{% endif %}">
-      {%- if available == false or available == 'false' -%}
-        Sold out
-      {%- else -%}
-        <span class="hoa-pc__now">{{ now_text }}</span>
+    {%- if is_out -%}
+      <p class="hoa-pc__bar hoa-pc__bar--out"><span class="hoa-pc__now">Sold out</span></p>
+    {%- else -%}
+      <p class="hoa-pc__bar{% if has_offer %} hoa-pc__bar--offer{% endif %}"><span class="hoa-pc__now">{{ now_text }}</span>
         {%- if has_offer -%}
           <s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>{{ was_text }}</s>
           <span class="hoa-pc__off">{{ off_pct }}% off</span>
         {%- endif -%}
-      {%- endif -%}
-    </p>
-    <p class="hoa-pc__about">{{ about }}</p>
+      </p>
+    {%- endif -%}
+  </div>
+  <div class="hoa-pc__info">
+    <div class="hoa-pc__body">
+      <p class="hoa-pc__meta">{% if family != blank %}<span class="hoa-pc__chip">{{ family }}</span>{% endif %}{% if wearer != blank %}<span class="hoa-pc__chip">{{ wearer | capitalize }}</span>{% endif %}</p>
+      <h3 class="hoa-pc__name"><a href="{{ url }}">{{ name }}</a></h3>
+      <p class="hoa-pc__rating">
+        {%- if has_reviews -%}
+          <span class="hoa-pc__stars" style="--fill: {{ fill }}%" role="img" aria-label="Rated {{ rating_n }} out of 5"></span>
+          <span class="hoa-pc__count" aria-label="{{ review_count }} reviews">({{ review_count }})</span>
+        {%- endif -%}
+      </p>
+      <p class="hoa-pc__price{% if has_offer %} hoa-pc__price--offer{% endif %}">
+        {%- if is_out -%}
+          Sold out
+        {%- else -%}
+          <span class="hoa-pc__now">{{ now_text }}</span>
+          {%- if has_offer -%}
+            <s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>{{ was_text }}</s>
+            <span class="hoa-pc__off">{{ off_pct }}% off</span>
+          {%- endif -%}
+        {%- endif -%}
+      </p>
+    </div>
+    {%- unless compact == true or compact == 'true' -%}
     <div class="hoa-pc__action">
       {%- if shopify_product != blank -%}
-        {%- if available == true or available == 'true' -%}
+        {%- if is_out -%}
+          <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
+        {%- else -%}
           {%- form 'product', shopify_product -%}
             <input type="hidden" name="id" value="{{ variant_id }}">
-            <button type="submit" name="add" class="hoa-pc__cta" aria-label="Add {{ name | escape }} to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>
+            <button type="submit" name="add" class="hoa-pc__cta" aria-label="Add {{ name | escape }} to cart">{% render 'hoa-cart-icon' %}<span>Add to cart</span></button>
           {%- endform -%}
-        {%- else -%}
-          <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
         {%- endif -%}
       {%- else -%}
-        {%- if available == false or available == 'false' -%}
+        {%- if is_out -%}
           <button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>
         {%- else -%}
-          <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add {{ name | escape }} to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>
+          <button type="button" class="hoa-pc__cta" data-hoa-add aria-label="Add {{ name | escape }} to cart">{% render 'hoa-cart-icon' %}<span>Add to cart</span></button>
         {%- endif -%}
       {%- endif -%}
+      <p class="hoa-pc__kind">{{ kind_text }}</p>
     </div>
+    {%- endunless -%}
   </div>
 </article>

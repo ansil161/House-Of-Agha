@@ -62,55 +62,42 @@
   };
 
   /* ------------------------------------------------------------------ card */
-  const plain = (html, max) => {
-    const text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    return text.length > max ? `${text.slice(0, max).replace(/\s\S*$/, '')}…` : text;
-  };
+  // Saved products are the shared product card (HOA.pcMarkup, styled by hoa-card.css). The heart is
+  // already "saved" here, so pressing it removes the card; the button below adds to the bag.
+  const CART = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const saved = (html) => html.replace('aria-pressed="false"', 'aria-pressed="true"').replace('data-wishlist-toggle', 'data-wishlist-toggle data-wishlist-fixed-label');
 
   const cardHtml = (item, p, index) => {
     const handle = esc(item.handle);
-    const style = `style="--i:${index}"`;
     if (!p) {
-      return `<article class="hoa-wl-card hoa-wl-card--gone" data-wl-card data-handle="${handle}" ${style}>
-        <div class="hoa-wl-card__media hoa-wl-card__media--gone"><span>${HEART}</span></div>
-        <div class="hoa-wl-card__body">
-          <h3 class="hoa-wl-card__name">No longer available</h3>
-          <p class="hoa-wl-card__about">This fragrance has been removed from the store.</p>
-          <div class="hoa-wl-card__actions">
-            <button type="button" class="hoa-wl-card__remove" data-wishlist-toggle data-wishlist-handle="${handle}" data-wishlist-fixed-label aria-pressed="true" aria-label="Remove from wishlist">${HEART}<span>Remove from Wishlist</span></button>
-          </div>
+      return `<article class="hoa-pc hoa-pc--gone" data-wl-card data-handle="${handle}" style="--i:${index}">
+        <div class="hoa-pc__visual"><span class="hoa-pc__media">${HEART}</span></div>
+        <div class="hoa-pc__info"><div class="hoa-pc__body">
+          <h3 class="hoa-pc__name">No longer available</h3>
+          <p class="hoa-pc__note">This fragrance has been removed from the store.</p>
         </div>
+        <div class="hoa-pc__action">
+          <button type="button" class="hoa-pc__remove" data-wishlist-toggle data-wishlist-handle="${handle}" data-wishlist-fixed-label aria-pressed="true" aria-label="Remove from wishlist">${HEART}<span>Remove</span></button>
+        </div></div>
       </article>`;
     }
     const variants = p.variants || [];
     const v = variants.find((x) => x.id === item.variant_id) || variants.find((x) => x.available) || variants[0] || {};
-    const multi = variants.length > 1 && v.title && v.title !== 'Default Title';
     const price = v.price != null ? v.price : p.price;
     const compare = v.compare_at_price && v.compare_at_price > price ? v.compare_at_price : 0;
-    const pct = compare ? Math.floor(((compare - price) * 100) / compare) : 0;
     const available = v.available !== undefined ? v.available : p.available;
     const image = (v.featured_image && v.featured_image.src) || p.featured_image;
-    const about = plain(p.description, 110);
-    const meta = [p.type, multi ? v.title : ''].filter(Boolean).map(esc).join(' · ');
-    const url = esc(p.url);
-    return `<article class="hoa-wl-card" data-wl-card data-handle="${handle}" ${style}>
-      <a class="hoa-wl-card__media" href="${url}" aria-label="${esc(p.title)}">
-        ${image ? `<img src="${esc(image)}" alt="${esc(p.title)}" loading="lazy" width="800" height="1000">` : ''}
-        ${pct ? `<span class="hoa-wl-card__badge">−${pct}%</span>` : ''}
-      </a>
-      <div class="hoa-wl-card__body">
-        ${meta ? `<p class="hoa-wl-card__meta">${meta}</p>` : ''}
-        <h3 class="hoa-wl-card__name"><a href="${url}">${esc(p.title)}</a></h3>
-        ${about ? `<p class="hoa-wl-card__about">${esc(about)}</p>` : ''}
-        <p class="hoa-wl-card__price">${esc(money(price))}${compare ? ` <s>${esc(money(compare))}</s>` : ''}</p>
-        <p class="hoa-wl-card__stock" data-state="${available ? 'in' : 'out'}">${available ? 'In stock' : 'Sold out'}</p>
-        <div class="hoa-wl-card__actions">
-          <button type="button" class="hoa-wl-card__add" data-wl-add data-handle="${handle}" data-variant="${esc(v.id)}" ${available ? '' : 'disabled'}>${available ? 'Add to bag' : 'Sold out'}</button>
-          <a class="hoa-wl-card__view" href="${url}">View product</a>
-          <button type="button" class="hoa-wl-card__remove" data-wishlist-toggle data-wishlist-handle="${handle}" data-wishlist-fixed-label aria-pressed="true" aria-label="Remove ${esc(p.title)} from wishlist">${HEART}<span>Remove from Wishlist</span></button>
-        </div>
-      </div>
-    </article>`;
+    const add = available
+      ? `<button type="button" class="hoa-pc__cta" data-wl-add data-handle="${handle}" data-variant="${esc(v.id)}">${CART}<span>Add to cart</span></button>`
+      : '<button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>';
+    const build = window.HOA && window.HOA.pcMarkup;
+    if (!build) return '';
+    return saved(build({
+      handle: item.handle, url: p.url, name: p.title, image, imageMood: (p.images || [])[1], family: p.type,
+      now: money(price), was: compare ? money(compare) : '', off: compare ? Math.round(((compare - price) * 100) / compare) : 0,
+      best: (p.tags || []).some((t) => /^best[- ]?seller$/i.test(t)), sold: !available,
+      action: add, index, attrs: ` data-wl-card data-handle="${handle}"`
+    }));
   };
 
   /* ---------------------------------------------------------------- render */
@@ -162,9 +149,11 @@
     const p = products.get(handle);
     const variant = p && (p.variants || []).find((x) => String(x.id) === btn.dataset.variant);
     if (!variant || !variant.available || btn.getAttribute('aria-busy') === 'true') return;
-    const label = btn.textContent;
+    const lab = btn.querySelector('span') || btn;
+    const label = lab.textContent;
     btn.setAttribute('aria-busy', 'true');
-    btn.textContent = 'Adding…';
+    btn.classList.add('is-loading');
+    lab.textContent = 'Adding…';
     try {
       const res = await fetch(`${cfg.root}cart/add.js`, {
         method: 'POST',
@@ -183,15 +172,16 @@
         bag.updateCartUI();
         setTimeout(() => bag.toggleCartDrawer(true), 350);
       }
-      btn.textContent = 'Added';
+      lab.textContent = 'Added';
       await wait(1600);
     } catch (error) {
       const bag = store();
       if (bag && bag.showToast) bag.showToast(error.message);
-      btn.textContent = label;
+      lab.textContent = label;
     } finally {
       btn.removeAttribute('aria-busy');
-      if (btn.textContent === 'Added' || btn.textContent === 'Adding…') btn.textContent = label;
+      btn.classList.remove('is-loading');
+      if (lab.textContent === 'Added' || lab.textContent === 'Adding…') lab.textContent = label;
     }
   };
 

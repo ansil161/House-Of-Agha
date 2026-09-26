@@ -695,7 +695,7 @@
   /* -------------------------------------------------------- Recommendations */
   async function initRecommendations() {
     const section = $('[data-pdp-related][data-url]');
-    if (!section || !isShopify || section.querySelector('.pdp-rel, .hoa-pc')) return;
+    if (!section || !isShopify || section.querySelector('.hoa-pc')) return;
     try {
       const res = await fetch(section.dataset.url);
       const html = await res.text();
@@ -1030,25 +1030,33 @@
     const wanted = handles.filter((h) => h && h !== current).slice(0, limit);
     const esc = (str) => String(str ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const handleOf = (url) => ((String(url).match(/\/products\/([^/?#]+)/) || [])[1] || '');
-    const heart = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
-    const card = (p, price) => `<div class="pdp-rel-wrap"><a class="pdp-rel" href="${esc(p.url)}"><div class="pdp-rel__frame">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" width="400" height="400">` : ''}</div><div class="pdp-rel__body"><h3 class="pdp-rel__title">${esc(p.title)}</h3><span class="pdp-rel__price">${esc(price)}</span></div></a><button type="button" class="pdp-like" data-wishlist-toggle data-wishlist-handle="${esc(handleOf(p.url))}" data-wishlist-title="${esc(p.title)}" aria-pressed="false" aria-label="Save to wishlist">${heart}</button></div>`;
+    // Same card as the shop (assets/hoa-card.css), compact: image, price bar, name, no cart button.
+    // Markup comes from HOA.pcMarkup (hoa-commerce.js, loaded on every page).
+    const card = (o, i) => (window.HOA && window.HOA.pcMarkup ? window.HOA.pcMarkup({ ...o, handle: handleOf(o.url), compact: true, action: 'none', index: i }) : '');
     // Mock mode only: no real history yet, so show the demo cards embedded by the section
     const showDemo = () => {
       const demo = readJSON($('[data-pdp-recent-mock]', section));
       if (!Array.isArray(demo) || !demo.length) return;
-      grid.innerHTML = demo.slice(0, limit).map((p) => card(p, p.price)).join('');
+      grid.innerHTML = demo.slice(0, limit).map((p, i) => card({ url: p.url, name: p.title, image: p.image, now: p.price }, i)).join('');
       section.hidden = false;
-      revealNow($$('.pdp-rel-wrap', grid));
+      revealNow($$('.hoa-pc', grid));
     };
     if (!wanted.length) { showDemo(); return; }
     const results = await Promise.all(wanted.map((h) => fetch(`/products/${encodeURIComponent(h)}.js`).then((r) => (r.ok ? r.json() : null)).catch(() => null)));
     const items = results.filter(Boolean);
     if (!items.length) { showDemo(); return; }
     const format = section.dataset.moneyFormat;
-    grid.innerHTML = items.map((p) => card({ url: p.url, title: p.title, image: p.featured_image }, formatMoney(p.price, format))).join('');
+    grid.innerHTML = items.map((p, i) => card({
+      url: p.url, name: p.title, image: p.featured_image, imageMood: (p.images || [])[1], family: p.type,
+      now: formatMoney(p.price, format),
+      was: p.compare_at_price > p.price ? formatMoney(p.compare_at_price, format) : '',
+      off: p.compare_at_price > p.price ? Math.round(((p.compare_at_price - p.price) * 100) / p.compare_at_price) : 0,
+      best: (p.tags || []).some((t) => /^best[- ]?seller$/i.test(t)),
+      sold: p.available === false
+    }, i)).join('');
     section.hidden = false;
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    revealNow($$('.pdp-rel-wrap', grid));
+    revealNow($$('.hoa-pc', grid));
   }
 
   /* ------------------------------------------------------------------- Boot */

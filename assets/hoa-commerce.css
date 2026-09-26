@@ -59,22 +59,6 @@
 }
 .hoa-collection__note { margin: 6px 0 18px; }
 
-/* ---------------------------------------------------------------- home cards */
-.hoa-card__tag--best { color: #8a6a37; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.6rem; padding: 6px 11px; }
-.hoa-card__tag--best::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 7px; vertical-align: 1px; border-radius: 50%; background: var(--hoa-brass, #B08D57); }
-.hoa-card__sub { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; margin: -8px 0 0; min-height: 1.1rem; }
-.hoa-card__count { font-size: 0.72rem; color: var(--hoa-mute, #857D72); font-variant-numeric: tabular-nums; }
-.hoa-card__offer { display: inline-flex; align-items: baseline; gap: 8px; margin-left: auto; font-variant-numeric: tabular-nums; }
-.hoa-card__offer s { font-size: 0.8rem; color: var(--hoa-mute, #857D72); }
-.hoa-card__off { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
-.hoa-card__price { font-weight: 600; font-variant-numeric: tabular-nums; }
-.hoa-card .hoa-card__family { margin-top: -6px; }
-.hoa-card__add .hoa-btn.is-added { background: var(--hoa-paper, #F6F3EE); color: var(--hoa-ink, #141210); }
-@media (max-width: 767px) {
-  .hoa-card__offer { margin-left: 0; width: 100%; }
-  .hoa-card__sub { margin-top: -6px; }
-}
-
 /* ---------------------------------------------------------------- product page */
 .pdp-chip--best { color: #8a6a37; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 .pdp-stage__badge { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -265,5 +249,4 @@
 
 /* "You may also like" on the product page: the shop's product cards, four across */
 .pdp-related-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.pdp-related-cards .hoa-pc__about { display: none; }
 @media (max-width: 1023px) { .pdp-related-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

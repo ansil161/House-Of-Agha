@@ -195,26 +195,42 @@
   }
 
   /* -------------------------- product card (same markup as snippets/hoa-shop-card.liquid) */
-  // Used where a page is painted by JS (the static product-page preview). Liquid pages render the snippet.
+  // One builder for every card that JS paints: the mock catalog (cardHtml below), recently viewed and the
+  // wishlist page. Liquid pages render the snippet. Styles: assets/hoa-card.css.
+  var CART_ICON = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var HEART_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+  // o: handle, url, name, image, imageMood, family, wearer, now (text), was (text), off (number), rating, reviews,
+  //    best, badge, sold, kind, compact, cls, action ('quick' | 'none' | html), attrs (extra article attributes), index
+  function pcMarkup(o) {
+    var sold = !!o.sold, offer = !!o.was && !sold;
+    var rating = Number(o.rating) || 0, reviews = Number(o.reviews) || 0;
+    var tag = o.best ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : (o.badge ? '<p class="hoa-pc__tag">' + esc(o.badge) + '</p>' : '');
+    var priceInner = '<span class="hoa-pc__now">' + esc(o.now) + '</span>' + (offer ? '<s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>' + esc(o.was) + '</s><span class="hoa-pc__off">' + o.off + '% off</span>' : '');
+    var action = '';
+    if (o.action === 'quick') {
+      action = sold ? '<button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>'
+        : '<button type="button" class="hoa-pc__cta" data-hoa-quick-add="' + esc(o.handle) + '" aria-label="Add ' + esc(o.name) + ' to cart">' + CART_ICON + '<span>Add to cart</span></button>';
+    } else if (o.action && o.action !== 'none') action = o.action;
+    return '<article class="hoa-pc' + (o.compact ? ' hoa-pc--compact' : '') + (o.cls ? ' ' + o.cls : '') + '" data-hoa-item data-product-id="' + esc(o.handle) + '" data-name="' + esc(o.name) + '" style="--i:' + (o.index || 0) + '"' + (o.attrs || '') + '>' +
+      '<div class="hoa-pc__visual"><a class="hoa-pc__media" href="' + esc(o.url) + '" tabindex="-1" aria-hidden="true">' +
+      '<span class="hoa-pc__img hoa-pc__img--product">' + (o.image ? '<img src="' + esc(o.image) + '" alt="" width="1200" height="1500" loading="lazy" decoding="async">' : '') + '</span>' +
+      (o.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(o.imageMood) + '" alt="" width="1200" height="1607" loading="lazy" decoding="async"></span>' : '') + '</a>' + tag +
+      '<button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save ' + esc(o.name) + ' to your wishlist" data-hoa-like data-key="' + esc(o.handle) + '" data-wishlist-toggle data-wishlist-handle="' + esc(o.handle) + '" data-wishlist-title="' + esc(o.name) + '">' + HEART_ICON + '</button>' +
+      (sold ? '<p class="hoa-pc__bar hoa-pc__bar--out"><span class="hoa-pc__now">Sold out</span></p>' : '<p class="hoa-pc__bar' + (offer ? ' hoa-pc__bar--offer' : '') + '">' + priceInner + '</p>') + '</div>' +
+      '<div class="hoa-pc__info"><div class="hoa-pc__body">' +
+      '<p class="hoa-pc__meta">' + (o.family ? '<span class="hoa-pc__chip">' + esc(o.family) + '</span>' : '') + (o.wearer ? '<span class="hoa-pc__chip">' + esc(o.wearer.charAt(0).toUpperCase() + o.wearer.slice(1)) + '</span>' : '') + '</p>' +
+      '<h3 class="hoa-pc__name"><a href="' + esc(o.url) + '">' + esc(o.name) + '</a></h3>' +
+      '<p class="hoa-pc__rating">' + (rating > 0 && reviews > 0 ? '<span class="hoa-pc__stars" style="--fill:' + rating * 20 + '%" role="img" aria-label="Rated ' + rating + ' out of 5"></span><span class="hoa-pc__count" aria-label="' + reviews + ' reviews">(' + reviews + ')</span>' : '') + '</p>' +
+      '<p class="hoa-pc__price' + (offer ? ' hoa-pc__price--offer' : '') + '">' + (sold ? 'Sold out' : priceInner) + '</p></div>' +
+      (action ? '<div class="hoa-pc__action">' + action + '<p class="hoa-pc__kind">' + esc(o.kind || 'Eau de Parfum') + '</p></div>' : '') +
+      '</div></article>';
+  }
   function cardHtml(p, i) {
-    var fill = p.rating * 20;
-    var sold = p.inventory === 0;
-    return '<article class="hoa-pc" data-hoa-item data-product-id="' + esc(p.handle) + '" data-name="' + esc(p.name) + '" style="--i:' + (i || 0) + '">' +
-      '<div class="hoa-pc__visual"><a class="hoa-pc__media" href="' + esc(p.url) + '" tabindex="-1" aria-hidden="true">' +
-      '<span class="hoa-pc__img hoa-pc__img--product"><img src="' + esc(p.imageMain || p.image) + '" alt="" width="1200" height="1500" loading="lazy" decoding="async"></span>' +
-      (p.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(p.imageMood) + '" alt="" width="1200" height="1607" loading="lazy" decoding="async"></span>' : '') + '</a>' +
-      (sold ? '<p class="hoa-pc__tag">Sold out</p>' : p.isBestSeller ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : '') +
-      '<button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save ' + esc(p.name) + ' to your wishlist" data-hoa-like data-key="' + esc(p.handle) + '" data-wishlist-toggle data-wishlist-handle="' + esc(p.handle) + '" data-wishlist-title="' + esc(p.name) + '">' +
-      '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button></div>' +
-      '<div class="hoa-pc__info"><p class="hoa-pc__meta"><span class="hoa-pc__chip">' + esc(p.family) + '</span><span class="hoa-pc__chip">' + esc(p.wearer.charAt(0).toUpperCase() + p.wearer.slice(1)) + '</span></p>' +
-      '<h3 class="hoa-pc__name"><a href="' + esc(p.url) + '">' + esc(p.name) + '</a></h3>' +
-      '<p class="hoa-pc__rating"><span class="hoa-pc__stars" style="--fill:' + fill + '%" role="img" aria-label="Rated ' + p.rating + ' out of 5"></span><span class="hoa-pc__count" aria-label="' + p.reviewCount + ' reviews">(' + p.reviewCount + ')</span></p>' +
-      '<p class="hoa-pc__price' + (p.hasOffer ? ' hoa-pc__price--offer' : '') + '">' + (sold ? 'Sold out' : '<span class="hoa-pc__now">' + money(p.price) + '</span>' +
-        (p.hasOffer ? '<s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>' + money(p.regularPrice) + '</s><span class="hoa-pc__off">' + p.discountPercentage + '% off</span>' : '')) + '</p>' +
-      '<p class="hoa-pc__about">' + (/^[aeiou]/i.test(p.family) ? 'An ' : 'A ') + esc(p.family.toLowerCase()) + ' Eau de Parfum from House of Agha.</p>' +
-      '<div class="hoa-pc__action">' + (sold ? '<button type="button" class="hoa-pc__cta hoa-pc__cta--ghost" disabled><span>Sold out</span></button>' :
-        '<button type="button" class="hoa-pc__cta" data-hoa-quick-add="' + esc(p.handle) + '" aria-label="Add ' + esc(p.name) + ' to cart"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5.5h10l-.8 8H3.8L3 5.5ZM5.5 5.5V4.6a2.5 2.5 0 0 1 5 0v.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to cart</span></button>') +
-      '</div></div></article>';
+    return pcMarkup({
+      handle: p.handle, url: p.url, name: p.name, image: p.imageMain || p.image, imageMood: p.imageMood,
+      family: p.family, wearer: p.wearer, now: money(p.price), was: p.hasOffer ? money(p.regularPrice) : '', off: p.discountPercentage,
+      rating: p.rating, reviews: p.reviewCount, best: p.isBestSeller, sold: p.inventory === 0, action: 'quick', index: i
+    });
   }
 
   /* ---------------------------------------------------------------- bag UI */
@@ -579,20 +595,32 @@
     // Product cards outside the shop grid (e.g. "You may also like"): the snippet's real product form
     // adds via Shopify's cart API, then mirrors the line into the bag drawer.
     document.addEventListener('submit', function (e) {
-      var form = e.target.closest && e.target.closest('[data-hoa-related] .hoa-pc__action form');
-      if (!form) return;
+      var form = e.target.closest && e.target.closest('.hoa-pc__action form');
+      if (!form || form.closest('[data-hoa-shop-grid]')) return; // the shop grid has its own handler (hoa-shop.js)
       e.preventDefault();
       var card = form.closest('[data-hoa-item]'), d = card.dataset, btn = form.querySelector('button');
+      if (btn.getAttribute('aria-busy') === 'true') return;
+      var busy = function (on) { btn.classList.toggle('is-loading', on); if (on) btn.setAttribute('aria-busy', 'true'); else btn.removeAttribute('aria-busy'); };
       var done = function () {
+        busy(false);
         if (typeof AghaStore === 'undefined') return;
         AghaStore.addToCart({ id: (d.productId || d.name) + '-' + Date.now(), handle: d.productId || '', title: d.name, price: d.priceText || '', compare: d.compareText || '', image: d.image || '', size: 'Eau de Parfum' });
         flash(btn);
       };
       if (window.Shopify && window.Shopify.routes) {
+        busy(true);
         fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, body: new FormData(form) })
           .then(function (r) { if (!r.ok) throw new Error('add failed'); done(); })
-          .catch(function () { if (typeof AghaStore !== 'undefined' && AghaStore.showToast) AghaStore.showToast('We could not add this to your bag.'); });
+          .catch(function () { busy(false); if (typeof AghaStore !== 'undefined' && AghaStore.showToast) AghaStore.showToast('We could not add this to your bag.'); });
       } else done();
+    });
+    // Mock-mode cards outside the shop grid (homepage): the same bag call as the quick-add buttons
+    document.addEventListener('click', function (e) {
+      var add = e.target.closest && e.target.closest('.hoa-pc [data-hoa-add]');
+      if (!add || add.closest('[data-hoa-shop-grid]')) return;
+      e.preventDefault();
+      quickAdd(add.closest('[data-hoa-item]').dataset.productId, add);
+      flash(add);
     });
     document.addEventListener('click', function (e) {
       if (e.target.closest('.cart-drawer')) return; // the drawer has its own handler
@@ -629,7 +657,7 @@
     product: product, fragrances: fragrances, byName: byName, pairOf: function (h) { return product(PAIRS[h]); },
     quote: quote, bundleQuote: bundleQuote, tierFor: tierFor, coupon: coupon, makeItem: makeItem,
     stockState: stockState, priceHtml: priceHtml, noteText: noteText, tierText: tierText,
-    cardHtml: cardHtml, renderBag: renderBag, applyToPreviewProducts: applyToPreviewProducts, initPair: initPair,
+    cardHtml: cardHtml, pcMarkup: pcMarkup, renderBag: renderBag, applyToPreviewProducts: applyToPreviewProducts, initPair: initPair,
     lowStock: LOW_STOCK, threshold: THRESHOLD
   };
 })();

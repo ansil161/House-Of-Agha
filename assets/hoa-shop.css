@@ -223,172 +223,10 @@
   gap: clamp(14px, 1.6vw, 24px);
 }
 .hoa-pc[hidden], .hoa-shop-interlude[hidden] { display: none !important; }
-/* Card: a soft, rounded tray holding an inset rounded photo, then compact info */
-.hoa-pc {
-  --pc-r: clamp(22px, 2.2vw, 30px);
-  --pc-pad: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
-  padding: var(--pc-pad);
-  border: 1px solid var(--hoa-line);
-  border-radius: var(--pc-r);
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(20, 18, 16, 0.04);
-  transition: box-shadow 0.4s var(--hoa-ease), transform 0.4s var(--hoa-ease), border-color 0.4s var(--hoa-ease);
-}
-.hoa-pc.is-entering { animation: hoa-shop-in 0.6s var(--hoa-ease) both; animation-delay: calc(var(--i, 0) * 50ms); }
-@keyframes hoa-shop-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-
-.hoa-pc__visual { position: relative; }
-.hoa-pc__media {
-  position: relative;
-  display: block;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: calc(var(--pc-r) - var(--pc-pad));
-  background: var(--hoa-paper-2);
-}
-.hoa-pc__img { position: absolute; inset: 0; }
-.hoa-pc__img img { width: 100%; height: 100%; object-fit: cover; }
-.hoa-pc__img--product img { mix-blend-mode: multiply; transform: scale(0.94); transition: transform 0.9s var(--hoa-ease); }
-.hoa-pc__img--mood { opacity: 0; transition: opacity 0.6s var(--hoa-ease); }
-.hoa-pc__img--mood img { transform: scale(1.05); transition: transform 1.2s var(--hoa-ease); }
-/* Price: a small floating pill over the top-left of the photo */
-.hoa-pc__tag {
-  position: absolute;
-  top: 10px; left: 10px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  max-width: calc(100% - 64px);
-  margin: 0;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #fff;
-  color: var(--hoa-ink);
-  font: 600 0.78rem/1.2 var(--hoa-sans);
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  pointer-events: none;
-  box-shadow: 0 1px 6px rgba(20, 18, 16, 0.1);
-}
-.hoa-pc__tag s, .hoa-pc__price s { font-weight: 400; font-size: 0.92em; color: var(--hoa-mute); }
-.hoa-pc__tag--sale { background: var(--hoa-ink); color: #fff; }
-.hoa-pc__tag--sale s { color: rgba(255, 255, 255, 0.6); }
-
-/* Wishlist: a circular icon button riding over the top-right corner of the image */
-.hoa-pc__like {
-  position: absolute;
-  top: 10px; right: 10px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 34px; height: 34px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 6px rgba(20, 18, 16, 0.1);
-  color: var(--hoa-ink);
-  cursor: pointer;
-  transition: background-color 0.3s var(--hoa-ease), transform 0.3s var(--hoa-ease-in-out);
-}
-.hoa-pc__like svg { width: 16px; height: 16px; }
-.hoa-pc__like svg path { transition: fill 0.25s var(--hoa-ease), stroke 0.25s var(--hoa-ease); }
-.hoa-pc__like:hover { background: var(--hoa-paper); transform: scale(1.08); }
-.hoa-pc__like:active { transform: scale(0.92); }
-.hoa-pc__like[aria-pressed='true'] svg path { fill: var(--hoa-ink); stroke: var(--hoa-ink); }
-.hoa-pc__like[aria-pressed='true'] { animation: hoa-pc-like-pop 0.4s var(--hoa-ease); }
-@keyframes hoa-pc-like-pop { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
-
-.hoa-pc__gift-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: var(--hoa-brass);
-  color: var(--hoa-ivory);
-  font: 500 0.62rem var(--hoa-sans);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  vertical-align: middle;
-}
-
-.hoa-pc__info { display: flex; flex-direction: column; flex: 1; gap: 4px; padding: 0 8px 6px; }
-.hoa-pc__name {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin: 0;
-  font-family: var(--hoa-sans);
-  font-size: 1.05rem;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  text-transform: none;
-}
-.hoa-pc__name a { color: inherit; text-decoration: none; }
-.hoa-pc__meta { display: flex; flex-wrap: wrap; gap: 0; margin: 0; }
-.hoa-pc__chip { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hoa-mute); }
-.hoa-pc__chip + .hoa-pc__chip::before { content: '\00b7'; margin: 0 7px; }
-.hoa-pc__price { display: none; margin: 0; font-size: 0.86rem; color: var(--hoa-ink-2); white-space: nowrap; } /* grid shows the price in the pill; list view shows this */
-.hoa-pc__about {
-  position: relative;
-  margin: 0;
-  font-size: 0.8rem;
-  line-height: 1.45;
-  color: var(--hoa-mute);
-  max-width: 34ch;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.hoa-pc__action { margin-top: auto; padding-top: 10px; }
-.hoa-pc__action form { margin: 0; }
-
-/* Card CTA: a full-width bar, distinct from the site's round-icon pill so it reads
-   as a proper "add to bag" control rather than a marketing link */
-.hoa-pc__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  width: auto;
-  padding: 8px 14px;
-  border: 1px solid var(--hoa-ink);
-  border-radius: 12px;
-  background: var(--hoa-ink);
-  color: var(--hoa-paper);
-  font: 600 0.72rem var(--hoa-sans);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.3s var(--hoa-ease), color 0.3s var(--hoa-ease), transform 0.15s var(--hoa-ease-in-out);
-}
-.hoa-pc__cta svg { width: 11px; height: 11px; flex: none; transition: transform 0.4s var(--hoa-ease); }
-.hoa-pc__cta:hover { background: var(--hoa-ink-2); border-color: var(--hoa-ink-2); }
-.hoa-pc__cta:hover svg { transform: translate(2px, -2px); }
-.hoa-pc__cta:active { transform: scale(0.97); }
-.hoa-pc__cta--ghost { background: transparent; color: var(--hoa-ink); }
-.hoa-pc__cta--ghost:hover { background: var(--hoa-ink); color: var(--hoa-paper); }
-
-@media (hover: hover) {
-  .hoa-pc:hover { box-shadow: 0 18px 32px -22px rgba(20, 18, 16, 0.35); border-color: rgba(20, 18, 16, 0.22); transform: translateY(-3px); }
-  .hoa-pc:hover .hoa-pc__img--product img { transform: scale(0.97); }
-  .hoa-pc__media:hover .hoa-pc__img--mood { opacity: 1; }
-  .hoa-pc__media:hover .hoa-pc__img--mood img { transform: none; }
-}
 
 /* One campaign photo spans two columns; it takes the row height of the tile beside it */
 .hoa-shop-interlude { grid-column: span 2; display: flex; flex-direction: column; gap: 14px; margin: 0; min-width: 0; }
 .hoa-shop-interlude__cap { padding: 0 8px; }
-.hoa-shop-interlude__cap .hoa-pc__price { display: block; }
 .hoa-shop-interlude__media { position: relative; flex: 1; min-height: 280px; overflow: hidden; border-radius: clamp(22px, 2.2vw, 30px); background: var(--hoa-stone); }
 .hoa-shop-interlude__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 55%; transition: transform 1.2s var(--hoa-ease); }
 .hoa-shop-interlude__media:hover img { transform: scale(1.02); }
@@ -396,47 +234,9 @@
 .hoa-shop-interlude__cap a span { transition: transform 0.4s var(--hoa-ease); }
 .hoa-shop-interlude__cap a:hover span { transform: translateX(3px); }
 
-/* ---------- List view ---------- */
+/* ---------- List view (the row card itself lives in hoa-card.css) ---------- */
 .hoa-shop-grid[data-view='list'] { display: block; border-top: 1px solid var(--hoa-line); }
 .hoa-shop-grid[data-view='list'] .hoa-shop-interlude { display: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc {
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(16px, 2vw, 32px);
-  padding: 12px 0;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 1px solid var(--hoa-line);
-  background: transparent;
-  box-shadow: none;
-}
-.hoa-shop-grid[data-view='list'] .hoa-pc__media { border-radius: 12px; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__tag { display: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__price { display: block; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__info { padding: 0; }
-.hoa-shop-grid[data-view='list'] .hoa-pc:hover { box-shadow: none; transform: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__like { display: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__name { display: flex; align-items: baseline; gap: 10px; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__about { display: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__info {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr) auto;
-  grid-template-areas: 'name meta price action';
-  align-items: center;
-  gap: 6px 16px;
-}
-.hoa-shop-grid[data-view='list'] .hoa-pc__name { grid-area: name; font-size: clamp(1.3rem, 2vw, 1.9rem); font-weight: 400; letter-spacing: -0.04em; transition: transform 0.5s var(--hoa-ease); }
-.hoa-shop-grid[data-view='list'] .hoa-pc__meta { grid-area: meta; font-size: 0.86rem; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__price { grid-area: price; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__action { grid-area: action; margin-top: 0; padding-top: 0; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__cta { width: auto; }
-@media (hover: hover) {
-  .hoa-shop-grid[data-view='list'] .hoa-pc:hover .hoa-pc__name { transform: translateX(6px); }
-  .hoa-shop-grid[data-view='list'] .hoa-pc:hover .hoa-pc__img--mood { opacity: 1; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc:hover .hoa-pc__img--mood img { transform: none; }
-}
 
 .hoa-shop-empty { display: grid; justify-items: start; gap: 10px; padding: clamp(40px, 6vw, 80px) 0; }
 .hoa-shop-empty[hidden] { display: none; }
@@ -452,8 +252,6 @@
   /* Gift wraps onto its own row here; a left/top rule turned it into a stray boxed stub */
   .hoa-shop-bar__group--gift { order: 3; flex-basis: 100%; padding: 0 0 12px; border: 0; }
   .hoa-shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__info { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; grid-template-areas: 'name meta action'; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__price { display: none; }
 }
 
 /* ---------- Mobile ---------- */
@@ -471,24 +269,9 @@
   .hoa-shop-bar__end { order: 3; flex-basis: 100%; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--hoa-line); }
 
   .hoa-shop-grid { gap: 12px 8px; }
-  .hoa-pc { --pc-r: 22px; --pc-pad: 6px; gap: 10px; }
-  .hoa-pc__info { gap: 3px; padding: 0 6px 4px; }
-  .hoa-pc__name { font-size: 0.94rem; }
-  .hoa-pc__chip { font-size: 0.62rem; letter-spacing: 0.06em; }
-  .hoa-pc__about { font-size: 0.74rem; max-width: none; }
-  .hoa-pc__action { padding-top: 6px; }
-  .hoa-pc__cta { padding: 7px 12px; font-size: 0.68rem; }
-  .hoa-pc__tag { top: 8px; left: 8px; padding: 5px 10px; font-size: 0.72rem; }
-  .hoa-pc__like { top: 8px; right: 8px; width: 30px; height: 30px; }
-  .hoa-pc__like svg { width: 14px; height: 14px; }
   .hoa-shop-interlude { gap: 12px; }
   .hoa-shop-interlude__media { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
 
-  .hoa-shop-grid[data-view='list'] .hoa-pc { grid-template-columns: 60px minmax(0, 1fr); gap: 14px; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__info { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'name action' 'meta action'; gap: 2px 12px; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__name { font-size: 1.2rem; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__meta { font-size: 0.76rem; }
-  .hoa-shop-grid[data-view='list'] .hoa-pc__action { justify-self: end; margin: 0; }
 
 }
 
@@ -578,81 +361,6 @@
   .hoa-shop-page *, .hoa-shop-page *::after { transition-duration: 0.01ms !important; }
 }
 
-.hoa-pc__cta:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
-
-/* Centered, modern add button: a compact black pill with a bag icon, fills up on hover */
-.hoa-pc__action { display: flex; justify-content: center; }
-.hoa-pc__action form { display: flex; justify-content: center; }
-.hoa-pc__cta {
-  gap: 8px;
-  padding: 10px 22px;
-  border-radius: 999px;
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-  box-shadow: 0 6px 14px -8px rgba(20, 18, 16, 0.5);
-}
-.hoa-pc__cta svg { width: 14px; height: 14px; order: -1; }
-.hoa-pc__cta:hover { background: var(--hoa-ink); border-color: var(--hoa-ink); transform: translateY(-1px); box-shadow: 0 10px 18px -10px rgba(20, 18, 16, 0.6); }
-.hoa-pc__cta:hover svg { transform: none; }
-.hoa-pc__cta--ghost { background: var(--hoa-ink); color: var(--hoa-paper); }
-.hoa-pc__cta:disabled { background: var(--hoa-stone); border-color: var(--hoa-stone); color: var(--hoa-mute); box-shadow: none; opacity: 1; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__action { justify-content: flex-end; }
-@media (max-width: 767px) { .hoa-pc__cta { padding: 9px 18px; font-size: 0.7rem; } }
-
-.hoa-pc__cta.is-added { background: #fff; color: var(--hoa-ink); }
-
-/* ==========================================================================
-   Card details: best-seller badge, reviews, offer price, screen-reader text.
-   Same tray, same image ratio; the price moved from the photo pill to the info
-   block so an offer can show its old price and discount beside it.
-   ========================================================================== */
-.hoa-pc__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-
-/* Best seller: a small quiet pill, brass lettering on white */
-.hoa-pc__tag--best {
-  padding: 5px 10px;
-  font: 600 0.6rem/1.2 var(--hoa-sans);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #8a6a37;
-}
-.hoa-pc__tag--best::before { content: ''; width: 5px; height: 5px; align-self: center; border-radius: 50%; background: var(--hoa-brass); }
-
-/* Reviews: five stars filled to the rating (brass over stone), then the count */
-.hoa-pc__rating { display: flex; align-items: center; gap: 6px; min-height: 1.1rem; margin: 2px 0 0; }
-.hoa-pc__stars {
-  --fill: 0%;
-  font-size: 0.8rem; line-height: 1; letter-spacing: 0.08em;
-  background: linear-gradient(90deg, var(--hoa-brass) var(--fill), #d9d2c6 var(--fill));
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-}
-.hoa-pc__stars::before { content: '\2605\2605\2605\2605\2605'; }
-.hoa-pc__count { font-size: 0.72rem; color: var(--hoa-mute); font-variant-numeric: tabular-nums; }
-
-/* Price: the selling price leads; an offer adds the struck old price and the percentage */
-.hoa-pc__price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 2px 0 0; font-variant-numeric: tabular-nums; white-space: normal; }
-.hoa-pc__now { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; color: var(--hoa-ink); }
-.hoa-pc__was { font-size: 0.8rem; font-weight: 400; color: var(--hoa-mute); text-decoration-thickness: 1px; }
-.hoa-pc__off { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #8a6a37; }
-.hoa-shop-interlude__cap .hoa-pc__price { display: block; }
-
-/* Add to cart: the label is longer than "Add", keep it compact and centred */
-.hoa-pc__cta span { white-space: nowrap; }
-
-/* List view: the pill is gone there already; reviews sit under the name */
-.hoa-shop-grid[data-view='list'] .hoa-pc__rating { display: none; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__price { display: flex; }
-.hoa-shop-grid[data-view='list'] .hoa-pc__now { font-size: 0.95rem; }
-@media (max-width: 1099px) { .hoa-shop-grid[data-view='list'] .hoa-pc__price { display: none; } }
-
-@media (max-width: 767px) {
-  .hoa-pc__now { font-size: 0.98rem; }
-  .hoa-pc__was { font-size: 0.74rem; }
-  .hoa-pc__off { font-size: 0.62rem; letter-spacing: 0.06em; }
-  .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.56rem; letter-spacing: 0.1em; }
-  .hoa-pc__cta { padding: 9px 14px; }
-}
 
 /* ---------- Price filter (toolbar) ---------- */
 .hoa-price { position: relative; }
@@ -700,54 +408,6 @@
   .hoa-sort select { max-width: 132px; }
 }
 
-/* ---------- Refinements: filled best-seller badge, cart button on the right ---------- */
-.hoa-pc__tag--best {
-  gap: 6px;
-  padding: 6px 12px 6px 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #b8955c, #8a6a37);
-  color: #fff;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  box-shadow: 0 6px 14px -6px rgba(138, 106, 55, 0.7);
-}
-.hoa-pc__tag--best::before {
-  content: '\2605'; width: auto; height: auto; border-radius: 0; background: none;
-  font-size: 0.72rem; line-height: 1; letter-spacing: 0;
-}
-
-/* Grid cards: one structured info stack (meta, name, rating, price, about) with a full-width cart button anchoring the bottom */
-.hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info { display: flex; flex-direction: column; gap: 0; padding: 12px 10px 10px; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__name { margin-top: 4px; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__rating { margin: 6px 0 0; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__price { margin: 10px 0 0; gap: 2px 8px; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__now { font-size: 1.3rem; font-weight: 700; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__about { margin: 8px 0 0; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__action { display: block; margin-top: auto; padding-top: 14px; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__about { margin-bottom: 14px; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__action { border-top: 1px solid var(--hoa-line); margin-top: auto; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__action form { display: block; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta {
-  width: 100%; height: 46px; padding: 0 18px; justify-content: center;
-  font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  background: var(--hoa-ink); border-color: var(--hoa-ink); color: #fff; box-shadow: none;
-}
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta:hover { background: #3a342d; border-color: #3a342d; transform: none; box-shadow: none; }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta:disabled { background: var(--hoa-stone); border-color: var(--hoa-stone); color: var(--hoa-mute); }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta.is-added { background: #fff; color: var(--hoa-ink); }
-.hoa-shop-grid[data-view='grid'] .hoa-pc__cta--ghost:disabled { width: 100%; }
-
-@media (max-width: 767px) {
-  .hoa-shop-grid[data-view='grid'] .hoa-pc > .hoa-pc__info { padding: 10px 6px 8px; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__now { font-size: 1.1rem; }
-  .hoa-shop-grid[data-view='grid'] .hoa-pc__cta { height: 42px; font-size: 0.64rem; letter-spacing: 0.1em; padding: 0 10px; }
-}
-@media (max-width: 767px) {
-  .hoa-pc__tag--best { padding: 4px 8px; font-size: 0.52rem; letter-spacing: 0.06em; gap: 4px; }
-  .hoa-pc__tag--best::before { font-size: 0.6rem; }
-}
-
 /* ==========================================================================
    Toolbar polish: Sort as a pill matching Price (the bare select left a wide gap before its arrow),
    even spacing at the pill's right end, and a two-row layout at mid widths where one row of
@@ -778,3 +438,8 @@
 @media (max-width: 767px) {
   .hoa-sort { padding: 0 10px 0 12px; }
 }
+
+/* Interlude caption: plain editorial text under the campaign photo */
+.hoa-shop-interlude__name { margin: 0; font-family: var(--hoa-serif); font-size: clamp(1.4rem, 1.15rem + 0.5vw, 1.75rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+.hoa-shop-interlude__meta { margin: 6px 0 0; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-shop-interlude__link { margin: 12px 0 0; }
