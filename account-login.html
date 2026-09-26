@@ -387,17 +387,23 @@
     </div>
 
     <div class="hoa-coupon__body">
-      <p class="hoa-coupon__eyebrow">Welcome to Agha</p>
+      <p class="hoa-coupon__eyebrow">Your exclusive offer</p>
       <h2 class="hoa-coupon__title" id="hoa-coupon-title">Enjoy 10% off <em>your first order</em></h2>
-      <p class="hoa-coupon__desc" id="hoa-coupon-desc">Copy your code, then add it in your bag before checkout.</p>
-
-      <div class="hoa-coupon__code" aria-label="Your discount code">
-        <span class="hoa-coupon__code-label">Your code</span>
-        <span class="hoa-coupon__code-value" data-coupon-code>WELCOME10</span>
+      <p class="hoa-coupon__desc" id="hoa-coupon-desc" data-coupon-desc data-done="Use this code in your bag before checkout.">Scratch the gold to reveal your code.</p><div class="hoa-coupon__scratch" data-coupon-scratch>
+        <div class="hoa-coupon__under">
+          <span class="hoa-coupon__code-label">Your code</span>
+          <span class="hoa-coupon__code-value" data-coupon-code data-code="WELCOME10" aria-hidden="true">&bull;&bull;&bull;&bull;&bull;&bull;</span>
+        </div>
+        <canvas class="hoa-coupon__foil" data-scratch-canvas role="img" aria-label="Scratch surface hiding your discount code"></canvas>
+        <canvas class="hoa-coupon__fx" data-scratch-fx aria-hidden="true"></canvas>
+        <span class="hoa-coupon__hint" data-scratch-hint aria-hidden="true">Scratch to reveal
+          <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v9M4 8.5l4 4 4-4"/></svg>
+        </span>
       </div>
+      <button type="button" class="hoa-coupon__reveal" data-coupon-reveal>Can&rsquo;t scratch? Reveal my code</button>
 
       <div class="hoa-coupon__actions">
-        <button type="button" class="hoa-coupon__copy" data-coupon-copy>COPY CODE</button>
+        <button type="button" class="hoa-coupon__copy" data-coupon-copy hidden>COPY CODE</button>
         <a class="hoa-coupon__cta" href="/collections/all" data-coupon-close-link>SHOP NOW</a>
       </div>
       <p class="hoa-coupon__live" role="status" aria-live="polite" data-coupon-status></p>
