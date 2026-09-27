@@ -375,8 +375,8 @@
   },
   "order": [
     "hero",
-    "the_house",
     "signature",
+    "the_house",
     "discover",
     "art",
     "collection",
