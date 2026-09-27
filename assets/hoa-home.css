@@ -32,7 +32,7 @@
 
 /* ---------- Page base (homepage only: layout adds .hoa-home to <body>) ---------- */
 .hoa-home { background: var(--hoa-paper); color: var(--hoa-ink); }
-.hoa-home main { overflow-x: clip; }
+.hoa-home main { position: relative; overflow-x: clip; }
 html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
@@ -411,6 +411,59 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-hero__dot.is-done .hoa-hero__dot-bar i { transform: scaleX(1); }
 .hoa-hero__dot-name { display: block; margin-top: 4px; font-family: var(--hoa-serif); font-style: italic; font-size: 0.92rem; letter-spacing: 0; }
 
+/* Bottle: sits in the gap the headline splits around, then travels down into the
+   Signature Fragrances carousel on scroll (assets/hoa-home.js, hoaHeroBottleJourney). */
+.hoa-hero__bottle {
+  grid-row: 2;
+  grid-column: 1;
+  position: relative;
+  z-index: 2;
+  width: clamp(64px, 6.2vw, 128px);
+  aspect-ratio: 4 / 5;
+  justify-self: center;
+  align-self: center;
+  pointer-events: none;
+}
+.hoa-hero__bottle-glow {
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(246, 241, 231, 0.3) 0%, rgba(246, 241, 231, 0) 70%);
+  filter: blur(8px);
+}
+.hoa-hero__bottle-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0; /* invisible at rest so the hero looks unchanged; hoaHeroBottleJourney() fades it in as soon as the visitor starts scrolling */
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.5));
+}
+/* Detached by JS into #main-content for the scroll journey, then docked into the
+   carousel's first slot; matches .hoa-cf__pic's sizing so there is no visual pop. */
+.hoa-bottle-journey {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 45;
+  pointer-events: none;
+  will-change: top, left, width, height, transform;
+}
+.hoa-cf__item .hoa-bottle-journey {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+.hoa-cf__item .hoa-bottle-journey img {
+  width: 134%;
+  height: 134%;
+  max-width: none;
+  margin: -17% 0 0 -17%;
+  object-fit: contain;
+  filter: none;
+}
+
 @media (max-width: 767px) {
   .hoa-hero { min-height: 600px; }
   .hoa-hero__content { grid-template-rows: auto 1fr auto; }
@@ -426,11 +479,35 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
     background: linear-gradient(180deg, rgba(12, 10, 8, 0.72) 0%, rgba(12, 10, 8, 0.1) 38%, rgba(12, 10, 8, 0) 55%, rgba(12, 10, 8, 0.82) 100%);
   }
   .hoa-hero__word--serif { align-self: flex-end; }
+  .hoa-hero__bottle { width: clamp(80px, 20vw, 128px); align-self: end; padding-bottom: 6px; }
   .hoa-hero__foot { grid-template-columns: 1fr; gap: 18px; }
   .hoa-hero__cta { justify-self: start; }
   .hoa-hero__index { justify-self: stretch; gap: 10px; }
   .hoa-hero__dot { width: auto; flex: 1; }
   .hoa-hero__dot-name { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* ==========================================================================
+   01B — BRIDGE (Hero → Signature Fragrances transition space)
+   Empty on purpose: it only reserves scroll distance for the travelling bottle.
+   ========================================================================== */
+.hoa-bridge {
+  position: relative;
+  height: clamp(280px, 40vh, 560px);
+  background: var(--hoa-paper);
+  overflow: hidden;
+}
+.hoa-bridge__beam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(176, 141, 87, 0) 0%, rgba(176, 141, 87, 0.22) 45%, rgba(176, 141, 87, 0) 100%);
+}
+@media (max-width: 767px) {
+  .hoa-bridge { height: clamp(160px, 26vh, 280px); }
 }
 
 /* ==========================================================================

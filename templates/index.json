@@ -127,6 +127,10 @@
       ],
       "settings": {}
     },
+    "bridge": {
+      "type": "hoa-bridge",
+      "settings": {}
+    },
     "discover": {
       "type": "hoa-families",
       "blocks": {
@@ -375,6 +379,7 @@
   },
   "order": [
     "hero",
+    "bridge",
     "signature",
     "the_house",
     "discover",

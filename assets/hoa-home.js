@@ -430,6 +430,100 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* Hero → Signature Fragrances: the Oud Fury bottle travels and docks   */
+  /* One element throughout: detached from the hero into #main-content   */
+  /* (position: absolute, coordinates in "main" space so it can cross    */
+  /* the hero/bridge/carousel section boundaries without being clipped), */
+  /* scroll-scrubbed by hand (no gsap scrub, so docking never fights the */
+  /* tween over inline styles), then reparented into the carousel's      */
+  /* first slot once the scroll range completes. Reversible on scroll up.*/
+  /* ------------------------------------------------------------------ */
+  function initHeroBottleJourney() {
+    if (!hasGsap() || reduceMotion) return;
+    var heroEl = document.querySelector('[data-hoa-hero]');
+    var slot = document.querySelector('[data-hoa-hero-bottle-slot]');
+    var bottle = document.querySelector('[data-hoa-hero-bottle]');
+    var bridge = document.querySelector('[data-hoa-bridge]');
+    var cf = document.querySelector('[data-hoa-cf]');
+    var dock = cf && cf.querySelector('[data-hoa-cf-card][data-index="0"]');
+    var main = document.getElementById('main-content');
+    if (!heroEl || !slot || !bottle || !bridge || !cf || !dock || !main) return;
+
+    var nativePic = dock.querySelector('.hoa-cf__pic');
+    if (nativePic) nativePic.style.visibility = 'hidden';
+
+    main.appendChild(bottle);
+    bottle.classList.add('hoa-bottle-journey');
+
+    function metrics() {
+      var mr = main.getBoundingClientRect();
+      var sr = slot.getBoundingClientRect();
+      var dr = dock.getBoundingClientRect();
+      return {
+        sTop: sr.top - mr.top, sLeft: sr.left - mr.left, sW: sr.width, sH: sr.height,
+        eTop: dr.top - mr.top, eLeft: dr.left - mr.left, eW: dr.width, eH: dr.height
+      };
+    }
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+    tl.fromTo(bottle, {
+      top: function () { return metrics().sTop; }, left: function () { return metrics().sLeft; },
+      width: function () { return metrics().sW; }, height: function () { return metrics().sH; }, rotation: 0
+    }, {
+      top: function () { return metrics().eTop; }, left: function () { return metrics().eLeft; },
+      width: function () { return metrics().eW; }, height: function () { return metrics().eH; }, duration: 4
+    }, 0)
+      // The bottle is invisible at rest (hero must look unchanged); it emerges
+      // from the hero photo's own bottle the instant the visitor starts scrolling.
+      .fromTo(bottle, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0)
+      .to(bottle, { rotation: -5, duration: 1 }, 0)
+      .to(bottle, { rotation: 8, duration: 1 }, 1)
+      .to(bottle, { rotation: -3, duration: 1 }, 2)
+      .to(bottle, { rotation: 0, duration: 1 }, 3);
+    tl.progress(0);
+
+    var docked = false;
+    function dockIt() {
+      docked = true;
+      dock.appendChild(bottle);
+      gsap.set(bottle, { clearProps: 'top,left,width,height,transform' });
+      bottle.alt = 'Oud Fury Eau de Parfum';
+    }
+    function undockIt(p) {
+      docked = false;
+      main.appendChild(bottle);
+      bottle.alt = '';
+      tl.progress(p);
+    }
+
+    var st = ScrollTrigger.create({
+      trigger: heroEl,
+      start: 'top top',
+      endTrigger: dock,
+      end: 'center 55%',
+      onUpdate: function (self) {
+        var p = self.progress;
+        if (p >= 1) { if (!docked) { tl.progress(1); dockIt(); } }
+        else { if (docked) undockIt(p); else tl.progress(p); }
+      },
+      onRefresh: function (self) {
+        tl.invalidate();
+        if (!docked) tl.progress(self.progress);
+      }
+    });
+
+    cleanups.push(function () {
+      st.kill();
+      tl.kill();
+      if (nativePic) nativePic.style.visibility = '';
+      bottle.classList.remove('hoa-bottle-journey');
+      gsap.set(bottle, { clearProps: 'all' });
+      bottle.alt = '';
+      slot.appendChild(bottle);
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
   /* 06 The Collection: tabs                                             */
   /* ------------------------------------------------------------------ */
   function initCollection() {
@@ -501,6 +595,7 @@
         initHero();
         initManifesto();
         initParallax(mm);
+        initHeroBottleJourney();
       });
     } else {
       initFragrances();

@@ -1,0 +1,19 @@
+{% comment %}
+  Hero → Signature Fragrances transition space. Purely visual: it exists so the
+  Oud Fury bottle (sections/hoa-hero.liquid) has room to scroll-travel down into
+  the Signature Fragrances carousel (assets/hoa-home.js, hoaHeroBottleJourney()).
+  No content, no settings — just a paper-toned gap with a faint trailing light.
+{% endcomment %}
+<div class="hoa-bridge" id="hoa-bridge" data-hoa-bridge aria-hidden="true">
+  <span class="hoa-bridge__beam"></span>
+</div>
+
+{% schema %}
+{
+  "name": "HOA Bridge",
+  "tag": "div",
+  "class": "hoa-bridge-section",
+  "settings": [],
+  "presets": [{ "name": "HOA Bridge" }]
+}
+{% endschema %}

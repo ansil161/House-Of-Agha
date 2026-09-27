@@ -5,6 +5,14 @@
   rise in on load, and the frame drifts back as the page scrolls (assets/hoa-home.js).
   Reduced motion: first slide only, no timer.
   Imagery: House of Agha campaign photography (Drive → assets/hoa-hero-*.webp).
+
+  data-hoa-hero-bottle: the Oud Fury cutout (assets/hoa-bottle-oud-fury-cutout.webp,
+  cut from assets/hoa-product-oud-fury.webp, the same photo the Signature Fragrances
+  carousel uses) sits in the gap the headline splits around. assets/hoa-home.js
+  scroll-travels this exact element down through sections/hoa-bridge.liquid and docks
+  it into the carousel's first (Oud Fury) slot — see hoaHeroBottleJourney() there.
+  Hardcoded to Oud Fury because both the first hero slide and the first carousel
+  fragrance are Oud Fury; if either ordering changes, update the asset + dock target.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
@@ -43,6 +51,15 @@
       <span class="hoa-hero__word"><span data-hoa-hero-word>{{ s.word_one }}</span></span>
       <span class="hoa-hero__word hoa-hero__word--serif"><span data-hoa-hero-word>{{ s.word_two }}</span></span>
     </h1>
+
+    <div class="hoa-hero__bottle" data-hoa-hero-bottle-slot aria-hidden="true">
+      <div class="hoa-hero__bottle-glow"></div>
+      <img class="hoa-hero__bottle-img" data-hoa-hero-bottle
+        src="{{ 'hoa-bottle-oud-fury-cutout.webp' | asset_url }}"
+        srcset="{{ 'hoa-bottle-oud-fury-cutout-sm.webp' | asset_url }} 480w, {{ 'hoa-bottle-oud-fury-cutout.webp' | asset_url }} 1200w"
+        sizes="(max-width: 767px) 120px, 200px"
+        width="200" height="250" alt="" loading="eager">
+    </div>
 
     <div class="hoa-hero__foot">
       <p class="hoa-hero__lede" data-hoa-hero-fade>{{ s.lede }}</p>
