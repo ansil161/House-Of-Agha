@@ -186,31 +186,48 @@
     <!-- Generated from templates/index.json. Edit the Liquid sections, not this block. -->
     <!-- hero · sections/hoa-hero.liquid -->
     <div id="shopify-section-hero" class="shopify-section hoa-hero-section"><section class="hoa-hero" id="hoa-hero" data-hoa-hero data-interval="7000" aria-roledescription="carousel" aria-label="House of Agha">
-  <div class="hoa-hero__media" data-hoa-hero-media><figure class="hoa-hero__slide is-active" data-hoa-slide >
-        <picture><source media="(max-width: 767px)" srcset="assets/hoa-oud-fury-portrait-sm.webp 700w, assets/hoa-oud-fury-portrait.webp 1200w" sizes="100vw"><img
-    src="assets/hoa-hero-oud-fury.webp"
-    srcset="assets/hoa-hero-oud-fury-sm.webp 1000w, assets/hoa-hero-oud-fury.webp 2000w"
+  <div class="hoa-hero__media" data-hoa-hero-media><figure class="hoa-hero__slide hoa-hero__slide--lift is-active" data-hoa-slide
+          style="--lift-x: 44.750%; --lift-y: 19.111%; --lift-w: 12.450%; --lift-h: 58.667%; --lift-xm: 34.167%; --lift-ym: 9.894%; --lift-wm: 37.833%; --lift-hm: 75.420%;"
+          >
+          <div class="hoa-hero__frame">
+            <picture>
+              <source media="(max-width: 767px)" srcset="assets/hoa-oud-fury-portrait-plate-sm.webp 700w, assets/hoa-oud-fury-portrait-plate.webp 1200w" sizes="100vw"><img
+    src="assets/hoa-hero-oud-fury-plate.webp"
+    srcset="assets/hoa-hero-oud-fury-plate-sm.webp 1000w, assets/hoa-hero-oud-fury-plate.webp 2000w"
     sizes="100vw"
     width="2000" height="1125"
     alt="Oud Fury Eau de Parfum on oud wood in a shaft of amber light"
     loading="eager" decoding="async" fetchpriority="high"></picture>
-      </figure><figure class="hoa-hero__slide" data-hoa-slide >
-        <picture><source media="(max-width: 767px)" srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w" sizes="100vw"><img
+            <div class="hoa-hero__lift-slot" data-hoa-hero-bottle-slot>
+              <div class="hoa-hero__lift" data-hoa-hero-bottle>
+                <picture>
+                  <source media="(max-width: 767px)" srcset="assets/hoa-oud-fury-portrait-bottle.webp">
+                  <img src="assets/hoa-hero-oud-fury-bottle.webp" width="480" height="1272" alt="" decoding="async" fetchpriority="high" draggable="false">
+                </picture>
+              </div>
+            </div>
+            <picture class="hoa-hero__lift-chip" data-hoa-hero-chip>
+              <source media="(max-width: 767px)" srcset="assets/hoa-oud-fury-portrait-chip.webp">
+              <img src="assets/hoa-hero-oud-fury-chip.webp" width="480" height="1272" alt="" decoding="async">
+            </picture>
+          </div>
+        </figure><figure class="hoa-hero__slide" data-hoa-slide >
+          <picture><source media="(max-width: 767px)" srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w" sizes="100vw"><img
     src="assets/hoa-hero-agha-blue.webp"
     srcset="assets/hoa-hero-agha-blue-sm.webp 1000w, assets/hoa-hero-agha-blue.webp 2000w"
     sizes="100vw"
     width="2000" height="1125"
     alt="Agha Blue Eau de Parfum standing in an ice cave above still water"
     loading="lazy" decoding="async"></picture>
-      </figure><figure class="hoa-hero__slide" data-hoa-slide >
-        <picture><source media="(max-width: 767px)" srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w" sizes="100vw"><img
+        </figure><figure class="hoa-hero__slide" data-hoa-slide >
+          <picture><source media="(max-width: 767px)" srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w" sizes="100vw"><img
     src="assets/hoa-hero-dark-paradise.webp"
     srcset="assets/hoa-hero-dark-paradise-sm.webp 1000w, assets/hoa-hero-dark-paradise.webp 2000w"
     sizes="100vw"
     width="2000" height="1125"
     alt="Oud of Dark Paradise on dark rock beneath a beam of smoke-filled light"
     loading="lazy" decoding="async"></picture>
-      </figure></div>
+        </figure></div>
   <div class="hoa-hero__veil" aria-hidden="true"></div>
 
   <div class="hoa-hero__content">
@@ -220,15 +237,6 @@
       <span class="hoa-hero__word"><span data-hoa-hero-word>House</span></span>
       <span class="hoa-hero__word hoa-hero__word--serif"><span data-hoa-hero-word>of Agha</span></span>
     </h1>
-
-    <div class="hoa-hero__bottle" data-hoa-hero-bottle-slot aria-hidden="true">
-      <div class="hoa-hero__bottle-glow"></div>
-      <img class="hoa-hero__bottle-img" data-hoa-hero-bottle
-        src="assets/hoa-bottle-oud-fury-cutout.webp"
-        srcset="assets/hoa-bottle-oud-fury-cutout-sm.webp 480w, assets/hoa-bottle-oud-fury-cutout.webp 1200w"
-        sizes="(max-width: 767px) 120px, 200px"
-        width="200" height="250" alt="" loading="eager">
-    </div>
 
     <div class="hoa-hero__foot">
       <p class="hoa-hero__lede" data-hoa-hero-fade>Seven fragrances, each one a world of its own.</p>
@@ -849,8 +857,7 @@
               <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
               Reel
             </span></div>
-        </div>
-      </li><li class="hoa-reel" data-hoa-reel >
+        </div></li><li class="hoa-reel" data-hoa-reel >
         <div class="hoa-reel__frame">
           <div class="hoa-reel__stage" data-hoa-reel-stage><img
     src="assets/hoa-agha-blue-portrait.webp"
@@ -887,8 +894,7 @@
               <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
               Reel
             </span></div>
-        </div>
-      </li><li class="hoa-reel" data-hoa-reel >
+        </div></li><li class="hoa-reel" data-hoa-reel >
         <div class="hoa-reel__frame">
           <div class="hoa-reel__stage" data-hoa-reel-stage><img
     src="assets/hoa-dark-paradise-portrait.webp"
@@ -925,8 +931,7 @@
               <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
               Reel
             </span></div>
-        </div>
-      </li><li class="hoa-reel" data-hoa-reel >
+        </div></li><li class="hoa-reel" data-hoa-reel >
         <div class="hoa-reel__frame">
           <div class="hoa-reel__stage" data-hoa-reel-stage><img
     src="assets/hoa-maha-portrait.webp"
@@ -963,8 +968,7 @@
               <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
               Reel
             </span></div>
-        </div>
-      </li>
+        </div></li>
       </ul>
     </div>
   </div>

@@ -16,6 +16,7 @@
 </script>
 <script src="{{ 'pdp.js' | asset_url }}" defer></script>
 <script src="{{ 'pdp-buybox.js' | asset_url }}" defer></script>
+<script src="{{ 'pdp-console.js' | asset_url }}" defer></script>
 
 {%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
 {%- assign pdp = pdp_json | parse_json -%}
@@ -180,10 +181,137 @@
         {%- endif -%}
       </div>
 
-      <div class="pdp-info">
-        <div data-pdp-hero-item>
-          {%- if section.settings.eyebrow != blank -%}<span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+      {%- comment -%}
+        PURCHASE CONSOLE — one column that answers the buyer's questions in order:
+        what is it → do people like it → what does it cost / save → why it's worth it → which offer →
+        how to pay → add to bag → can it reach me → why trust it. Every figure is Shopify data
+        (price, compare_at_price, variants, inventory, metafields) or the section's own settings/blocks;
+        only in mock mode do values fall back to the demo catalog (snippets/hoa-catalog-data.liquid).
+        assets/pdp-console.js adds the live parts (coupon copy/apply, price-with-code, EMI, pincode).
+      {%- endcomment -%}
+      {%- liquid
+        assign s = section.settings
+        assign catalog_json = ''
+        capture catalog_json
+          render 'hoa-catalog-data'
+        endcapture
+        assign catalog = catalog_json | parse_json
+        assign cat_item = null
+        for c in catalog.products
+          if c.handle == product.handle
+            assign cat_item = c
+            break
+          endif
+        endfor
+
+        assign wearer = product.metafields.custom.gender.value | default: product.metafields.custom.gender | downcase
+        if wearer == blank and pdp.use_mock and cat_item
+          assign wearer = cat_item.wearer
+        endif
+        case wearer
+          when 'men', 'man', 'male', 'him', 'for him'
+            assign wearer_label = 'For him'
+          when 'women', 'woman', 'female', 'her', 'for her'
+            assign wearer_label = 'For her'
+          when 'unisex', 'all', 'everyone'
+            assign wearer_label = 'Unisex'
+          else
+            assign wearer_label = ''
+        endcase
+
+        assign is_best = false
+        if product.tags contains 'best-seller' or product.tags contains 'Best Seller'
+          assign is_best = true
+        endif
+        assign save_amount = compare_price | minus: current_variant.price
+
+        assign value_blocks = section.blocks | where: 'type', 'value'
+        assign trust_blocks = section.blocks | where: 'type', 'assurance'
+        assign offer_blocks = section.blocks | where: 'type', 'offer'
+        assign ship_threshold = catalog.settings.freeShippingThreshold | default: 0 | times: 100
+        if s.free_shipping_threshold > 0
+          assign ship_threshold = s.free_shipping_threshold | times: 100
+        endif
+      -%}
+      <div class="pdp-info pdp-console" data-pdp-console>
+
+        {%- comment -%} Value pills: only facts this product actually carries (metafields / settings), shown above the title {%- endcomment -%}
+        {%- capture value_html -%}
+          {%- for block in value_blocks -%}
+            {%- liquid
+              assign b = block.settings
+              assign v_text = ''
+              case b.source
+                when 'longevity'
+                  assign v_text = pdp.longevity
+                  if v_text != blank
+                    assign v_lower = v_text | downcase
+                    unless v_lower contains 'last'
+                      assign v_text = 'Lasts ' | append: v_text
+                    endunless
+                  endif
+                when 'wearer'
+                  assign v_text = wearer_label
+                when 'family'
+                  assign v_text = family
+                when 'intensity'
+                  assign v_text = pdp.intensity
+                else
+                  assign v_text = b.text
+              endcase
+            -%}
+            {%- if v_text != blank -%}
+              <li class="pdp-value" {{ block.shopify_attributes }}>
+                <span class="pdp-value__icon">{% render 'agha-pdp-icon', icon: b.icon %}</span>
+                <span class="pdp-value__title pdp-sr">{{ b.title }}: </span>
+                <span class="pdp-value__text">{{ v_text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%- liquid
+          comment
+            First-order banner: the same offer as the lead ticket below (first Offer block, else the
+            catalog's welcome coupon), said once more where the eye lands first.
+          endcomment
+          assign banner_text = ''
+          assign banner_code = ''
+          if offer_blocks.size > 0
+            assign banner_text = offer_blocks.first.settings.title
+            assign banner_code = offer_blocks.first.settings.code
+          elsif catalog.coupons.first
+            assign banner_text = catalog.coupons.first.description
+            assign banner_code = catalog.coupons.first.code
+          endif
+          assign family_line = family
+          if section.settings.eyebrow != blank
+            unless value_html contains section.settings.eyebrow
+              if family_line != blank
+                assign family_line = section.settings.eyebrow | append: ' | ' | append: family_line
+              else
+                assign family_line = section.settings.eyebrow
+              endif
+            endunless
+          endif
+        -%}
+        {%- if banner_text != blank -%}
+          <a class="pdp-banner-offer" href="#pdp-deals-{{ section.id }}" data-pdp-hero-item>
+            {%- render 'agha-pdp-icon', icon: 'gift' -%}
+            <span><b>{{ banner_text }}</b>{% if banner_code != blank %}<span class="pdp-banner-offer__code">Code {{ banner_code }}</span>{% endif %}</span>
+          </a>
+        {%- endif -%}
+
+        {%- comment -%}
+          LEVEL 1 — name, proof, price, saving. Fact pills above the name, the family in gold under it.
+        {%- endcomment -%}
+        <div class="pdp-console__id" data-pdp-hero-item>
+          {%- if value_html contains 'pdp-value' -%}
+            <ul class="pdp-values" role="list">{{ value_html }}</ul>
+          {%- endif -%}
           <h1 class="pdp-title">{{ product.title }}</h1>
+          {%- if family_line != blank -%}<p class="pdp-console__family">{{ family_line }}</p>{%- endif -%}
+          {%- if lede != blank -%}<p class="pdp-lede">{{ lede }}</p>{%- endif -%}
           {%- if pdp.brand != blank or any_sku -%}
             <p class="pdp-identity">
               {%- if pdp.brand != blank -%}<span>{{ pdp.brand }}</span>{%- endif -%}
@@ -192,39 +320,112 @@
           {%- endif -%}
         </div>
 
+        {%- comment -%} 2 · Social proof {%- endcomment -%}
         {%- if rating_val > 0 -%}
-          {%- assign rating_pct = rating_val | divided_by: rating_scale | times: 100 -%}
           <div class="pdp-rating" data-pdp-hero-item{% if pdp.reviews.mock %} data-pdp-mock="reviews"{% endif %}>
-            <span class="pdp-stars" role="img" aria-label="Rated {{ rating_val | round: 1 }} out of {{ rating_scale }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
-            <strong>{{ rating_val | round: 1 }}</strong>
-            <a href="#pdp-reviews">{{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}{% if pdp.reviews.mock %} (demo){% endif %}</a>
+            {%- if rating_val > 0 -%}
+              {%- assign rating_pct = rating_val | divided_by: rating_scale | times: 100 -%}
+              <a class="pdp-rating__link" href="#pdp-reviews">
+                <span class="pdp-stars" role="img" aria-label="Rated {{ rating_val | round: 1 }} out of {{ rating_scale }}"><span class="pdp-stars__fill" style="width: {{ rating_pct }}%"></span></span>
+                <strong>{{ rating_val | round: 1 }}</strong>
+                <span class="pdp-rating__count">{{ rating_count }} {{ rating_count | pluralize: 'review', 'reviews' }}{% if pdp.reviews.mock %} (demo){% endif %}</span>
+              </a>
+            {%- endif -%}
           </div>
         {%- endif -%}
 
-        {%- if scent_tags != blank -%}
-          <div class="pdp-tags" data-pdp-hero-item>
-            {%- for tag in scent_tags -%}<span class="pdp-chip">{{ tag }}</span>{%- endfor -%}
-          </div>
-        {%- endif -%}
-
-        {%- if lede != blank -%}
-          <p class="pdp-lede" data-pdp-hero-item>{{ lede }}</p>
-        {%- endif -%}
-
+        {%- comment -%}
+          Price: the selling price is the largest figure in the column; the MRP sits beside it, small and
+          struck; the saving is a solid pill on its own line so it reads as a gain, not a footnote.
+        {%- endcomment -%}
         <div class="pdp-price" data-pdp-hero-item>
           <span class="pdp-price__amount" data-pdp-price>{{ current_variant.price | money }}</span>
-          <s class="pdp-price__compare" data-pdp-compare{% unless on_sale %} hidden{% endunless %}>{{ compare_price | money }}</s>
-          <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}{{ save_pct }}% off{% endif %}</span>
+          <s class="pdp-price__compare" data-pdp-compare{% unless on_sale %} hidden{% endunless %}><span class="pdp-sr">MRP </span>{{ compare_price | money }}</s>
+          <span class="pdp-price__note">
+            <span class="pdp-savings" data-pdp-savings{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}You save {{ save_amount | money }}{% endif %}</span>
+            <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}{{ save_pct }}% off{% endif %}</span>
+            {%- if cart.taxes_included or pdp.use_mock %}<span class="pdp-price__tax">Inclusive of all taxes</span>{% endif -%}
+          </span>
           {%- if sale_message != blank -%}
             <span class="pdp-price__offer" data-pdp-offer{% unless on_sale %} hidden{% endunless %}>{{ sale_message }}</span>
           {%- endif -%}
-          <span class="pdp-price__note">
-            {%- unless product.has_only_default_variant -%}<span data-pdp-variant-title>{{ current_variant.title }}</span>{% if cart.taxes_included %} · {% endif %}{%- endunless -%}
-            {%- if cart.taxes_included %}Inclusive of all taxes{% endif -%}
-          </span>
         </div>
-        <p class="pdp-savings" data-pdp-savings data-pdp-hero-item{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}You save {{ compare_price | minus: current_variant.price | money }}{% endif %}</p>
-        <p class="hoa-offer-note pdp-offer-note" data-hoa-offer-note="tiers-pdp" data-pdp-hero-item></p>
+
+        {%- comment -%}
+          5 · Exclusive offers. Shopify cannot list discount codes in Liquid, so the offers come from this
+          section's "Offer" blocks. Without any, the catalog's first coupon is shown — the same code the
+          welcome popup reveals and the bag validates — plus its free-shipping threshold. Nothing here changes the real price:
+          a code is applied at checkout (Shopify's /discount/CODE) and the bag.
+        {%- endcomment -%}
+        {%- capture offers_html -%}
+          {%- if offer_blocks.size > 0 -%}
+            {%- for block in offer_blocks -%}
+              {%- liquid
+                assign b = block.settings
+                assign o_price = ''
+                if b.percent > 0 and b.percent < 100
+                  assign rest = 100 | minus: b.percent
+                  assign o_price = current_variant.price | times: rest | divided_by: 100 | money
+                endif
+              -%}
+              <li class="pdp-deal{% if forloop.first %} pdp-deal--lead{% endif %}{% if b.code == blank %} pdp-deal--auto{% endif %}" data-pdp-deal data-percent="{{ b.percent }}" {{ block.shopify_attributes }}>
+                <span class="pdp-deal__icon">{% render 'agha-pdp-icon', icon: b.icon %}</span>
+                <span class="pdp-deal__body">
+                  <span class="pdp-deal__label">{{ b.label }}</span>
+                  <span class="pdp-deal__title">{% if o_price != blank %}Get it for <b data-pdp-deal-price>{{ o_price }}</b>{% else %}{{ b.title }}{% endif %}</span>
+                  {%- if b.text != blank -%}<span class="pdp-deal__text">{{ b.text }}</span>{%- endif -%}
+                </span>
+                {%- if b.code != blank -%}
+                  <button type="button" class="pdp-deal__code" data-pdp-code="{{ b.code | escape }}" aria-label="Copy and apply code {{ b.code | escape }}">
+                    <span class="pdp-deal__code-text">{{ b.code }}</span><span class="pdp-deal__code-act" data-pdp-code-act>Copy</span>
+                  </button>
+                {%- else -%}
+                  <span class="pdp-deal__auto">Auto-applied</span>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- comment -%} Same code as the welcome popup (snippets/hoa-coupon-popup.liquid) and the bag {%- endcomment -%}
+            {%- assign cp = catalog.coupons.first -%}
+            {%- if cp -%}
+              {%- liquid
+                assign o_price = ''
+                if cp.type == 'percent'
+                  assign rest = 100 | minus: cp.value
+                  assign o_price = current_variant.price | times: rest | divided_by: 100 | money
+                endif
+              -%}
+              <li class="pdp-deal pdp-deal--lead" data-pdp-deal data-percent="{% if cp.type == 'percent' %}{{ cp.value }}{% endif %}">
+                <span class="pdp-deal__icon">{% render 'agha-pdp-icon', icon: 'gift' %}</span>
+                <span class="pdp-deal__body">
+                  <span class="pdp-deal__label">{{ cp.label }}</span>
+                  <span class="pdp-deal__title">{% if o_price != blank %}Get it for <b data-pdp-deal-price>{{ o_price }}</b>{% else %}{{ cp.description }}{% endif %}</span>
+                  <span class="pdp-deal__text">{{ cp.description | capitalize }}</span>
+                </span>
+                <button type="button" class="pdp-deal__code" data-pdp-code="{{ cp.code | escape }}" aria-label="Copy and apply code {{ cp.code | escape }}">
+                  <span class="pdp-deal__code-text">{{ cp.code }}</span><span class="pdp-deal__code-act" data-pdp-code-act>Copy</span>
+                </button>
+              </li>
+            {%- endif -%}
+          {%- endif -%}
+          {%- if ship_threshold > 0 -%}
+            <li class="pdp-deal pdp-deal--auto" data-pdp-ship data-threshold="{{ ship_threshold }}">
+              <span class="pdp-deal__icon">{% render 'agha-pdp-icon', icon: 'delivery' %}</span>
+              <span class="pdp-deal__body">
+                <span class="pdp-deal__label">Complimentary shipping</span>
+                <span class="pdp-deal__title" data-pdp-ship-text>{% if current_variant.price >= ship_threshold %}This order ships free{% else %}Free on orders above {{ ship_threshold | money_without_trailing_zeros }}{% endif %}</span>
+              </span>
+              <span class="pdp-deal__auto">Auto-applied</span>
+            </li>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if offers_html contains 'pdp-deal' -%}
+          <section class="pdp-deals" aria-labelledby="pdp-deals-{{ section.id }}" data-pdp-hero-item>
+            <h2 class="pdp-deals__head" id="pdp-deals-{{ section.id }}">{% render 'agha-pdp-icon', icon: 'sparkle' %}<span>{{ s.offers_heading | default: 'Exclusive offers' }}</span></h2>
+            <ul class="pdp-deals__list" role="list">{{ offers_html }}</ul>
+            <p class="pdp-sr" data-pdp-code-live role="status" aria-live="polite"></p>
+          </section>
+        {%- endif -%}
 
         {%- form 'product', product, class: 'pdp-form', data-pdp-form: '', data-pdp-hero-item: '', novalidate: 'novalidate' -%}
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-pdp-variant-id>
@@ -232,7 +433,7 @@
           {%- unless product.has_only_default_variant -%}
             {%- for option in product.options_with_values -%}
               {%- assign option_index = forloop.index0 -%}
-              <fieldset class="pdp-options" data-pdp-option="{{ option_index }}">
+              <fieldset class="pdp-options" data-pdp-option="{{ option_index }}"{% if option.values.size == 1 %} hidden{% endif %}>
                 <legend class="pdp-options__legend"><span>{{ option.name }}:</span><span data-pdp-option-value>{{ option.selected_value }}</span></legend>
                 <div class="pdp-options__grid">
                   {%- for value in option.values -%}
@@ -280,11 +481,27 @@
             </fieldset>
           {%- endif -%}
 
-          <fieldset class="pdp-offers" data-pdp-offers data-unit="{{ section.settings.offer_unit | default: 'bottle' }}" hidden>
-            <legend class="pdp-offers__legend"><span>{{ section.settings.offer_heading | default: 'Choose your set' }}</span></legend>
+          {%- comment -%} Buy more, save more: painted by assets/pdp-buybox.js from the quantity tiers. Stacked
+            choice rows right above the purchase, so the saving is picked before the button is pressed {%- endcomment -%}
+          <fieldset class="pdp-offers" data-pdp-offers data-unit="{{ s.offer_unit | default: 'bottle' }}" hidden>
+            <legend class="pdp-offers__legend"><span>{{ s.offer_heading | default: 'Buy more, save more' }}</span></legend>
             <div class="pdp-offers__list" data-pdp-offers-list></div>
           </fieldset>
 
+
+          {%- comment -%} 7 · Pay later: only when the store's checkout really offers instalments (setting) {%- endcomment -%}
+          {%- if s.emi_installments > 1 -%}
+            {%- assign emi_first = current_variant.price | divided_by: s.emi_installments -%}
+            <p class="pdp-emi" data-pdp-emi data-installments="{{ s.emi_installments }}">
+              <span class="pdp-emi__icon">{% render 'agha-pdp-icon', icon: 'card' %}</span>
+              <span class="pdp-emi__copy">
+                <span>Pay <b data-pdp-emi-now>{{ emi_first | money }}</b> now<span class="pdp-emi__rest"> + {{ s.emi_installments | minus: 1 }} monthly {{ s.emi_installments | minus: 1 | pluralize: 'payment', 'payments' }}</span></span>
+                {%- if s.emi_note != blank -%}<small>{{ s.emi_note }}</small>{%- endif -%}
+              </span>
+            </p>
+          {%- endif -%}
+
+          {%- comment -%} 8 · Purchase {%- endcomment -%}
           <div class="pdp-buy">
             <div class="pdp-qty" data-pdp-qty>
               <button type="button" data-pdp-qty-step="-1" aria-label="Decrease quantity" disabled>−</button>
@@ -324,59 +541,62 @@
           <p class="pdp-sr" data-pdp-live role="status" aria-live="polite"></p>
         {%- endform -%}
 
-        {%- if section.settings.show_secure -%}
-          <div class="pdp-secure" data-pdp-hero-item>
-            <span class="pdp-secure__icon">{% render 'agha-pdp-icon', icon: 'secure' %}</span>
-            <div>
-              <p class="pdp-secure__title">{{ section.settings.secure_title }}</p>
-              {%- if section.settings.secure_text != blank -%}<p class="pdp-secure__text">{{ section.settings.secure_text }}</p>{%- endif -%}
-            </div>
-            {%- if shop.enabled_payment_types.size > 0 -%}
-              <ul class="pdp-payments" aria-label="Accepted payment methods">
-                {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
-              </ul>
-            {%- endif -%}
+        {%- comment -%}
+          9 · Delivery check. The estimate comes from the dispatch / delivery settings (pdp.js). The pincode is
+          checked for a valid Indian format; with a serviceability URL set, pdp-console.js asks it as well.
+        {%- endcomment -%}
+        {%- if s.show_delivery -%}
+          <div class="pdp-deliver" data-pdp-delivery data-pdp-pincode data-min-days="{{ s.delivery_min_days }}" data-max-days="{{ s.delivery_max_days }}" data-dispatch-days="{{ s.dispatch_days }}" data-cutoff-hour="{{ s.cutoff_hour }}" data-serviceability-url="{{ s.pincode_url | escape }}" data-pdp-hero-item>
+            <form class="pdp-deliver__form" data-pdp-pincode-form novalidate>
+              <label class="pdp-deliver__label" for="pdp-pin-{{ section.id }}">{% render 'agha-pdp-icon', icon: 'pin' %}Check delivery</label>
+              <span class="pdp-deliver__field">
+                <input id="pdp-pin-{{ section.id }}" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Enter pincode" data-pdp-pincode-input aria-describedby="pdp-pin-msg-{{ section.id }}">
+                <button type="submit" class="pdp-deliver__btn">Check</button>
+              </span>
+            </form>
+            <p class="pdp-deliver__msg" id="pdp-pin-msg-{{ section.id }}" data-pdp-pincode-msg role="status" aria-live="polite">
+              {% render 'agha-pdp-icon', icon: 'delivery' %}<span data-pdp-delivery-summary>Estimated delivery <strong data-pdp-delivery-range></strong></span>
+            </p>
           </div>
         {%- endif -%}
 
-        {%- assign trust_title = section.settings.authenticity_title | default: pdp.authenticity_title -%}
-        {%- assign trust_text = section.settings.authenticity_text | default: pdp.authenticity_text -%}
-        {%- if trust_title != blank and trust_text != blank -%}
-          <div class="pdp-secure pdp-secure--trust" data-pdp-hero-item>
-            <span class="pdp-secure__icon">{% render 'agha-pdp-icon', icon: 'seal' %}</span>
-            <div>
-              <p class="pdp-secure__title">{{ trust_title }}</p>
-              <p class="pdp-secure__text">{{ trust_text }}</p>
-            </div>
-          </div>
-        {%- endif -%}
-
-        {%- if section.blocks.size > 0 -%}
-          <div class="pdp-benefits" data-pdp-hero-item>
-            {%- for block in section.blocks -%}
-              <div class="pdp-benefit" {{ block.shopify_attributes }}>
-                <span class="pdp-benefit__icon">{% render 'agha-pdp-icon', icon: block.settings.icon %}</span>
-                <span class="pdp-benefit__title">{{ block.settings.title }}</span>
-                {%- if block.settings.text != blank -%}<span class="pdp-benefit__text">{{ block.settings.text }}</span>{%- endif -%}
+        {%- comment -%} 10 · Trust: the section's assurance blocks, authenticity and secure checkout on one quiet grid {%- endcomment -%}
+        {%- assign trust_title = s.authenticity_title | default: pdp.authenticity_title -%}
+        {%- assign trust_text = s.authenticity_text | default: pdp.authenticity_text -%}
+        {%- if trust_blocks.size > 0 or trust_title != blank or s.show_secure -%}
+          <div class="pdp-trust" data-pdp-hero-item>
+            <ul class="pdp-trust__list" role="list">
+              {%- for block in trust_blocks -%}
+                <li class="pdp-trust__item" {{ block.shopify_attributes }}>
+                  <span class="pdp-trust__icon">{% render 'agha-pdp-icon', icon: block.settings.icon %}</span>
+                  <span><b>{{ block.settings.title }}</b>{%- if block.settings.text != blank -%}<small>{{ block.settings.text }}</small>{%- endif -%}</span>
+                </li>
+              {%- endfor -%}
+              {%- if trust_title != blank and trust_text != blank -%}
+                <li class="pdp-trust__item">
+                  <span class="pdp-trust__icon">{% render 'agha-pdp-icon', icon: 'seal' %}</span>
+                  <span><b>{{ trust_title }}</b><small>{{ trust_text }}</small></span>
+                </li>
+              {%- endif -%}
+            </ul>
+            {%- if s.show_secure -%}
+              <div class="pdp-trust__pay">
+                <span class="pdp-trust__secure">{% render 'agha-pdp-icon', icon: 'secure' %}{{ s.secure_title }}</span>
+                {%- if shop.enabled_payment_types.size > 0 -%}
+                  <ul class="pdp-payments" role="list" aria-label="Accepted payment methods">
+                    {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
+                  </ul>
+                {%- elsif s.secure_text != blank -%}
+                  <span class="pdp-trust__secure-text">{{ s.secure_text }}</span>
+                {%- endif -%}
               </div>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-
-        {%- if section.settings.show_delivery -%}
-          <div class="pdp-delivery" data-pdp-delivery data-min-days="{{ section.settings.delivery_min_days }}" data-max-days="{{ section.settings.delivery_max_days }}" data-dispatch-days="{{ section.settings.dispatch_days }}" data-cutoff-hour="{{ section.settings.cutoff_hour }}" data-pdp-hero-item>
-            <p class="pdp-delivery__summary">{% render 'agha-pdp-icon', icon: 'time' %}<span data-pdp-delivery-summary>Estimated delivery <strong data-pdp-delivery-range></strong></span></p>
-            <ol class="pdp-delivery__track">
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'bag' %}</span><b data-pdp-delivery-date="order"></b>Ordered</li>
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'delivery' %}</span><b data-pdp-delivery-date="dispatch"></b>Dispatched</li>
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">{% render 'agha-pdp-icon', icon: 'pin' %}</span><b data-pdp-delivery-date="deliver"></b>Delivered</li>
-            </ol>
+            {%- endif -%}
           </div>
         {%- endif -%}
 
         <div class="pdp-accordion" data-pdp-hero-item>
           {%- if pdp.description_html != blank -%}
-            <details data-pdp-accordion open>
+            <details data-pdp-accordion>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
               <div class="pdp-accordion__body">{{ pdp.description_html }}</div>
             </details>
@@ -485,7 +705,10 @@
         {%- unless product.has_only_default_variant -%}<p class="pdp-dock__meta" data-pdp-variant-title>{{ current_variant.title }}</p>{%- endunless -%}
       </div>
       <span class="pdp-dock__spacer"></span>
-      <span class="pdp-dock__price" data-pdp-price>{{ current_variant.price | money }}</span>
+      <span class="pdp-dock__prices">
+        <span class="pdp-dock__price" data-pdp-price>{{ current_variant.price | money }}</span>
+        <s class="pdp-dock__was" data-pdp-dock-was{% unless on_sale %} hidden{% endunless %}>{{ compare_price | money }}</s>
+      </span>
       <button type="button" class="pdp-btn pdp-add" data-pdp-dock-add tabindex="-1"{% unless current_variant.available %} disabled{% endunless %}>
         <span class="pdp-add__label" data-pdp-add-label>{% if current_variant.available %}Add to bag{% else %}Sold out{% endif %}</span>
         <span class="pdp-add__progress" aria-hidden="true"></span>
@@ -515,17 +738,76 @@
   "class": "pdp-shopify-section",
   "blocks": [
     {
-      "type": "benefit",
-      "name": "Benefit",
+      "type": "value",
+      "name": "Value (under the price)",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "source",
+          "label": "Show",
+          "default": "custom",
+          "info": "Product facts come from metafields and are hidden when a product has none — nothing is invented.",
+          "options": [
+            { "value": "longevity", "label": "Longevity (custom.longevity)" },
+            { "value": "wearer", "label": "Wearer (custom.gender)" },
+            { "value": "family", "label": "Fragrance family (custom.family)" },
+            { "value": "intensity", "label": "Intensity (custom.intensity)" },
+            { "value": "custom", "label": "Text below (same for every product)" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Label", "default": "Longevity" },
+        { "type": "text", "id": "text", "label": "Text (only for \"Text below\")" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "time",
+          "options": [
+            { "value": "time", "label": "Clock" },
+            { "value": "person", "label": "Person" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "hourglass", "label": "Hourglass" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "wood", "label": "Wood" },
+            { "value": "flower", "label": "Flower" },
+            { "value": "seal", "label": "Seal" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "offer",
+      "name": "Offer",
+      "limit": 3,
+      "settings": [
+        { "type": "paragraph", "content": "Use only live Shopify discounts. The code is copied for the customer and applied to their checkout." },
+        { "type": "text", "id": "label", "label": "Label", "default": "Welcome offer" },
+        { "type": "text", "id": "title", "label": "Headline", "default": "10% off your first order" },
+        { "type": "range", "id": "percent", "label": "Percentage off (shows \"Get it for ₹…\")", "min": 0, "max": 50, "step": 1, "unit": "%", "default": 0, "info": "0 = show the headline instead." },
+        { "type": "text", "id": "text", "label": "Small print" },
+        { "type": "text", "id": "code", "label": "Discount code", "info": "Leave empty for an automatic discount (shown as \"Auto-applied\")." },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "gift",
+          "options": [
+            { "value": "gift", "label": "Gift" },
+            { "value": "tag", "label": "Tag" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "card", "label": "Card" },
+            { "value": "delivery", "label": "Delivery" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "assurance",
+      "name": "Assurance (trust)",
       "limit": 6,
       "settings": [
-    { "type": "header", "content": "More views (under the gallery)" },
-    { "type": "image_picker", "id": "extra_image_1", "label": "Extra image 1" },
-    { "type": "image_picker", "id": "extra_image_2", "label": "Extra image 2" },
-    { "type": "image_picker", "id": "extra_image_3", "label": "Extra image 3" },
-    { "type": "image_picker", "id": "extra_image_4", "label": "Extra image 4" },
-    { "type": "text", "id": "offer_heading", "label": "Offer selector heading", "default": "Choose your set" },
-    { "type": "text", "id": "offer_unit", "label": "Offer unit (singular)", "default": "bottle", "info": "Shown as \"2 bottles\" on each offer. Offers and savings come from the quantity tiers in the catalog data." },
         {
           "type": "select",
           "id": "icon",
@@ -550,24 +832,37 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow above the title", "default": "Extrait de parfum · 35%" },
     { "type": "checkbox", "id": "show_wishlist", "label": "Show wishlist button", "info": "Signed-in customers only; guests are sent to Shopify's login page first.", "default": true },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show dynamic checkout buttons", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show Buy now (dynamic checkout)", "default": true },
     { "type": "text", "id": "in_stock_text", "label": "In-stock message", "default": "In stock · ready to dispatch" },
     { "type": "range", "id": "low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 20, "step": 1, "default": 5 },
-    { "type": "header", "content": "Secure checkout card" },
-    { "type": "checkbox", "id": "show_secure", "label": "Show card", "default": true },
+    { "type": "header", "content": "Offers" },
+    { "type": "text", "id": "offers_heading", "label": "Offers heading", "default": "Exclusive offers" },
+    { "type": "range", "id": "free_shipping_threshold", "label": "Free shipping above (₹)", "min": 0, "max": 10000, "step": 250, "default": 0, "info": "0 = use the catalog threshold. Match your Shopify shipping rates." },
+    { "type": "text", "id": "offer_heading", "label": "Multi-buy heading", "default": "Buy more, save more" },
+    { "type": "text", "id": "offer_unit", "label": "Multi-buy unit (singular)", "default": "bottle", "info": "Shown as \"2 bottles\" on each option. Savings come from the quantity tiers in the catalog data." },
+    { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown under the price, only while the selected variant has a compare-at price." },
+    { "type": "header", "content": "Pay later" },
+    { "type": "range", "id": "emi_installments", "label": "Instalments", "min": 0, "max": 6, "step": 1, "default": 0, "info": "0 = hidden. Turn on only if your checkout offers pay-in-instalments (Snapmint, Simpl, Razorpay…)." },
+    { "type": "text", "id": "emi_note", "label": "Pay later note", "info": "Only state terms your provider actually offers." },
+    { "type": "header", "content": "Secure checkout" },
+    { "type": "checkbox", "id": "show_secure", "label": "Show secure checkout + payment icons", "default": true },
     { "type": "text", "id": "secure_title", "label": "Title", "default": "Secure checkout" },
-    { "type": "text", "id": "secure_text", "label": "Text", "default": "Payments are processed securely by Shopify." },
-    { "type": "header", "content": "Delivery estimate" },
-    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
+    { "type": "text", "id": "secure_text", "label": "Text (when no payment icons)", "default": "Payments are processed securely by Shopify." },
+    { "type": "header", "content": "Delivery" },
+    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery check", "default": true },
     { "type": "range", "id": "dispatch_days", "label": "Business days to dispatch", "min": 0, "max": 5, "step": 1, "default": 1 },
     { "type": "range", "id": "delivery_min_days", "label": "Minimum business days to deliver", "min": 1, "max": 15, "step": 1, "default": 3 },
     { "type": "range", "id": "delivery_max_days", "label": "Maximum business days to deliver", "min": 1, "max": 20, "step": 1, "default": 6 },
     { "type": "range", "id": "cutoff_hour", "label": "Same-day dispatch cutoff (hour, 0 = off)", "info": "Shows an 'Order within …' countdown until this hour.", "min": 0, "max": 23, "step": 1, "default": 0 },
-    { "type": "header", "content": "Offer" },
-    { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown beside the discount badge, only while the selected variant has a compare-at price." },
-    { "type": "header", "content": "Authenticity card" },
-    { "type": "text", "id": "authenticity_title", "label": "Title", "info": "The card shows only when both fields are filled." },
+    { "type": "text", "id": "pincode_url", "label": "Pincode serviceability URL (optional)", "info": "e.g. an app proxy returning {\"serviceable\": true, \"days\": 4}. Use {pincode} in the URL. Without it only the format is checked." },
+    { "type": "header", "content": "Authenticity" },
+    { "type": "text", "id": "authenticity_title", "label": "Title", "info": "Shown in the trust list when both fields are filled." },
     { "type": "textarea", "id": "authenticity_text", "label": "Text", "info": "Use only claims you can stand behind." },
+    { "type": "header", "content": "More views (under the gallery)" },
+    { "type": "image_picker", "id": "extra_image_1", "label": "Extra image 1" },
+    { "type": "image_picker", "id": "extra_image_2", "label": "Extra image 2" },
+    { "type": "image_picker", "id": "extra_image_3", "label": "Extra image 3" },
+    { "type": "image_picker", "id": "extra_image_4", "label": "Extra image 4" },
     { "type": "header", "content": "Details" },
     { "type": "richtext", "id": "how_to_wear", "label": "How to wear", "info": "Fallback. Per-product metafields (custom.spray_where, spray_count, spray_distance, spray_when, how_to_wear) take precedence." },
     { "type": "header", "content": "Shipping & returns" },

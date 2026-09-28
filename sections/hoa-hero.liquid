@@ -6,13 +6,15 @@
   Reduced motion: first slide only, no timer.
   Imagery: House of Agha campaign photography (Drive → assets/hoa-hero-*.webp).
 
-  data-hoa-hero-bottle: the Oud Fury cutout (assets/hoa-bottle-oud-fury-cutout.webp,
-  cut from assets/hoa-product-oud-fury.webp, the same photo the Signature Fragrances
-  carousel uses) sits in the gap the headline splits around. assets/hoa-home.js
-  scroll-travels this exact element down through sections/hoa-bridge.liquid and docks
-  it into the carousel's first (Oud Fury) slot — see hoaHeroBottleJourney() there.
-  Hardcoded to Oud Fury because both the first hero slide and the first carousel
-  fragrance are Oud Fury; if either ordering changes, update the asset + dock target.
+  Scroll journey (one bottle, start to finish): on the slide with "Lift the bottle" on
+  (Oud Fury, first), the backdrop is the same photo with the bottle painted out
+  (<asset>-plate), and the photo's OWN bottle, cut from that exact frame
+  (<asset>-bottle), sits back in place on top, with the wood chip that stands in front of
+  its glass laid over it again (<asset>-chip). At rest this is pixel-identical to the
+  photo. assets/hoa-home.js (initHeroBottleJourney) then scroll-drives that single
+  [data-hoa-hero-bottle] element down into the first Signature Fragrances card.
+  Files are made by tools/hero-bottle/lift.py, which also prints the lift boxes.
+  While the journey runs, the slides don't auto-advance: the first-screen bottle is locked.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
@@ -26,20 +28,50 @@
           assign load = 'eager'
         endif
       -%}
-      <figure class="hoa-hero__slide{% if forloop.first %} is-active{% endif %}" data-hoa-slide {{ block.shopify_attributes }}>
-        <picture>
-          {%- if b.image_mobile != blank -%}
-            <source media="(max-width: 767px)" srcset="{{ b.image_mobile | image_url: width: 1200 }}">
-          {%- elsif b.asset_mobile != blank -%}
-            <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-sm.webp' | asset_url }} 700w, {{ b.asset_mobile | append: '.webp' | asset_url }} 1200w" sizes="100vw">
-          {%- endif -%}
-          {%- if forloop.first -%}
-            {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load, priority: true -%}
-          {%- else -%}
-            {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load -%}
-          {%- endif -%}
-        </picture>
-      </figure>
+      {%- if forloop.first and b.lift_bottle -%}
+        {%- liquid
+          assign lb = b.lift_box | split: ','
+          assign lbm = b.lift_box_mobile | split: ','
+          assign plate = b.asset | append: '-plate'
+        -%}
+        <figure class="hoa-hero__slide hoa-hero__slide--lift is-active" data-hoa-slide
+          style="--lift-x: {{ lb[0] }}%; --lift-y: {{ lb[1] }}%; --lift-w: {{ lb[2] }}%; --lift-h: {{ lb[3] }}%; --lift-xm: {{ lbm[0] }}%; --lift-ym: {{ lbm[1] }}%; --lift-wm: {{ lbm[2] }}%; --lift-hm: {{ lbm[3] }}%;"
+          {{ block.shopify_attributes }}>
+          <div class="hoa-hero__frame">
+            <picture>
+              <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-plate-sm.webp' | asset_url }} 700w, {{ b.asset_mobile | append: '-plate.webp' | asset_url }} 1200w" sizes="100vw">
+              {%- render 'hoa-img', name: plate, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: 'eager', priority: true -%}
+            </picture>
+            <div class="hoa-hero__lift-slot" data-hoa-hero-bottle-slot>
+              <div class="hoa-hero__lift" data-hoa-hero-bottle>
+                <picture>
+                  <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-bottle.webp' | asset_url }}">
+                  <img src="{{ b.asset | append: '-bottle.webp' | asset_url }}" width="480" height="1272" alt="" decoding="async" fetchpriority="high" draggable="false">
+                </picture>
+              </div>
+            </div>
+            <picture class="hoa-hero__lift-chip" data-hoa-hero-chip>
+              <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-chip.webp' | asset_url }}">
+              <img src="{{ b.asset | append: '-chip.webp' | asset_url }}" width="480" height="1272" alt="" decoding="async">
+            </picture>
+          </div>
+        </figure>
+      {%- else -%}
+        <figure class="hoa-hero__slide{% if forloop.first %} is-active{% endif %}" data-hoa-slide {{ block.shopify_attributes }}>
+          <picture>
+            {%- if b.image_mobile != blank -%}
+              <source media="(max-width: 767px)" srcset="{{ b.image_mobile | image_url: width: 1200 }}">
+            {%- elsif b.asset_mobile != blank -%}
+              <source media="(max-width: 767px)" srcset="{{ b.asset_mobile | append: '-sm.webp' | asset_url }} 700w, {{ b.asset_mobile | append: '.webp' | asset_url }} 1200w" sizes="100vw">
+            {%- endif -%}
+            {%- if forloop.first -%}
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load, priority: true -%}
+            {%- else -%}
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: 2000, h: 1125, alt: b.alt, sizes: '100vw', loading: load -%}
+            {%- endif -%}
+          </picture>
+        </figure>
+      {%- endif -%}
     {%- endfor -%}
   </div>
   <div class="hoa-hero__veil" aria-hidden="true"></div>
@@ -51,15 +83,6 @@
       <span class="hoa-hero__word"><span data-hoa-hero-word>{{ s.word_one }}</span></span>
       <span class="hoa-hero__word hoa-hero__word--serif"><span data-hoa-hero-word>{{ s.word_two }}</span></span>
     </h1>
-
-    <div class="hoa-hero__bottle" data-hoa-hero-bottle-slot aria-hidden="true">
-      <div class="hoa-hero__bottle-glow"></div>
-      <img class="hoa-hero__bottle-img" data-hoa-hero-bottle
-        src="{{ 'hoa-bottle-oud-fury-cutout.webp' | asset_url }}"
-        srcset="{{ 'hoa-bottle-oud-fury-cutout-sm.webp' | asset_url }} 480w, {{ 'hoa-bottle-oud-fury-cutout.webp' | asset_url }} 1200w"
-        sizes="(max-width: 767px) 120px, 200px"
-        width="200" height="250" alt="" loading="eager">
-    </div>
 
     <div class="hoa-hero__foot">
       <p class="hoa-hero__lede" data-hoa-hero-fade>{{ s.lede }}</p>
@@ -96,7 +119,10 @@
         { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (4:5 or taller)" },
         { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)", "info": "Base name without extension, e.g. hoa-hero-oud-fury" },
         { "type": "text", "id": "asset_mobile", "label": "Theme asset, mobile" },
-        { "type": "text", "id": "alt", "label": "Alt text" }
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "checkbox", "id": "lift_bottle", "label": "Lift the bottle (first slide only)", "default": false, "info": "Needs <asset>-plate / -bottle / -chip files from tools/hero-bottle/lift.py. The bottle then travels into the first Signature Fragrances card on scroll." },
+        { "type": "text", "id": "lift_box", "label": "Bottle box, desktop art", "info": "left,top,width,height in % of the photo (printed by lift.py)" },
+        { "type": "text", "id": "lift_box_mobile", "label": "Bottle box, mobile art" }
       ]
     }
   ],

@@ -411,58 +411,81 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-hero__dot.is-done .hoa-hero__dot-bar i { transform: scaleX(1); }
 .hoa-hero__dot-name { display: block; margin-top: 4px; font-family: var(--hoa-serif); font-style: italic; font-size: 0.92rem; letter-spacing: 0; }
 
-/* Bottle: sits in the gap the headline splits around, then travels down into the
-   Signature Fragrances carousel on scroll (assets/hoa-home.js, hoaHeroBottleJourney). */
-.hoa-hero__bottle {
-  grid-row: 2;
-  grid-column: 1;
-  position: relative;
-  z-index: 2;
-  width: clamp(64px, 6.2vw, 128px);
-  aspect-ratio: 4 / 5;
-  justify-self: center;
-  align-self: center;
+/* Lifted bottle (sections/hoa-hero.liquid, slide--lift): the frame reproduces the photo's
+   object-fit: cover box, so the painted-out backdrop, the photo's own bottle and the chip
+   in front of it share one coordinate space and the first screen reads as the photo.
+   The Ken Burns scale moves from the img to the frame so all three stay in register. */
+.hoa-hero__slide--lift { container-type: size; }
+.hoa-hero__frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100cqw, 177.7778cqh);
+  aspect-ratio: 2000 / 1125;
+  transform: translate(-50%, -50%) scale(1.06);
+  transition: transform 7.5s linear;
+}
+.hoa-hero__slide--lift.is-active .hoa-hero__frame { transform: translate(-50%, -50%) scale(1); }
+.hoa-hero__slide.hoa-hero__slide--lift img { transform: none; transition: none; will-change: auto; }
+.hoa-hero__frame > picture:first-child,
+.hoa-hero__frame > picture:first-child > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.hoa-hero__lift-slot,
+.hoa-hero__lift-chip {
+  position: absolute;
+  left: var(--lift-x);
+  top: var(--lift-y);
+  width: var(--lift-w);
+  height: var(--lift-h);
   pointer-events: none;
 }
-.hoa-hero__bottle-glow {
-  position: absolute;
-  inset: -40%;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(246, 241, 231, 0.3) 0%, rgba(246, 241, 231, 0) 70%);
-  filter: blur(8px);
+.hoa-hero__lift-slot { z-index: 1; }
+.hoa-hero__lift-chip { z-index: 2; display: block; }
+.hoa-hero__lift { position: relative; width: 100%; height: 100%; }
+.hoa-hero__slide .hoa-hero__lift-chip img,
+.hoa-hero__slide .hoa-hero__lift picture,
+.hoa-hero__slide .hoa-hero__lift img,
+.hoa-hero__lift picture,
+.hoa-hero__lift img { display: block; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; user-select: none; }
+@media (max-width: 767px) {
+  .hoa-hero__frame { width: max(100cqw, 74.6733cqh); aspect-ratio: 1200 / 1607; }
+  .hoa-hero__lift-slot,
+  .hoa-hero__lift-chip { left: var(--lift-xm); top: var(--lift-ym); width: var(--lift-wm); height: var(--lift-hm); }
 }
-.hoa-hero__bottle-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  opacity: 0; /* invisible at rest so the hero looks unchanged; hoaHeroBottleJourney() fades it in as soon as the visitor starts scrolling */
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.5));
-}
-/* Detached by JS into #main-content for the scroll journey, then docked into the
-   carousel's first slot; matches .hoa-cf__pic's sizing so there is no visual pop. */
+
+/* The same element while it travels (moved into #main-content by assets/hoa-home.js,
+   initHeroBottleJourney). ::after carries the hero veil's shading at the moment it
+   leaves the veil, then fades out; its mask is the bottle's own image. */
 .hoa-bottle-journey {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 45;
   pointer-events: none;
-  will-change: top, left, width, height, transform;
+  will-change: transform;
 }
-.hoa-cf__item .hoa-bottle-journey {
+.hoa-bottle-journey::after {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 5;
+  background: var(--hoa-lift-veil, none);
+  opacity: var(--hoa-lift-veil-o, 0);
+  -webkit-mask: var(--hoa-lift-mask, none) center / 100% 100% no-repeat;
+  mask: var(--hoa-lift-mask, none) center / 100% 100% no-repeat;
 }
-.hoa-cf__item .hoa-bottle-journey img {
-  width: 134%;
-  height: 134%;
-  max-width: none;
-  margin: -17% 0 0 -17%;
-  object-fit: contain;
-  filter: none;
+/* Where it lands: the product bottle's footprint inside the first carousel card
+   (hoa-product-*.webp drawn at 134% / -17% in a 1 : 1.2 card; the lifted bottle is 0.377 w/h). */
+.hoa-cf__pic { position: relative; }
+/* Its own photo stays hidden (!important: the carousel entrance tweens autoAlpha inline). */
+.hoa-cf__pic--lift > img { visibility: hidden !important; }
+.hoa-cf__dock {
+  position: absolute;
+  left: 28.17%;
+  top: 7.27%;
+  width: 43.65%;
+  height: 96.39%;
+  pointer-events: none;
 }
+.hoa-cf__dock .hoa-hero__lift img { width: 100%; height: 100%; max-width: none; margin: 0; }
 
 @media (max-width: 767px) {
   .hoa-hero { min-height: 600px; }
@@ -479,7 +502,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
     background: linear-gradient(180deg, rgba(12, 10, 8, 0.72) 0%, rgba(12, 10, 8, 0.1) 38%, rgba(12, 10, 8, 0) 55%, rgba(12, 10, 8, 0.82) 100%);
   }
   .hoa-hero__word--serif { align-self: flex-end; }
-  .hoa-hero__bottle { width: clamp(80px, 20vw, 128px); align-self: end; padding-bottom: 6px; }
   .hoa-hero__foot { grid-template-columns: 1fr; gap: 18px; }
   .hoa-hero__cta { justify-self: start; }
   .hoa-hero__index { justify-self: stretch; gap: 10px; }
@@ -1085,6 +1107,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) {
   .hoa-hero__slide, .hoa-hero__slide img, .hoa-card__img--mood, .hoa-card__img--mood img { transition: none !important; }
   .hoa-hero__slide img { transform: none !important; }
+  .hoa-hero__frame { transition: none !important; transform: translate(-50%, -50%) !important; }
   .hoa-js [data-hoa-reveal] { opacity: 1; transform: none; }
   .hoa-js .hoa-manifesto__text .hoa-word { opacity: 1; }
 }
@@ -1588,6 +1611,152 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reels--product .hoa-reels__arrows { display: none; }
 @media (max-width: 860px) {
   .hoa-reels--product .hoa-reels__track { grid-template-columns: repeat(2, minmax(0, 1fr)); --reel-gap: 12px; }
+}
+
+/* Shoppable films (product page): tap the film to watch it full screen; a product strip under each card */
+.hoa-reel__tap {
+  position: absolute; inset: 0; z-index: 2; padding: 0; border: 0; background: none; cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+.hoa-reel__tap:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: -4px; }
+.hoa-reel__tap-hint {
+  position: absolute; left: 12px; bottom: 12px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px 6px 9px; border-radius: 999px;
+  font: 500 0.66rem/1 var(--hoa-sans); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--hoa-ivory); background: rgba(12, 10, 8, 0.42);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background-color 0.3s ease, transform 0.4s var(--hoa-ease);
+}
+.hoa-reel__tap-hint svg { width: 13px; height: 13px; }
+.hoa-reel__tap:hover .hoa-reel__tap-hint { background: rgba(12, 10, 8, 0.66); transform: translateY(-2px); }
+
+.hoa-reels--product .hoa-reel { display: flex; flex-direction: column; }
+.hoa-reels--product .hoa-reel__frame { height: auto; flex: none; }
+.hoa-reel__shop {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 4px 12px;
+  margin-top: 12px; padding: 10px; border: 1px solid var(--hoa-line); border-radius: 12px; background: #fff;
+}
+.hoa-reel__thumb { display: block; width: 44px; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: var(--hoa-paper-2); }
+.hoa-reel__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+.hoa-reel__info { min-width: 0; display: grid; gap: 3px; }
+.hoa-reel__name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 0.9rem; font-weight: 600; letter-spacing: -0.01em; color: var(--hoa-ink); text-decoration: none;
+}
+.hoa-reel__name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.hoa-reel__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin: 0; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+.hoa-reel__price span { font-weight: 600; color: var(--hoa-ink); }
+.hoa-reel__price s { font-size: 0.74rem; color: var(--hoa-mute); }
+.hoa-reel__acts { grid-column: 1 / -1; display: flex; gap: 8px; margin-top: 8px; }
+.hoa-reel__view, .hoa-reel__add {
+  flex: 1; min-width: 0; height: 38px; padding: 0 10px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 600 0.66rem/1 var(--hoa-sans); letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;
+  cursor: pointer; text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.hoa-reel__view { border: 1px solid var(--hoa-ink); background: #fff; color: var(--hoa-ink); }
+.hoa-reel__view:hover { background: var(--hoa-ink); color: #fff; }
+.hoa-reel__add { border: 1px solid var(--hoa-ink); background: var(--hoa-ink); color: #fff; }
+.hoa-reel__add:hover:not(:disabled) { background: #2a2622; transform: translateY(-1px); }
+.hoa-reel__add:active:not(:disabled) { transform: scale(0.98); }
+.hoa-reel__add.is-loading { cursor: progress; opacity: 0.75; }
+.hoa-reel__add.is-added { background: #2F6B47; border-color: #2F6B47; }
+.hoa-reel__add:disabled { background: var(--hoa-paper-2); border-color: var(--hoa-paper-2); color: var(--hoa-mute); cursor: not-allowed; }
+.hoa-reel__view:focus-visible, .hoa-reel__add:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 2px; }
+
+/* Phones: the films become a swipe row, so each card stays big enough to shop from */
+@media (max-width: 860px) {
+  .hoa-reels--product .hoa-reels__viewport { margin-right: calc(var(--hoa-gutter) * -1); }
+  .hoa-reels--product .hoa-reels__track {
+    display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    padding-right: var(--hoa-gutter); padding-bottom: 6px;
+  }
+  .hoa-reels--product .hoa-reel { flex: 0 0 min(66%, 280px); scroll-snap-align: start; }
+  .hoa-reels--product .hoa-reel__view, .hoa-reels--product .hoa-reel__add { padding: 0 8px; letter-spacing: 0.08em; }
+}
+
+/* Full-screen viewer (assets/hoa-reels.js builds it on first tap) */
+.hoa-reelview-open { overflow: hidden; }
+.hoa-reelview {
+  width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0;
+  background: transparent; color: var(--hoa-ivory); overflow: hidden;
+}
+.hoa-reelview::backdrop { background: rgba(8, 7, 6, 0.9); backdrop-filter: blur(6px); }
+.hoa-reelview[open] { display: grid; place-items: center; animation: hoa-rv-in 0.35s var(--hoa-ease); }
+@keyframes hoa-rv-in { from { opacity: 0; } to { opacity: 1; } }
+.hoa-reelview__inner {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: clamp(12px, 3vw, 40px);
+  width: 100%; height: 100%; padding: 24px;
+}
+.hoa-reelview__col { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(400px, 100%); }
+.hoa-reelview__stage { width: min(420px, calc((100vh - 220px) * 9 / 16), 100%); }
+.hoa-reelview__stage { position: relative; margin: 0; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; background: #000; }
+.hoa-reelview__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hoa-reelview__toggle { position: absolute; inset: 0; z-index: 1; padding: 0; border: 0; background: none; cursor: pointer; }
+.hoa-reelview__play {
+  position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; background: rgba(12, 10, 8, 0.45); backdrop-filter: blur(8px);
+  opacity: 0; transform: scale(0.9); transition: opacity 0.3s ease, transform 0.3s var(--hoa-ease);
+}
+.hoa-reelview__play svg { width: 26px; height: 26px; margin-left: 3px; }
+.hoa-reelview.is-paused .hoa-reelview__play { opacity: 1; transform: none; }
+.hoa-reelview__sound {
+  position: absolute; z-index: 2; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; padding: 0;
+  display: grid; place-items: center; cursor: pointer; color: #fff;
+  border: 1px solid rgba(246, 241, 231, 0.3); background: rgba(12, 10, 8, 0.42); backdrop-filter: blur(8px);
+}
+.hoa-reelview__sound svg { width: 18px; height: 18px; grid-area: 1 / 1; }
+.hoa-reelview__i-off { display: none; }
+.hoa-reelview.is-muted .hoa-reelview__i-off { display: block; }
+.hoa-reelview.is-muted .hoa-reelview__i-on { display: none; }
+.hoa-reelview__count {
+  position: absolute; z-index: 2; top: 22px; left: 16px; pointer-events: none;
+  font: 500 0.72rem/1 var(--hoa-sans); letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.85);
+}
+.hoa-reelview__bar { position: absolute; z-index: 2; left: 14px; right: 14px; top: 8px; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, 0.25); overflow: hidden; pointer-events: none; }
+.hoa-reelview__bar i { display: block; height: 100%; background: #fff; transform: scaleX(0); transform-origin: left; }
+.hoa-reelview__close, .hoa-reelview__nav {
+  display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: pointer; color: #fff;
+  border: 1px solid rgba(246, 241, 231, 0.28); background: rgba(246, 241, 231, 0.08);
+  transition: background-color 0.25s ease, transform 0.25s var(--hoa-ease);
+}
+.hoa-reelview__close:hover, .hoa-reelview__nav:hover { background: rgba(246, 241, 231, 0.2); }
+.hoa-reelview__close { position: absolute; z-index: 3; top: 20px; right: 20px; width: 44px; height: 44px; }
+.hoa-reelview__close svg { width: 20px; height: 20px; }
+.hoa-reelview__nav { flex: none; width: 52px; height: 52px; }
+.hoa-reelview__nav[hidden] { display: none; }
+.hoa-reelview__nav svg { width: 22px; height: 22px; }
+.hoa-reelview__shop .hoa-reel__shop,
+.hoa-reelview__shop { margin: 0; }
+.hoa-reelview__shop {
+  display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 10px 12px;
+  width: min(380px, 100%); padding: 12px; border-radius: 14px; background: #fff; color: var(--hoa-ink);
+}
+.hoa-reelview__shop[hidden] { display: none; }
+.hoa-reelview__shop .hoa-reel__thumb { width: 48px; }
+.hoa-reelview__shop .hoa-reel__acts { grid-column: 1 / -1; margin: 0; }
+.hoa-reelview__shop .hoa-reel__view, .hoa-reelview__shop .hoa-reel__add { height: 42px; }
+.hoa-reelview button:focus-visible, .hoa-reelview a:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 2px; }
+
+@media (max-width: 640px) {
+  .hoa-reelview__inner { padding: 0; gap: 0; }
+  .hoa-reelview__col { width: 100%; height: 100%; gap: 0; align-items: stretch; }
+  .hoa-reelview__stage { flex: 1; width: 100%; aspect-ratio: auto; border-radius: 0; }
+  .hoa-reelview__shop { width: 100%; }
+  .hoa-reelview__nav { position: absolute; z-index: 3; top: 50%; width: 42px; height: 42px; margin-top: -21px; background: rgba(12, 10, 8, 0.35); }
+  .hoa-reelview__nav--prev { left: 10px; }
+  .hoa-reelview__nav--next { right: 10px; }
+  .hoa-reelview__close { top: 14px; right: 64px; width: 40px; height: 40px; background: rgba(12, 10, 8, 0.42); }
+  .hoa-reelview__shop {
+    grid-template-columns: 44px minmax(0, 1fr); border-radius: 18px 18px 0 0;
+    padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+  }
+  .hoa-reelview__shop .hoa-reel__acts { grid-column: 1 / -1; }
+  .hoa-reelview__shop .hoa-reel__view, .hoa-reelview__shop .hoa-reel__add { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-reelview[open] { animation: none; }
 }
 
 .hoa-reels__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

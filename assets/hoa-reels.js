@@ -58,7 +58,7 @@
       if (!st) return;
       var video = st.video;
       if (st.near) attachSources(video);
-      var shouldPlay = st.inTrack && st.inPage && !st.userPaused && !reduceMotion;
+      var shouldPlay = st.inTrack && st.inPage && !st.userPaused && !st.hold && !reduceMotion;
       if (shouldPlay && video.paused) {
         attachSources(video);
         var req = video.play();
@@ -115,6 +115,11 @@
         cleanups.push(function () { soundBtn.removeEventListener('click', onSound); });
       }
     });
+
+    // The full-screen viewer holds the inline films while it is open
+    root._hoaHold = function (on) {
+      state.forEach(function (st, reel) { st.hold = on; if (on) st.video.pause(); else sync(reel); });
+    };
 
     if (!state.size) return function () {};
 
@@ -289,6 +294,197 @@
     };
   }
 
+  /* ---------------- Shop: add to bag + full-screen viewer (product page) ---------------- */
+  var isShopify = Boolean(window.Shopify && window.Shopify.routes);
+
+  function addToBag(btn) {
+    if (!btn || btn.disabled || btn.getAttribute('aria-busy') === 'true') return;
+    var d = btn.dataset;
+    var label = btn.querySelector('span') || btn;
+    var original = btn._hoaLabel || label.textContent;
+    btn._hoaLabel = original;
+    btn.setAttribute('aria-busy', 'true');
+    btn.classList.add('is-loading');
+
+    // Mirror into the theme's bag drawer, as the PDP buy button does
+    var mirror = function () {
+      if (typeof AghaStore === 'undefined') return;
+      if (!isShopify && window.HOA && window.HOA.ready && window.HOA.product(d.handle)) AghaStore.addToCart(window.HOA.makeItem(d.handle));
+      else AghaStore.addToCart({ id: d.handle + '-' + Date.now(), handle: d.handle, title: d.title, price: d.price, compare: d.compare, image: d.image, size: 'Eau de Parfum' });
+    };
+    var finish = function (ok) {
+      btn.removeAttribute('aria-busy');
+      btn.classList.remove('is-loading');
+      if (!ok) return;
+      btn.classList.add('is-added');
+      label.textContent = 'Added ✓';
+      clearTimeout(btn._hoaT);
+      btn._hoaT = setTimeout(function () { btn.classList.remove('is-added'); label.textContent = original; }, 1800);
+    };
+
+    if (isShopify && d.variant) {
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ items: [{ id: Number(d.variant), quantity: 1 }] })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('add failed');
+        mirror();
+        finish(true);
+      }).catch(function () {
+        finish(false);
+        if (typeof AghaStore !== 'undefined' && AghaStore.showToast) AghaStore.showToast('We could not add this to your bag.');
+      });
+    } else {
+      mirror();
+      setTimeout(function () { finish(true); }, 350);
+    }
+  }
+  // One delegated listener serves every card and the viewer's copy of it
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-hoa-reel-add]');
+    if (btn) { e.preventDefault(); addToBag(btn); }
+  });
+
+  var ICON_PREV = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ICON_NEXT = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  var ICON_SOUND = '<svg class="hoa-reelview__i-on" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+    '<svg class="hoa-reelview__i-off" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+  var viewer = null;
+  function buildViewer() {
+    if (viewer) return viewer;
+    var dlg = document.createElement('dialog');
+    dlg.className = 'hoa-reelview';
+    dlg.setAttribute('aria-label', 'Product film');
+    dlg.innerHTML =
+      '<div class="hoa-reelview__inner">' +
+        '<button type="button" class="hoa-reelview__close" data-rv-close aria-label="Close film">' + ICON_CLOSE + '</button>' +
+        '<button type="button" class="hoa-reelview__nav hoa-reelview__nav--prev" data-rv-step="-1" aria-label="Previous film">' + ICON_PREV + '</button>' +
+        '<div class="hoa-reelview__col">' +
+          '<figure class="hoa-reelview__stage">' +
+            '<video class="hoa-reelview__video" data-rv-video playsinline loop preload="auto"></video>' +
+            '<button type="button" class="hoa-reelview__toggle" data-rv-toggle aria-label="Pause film"><span class="hoa-reelview__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg></span></button>' +
+            '<button type="button" class="hoa-reelview__sound" data-rv-sound aria-pressed="true" aria-label="Mute">' + ICON_SOUND + '</button>' +
+            '<span class="hoa-reelview__count" data-rv-count></span>' +
+            '<span class="hoa-reelview__bar" aria-hidden="true"><i data-rv-bar></i></span>' +
+          '</figure>' +
+          '<div class="hoa-reelview__shop" data-rv-shop></div>' +
+        '</div>' +
+        '<button type="button" class="hoa-reelview__nav hoa-reelview__nav--next" data-rv-step="1" aria-label="Next film">' + ICON_NEXT + '</button>' +
+      '</div>';
+    document.body.appendChild(dlg);
+
+    var video = dlg.querySelector('[data-rv-video]');
+    var shop = dlg.querySelector('[data-rv-shop]');
+    var count = dlg.querySelector('[data-rv-count]');
+    var bar = dlg.querySelector('[data-rv-bar]');
+    var soundBtn = dlg.querySelector('[data-rv-sound]');
+    var toggle = dlg.querySelector('[data-rv-toggle]');
+    var v = { dlg: dlg, list: [], index: 0, root: null, opener: null, muted: false };
+
+    var setMuted = function (m) {
+      v.muted = m;
+      video.muted = m;
+      soundBtn.setAttribute('aria-pressed', String(!m));
+      soundBtn.setAttribute('aria-label', m ? 'Turn sound on' : 'Mute');
+      dlg.classList.toggle('is-muted', m);
+    };
+    var play = function () {
+      var req = video.play();
+      // Sound-on autoplay can be refused; fall back to muted rather than a frozen frame
+      if (req && req.catch) req.catch(function () { setMuted(true); var r2 = video.play(); if (r2 && r2.catch) r2.catch(function () {}); });
+    };
+
+    v.show = function (i) {
+      var n = v.list.length;
+      if (!n) return;
+      v.index = (i + n) % n;
+      var reel = v.list[v.index];
+      var src = reel.querySelector('[data-hoa-reel-video]');
+      var poster = reel.querySelector('img');
+      video.innerHTML = '';
+      if (src && src.dataset.srcWebm) { var w = document.createElement('source'); w.src = src.dataset.srcWebm; w.type = 'video/webm'; video.appendChild(w); }
+      if (src && src.dataset.src) { var m = document.createElement('source'); m.src = src.dataset.src; m.type = 'video/mp4'; video.appendChild(m); }
+      video.poster = poster ? (poster.currentSrc || poster.src || '') : '';
+      video.setAttribute('aria-label', (src && src.getAttribute('aria-label')) || 'Product film');
+      video.load();
+      setMuted(v.muted);
+      play();
+      var strip = reel.querySelector('[data-hoa-reel-shop]');
+      shop.innerHTML = strip ? strip.innerHTML : '';
+      shop.querySelectorAll('img').forEach(function (im) { im.loading = 'eager'; });
+      // A fresh copy: never carry the card's momentary Adding / Added state
+      shop.querySelectorAll('[data-hoa-reel-add]').forEach(function (b) {
+        b.classList.remove('is-added', 'is-loading');
+        b.removeAttribute('aria-busy');
+        var s = b.querySelector('span');
+        if (s && !b.disabled) s.textContent = 'Add to bag';
+      });
+      shop.hidden = !strip;
+      count.textContent = (v.index + 1) + ' / ' + n;
+      dlg.querySelectorAll('[data-rv-step]').forEach(function (b) { b.hidden = n < 2; });
+      bar.style.transform = 'scaleX(0)';
+    };
+
+    video.addEventListener('timeupdate', function () {
+      if (video.duration) bar.style.transform = 'scaleX(' + (video.currentTime / video.duration) + ')';
+    });
+    video.addEventListener('play', function () { dlg.classList.remove('is-paused'); toggle.setAttribute('aria-label', 'Pause film'); });
+    video.addEventListener('pause', function () { dlg.classList.add('is-paused'); toggle.setAttribute('aria-label', 'Play film'); });
+    toggle.addEventListener('click', function () { if (video.paused) play(); else video.pause(); });
+    soundBtn.addEventListener('click', function () { setMuted(!v.muted); if (video.paused) play(); });
+    dlg.addEventListener('click', function (e) {
+      if (e.target === dlg || e.target.closest('[data-rv-close]')) { dlg.close(); return; }
+      var step = e.target.closest('[data-rv-step]');
+      if (step) v.show(v.index + Number(step.dataset.rvStep));
+    });
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); v.show(v.index + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); v.show(v.index - 1); }
+    });
+    // Swipe left / right between films on touch screens
+    var sx = null;
+    dlg.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchend', function (e) {
+      if (sx == null) return;
+      var dx = e.changedTouches[0].clientX - sx;
+      sx = null;
+      if (Math.abs(dx) > 50 && v.list.length > 1) v.show(v.index + (dx < 0 ? 1 : -1));
+    });
+    dlg.addEventListener('close', function () {
+      video.pause();
+      video.innerHTML = '';
+      video.removeAttribute('poster');
+      video.load();
+      document.documentElement.classList.remove('hoa-reelview-open');
+      if (v.root && v.root._hoaHold) v.root._hoaHold(false);
+      if (v.opener && v.opener.focus) v.opener.focus({ preventScroll: true });
+    });
+    viewer = v;
+    return v;
+  }
+
+  function initViewer(root, track) {
+    var onOpen = function (e) {
+      var btn = e.target.closest && e.target.closest('[data-hoa-reel-open]');
+      if (!btn || !root.contains(btn)) return;
+      e.preventDefault();
+      var v = buildViewer();
+      v.root = root;
+      v.opener = btn;
+      v.list = Array.prototype.slice.call(root.querySelectorAll('[data-hoa-reel]')).filter(function (r) { return r.querySelector('[data-hoa-reel-open]'); });
+      if (root._hoaHold) root._hoaHold(true);
+      v.muted = false;
+      document.documentElement.classList.add('hoa-reelview-open');
+      if (typeof v.dlg.showModal === 'function') v.dlg.showModal(); else v.dlg.setAttribute('open', '');
+      v.show(Math.max(0, v.list.indexOf(btn.closest('[data-hoa-reel]'))));
+    };
+    track.addEventListener('click', onOpen);
+    return function () { track.removeEventListener('click', onOpen); };
+  }
+
   /* ---------------- Motion ---------------- */
   function initMotion(root) {
     // Product page: one card, no entrance stagger (a late-built page can leave ScrollTrigger positions stale).
@@ -317,6 +513,7 @@
     instances.set(root, {
       videos: initVideos(root, track),
       carousel: initCarousel(root, track),
+      viewer: initViewer(root, track),
       motion: initMotion(root)
     });
   }
@@ -324,7 +521,7 @@
   function destroy(root) {
     var inst = instances.get(root);
     if (!inst) return;
-    ['videos', 'carousel'].forEach(function (k) { if (inst[k]) inst[k](); });
+    ['videos', 'carousel', 'viewer'].forEach(function (k) { if (inst[k]) inst[k](); });
     if (inst.motion) inst.motion.revert();
     instances.delete(root);
   }

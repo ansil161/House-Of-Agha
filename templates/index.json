@@ -9,7 +9,10 @@
             "name": "Oud Fury",
             "asset": "hoa-hero-oud-fury",
             "asset_mobile": "hoa-oud-fury-portrait",
-            "alt": "Oud Fury Eau de Parfum on oud wood in a shaft of amber light"
+            "alt": "Oud Fury Eau de Parfum on oud wood in a shaft of amber light",
+            "lift_bottle": true,
+            "lift_box": "44.750,19.111,12.450,58.667",
+            "lift_box_mobile": "34.167,9.894,37.833,75.420"
           }
         },
         "slide_agha_blue": {

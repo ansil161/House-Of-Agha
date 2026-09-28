@@ -39,6 +39,8 @@
   ============================================================================
 {%- endcomment -%}
 {%- assign mock_rows = 'Oud Fury|oud-fury|Eau de Parfum|₹4,500|https://videos.pexels.com/video-files/7816005/7816005-sd_540_960_25fps.mp4|hoa-oud-fury-portrait|hoa-product-oud-fury;Agha Blue|agha-blue|Eau de Parfum|₹5,200|https://videos.pexels.com/video-files/6764969/6764969-sd_540_960_25fps.mp4|hoa-agha-blue-portrait|hoa-product-agha-blue;Oud of Dark Paradise|oud-of-dark-paradise|Eau de Parfum|₹4,800|https://videos.pexels.com/video-files/12719020/12719020-sd_540_960_30fps.mp4|hoa-dark-paradise-portrait|hoa-product-dark-paradise;Maha|maha|Eau de Parfum|₹4,600|https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4|hoa-maha-portrait|hoa-product-maha' | split: ';' -%}
+{%- capture reels_catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- assign reels_catalog = reels_catalog_json | parse_json -%}
 {%- liquid
   assign s = section.settings
   assign ig_handle = s.instagram_handle | default: 'houseofagha' | remove: '@'
@@ -116,6 +118,54 @@
       endif
       assign poster_alt = b.poster_alt | default: r_name
       assign reel_link = b.reel_url | default: ig_url
+
+      comment
+        Shoppable card (product page mode): the reel's product from Shopify (picked product, else the product
+        with this handle), falling back to the shared catalog while the store has no such product.
+      endcomment
+      assign shop_name = ''
+      if single
+        assign sp = p
+        if sp == blank
+          assign sp = all_products[r_handle]
+        endif
+        assign shop_url = '/products/' | append: r_handle
+        assign shop_was = ''
+        assign shop_variant = ''
+        assign shop_available = true
+        assign shop_img = ''
+        if sp != blank and sp.id != blank
+          assign shop_name = sp.title
+          assign shop_url = sp.url
+          assign sv = sp.selected_or_first_available_variant
+          assign shop_variant = sv.id
+          assign shop_available = sp.available
+          assign shop_now = sv.price | money
+          if sv.compare_at_price > sv.price
+            assign shop_was = sv.compare_at_price | money
+          endif
+          if sp.featured_image
+            assign shop_img = sp.featured_image | image_url: width: 240
+          endif
+        else
+          for c in reels_catalog.products
+            if c.handle == r_handle
+              assign shop_name = c.name
+              assign shop_img = c.image
+              if c.salePrice and c.salePrice < c.regularPrice
+                assign shop_now = c.salePrice | times: 100 | money
+                assign shop_was = c.regularPrice | times: 100 | money
+              else
+                assign shop_now = c.regularPrice | times: 100 | money
+              endif
+              if c.inventory == 0
+                assign shop_available = false
+              endif
+              break
+            endif
+          endfor
+        endif
+      endif
     -%}
     {%- unless skip -%}
       {%- assign shown = shown | plus: 1 -%}
@@ -137,6 +187,12 @@
                 {%- if webm_src != blank %} data-src-webm="{{ webm_src }}"{% endif %}
                 aria-label="{{ r_name | escape }} reel"
               ></video>
+            {%- endif -%}
+
+            {%- if single and has_video -%}
+              <button type="button" class="hoa-reel__tap" data-hoa-reel-open aria-label="Watch the {{ r_name | escape }} film full screen, with sound">
+                <span class="hoa-reel__tap-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Tap to watch</span>
+              </button>
             {%- endif -%}
 
             {%- unless single -%}
@@ -170,6 +226,25 @@
             {%- endunless -%}
           </div>
         </div>
+        {%- if single and shop_name != blank -%}
+          <div class="hoa-reel__shop" data-hoa-reel-shop>
+            <a class="hoa-reel__thumb" href="{{ shop_url }}" tabindex="-1" aria-hidden="true">
+              {%- if shop_img != blank -%}<img src="{{ shop_img }}" alt="" width="120" height="150" loading="lazy" decoding="async">{%- endif -%}
+            </a>
+            <div class="hoa-reel__info">
+              <a class="hoa-reel__name" href="{{ shop_url }}">{{ shop_name }}</a>
+              <p class="hoa-reel__price"><span>{{ shop_now }}</span>{% if shop_was != blank %}<s><span class="hoa-sr">MRP </span>{{ shop_was }}</s>{% endif %}</p>
+            </div>
+            <div class="hoa-reel__acts">
+              {%- unless r_handle == product.handle -%}
+                <a class="hoa-reel__view" href="{{ shop_url }}">View product</a>
+              {%- endunless -%}
+              <button type="button" class="hoa-reel__add" data-hoa-reel-add data-handle="{{ r_handle }}" data-variant="{{ shop_variant }}" data-title="{{ shop_name | escape }}" data-price="{{ shop_now }}" data-compare="{{ shop_was }}" data-image="{{ shop_img }}"{% unless shop_available %} disabled{% endunless %}>
+                <span>{% if shop_available %}Add to bag{% else %}Sold out{% endif %}</span>
+              </button>
+            </div>
+          </div>
+        {%- endif -%}
       </li>
     {%- endunless -%}
   {%- endfor -%}

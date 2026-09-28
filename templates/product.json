@@ -3,6 +3,31 @@
     "main": {
       "type": "agha-pdp-main",
       "blocks": {
+        "value_longevity": {
+          "type": "value",
+          "settings": {
+            "source": "longevity",
+            "title": "Longevity",
+            "icon": "time"
+          }
+        },
+        "value_wearer": {
+          "type": "value",
+          "settings": {
+            "source": "wearer",
+            "title": "Made for",
+            "icon": "person"
+          }
+        },
+        "value_strength": {
+          "type": "value",
+          "settings": {
+            "source": "custom",
+            "title": "Concentration",
+            "text": "Eau de Parfum",
+            "icon": "drop"
+          }
+        },
         "shipping": {
           "type": "assurance",
           "settings": {
@@ -18,38 +43,26 @@
             "title": "5 ml sample included",
             "text": "Try it on skin before you open the flacon."
           }
-        },
-        "maceration": {
-          "type": "assurance",
-          "settings": {
-            "icon": "time",
-            "title": "90-day maceration",
-            "text": "Every batch rests before it is bottled."
-          }
-        },
-        "secure": {
-          "type": "assurance",
-          "settings": {
-            "icon": "secure",
-            "title": "Secure checkout",
-            "text": "Encrypted payment through Shopify."
-          }
         }
       },
       "block_order": [
+        "value_longevity",
+        "value_wearer",
+        "value_strength",
         "shipping",
-        "sample",
-        "maceration",
-        "secure"
+        "sample"
       ],
       "settings": {
-        "caption_left": "Extrait de parfum",
-        "caption_right": "35% oil concentration",
+        "offers_heading": "Exclusive offers",
+        "offer_heading": "Buy more, save more",
+        "emi_installments": 3,
+        "emi_note": "Interest-free with eligible pay-later options at checkout",
         "show_dynamic_checkout": true,
         "show_delivery": true,
         "free_shipping_text": "Complimentary shipping on orders above ₹5,000.",
         "authenticity_title": "Numbered and batch-coded",
-        "authenticity_text": "Every flacon is laser-engraved with its batch code and compounding date."
+        "authenticity_text": "Every flacon is laser-engraved with its batch code and compounding date.",
+        "eyebrow": "Eau de Parfum"
       }
     },
     "story": {
@@ -187,24 +200,15 @@
       "type": "hoa-pdp-pair",
       "settings": {}
     },
-    "why": {
-      "type": "agha-pdp-why",
-      "blocks": {
-        "certified": { "type": "benefit", "settings": { "icon": "badge", "title": "Certified\nperfumers", "text": "Hong Kong\nSchool of Perfumery" } },
-        "parfum": { "type": "benefit", "settings": { "icon": "bottle", "title": "35% pure\nparfum", "text": "Extrait de parfum" } },
-        "aged": { "type": "benefit", "settings": { "icon": "hourglass", "title": "Aged for\nweeks", "text": "Smooth and refined" } },
-        "ifra": { "type": "benefit", "settings": { "icon": "ifra", "title": "IFRA\ncertified", "text": "High-grade, skin safe" } }
-      },
-      "block_order": ["certified", "parfum", "aged", "ifra"],
-      "settings": {}
-    },
     "review_summary": {
       "type": "agha-pdp-review-summary",
       "settings": {}
     },
     "reviews": {
       "type": "agha-pdp-reviews",
-      "settings": { "hide_summary": true }
+      "settings": {
+        "hide_summary": true
+      }
     },
     "faq": {
       "type": "agha-pdp-faq",
@@ -253,7 +257,8 @@
       "type": "agha-pdp-related",
       "settings": {
         "label": "09 — Explore the house",
-        "heading": "Other expressions",
+        "eyebrow": "More scents to discover",
+        "heading": "If you love this…",
         "limit": 3
       }
     },
@@ -325,22 +330,67 @@
         "heading_serif": "in motion.",
         "only_current_product": true
       }
+    },
+    "why": {
+      "type": "agha-pdp-why",
+      "blocks": {
+        "certified": {
+          "type": "benefit",
+          "settings": {
+            "icon": "badge",
+            "title": "Certified\nperfumers",
+            "text": "Hong Kong\nSchool of Perfumery"
+          }
+        },
+        "parfum": {
+          "type": "benefit",
+          "settings": {
+            "icon": "bottle",
+            "title": "35% pure\nparfum",
+            "text": "Extrait de parfum"
+          }
+        },
+        "aged": {
+          "type": "benefit",
+          "settings": {
+            "icon": "hourglass",
+            "title": "Aged for\nweeks",
+            "text": "Smooth and refined"
+          }
+        },
+        "ifra": {
+          "type": "benefit",
+          "settings": {
+            "icon": "ifra",
+            "title": "IFRA\ncertified",
+            "text": "High-grade, skin safe"
+          }
+        }
+      },
+      "block_order": [
+        "certified",
+        "parfum",
+        "aged",
+        "ifra"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "main",
-    "story",
     "the_fragrance",
+    "story",
     "details",
     "why",
     "composition",
     "craft",
     "experience",
     "fragrance_notes",
-    "reels",
     "review_summary",
     "reviews",
     "faq",
+    "reels",
+    "pair",
     "related",
     "recently_viewed",
     "finale"

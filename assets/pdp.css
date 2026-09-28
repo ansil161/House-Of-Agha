@@ -3220,3 +3220,1000 @@ html:has(.pdp) body {
 .pdp-more__tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-editorial, ease); }
 @media (hover: hover) { .pdp-more__tile:hover img { transform: scale(1.03); } }
 @media (max-width: 768px) { .pdp-more { gap: 8px; margin-top: 10px; } }
+
+/* ==========================================================================
+   PURCHASE CONSOLE (sections/agha-pdp-main.liquid · assets/pdp-console.js)
+   One buying column read top to bottom: identity → proof → price → value →
+   offers → multi-buy → pay later → add to bag → delivery → trust.
+   Warm ivory, hairline borders, one brass accent; nothing louder than the CTA.
+   ========================================================================== */
+.pdp-console {
+  --pc-gold: #9C7A3C;
+  --pc-gold-line: #E3D5B8;
+  --pc-ivory: #FBF8F2;
+  --pc-ivory-2: #F5EFE3;
+  container-type: inline-size;
+  container-name: pdp-console;
+}
+.pdp-console .pdp-buy { min-width: 0; }
+.pdp-console .pdp-add { padding: 0 20px; }
+/* Narrow column: the button drops its price (it sits right above and in the sticky bar) */
+@container pdp-console (max-width: 470px) {
+  .pdp-console .pdp-add__sep,
+  .pdp-console .pdp-add__price { display: none; }
+}
+.pdp-console > * + * { margin-top: 18px; }
+.pdp-console .pdp-form { margin-top: 18px !important; }
+
+/* 1 · Identity */
+.pdp-console__id .pdp-title { margin-top: 8px !important; }
+.pdp-console__line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin-top: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pc-gold);
+}
+.pdp-console__line > span + span::before { content: "\00B7"; margin: 0 10px; color: var(--pc-gold-line); }
+.pdp-console .pdp-lede {
+  margin-top: 10px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--pdp-ink-soft);
+  max-width: 42ch;
+}
+.pdp-console .pdp-identity { margin-top: 8px; }
+
+/* 2 · Social proof */
+.pdp-console .pdp-rating { flex-wrap: wrap; gap: 10px 14px; }
+.pdp-console .pdp-rating a.pdp-rating__link { text-decoration: none; color: var(--pdp-ink); }
+.pdp-rating__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--pdp-ink);
+  text-decoration: none;
+}
+.pdp-rating__count {
+  color: var(--pdp-ink-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--pdp-clay);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+.pdp-rating__link:hover .pdp-rating__count { text-decoration-color: currentColor; }
+.pdp-console__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 11px 0 9px;
+  border: 1px solid var(--pc-gold-line);
+  border-radius: var(--pdp-pill);
+  background: var(--pc-ivory);
+  color: var(--pc-gold);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pdp-console__badge svg { width: 13px; height: 13px; }
+
+/* 3 · Price */
+.pdp-console .pdp-price { padding-top: 18px; row-gap: 8px; }
+.pdp-console .pdp-price__amount { font-size: clamp(2.1rem, 2.6vw, 2.5rem); }
+.pdp-console .pdp-price__compare { font-size: 1.05rem; text-decoration-thickness: 1px; }
+.pdp-console .pdp-price__save {
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 3px;
+  background: var(--pdp-ink);
+  font-size: 0.68rem;
+}
+.pdp-console .pdp-price__note { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.pdp-console .pdp-savings {
+  margin: 0;
+  color: var(--pdp-success);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+.pdp-console .pdp-savings[hidden] { display: none; }
+.pdp-savings.is-pop { display: inline-block; animation: pc-pop 0.6s var(--ease-editorial, ease); }
+@keyframes pc-pop { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+/* 4 · Value stack */
+.pdp-values {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 14px 0;
+  list-style: none;
+  border-top: 1px solid var(--pdp-line);
+  border-bottom: 1px solid var(--pdp-line);
+}
+.pdp-value {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 0 14px;
+  min-width: 0;
+}
+.pdp-value:first-child { padding-left: 0; }
+.pdp-value + .pdp-value { border-left: 1px solid var(--pdp-line); }
+.pdp-value__icon { grid-row: 1 / 3; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--pc-ivory-2); color: var(--pc-gold); }
+.pdp-value__icon svg { width: 17px; height: 17px; }
+.pdp-value__title { align-self: end; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pdp-muted); }
+.pdp-value__text { align-self: start; font-size: 0.88rem; font-weight: 600; line-height: 1.25; color: var(--pdp-ink); overflow-wrap: anywhere; }
+
+/* 5 · Exclusive offers */
+.pdp-deals {
+  padding: 14px 16px 4px;
+  border: 1px solid var(--pc-gold-line);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--pc-ivory) 0%, #fff 100%);
+}
+.pdp-deals__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 2px;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pc-gold);
+}
+.pdp-deals__head svg { width: 14px; height: 14px; }
+.pdp-deals__list { margin: 0; padding: 0; list-style: none; }
+.pdp-deal {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+.pdp-deal + .pdp-deal { border-top: 1px dashed var(--pc-gold-line); }
+.pdp-deal__icon { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--pc-gold-line); border-radius: 50%; background: #fff; color: var(--pc-gold); }
+.pdp-deal__icon svg { width: 17px; height: 17px; }
+.pdp-deal__body { display: grid; gap: 1px; min-width: 0; }
+.pdp-deal__label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pc-gold); }
+.pdp-deal__title { font-size: 0.95rem; font-weight: 500; line-height: 1.3; color: var(--pdp-ink); }
+.pdp-deal__title b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.pdp-deal__text { font-size: 0.76rem; color: var(--pdp-muted); }
+.pdp-deal__code {
+  display: inline-flex;
+  align-items: stretch;
+  height: 36px;
+  padding: 0;
+  border: 1px dashed var(--pc-gold);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--pdp-ink);
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+.pdp-deal__code-text { display: grid; place-items: center; padding: 0 10px; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; }
+.pdp-deal__code-act {
+  display: grid;
+  place-items: center;
+  min-width: 64px;
+  padding: 0 10px;
+  border-left: 1px dashed var(--pc-gold);
+  background: var(--pc-ivory-2);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+@media (hover: hover) {
+  .pdp-deal__code:hover { box-shadow: 0 4px 14px rgba(156, 122, 60, 0.18); transform: translateY(-1px); }
+  .pdp-deal__code:hover .pdp-deal__code-act { background: var(--pc-gold); color: #fff; }
+}
+.pdp-deal__code.is-busy { cursor: progress; opacity: 0.7; }
+.pdp-deal__code.is-applied { border-style: solid; border-color: var(--pdp-success); }
+.pdp-deal__code.is-applied .pdp-deal__code-act,
+.pdp-deal__code.is-applied:hover .pdp-deal__code-act { border-left: 1px solid var(--pdp-success); background: var(--pdp-success); color: #fff; }
+.pdp-deal__code.is-pop { animation: pc-pop 0.5s var(--ease-editorial, ease); }
+.pdp-deal__auto { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pdp-muted); white-space: nowrap; }
+.pdp-deal__auto::before { content: "\2713\00A0"; color: var(--pdp-success); }
+.pdp-deal.is-met .pdp-deal__title { color: var(--pdp-success); font-weight: 600; }
+.pdp-js .pdp-deal { animation: pc-rise 0.7s var(--ease-editorial, ease) 0.2s both; }
+.pdp-js .pdp-deal:nth-child(2) { animation-delay: 0.32s; }
+.pdp-js .pdp-deal:nth-child(3) { animation-delay: 0.44s; }
+@keyframes pc-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* 6 · Multi-buy: a quieter heading so the offers above stay the lead */
+.pdp-console .pdp-offers__legend { color: var(--pdp-ink); }
+.pdp-console .pdp-offer { padding: 11px 14px; }
+.pdp-console .pdp-offers__list { gap: 10px; }
+
+/* 7 · Pay later: a supporting line, not a banner */
+.pdp-emi {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--pdp-soft);
+  font-size: 0.86rem;
+  color: var(--pdp-ink);
+}
+.pdp-emi__icon { display: grid; color: var(--pc-gold); }
+.pdp-emi__icon svg { width: 20px; height: 20px; }
+.pdp-emi__copy { display: grid; gap: 1px; }
+.pdp-emi b { font-variant-numeric: tabular-nums; }
+.pdp-emi__rest { color: var(--pdp-ink-soft); }
+.pdp-emi small { font-size: 0.72rem; color: var(--pdp-muted); }
+
+/* 8 · Purchase: the strongest thing on the page */
+.pdp-console .pdp-add { font-size: 0.84rem; letter-spacing: 0.12em; }
+.pdp-console .pdp-add::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .pdp-console .pdp-add:hover:not(:disabled)::after { transform: translateX(120%); transition: transform 0.9s var(--ease-editorial, ease); }
+}
+.pdp-console .pdp-buynow,
+.pdp-console .pdp-dynamic-checkout { margin-top: -4px; }
+.pdp-console .pdp-stock { margin-top: -2px; }
+
+/* 9 · Delivery check */
+.pdp-deliver { display: grid; gap: 8px; }
+.pdp-deliver__form { display: grid; gap: 8px; }
+.pdp-deliver__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pdp-ink);
+}
+.pdp-deliver__label svg { width: 15px; height: 15px; color: var(--pc-gold); }
+.pdp-deliver__field {
+  display: flex;
+  height: 46px;
+  border: 1px solid var(--pdp-line);
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.pdp-deliver__field:focus-within { border-color: var(--pdp-ink); box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.06); }
+.pdp-deliver__field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  outline: none;
+}
+.pdp-deliver__field input[aria-invalid="true"] { color: #9A3B2E; }
+.pdp-deliver__btn {
+  padding: 0 18px;
+  border: 0;
+  border-left: 1px solid var(--pdp-line);
+  background: var(--pdp-soft);
+  color: var(--pdp-ink);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.pdp-deliver__btn:hover { background: var(--pdp-ink); color: #fff; }
+.pdp-deliver.is-busy .pdp-deliver__btn { cursor: progress; opacity: 0.6; }
+.pdp-deliver__msg { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 0.82rem; color: var(--pdp-ink-soft); }
+.pdp-deliver__msg svg { flex: 0 0 auto; width: 16px; height: 16px; color: var(--pdp-muted); }
+.pdp-deliver[data-state="ok"] .pdp-deliver__msg svg { color: var(--pdp-success); }
+.pdp-deliver[data-state="error"] .pdp-deliver__msg { color: #9A3B2E; }
+
+/* 10 · Trust */
+.pdp-trust { padding: 16px; border-radius: 6px; background: var(--pdp-soft); }
+.pdp-trust__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 18px; margin: 0; padding: 0; list-style: none; }
+.pdp-trust__item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; line-height: 1.35; }
+.pdp-trust__item b { display: block; font-weight: 600; color: var(--pdp-ink); }
+.pdp-trust__item small { display: block; margin-top: 2px; font-size: 0.72rem; color: var(--pdp-muted); }
+.pdp-trust__icon { flex: 0 0 auto; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: var(--pc-gold); }
+.pdp-trust__icon svg { width: 15px; height: 15px; }
+.pdp-trust__pay { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--pdp-line); }
+.pdp-trust__secure { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.pdp-trust__secure svg { width: 14px; height: 14px; }
+.pdp-trust__secure-text { font-size: 0.74rem; color: var(--pdp-muted); }
+.pdp-trust .pdp-payments { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.pdp-trust .pdp-payments svg { width: 34px; height: 22px; }
+
+/* Sticky dock: the saving travels with it */
+.pdp-dock__prices { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.pdp-dock__was { font-size: 0.74rem; color: var(--pdp-muted); }
+.pdp-dock__was[hidden] { display: none; }
+
+/* Phone: product first, offers visible without long scrolling */
+@media (max-width: 768px) {
+  .pdp-console > * + * { margin-top: 16px; }
+  .pdp-console__line { margin-top: 10px; font-size: 0.66rem; }
+  .pdp-console .pdp-lede { font-size: 0.98rem; }
+  .pdp-values { padding: 12px 0; }
+  .pdp-value { grid-template-columns: 1fr; grid-template-rows: auto auto auto; justify-items: center; text-align: center; row-gap: 4px; padding: 0 8px; }
+  .pdp-value:first-child { padding-left: 8px; }
+  .pdp-value__icon { grid-row: auto; width: 30px; height: 30px; }
+  .pdp-value__title, .pdp-value__text { align-self: auto; }
+  .pdp-value__text { font-size: 0.8rem; }
+  .pdp-deals { padding: 12px 12px 2px; }
+  .pdp-deal { gap: 10px; padding: 10px 0; }
+  .pdp-deal__icon { width: 30px; height: 30px; }
+  .pdp-deal__title { font-size: 0.88rem; }
+  .pdp-deal__text { display: none; }
+  .pdp-deal--auto .pdp-deal__auto { display: none; }
+  .pdp-deal--auto { grid-template-columns: auto minmax(0, 1fr); }
+  .pdp-deal__code { height: 34px; }
+  .pdp-deal__code-text { padding: 0 8px; font-size: 0.68rem; }
+  .pdp-deal__code-act { min-width: 52px; padding: 0 8px; }
+  .pdp-trust__list { grid-template-columns: 1fr; gap: 12px; }
+  .pdp-dock .pdp-dock__prices { align-items: flex-start; }
+  .pdp-dock .pdp-add { flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdp-js .pdp-deal,
+  .pdp-savings.is-pop,
+  .pdp-deal__code.is-pop { animation: none; }
+  .pdp-console .pdp-add::after { display: none; }
+}
+
+/* Recommendations: three relevant cards; a swipe row on phones */
+.pdp-related .hoa-shop-grid.pdp-related-cards[data-view='grid'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 768px) {
+  .pdp-related .hoa-shop-grid.pdp-related-cards[data-view='grid'] {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 72%;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter, 20px);
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pdp-related .pdp-related-cards::-webkit-scrollbar { display: none; }
+  .pdp-related .pdp-related-cards > .hoa-pc { scroll-snap-align: start; }
+}
+
+/* ==========================================================================
+   CONVERSION HIERARCHY (2026-09-28)
+   Same data, different weight. The buy column reads the way a shop assistant would say it:
+     LEVEL 1  name · rating · price · saving · lead offer · Add to bag      (heavy)
+     LEVEL 2  benefit strip · second offer · multi-buy · pay later · Buy now (supporting)
+     LEVEL 3  delivery · stock · trust · details                             (quiet)
+   Contrast plan: warm paper page → soft-lit image stage → dark type → one gold
+   accent (saving, lead offer) → the only solid black element is Add to bag.
+   ========================================================================== */
+.pdp-hero {
+  --cv-paper: #F6F3EE;
+  --cv-gold: #8C6B2E;
+  --cv-gold-line: #E2D2B0;
+  --cv-offer: #FBF5E8;
+  background: var(--cv-paper);
+}
+
+/* Image: the bottle gets a lit stage instead of a flat box; the studio white melts into it */
+.pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track {
+  border-radius: 6px;
+  background: radial-gradient(115% 85% at 50% 38%, #FFFFFF 0%, #F7F3EC 48%, #ECE4D8 100%);
+}
+.pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide { background: transparent; }
+.pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide:first-child img { mix-blend-mode: multiply; }
+.pdp-hero .pdp-thumb { background: #fff; border-color: transparent; }
+.pdp-hero .pdp-thumb.is-active { border-color: var(--pdp-ink); }
+.pdp-hero .pdp-more__tile { border-radius: 6px; }
+.pdp-hero .pdp-expand { width: 42px; height: 42px; box-shadow: none; background: rgba(255, 255, 255, 0.85); }
+
+/* Rhythm: tight inside a group, air between groups */
+.pdp-console > * + * { margin-top: 22px; }
+.pdp-console > .pdp-rating { margin-top: 14px; }
+.pdp-console > .pdp-price { margin-top: 18px; }
+.pdp-console > .pdp-values { margin-top: 18px; }
+.pdp-console .pdp-form { margin-top: 20px !important; gap: 14px; }
+
+/* Level 1 · identity */
+.pdp-console__line {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--pdp-muted);
+}
+.pdp-console__line > span + span::before { color: var(--cv-gold); }
+.pdp-console__id .pdp-title {
+  margin-top: 10px !important;
+  font-size: clamp(2.6rem, 3.7vw, 3.5rem);
+  line-height: 0.98;
+}
+.pdp-console .pdp-lede { margin-top: 10px; font-size: 1.02rem; line-height: 1.45; max-width: 56ch; }
+
+/* Level 1 · social proof: gold stars, a real link, best-seller as a quiet word rather than a badge */
+.pdp-console .pdp-rating { gap: 6px 14px; font-size: 0.86rem; }
+.pdp-console .pdp-rating .pdp-stars { font-size: 0.95rem; }
+.pdp-console .pdp-rating .pdp-stars__fill { color: #B8872F; }
+.pdp-console .pdp-rating strong { font-size: 0.92rem; }
+.pdp-console .pdp-rating__count { color: var(--pdp-ink); }
+.pdp-console .pdp-console__badge {
+  height: auto;
+  padding: 0 0 0 14px;
+  border: 0;
+  border-left: 1px solid var(--pdp-line);
+  border-radius: 0;
+  background: none;
+  color: var(--cv-gold);
+}
+
+/* Level 1 · price: the selling price is the biggest figure in the column; the saving reads as a gain */
+.pdp-console .pdp-price {
+  padding-top: 18px;
+  border-top: 1px solid var(--pdp-line);
+  column-gap: 14px;
+  row-gap: 10px;
+}
+.pdp-console .pdp-price__amount {
+  font-family: var(--font-sans);
+  font-size: clamp(2.5rem, 3.1vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.pdp-console .pdp-price__compare { font-size: 1.1rem; color: var(--pdp-muted); text-decoration-thickness: 1px; }
+.pdp-console .pdp-price__note { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 0.76rem; }
+.pdp-console .pdp-savings {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background: var(--cv-gold);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pdp-console .pdp-price__save {
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--cv-gold);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.pdp-console .pdp-price__tax { color: var(--pdp-muted); }
+.pdp-console .pdp-price__save:not([hidden]) + .pdp-price__tax::before { content: "\00B7"; margin-right: 12px; color: var(--pdp-clay); }
+
+/* Level 2 · benefit strip: three facts, scannable in a second; small gold glyph, no circles */
+.pdp-console .pdp-values { padding: 14px 0; border-top: 0; border-bottom: 1px solid var(--pdp-line); }
+.pdp-console .pdp-value {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 6px;
+  row-gap: 3px;
+  align-items: center;
+  padding: 0 14px;
+}
+.pdp-console .pdp-value:first-child { padding-left: 0; }
+.pdp-console .pdp-value__icon { grid-row: 1; width: auto; height: auto; background: none; color: var(--cv-gold); }
+.pdp-console .pdp-value__icon svg { width: 13px; height: 13px; }
+.pdp-console .pdp-value__title { grid-row: 1; align-self: center; font-size: 0.6rem; }
+.pdp-console .pdp-value__text { grid-column: 1 / -1; font-size: 0.92rem; }
+
+/* Level 1/2 · offers: a value moment on its own warm surface, the warmest thing in the column */
+.pdp-console .pdp-deals {
+  position: relative;
+  padding: 16px 20px 6px;
+  border: 1px solid var(--cv-gold-line);
+  border-radius: 10px;
+  background: linear-gradient(180deg, var(--cv-offer) 0%, #FFFDF9 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 12px 30px -22px rgba(140, 107, 46, 0.45);
+}
+.pdp-console .pdp-deals__head {
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  color: var(--cv-gold);
+}
+.pdp-console .pdp-deals__head::before,
+.pdp-console .pdp-deals__head::after { content: ""; flex: 1; height: 1px; background: var(--cv-gold-line); }
+.pdp-console .pdp-deal { gap: 14px; padding: 12px 0; }
+.pdp-console .pdp-deal + .pdp-deal { border-top: 1px solid var(--cv-gold-line); }
+.pdp-console .pdp-deal__label { color: var(--cv-gold); font-size: 0.64rem; letter-spacing: 0.16em; }
+/* Lead offer: the headline you notice without reading */
+.pdp-console .pdp-deal--lead { padding: 14px 0 16px; }
+.pdp-console .pdp-deal--lead .pdp-deal__icon { width: 46px; height: 46px; border: 0; background: var(--cv-gold); color: #fff; }
+.pdp-console .pdp-deal--lead .pdp-deal__icon svg { width: 21px; height: 21px; }
+.pdp-console .pdp-deal--lead .pdp-deal__body { gap: 3px; }
+.pdp-console .pdp-deal--lead .pdp-deal__title { font-size: 1.32rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.pdp-console .pdp-deal--lead .pdp-deal__title b { font-weight: 800; }
+.pdp-console .pdp-deal--lead .pdp-deal__text { font-size: 0.8rem; color: var(--pdp-ink-soft); }
+.pdp-console .pdp-deal__code { height: 44px; border-color: var(--cv-gold); border-radius: 6px; }
+.pdp-console .pdp-deal__code-text { padding: 0 14px; font-size: 0.82rem; letter-spacing: 0.14em; }
+.pdp-console .pdp-deal__code-act { min-width: 70px; border-left-color: var(--cv-gold); background: var(--pdp-ink); color: #fff; font-weight: 700; }
+@media (hover: hover) {
+  .pdp-console .pdp-deal__code:hover .pdp-deal__code-act { background: var(--cv-gold); }
+}
+/* Secondary offers (free shipping, extra offer blocks): same card, smaller voice */
+.pdp-console .pdp-deal:not(.pdp-deal--lead) .pdp-deal__icon { width: 34px; height: 34px; margin-inline: 6px; background: #fff; }
+.pdp-console .pdp-deal:not(.pdp-deal--lead) .pdp-deal__title { font-size: 0.92rem; font-weight: 600; }
+.pdp-console .pdp-deal:not(.pdp-deal--lead) { padding: 10px 0 12px; }
+
+/* Level 2 · multi-buy: three compact tiles in one row instead of three tall rows */
+.pdp-console .pdp-offers { margin-top: 6px; }
+.pdp-console .pdp-offers__legend { margin-bottom: 10px; color: var(--pdp-muted); font-size: 0.66rem; }
+.pdp-console .pdp-offers__list { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; }
+.pdp-console .pdp-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 12px 12px 11px;
+  border-radius: 8px;
+  background: #fff;
+}
+.pdp-console .pdp-offer__radio,
+.pdp-console .pdp-offer__icon { display: none; }
+.pdp-console .pdp-offer__body { display: contents; }
+.pdp-console .pdp-offer__meta { order: 3; gap: 4px 8px; font-size: 0.72rem; }
+.pdp-console .pdp-offer__name { order: 1; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pdp-muted); }
+.pdp-console .pdp-offer__price { order: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+.pdp-console .pdp-offer__price b { font-size: 1.02rem; font-weight: 700; }
+.pdp-console .pdp-offer__price s { font-size: 0.72rem; }
+.pdp-console .pdp-offer__save { padding: 1px 6px 1px 4px; background: #F3EAD6; color: var(--cv-gold); font-size: 0.68rem; }
+.pdp-console .pdp-offer.is-selected { background: #fff; border-color: var(--pdp-ink); box-shadow: inset 0 0 0 1px var(--pdp-ink); }
+.pdp-console .pdp-offer.is-selected .pdp-offer__name { color: var(--pdp-ink); }
+.pdp-console .pdp-offer.is-selected .pdp-offer__price b { color: var(--pdp-ink); }
+.pdp-console .pdp-offer__flag { right: 10px; background: var(--cv-gold); font-size: 0.56rem; }
+
+/* Level 2 · pay later: a line of reassurance, not a banner */
+.pdp-console .pdp-emi { gap: 10px; padding: 0; background: none; font-size: 0.86rem; }
+.pdp-console .pdp-emi__icon svg { width: 18px; height: 18px; }
+.pdp-console .pdp-emi__copy { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.pdp-console .pdp-emi small { font-size: 0.74rem; }
+
+/* Level 1 · the action. Add to bag is the only solid black shape in the column. */
+.pdp-console .pdp-qty,
+.pdp-console .pdp-icon-btn { height: 60px; background: #fff; }
+.pdp-console .pdp-icon-btn { width: 60px; }
+.pdp-console .pdp-add {
+  height: 60px;
+  background: #111;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  box-shadow: 0 14px 26px -16px rgba(17, 17, 17, 0.7);
+}
+@media (hover: hover) {
+  .pdp-console .pdp-add:hover:not(:disabled) { background: #000; transform: translateY(-2px); box-shadow: 0 18px 30px -16px rgba(17, 17, 17, 0.75); }
+}
+.pdp-console .pdp-add.is-added { background: var(--pdp-success); box-shadow: 0 14px 26px -16px rgba(47, 107, 71, 0.7); }
+.pdp-console .pdp-add.is-added .pdp-add__label { display: inline-block; animation: pc-pop 0.5s var(--ease-editorial, ease); }
+/* Buy now: clearly secondary: outline, lighter, shorter */
+.pdp-console .pdp-buynow,
+.pdp-console .pdp-dynamic-checkout .shopify-payment-button__button--unbranded {
+  height: 50px;
+  min-height: 50px;
+  border: 1px solid rgba(17, 17, 17, 0.28);
+  background: transparent;
+  color: var(--pdp-ink);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  box-shadow: none;
+}
+.pdp-console .pdp-buynow:hover:not(:disabled),
+.pdp-console .pdp-dynamic-checkout .shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  border-color: var(--pdp-ink);
+  background: #fff;
+  color: var(--pdp-ink);
+  transform: none;
+}
+.pdp-console .pdp-stock { font-size: 0.78rem; }
+
+/* Level 3 · delivery: one line, one field */
+.pdp-console .pdp-deliver { gap: 6px; padding-top: 20px; border-top: 1px solid var(--pdp-line); }
+.pdp-console .pdp-deliver__form { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; }
+.pdp-console .pdp-deliver__label { font-size: 0.66rem; }
+.pdp-console .pdp-deliver__field { height: 42px; }
+.pdp-console .pdp-deliver__msg { font-size: 0.8rem; }
+
+/* Level 3 · trust: three quiet marks in a row; the detail line stays for screen readers */
+.pdp-console .pdp-trust { padding: 16px 0 0; border-top: 1px solid var(--pdp-line); border-radius: 0; background: none; }
+.pdp-console .pdp-trust__list { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 12px; }
+.pdp-console .pdp-trust__item { flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 0.74rem; }
+.pdp-console .pdp-trust__item b { font-weight: 500; color: var(--pdp-ink-soft); }
+.pdp-console .pdp-trust__item small {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.pdp-console .pdp-trust__icon { width: auto; height: auto; background: none; }
+.pdp-console .pdp-trust__icon svg { width: 20px; height: 20px; }
+.pdp-console .pdp-trust__pay { justify-content: center; margin-top: 14px; padding-top: 0; border-top: 0; color: var(--pdp-muted); }
+
+/* Level 3 · details: collapsed, small, sans. Reference, not headline. */
+.pdp-console .pdp-accordion summary { padding: 15px 0; font-family: var(--font-sans); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pdp-ink-soft); }
+.pdp-console .pdp-accordion__icon { flex-basis: 22px; height: 22px; background: transparent; }
+
+/* Narrow buy column (tablet, phone): the lead offer's code becomes a full-width tap target */
+@container pdp-console (max-width: 470px) {
+  .pdp-console .pdp-deal--lead { grid-template-columns: auto minmax(0, 1fr); row-gap: 12px; }
+  .pdp-console .pdp-deal--lead .pdp-deal__code { grid-column: 1 / -1; justify-content: space-between; width: 100%; }
+  .pdp-console .pdp-deal--lead .pdp-deal__code-text { flex: 1; }
+  .pdp-console .pdp-deal--lead .pdp-deal__code-act { min-width: 96px; }
+  .pdp-console .pdp-deliver__form { grid-template-columns: 1fr; gap: 8px; }
+}
+
+@media (max-width: 768px) {
+  .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track { border-radius: 0; }
+  /* Phone order is image → name → price: the extra views would push the name a screen down,
+     and the same photographs are already one swipe / one thumbnail away */
+  .pdp-hero .pdp-more { display: none; }
+  .pdp-console > * + * { margin-top: 18px; }
+  .pdp-console > .pdp-rating { margin-top: 10px; }
+  .pdp-console > .pdp-price { margin-top: 14px; }
+  .pdp-console > .pdp-values { margin-top: 12px; }
+  .pdp-console__id .pdp-title { font-size: 2.35rem; }
+  .pdp-console .pdp-lede { font-size: 0.96rem; }
+  .pdp-console .pdp-price { padding-top: 14px; }
+  .pdp-console .pdp-price__amount { font-size: 2.3rem; }
+  .pdp-console .pdp-value,
+  .pdp-console .pdp-value:first-child { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; padding: 0 10px; }
+  .pdp-console .pdp-value:first-child { padding-left: 0; }
+  .pdp-console .pdp-value__icon { grid-row: 1; width: auto; height: auto; }
+  .pdp-console .pdp-value__text { font-size: 0.82rem; }
+  .pdp-console .pdp-deals { padding: 14px 14px 4px; }
+  .pdp-console .pdp-deal--lead .pdp-deal__icon { width: 40px; height: 40px; }
+  .pdp-console .pdp-deal--lead .pdp-deal__title { font-size: 1.2rem; }
+  .pdp-console .pdp-deal--lead .pdp-deal__text { display: block; }
+  .pdp-console .pdp-deal__code { height: 46px; }
+  .pdp-console .pdp-deal__code-text { font-size: 0.82rem; }
+  .pdp-console .pdp-offer { padding: 11px 10px 10px; }
+  .pdp-console .pdp-qty,
+  .pdp-console .pdp-icon-btn { height: 56px; }
+  .pdp-console .pdp-icon-btn { width: 56px; }
+  .pdp-console .pdp-add { height: 56px; }
+  .pdp-console .pdp-trust__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pdp-dock .pdp-add { height: 50px; font-weight: 700; letter-spacing: 0.14em; }
+}
+
+/* ==========================================================================
+   RETAIL FEEL (2026-09-28, after the user's reference screenshots)
+   Warmer and more "shop": a first-order banner, fact pills above the name, the family
+   in gold, a green saving, offers as coupon tickets, and stacked Single / Duo / Trio
+   rows right above the purchase. Overrides the CONVERSION HIERARCHY block above.
+   ========================================================================== */
+.pdp-hero { --cv-ticket-line: #E6D3AC; --cv-save: #2F6B47; }
+
+/* First-order banner: the lead offer, said once where the eye lands first */
+.pdp-banner-offer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #F1E2C2 0%, #F8EEDB 100%);
+  color: #5A4214;
+  font-size: 0.84rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.pdp-banner-offer svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--cv-gold); }
+.pdp-banner-offer > span { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; flex: 1; }
+.pdp-banner-offer b { font-weight: 700; }
+.pdp-banner-offer b::first-letter { text-transform: uppercase; }
+.pdp-banner-offer__code {
+  margin-left: auto;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border: 1px dashed var(--cv-gold);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (hover: hover) { .pdp-banner-offer:hover { transform: translateY(-1px); } }
+.pdp-console > .pdp-banner-offer + .pdp-console__id { margin-top: 18px; }
+
+/* Fact pills above the name (value blocks: longevity, wearer, concentration) */
+.pdp-console .pdp-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+.pdp-console .pdp-value,
+.pdp-console .pdp-value:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--pdp-pill);
+  background: #EFE3CC;
+  color: #5A4214;
+}
+.pdp-console .pdp-value__icon { display: grid; place-items: center; color: var(--cv-gold); }
+.pdp-console .pdp-value__icon svg { display: block; width: 13px; height: 13px; }
+.pdp-console .pdp-value__icon,
+.pdp-console .pdp-value__text { align-self: center; }
+.pdp-console .pdp-value__text { font-size: 0.78rem; font-weight: 600; line-height: 1; color: inherit; }
+
+/* Family in gold under the name */
+.pdp-console__family {
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #9C7A3C;
+}
+
+/* The saving reads as a gain: green, next to the gold offer language */
+.pdp-console .pdp-savings { background: var(--cv-save); }
+.pdp-console .pdp-price__save { color: var(--cv-save); }
+
+/* Offers: coupon tickets side by side (scroll sideways when there are more) */
+.pdp-console .pdp-deals { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.pdp-console .pdp-deals__head {
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pdp-ink);
+}
+.pdp-console .pdp-deals__head::before,
+.pdp-console .pdp-deals__head::after { content: none; }
+.pdp-console .pdp-deals__head svg { width: 16px; height: 16px; color: var(--cv-gold); }
+.pdp-console .pdp-deals__list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(230px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.pdp-console .pdp-deals__list::-webkit-scrollbar { display: none; }
+.pdp-console .pdp-deal,
+.pdp-console .pdp-deal--lead,
+.pdp-console .pdp-deal:not(.pdp-deal--lead) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--cv-ticket-line);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FBF1DE 0%, #FFFBF4 65%);
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+.pdp-console .pdp-deal + .pdp-deal { border-top: 1px solid var(--cv-ticket-line); }
+.pdp-console .pdp-deal--auto { background: linear-gradient(135deg, #F4F1EA 0%, #FFFFFF 65%); }
+/* Ticket notches, centred on the tear line */
+.pdp-console .pdp-deal::before,
+.pdp-console .pdp-deal::after {
+  content: "";
+  position: absolute;
+  bottom: 37px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--cv-ticket-line);
+  border-radius: 50%;
+  background: var(--cv-paper);
+}
+.pdp-console .pdp-deal::before { left: -9px; }
+.pdp-console .pdp-deal::after { right: -9px; }
+.pdp-console .pdp-deal__icon { display: none; }
+.pdp-console .pdp-deal__body,
+.pdp-console .pdp-deal--lead .pdp-deal__body { position: relative; gap: 3px; padding: 14px 16px 14px; }
+.pdp-console .pdp-deal--lead .pdp-deal__body::after {
+  content: "\2726";
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--cv-gold);
+  opacity: 0.35;
+}
+.pdp-console .pdp-deal__label { padding-right: 24px; }
+.pdp-console .pdp-deal__title,
+.pdp-console .pdp-deal:not(.pdp-deal--lead) .pdp-deal__title { font-size: 1.02rem; font-weight: 600; line-height: 1.25; }
+.pdp-console .pdp-deal--lead .pdp-deal__title { font-size: 1.2rem; font-weight: 500; }
+.pdp-console .pdp-deal__text,
+.pdp-console .pdp-deal--lead .pdp-deal__text { display: block; font-size: 0.76rem; color: var(--pdp-ink-soft); }
+/* Tear-off stub: the code (tap to copy + apply) or "Auto-applied" */
+.pdp-console .pdp-deal__code,
+.pdp-console .pdp-deal__auto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 46px;
+  margin-top: auto;
+  padding: 0 12px 0 16px;
+  border: 0;
+  border-top: 1px dashed #D5BE8F;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.pdp-console .pdp-deal__code-text { flex: 1; justify-items: start; padding: 0; text-align: left; font-size: 0.82rem; letter-spacing: 0.14em; color: #6B5220; }
+.pdp-console .pdp-deal__code-act,
+.pdp-console .pdp-deal--lead .pdp-deal__code-act {
+  min-width: 0;
+  height: 28px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--pdp-pill);
+  background: var(--pdp-ink);
+  color: #fff;
+  font-size: 0.64rem;
+}
+.pdp-console .pdp-deal__code.is-applied { border-top-style: dashed; border-color: #D5BE8F; }
+.pdp-console .pdp-deal__code.is-applied .pdp-deal__code-act { border: 0; background: var(--cv-save); }
+@media (hover: hover) {
+  .pdp-console .pdp-deal__code:hover { box-shadow: none; transform: none; background: rgba(255, 255, 255, 0.6); }
+}
+.pdp-console .pdp-deal__auto { justify-content: flex-start; font-size: 0.66rem; }
+
+/* Buy more, save more: stacked choice rows above the purchase */
+.pdp-console .pdp-offers { margin-top: 0; }
+.pdp-console .pdp-offers__list { grid-auto-flow: row; grid-auto-columns: auto; gap: 10px; }
+.pdp-console .pdp-offer {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fff;
+}
+.pdp-console .pdp-offer__radio { display: block; }
+.pdp-console .pdp-offer__icon { display: inline-flex; }
+.pdp-console .pdp-offer__body { display: grid; gap: 2px; }
+.pdp-console .pdp-offer__name { order: 0; font-size: 0.98rem; font-weight: 600; letter-spacing: 0.01em; text-transform: none; color: var(--pdp-ink); }
+.pdp-console .pdp-offer__meta { order: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 0.76rem; }
+.pdp-console .pdp-offer__save { background: #E6F0E9; color: var(--cv-save); font-size: 0.7rem; }
+.pdp-console .pdp-offer__price { order: 0; display: grid; justify-items: end; gap: 1px; }
+.pdp-console .pdp-offer__price b { font-size: 1.05rem; }
+.pdp-console .pdp-offer.is-selected { background: #FBF3E3; border-color: var(--pdp-ink); box-shadow: inset 0 0 0 1px var(--pdp-ink); }
+.pdp-console .pdp-offer__flag { right: 14px; font-size: 0.6rem; }
+
+@media (max-width: 768px) {
+  .pdp-banner-offer { gap: 8px; padding: 9px 10px 9px 12px; font-size: 0.78rem; }
+  .pdp-banner-offer > span { flex-wrap: nowrap; gap: 8px; }
+  .pdp-banner-offer__code { padding: 2px 6px; font-size: 0.64rem; letter-spacing: 0.06em; }
+  .pdp-console .pdp-values { margin-bottom: 12px; }
+  .pdp-console .pdp-deals__list { grid-auto-columns: 84%; }
+  .pdp-console .pdp-deal--auto .pdp-deal__auto { display: flex; }
+  .pdp-console .pdp-offer { padding: 11px 14px; }
+}
+
+/* ==========================================================================
+   COLOUR PASS (2026-09-28): the beige-on-beige palette read flat, so the buy column
+   now sits on white with distinct colour blocks, like a retail PDP:
+     emerald brand moments: first-order banner, family line, selected tier, flags
+     peach   value blocks: offer tickets, pay-later bar, fact pills
+     green   the saving
+     amber   stars
+     black   Add to bag (still the only solid black shape)
+   ========================================================================== */
+.pdp-hero {
+  --cv-paper: #FFFFFF;
+  --cv-wine: #0F5A45;      /* brand accent: deep emerald (user's pick, was wine #7A2445) */
+  --cv-wine-soft: #EAF4F0;
+  --cv-peach: #FFF3E6;
+  --cv-peach-2: #FDE6CC;
+  --cv-peach-line: #F1C9A0;
+  --cv-peach-ink: #7A4513;
+  --cv-save: #178A45;
+  --cv-star: #F2A91E;
+  --cv-gold: var(--cv-wine);
+  --cv-ticket-line: var(--cv-peach-line);
+  background: #fff;
+}
+
+/* Image stage: neutral light grey so the bottle, not the page, carries the colour */
+.pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track { background: radial-gradient(115% 85% at 50% 38%, #FFFFFF 0%, #F6F6F4 55%, #ECECE8 100%); }
+.pdp-hero .pdp-thumb { background: #F6F6F4; }
+
+/* First-order banner: a solid wine band */
+.pdp-banner-offer { background: var(--cv-wine); color: #fff; }
+.pdp-banner-offer svg { color: #fff; }
+.pdp-banner-offer__code { border-color: rgba(255, 255, 255, 0.7); color: #fff; }
+@media (hover: hover) { .pdp-banner-offer:hover { background: #0B4736; } }
+
+/* Fact pills: warm peach chips */
+.pdp-console .pdp-value,
+.pdp-console .pdp-value:first-child { background: var(--cv-peach-2); color: var(--cv-peach-ink); }
+.pdp-console .pdp-value__icon { color: var(--cv-peach-ink); }
+
+/* Family line and proof */
+.pdp-console__family { color: var(--cv-wine); }
+.pdp-console .pdp-rating .pdp-stars__fill { color: var(--cv-star); }
+.pdp-console .pdp-price { border-top-color: #EEEEEE; }
+.pdp-console .pdp-savings { background: var(--cv-save); border-radius: 999px; }
+.pdp-console .pdp-price__save { color: var(--cv-save); }
+
+/* Offer tickets: peach cards, wine labels, black COPY */
+.pdp-console .pdp-deals__head svg { color: var(--cv-wine); }
+.pdp-console .pdp-deal,
+.pdp-console .pdp-deal--lead,
+.pdp-console .pdp-deal:not(.pdp-deal--lead) { background: linear-gradient(135deg, var(--cv-peach-2) 0%, var(--cv-peach) 70%); border-color: var(--cv-peach-line); }
+.pdp-console .pdp-deal.pdp-deal--auto:not(.pdp-deal--lead) { background: linear-gradient(135deg, #E3F4E9 0%, #F4FBF6 70%); border-color: #BFE0CB; }
+.pdp-console .pdp-deal--auto::before,
+.pdp-console .pdp-deal--auto::after { border-color: #BFE0CB; }
+.pdp-console .pdp-deal--auto .pdp-deal__auto { border-top-color: #A9D5B9; color: var(--cv-save); }
+.pdp-console .pdp-deal--auto .pdp-deal__label { color: var(--cv-save); }
+.pdp-console .pdp-deal__label { color: var(--cv-wine); }
+.pdp-console .pdp-deal--lead .pdp-deal__body::after { color: var(--cv-wine); opacity: 0.45; }
+.pdp-console .pdp-deal__code,
+.pdp-console .pdp-deal__auto { border-top-color: #E8B27C; }
+.pdp-console .pdp-deal__code-text { color: var(--cv-peach-ink); }
+
+/* Multi-buy rows: white, selected row tinted wine, flag in wine */
+.pdp-console .pdp-offer { border-color: #E6E6E6; }
+.pdp-console .pdp-offer.is-selected { background: var(--cv-wine-soft); border-color: var(--cv-wine); box-shadow: inset 0 0 0 1px var(--cv-wine); }
+.pdp-console .pdp-offer.is-selected .pdp-offer__radio { border-color: var(--cv-wine); background: var(--cv-wine); }
+.pdp-console .pdp-offer.is-selected .pdp-offer__icon { color: var(--cv-wine); }
+.pdp-console .pdp-offer__flag { background: var(--cv-wine); }
+.pdp-console .pdp-offer__save { background: #E3F4E9; color: var(--cv-save); }
+
+/* Pay later: a peach bar, like the offers it belongs with */
+.pdp-console .pdp-emi { padding: 12px 16px; border-radius: 10px; background: var(--cv-peach-2); color: #3D2410; }
+.pdp-console .pdp-emi__icon { color: var(--cv-peach-ink); }
+.pdp-console .pdp-emi small { color: #8A5A2B; }
+
+/* Quiet levels on white */
+.pdp-console .pdp-deliver,
+.pdp-console .pdp-trust,
+.pdp-console .pdp-accordion { border-color: #EEEEEE; }
+.pdp-console .pdp-deliver__label svg,
+.pdp-console .pdp-trust__icon { color: var(--cv-wine); }

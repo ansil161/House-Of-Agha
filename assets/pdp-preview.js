@@ -39,6 +39,11 @@
     leaf: '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19l8-8"/>',
     flower: '<circle cx="12" cy="12" r="2.2"/><path d="M12 9.8c-1.5-3.2-.6-5.8 0-6.8.6 1 1.5 3.6 0 6.8zM12 14.2c1.5 3.2.6 5.8 0 6.8-.6-1-1.5-3.6 0-6.8zM9.8 12c-3.2 1.5-5.8.6-6.8 0 1-.6 3.6-1.5 6.8 0zM14.2 12c3.2-1.5 5.8-.6 6.8 0-1 .6-3.6 1.5-6.8 0z"/>',
     wood: '<ellipse cx="7" cy="12" rx="3" ry="6"/><path d="M7 6h10c1.7 0 3 2.7 3 6s-1.3 6-3 6H7"/><path d="M7 10.5c.6 0 1 .7 1 1.5s-.4 1.5-1 1.5"/>',
+    gift: '<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8.5h14V12M12 8v12.5"/><path d="M12 8c-1.5-3.5-5.5-4-5.5-1.5S10 8 12 8zM12 8c1.5-3.5 5.5-4 5.5-1.5S14 8 12 8z"/>',
+    tag: '<path d="M3 12.6V4.2c0-.7.5-1.2 1.2-1.2h8.4L21 11.4a1.4 1.4 0 0 1 0 2l-7.6 7.6a1.4 1.4 0 0 1-2 0z"/><circle cx="7.8" cy="7.8" r="1.4"/>',
+    card: '<rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19M6 14.5h4"/>',
+    person: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20.5c.8-3.8 3.6-6 7-6s6.2 2.2 7 6"/>',
+    check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
     sparkle: '<path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/><path d="M19 16c.2 1.5.8 2.1 2.3 2.3-1.5.2-2.1.8-2.3 2.3-.2-1.5-.8-2.1-2.3-2.3 1.5-.2 2.1-.8 2.3-2.3z"/>'
   };
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
@@ -66,7 +71,20 @@
   const tags = (product.tagline || '').split('·').map((t) => t.trim()).filter(Boolean);
   const stars = (value) => `<span class="pdp-stars" role="img" aria-label="Rated ${value.toFixed(1)} out of 5"><span class="pdp-stars__fill" style="width: ${(value / 5) * 100}%"></span></span>`;
 
-  const eyebrow = product.eyebrow || 'Extrait de parfum · 35%';
+  const eyebrow = product.eyebrow || 'Eau de Parfum';
+  // Console data — same sources as the Liquid: catalog wearer / best-seller / coupon / shipping threshold.
+  const wearerLabel = ({ men: 'For him', women: 'For her', unisex: 'Unisex' })[(cat && cat.wearer) || ''] || '';
+  const isBest = Boolean(cat && cat.isBestSeller);
+  const onSale = current.compare_at_price > current.price;
+  const unitRupees = current.price == null ? 0 : current.price / 100;
+  const welcome = window.HOA && window.HOA.ready ? window.HOA.coupon.primary() : null;
+  const shipThreshold = window.HOA && window.HOA.ready ? window.HOA.threshold : 0;
+  // Value stack (templates/product.json blocks): longevity, wearer, concentration — only facts the product has
+  const values = [
+    product.longevity && ['time', 'Longevity', /last/i.test(product.longevity) ? product.longevity : 'Lasts ' + product.longevity],
+    wearerLabel && ['person', 'Made for', wearerLabel],
+    ['drop', 'Concentration', 'Eau de Parfum']
+  ].filter(Boolean);
   document.title = `${niceTitle} ${eyebrow} — AGHA PERFUMES`;
   document.querySelector('meta[name="description"]')?.setAttribute('content', product.description);
 
@@ -113,36 +131,69 @@
           </div>
         </div>
 
-        <div class="pdp-info">
-          <div data-pdp-hero-item>
-            <span class="pdp-eyebrow">${esc(eyebrow)}</span>
+        <!-- Purchase console: mirrors sections/agha-pdp-main.liquid -->
+        <div class="pdp-info pdp-console" data-pdp-console>
+          ${welcome ? `
+          <a class="pdp-banner-offer" href="#pdp-deals-preview" data-pdp-hero-item>${icon('gift')}<span><b>${esc(welcome.description)}</b><span class="pdp-banner-offer__code">Code ${esc(welcome.code)}</span></span></a>` : ''}
+
+          <div class="pdp-console__id" data-pdp-hero-item>
+            ${values.length ? `
+            <ul class="pdp-values" role="list">
+              ${values.map(([ic, title, text]) => `<li class="pdp-value"><span class="pdp-value__icon">${icon(ic)}</span><span class="pdp-value__title pdp-sr">${esc(title)}: </span><span class="pdp-value__text">${esc(text)}</span></li>`).join('')}
+            </ul>` : ''}
             <h1 class="pdp-title">${esc(niceTitle)}</h1>
+            ${product.family ? `<p class="pdp-console__family">${esc(product.family)}</p>` : ''}
+            <p class="pdp-lede">${esc(product.description)}</p>
           </div>
 
           ${rating ? `
           <div class="pdp-rating" data-pdp-hero-item>
-            ${stars(rating)}
-            <strong>${rating.toFixed(1)}</strong>
-            <a href="#pdp-reviews">${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'}</a>
+            ${rating ? `<a class="pdp-rating__link" href="#pdp-reviews">${stars(rating)}<strong>${rating.toFixed(1)}</strong><span class="pdp-rating__count">${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'}</span></a>` : ''}
           </div>` : ''}
-
-          ${tags.length ? `<div class="pdp-tags" data-pdp-hero-item>${tags.map((t) => `<span class="pdp-chip">${esc(t)}</span>`).join('')}</div>` : ''}
-
-          <p class="pdp-lede" data-pdp-hero-item>${esc(product.description)}</p>
 
           <div class="pdp-price" data-pdp-hero-item>
             <span class="pdp-price__amount" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
-            <s class="pdp-price__compare" data-pdp-compare${current.compare_at_price > current.price ? '' : ' hidden'}>${current.compare_at_price > current.price ? money(current.compare_at_price / 100) : ''}</s>
-            <span class="pdp-price__save" data-pdp-save${current.compare_at_price > current.price ? '' : ' hidden'}>${current.compare_at_price > current.price ? Math.round(((current.compare_at_price - current.price) * 100) / current.compare_at_price) + '% off' : ''}</span>
-            <span class="pdp-price__note"><span data-pdp-variant-title>${current.title}</span> · Inclusive of all taxes</span>
+            <s class="pdp-price__compare" data-pdp-compare${onSale ? '' : ' hidden'}><span class="pdp-sr">MRP </span>${onSale ? money(current.compare_at_price / 100) : ''}</s>
+            <span class="pdp-price__note">
+              <span class="pdp-savings" data-pdp-savings${onSale ? '' : ' hidden'}>${onSale ? 'You save ' + money((current.compare_at_price - current.price) / 100) : ''}</span>
+              <span class="pdp-price__save" data-pdp-save${onSale ? '' : ' hidden'}>${onSale ? Math.round(((current.compare_at_price - current.price) * 100) / current.compare_at_price) + '% off' : ''}</span>
+              <span class="pdp-price__tax">Inclusive of all taxes</span>
+            </span>
           </div>
-          <p class="pdp-savings" data-pdp-savings data-pdp-hero-item${current.compare_at_price > current.price ? '' : ' hidden'}>${current.compare_at_price > current.price ? 'You save ' + money((current.compare_at_price - current.price) / 100) : ''}</p>
-          <p class="hoa-offer-note pdp-offer-note" data-hoa-offer-note="tiers-pdp" data-pdp-hero-item></p>
+
+          ${(welcome || shipThreshold) ? `
+          <section class="pdp-deals" aria-labelledby="pdp-deals-preview" data-pdp-hero-item>
+            <h2 class="pdp-deals__head" id="pdp-deals-preview">${icon('sparkle')}<span>Exclusive offers</span></h2>
+            <ul class="pdp-deals__list" role="list">
+              ${welcome ? `
+              <li class="pdp-deal pdp-deal--lead" data-pdp-deal data-percent="${welcome.type === 'percent' ? welcome.value : ''}">
+                <span class="pdp-deal__icon">${icon('gift')}</span>
+                <span class="pdp-deal__body">
+                  <span class="pdp-deal__label">${esc(welcome.label)}</span>
+                  <span class="pdp-deal__title">${welcome.type === 'percent' ? `Get it for <b data-pdp-deal-price>${money(Math.round(unitRupees * (100 - welcome.value) / 100))}</b>` : esc(welcome.description)}</span>
+                  <span class="pdp-deal__text">${esc(welcome.description.charAt(0).toUpperCase() + welcome.description.slice(1))}</span>
+                </span>
+                <button type="button" class="pdp-deal__code" data-pdp-code="${esc(welcome.code)}" aria-label="Copy and apply code ${esc(welcome.code)}">
+                  <span class="pdp-deal__code-text">${esc(welcome.code)}</span><span class="pdp-deal__code-act" data-pdp-code-act>Copy</span>
+                </button>
+              </li>` : ''}
+              ${shipThreshold ? `
+              <li class="pdp-deal pdp-deal--auto" data-pdp-ship data-threshold="${shipThreshold * 100}">
+                <span class="pdp-deal__icon">${icon('delivery')}</span>
+                <span class="pdp-deal__body">
+                  <span class="pdp-deal__label">Complimentary shipping</span>
+                  <span class="pdp-deal__title" data-pdp-ship-text>Free on orders above ${money(shipThreshold)}</span>
+                </span>
+                <span class="pdp-deal__auto">Auto-applied</span>
+              </li>` : ''}
+            </ul>
+            <p class="pdp-sr" data-pdp-code-live role="status" aria-live="polite"></p>
+          </section>` : ''}
 
           <form class="pdp-form" data-pdp-form novalidate data-pdp-hero-item>
             <input type="hidden" name="id" value="${current.id}" data-pdp-variant-id>
 
-            <fieldset class="pdp-options" data-pdp-option="0">
+            <fieldset class="pdp-options" data-pdp-option="0"${variants.length < 2 ? ' hidden' : ''}>
               <legend class="pdp-options__legend"><span>Size:</span><span data-pdp-option-value>${current.title}</span></legend>
               <div class="pdp-options__grid">
                 ${variants.map((v) => `
@@ -155,9 +206,17 @@
             </fieldset>
 
             <fieldset class="pdp-offers" data-pdp-offers data-unit="bottle" hidden>
-              <legend class="pdp-offers__legend"><span>Choose your set</span></legend>
+              <legend class="pdp-offers__legend"><span>Buy more, save more</span></legend>
               <div class="pdp-offers__list" data-pdp-offers-list></div>
             </fieldset>
+
+            <p class="pdp-emi" data-pdp-emi data-installments="3">
+              <span class="pdp-emi__icon">${icon('card')}</span>
+              <span class="pdp-emi__copy">
+                <span>Pay <b data-pdp-emi-now>${money(Math.ceil(unitRupees / 3))}</b> now<span class="pdp-emi__rest"> + 2 monthly payments</span></span>
+                <small>Interest-free with eligible pay-later options at checkout</small>
+              </span>
+            </p>
 
             <div class="pdp-buy">
               <div class="pdp-qty" data-pdp-qty>
@@ -173,40 +232,37 @@
               </button>
               <button type="button" class="pdp-icon-btn" data-pdp-wishlist data-wishlist-toggle data-wishlist-handle="${esc(handle)}" aria-pressed="false" aria-label="Save to wishlist">${icon('heart')}</button>
             </div>
-            <button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block" data-pdp-buy-now>Buy it now</button>
+            <button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-buynow" data-pdp-buy-now>Buy it now</button>
             <p class="pdp-stock" data-pdp-stock data-state="${stockNow.state}" role="status">${stockNow.text || 'In stock · ready to dispatch'}</p>
             <p class="pdp-sr" data-pdp-live role="status" aria-live="polite"></p>
           </form>
 
-          <div class="pdp-secure" data-pdp-hero-item>
-            <span class="pdp-secure__icon">${icon('secure')}</span>
-            <div>
-              <p class="pdp-secure__title">Secure checkout</p>
-              <p class="pdp-secure__text">Payments are processed securely by Shopify.</p>
+          <div class="pdp-deliver" data-pdp-delivery data-pdp-pincode data-min-days="3" data-max-days="6" data-dispatch-days="1" data-cutoff-hour="0" data-serviceability-url="" data-pdp-hero-item>
+            <form class="pdp-deliver__form" data-pdp-pincode-form novalidate>
+              <label class="pdp-deliver__label" for="pdp-pin-preview">${icon('pin')}Check delivery</label>
+              <span class="pdp-deliver__field">
+                <input id="pdp-pin-preview" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="6" placeholder="Enter pincode" data-pdp-pincode-input aria-describedby="pdp-pin-msg-preview">
+                <button type="submit" class="pdp-deliver__btn">Check</button>
+              </span>
+            </form>
+            <p class="pdp-deliver__msg" id="pdp-pin-msg-preview" data-pdp-pincode-msg role="status" aria-live="polite">${icon('delivery')}<span data-pdp-delivery-summary>Estimated delivery <strong data-pdp-delivery-range></strong></span></p>
+          </div>
+
+          <div class="pdp-trust" data-pdp-hero-item>
+            <ul class="pdp-trust__list" role="list">
+              ${[
+                ['delivery', 'Complimentary shipping', shipThreshold ? 'On orders above ' + money(shipThreshold) + ', wrapped in matte black hardboard.' : 'Wrapped in matte black hardboard.'],
+                ['sample', '5 ml sample included', 'Try it on skin before you open the flacon.'],
+                ['seal', 'Numbered and batch-coded', 'Every flacon is laser-engraved with its batch code and compounding date.']
+              ].map(([ic, t, d]) => `<li class="pdp-trust__item"><span class="pdp-trust__icon">${icon(ic)}</span><span><b>${t}</b><small>${d}</small></span></li>`).join('')}
+            </ul>
+            <div class="pdp-trust__pay">
+              <span class="pdp-trust__secure">${icon('secure')}Secure checkout</span>
+              <span class="pdp-trust__secure-text">Payments are processed securely by Shopify.</span>
             </div>
           </div>
-
-          <div class="pdp-benefits" data-pdp-hero-item>
-            ${[
-              ['delivery', 'Complimentary shipping', window.HOA && window.HOA.ready ? 'On orders above ' + window.HOA.money(window.HOA.threshold) : 'On qualifying orders'],
-              ['sample', '5 ml sample included', 'Try it on skin first'],
-              ['hourglass', '90-day maceration', 'Every batch is rested'],
-              ['seal', 'Individually numbered', 'Batch code on every flacon']
-            ].map(([ic, t, d]) => `
-              <div class="pdp-benefit"><span class="pdp-benefit__icon">${icon(ic)}</span><span class="pdp-benefit__title">${t}</span><span class="pdp-benefit__text">${d}</span></div>`).join('')}
-          </div>
-
-          <div class="pdp-delivery" data-pdp-delivery data-min-days="3" data-max-days="6" data-dispatch-days="1" data-cutoff-hour="0" data-pdp-hero-item>
-            <p class="pdp-delivery__summary">${icon('time')}<span data-pdp-delivery-summary>Estimated delivery <strong data-pdp-delivery-range></strong></span></p>
-            <ol class="pdp-delivery__track">
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">${icon('bag')}</span><b data-pdp-delivery-date="order"></b>Ordered</li>
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">${icon('delivery')}</span><b data-pdp-delivery-date="dispatch"></b>Dispatched</li>
-              <li class="pdp-delivery__step"><span class="pdp-delivery__icon">${icon('pin')}</span><b data-pdp-delivery-date="deliver"></b>Delivered</li>
-            </ol>
-          </div>
-
           <div class="pdp-accordion" data-pdp-hero-item>
-            <details data-pdp-accordion open>
+            <details data-pdp-accordion>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
               <div class="pdp-accordion__body"><p>${esc(product.description)}</p></div>
             </details>
@@ -223,7 +279,7 @@
             </details>
             <details data-pdp-accordion>
               <summary>Shipping<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body"><p>Complimentary shipping on every flacon, hand-wrapped in matte black hardboard with a 5 ml sample inside. Your estimated delivery window is shown above.</p></div>
+              <div class="pdp-accordion__body"><p>${shipThreshold ? 'Complimentary shipping on orders above ' + money(shipThreshold) + '. ' : ''}Every flacon is hand-wrapped in matte black hardboard with a 5 ml sample inside. Check your pincode above for an estimated delivery date.</p></div>
             </details>
           </div>
         </div>
@@ -242,7 +298,10 @@
           <p class="pdp-dock__meta" data-pdp-variant-title>${current.title}</p>
         </div>
         <span class="pdp-dock__spacer"></span>
-        <span class="pdp-dock__price" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
+        <span class="pdp-dock__prices">
+          <span class="pdp-dock__price" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
+          <s class="pdp-dock__was" data-pdp-dock-was${onSale ? '' : ' hidden'}>${onSale ? money(current.compare_at_price / 100) : ''}</s>
+        </span>
         <button type="button" class="pdp-btn pdp-add" data-pdp-dock-add tabindex="-1">
           <span class="pdp-add__label" data-pdp-add-label>Add to bag</span>
           <span class="pdp-add__progress" aria-hidden="true"></span>
@@ -262,29 +321,6 @@
         <button type="button" data-pdp-lightbox-step="1">Next →</button>
       </div>` : ''}
     </dialog>
-  </section>`;
-
-  /* ------------------------------------------------------------ 02 Features */
-  const features = [
-    ['drop', '35%', 'Perfume oil', 'Extrait strength — most perfumes stop at 12–15%.'],
-    product.longevity && ['time', product.longevity, 'Lasting on skin', 'And for days on wool and cashmere.'],
-    ['hourglass', '90 days', 'Macerated', 'Every batch rests before it is bottled.'],
-    ['sample', '5 ml', 'Sample included', 'Try it on skin before you open the flacon.']
-  ].filter(Boolean);
-
-  const featuresSection = `
-  <section class="pdp pdp-section pdp-features" data-pdp-features>
-    <div class="container">
-      <div class="pdp-features__grid">
-        ${features.map(([ic, value, title, text]) => `
-          <div class="pdp-feature" data-pdp-card>
-            <span class="pdp-feature__icon">${icon(ic)}</span>
-            <p class="pdp-feature__value">${esc(value)}</p>
-            <p class="pdp-feature__title">${esc(title)}</p>
-            <p class="pdp-feature__text">${esc(text)}</p>
-          </div>`).join('')}
-      </div>
-    </div>
   </section>`;
 
   /* ---------------------------------------------------- 03 Notes collage */
@@ -704,7 +740,7 @@
   // Same catalog order the shop uses; the paired fragrance leads, so "related" and "pair it with" agree.
   const pairHandle = cat && window.HOA.pairOf(handle) ? window.HOA.pairOf(handle).handle : null;
   const others = Object.entries(AGHA_PRODUCTS).filter(([key]) => key !== handle)
-    .sort((a, b) => (b[0] === pairHandle) - (a[0] === pairHandle)).slice(0, 4);
+    .sort((a, b) => (b[0] === pairHandle) - (a[0] === pairHandle)).slice(0, 3);
   const relPrice = (key, p) => {
     const c = window.HOA && window.HOA.ready ? window.HOA.product(key) : null;
     return c ? window.HOA.priceHtml(c, 'hoa-cprice') : money(p.sizes['50 ML'] ?? Object.values(p.sizes)[0]);
@@ -714,8 +750,8 @@
     <div class="container">
       <div class="pdp-related__head">
         <header class="pdp-heading pdp-heading--left" data-pdp-reveal>
-          <span class="pdp-eyebrow">Explore the house</span>
-          <h2>You may also like</h2>
+          <span class="pdp-eyebrow">More scents to discover</span>
+          <h2>If you love ${esc(niceTitle)}…</h2>
         </header>
         <a class="pdp-link" href="/shop.html">View all</a>
       </div>
@@ -774,8 +810,34 @@
                   <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
               </div>
+              <button type="button" class="hoa-reel__tap" data-hoa-reel-open aria-label="Watch the ${esc(reelShop(r[0]).name)} film full screen, with sound">
+                <span class="hoa-reel__tap-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Tap to watch</span>
+              </button>
             </div></div>
+            ${reelShopHtml(r[0])}
           </li>`;
+  // Shoppable strip: mirrors the product-page mode of sections/hoa-reels.liquid (catalog = Shopify stand-in)
+  function reelShop(h) {
+    const c = window.HOA && window.HOA.ready ? window.HOA.product(h) : null;
+    const p = AGHA_PRODUCTS[h];
+    return c ? { name: c.name, url: '/product.html?p=' + h, img: c.image, now: money(c.price), was: c.hasOffer ? money(c.regularPrice) : '', sold: c.inventory === 0 }
+      : { name: p ? titleCase(p.title) : h, url: '/product.html?p=' + h, img: p ? p.images[0] : '', now: '', was: '', sold: false };
+  }
+  function reelShopHtml(h) {
+    const s = reelShop(h);
+    return `
+            <div class="hoa-reel__shop" data-hoa-reel-shop>
+              <a class="hoa-reel__thumb" href="${s.url}" tabindex="-1" aria-hidden="true">${s.img ? `<img src="${s.img}" alt="" width="120" height="150" loading="lazy" decoding="async">` : ''}</a>
+              <div class="hoa-reel__info">
+                <a class="hoa-reel__name" href="${s.url}">${esc(s.name)}</a>
+                <p class="hoa-reel__price"><span>${s.now}</span>${s.was ? `<s><span class="hoa-sr">MRP </span>${s.was}</s>` : ''}</p>
+              </div>
+              <div class="hoa-reel__acts">
+                ${h === handle ? '' : `<a class="hoa-reel__view" href="${s.url}">View product</a>`}
+                <button type="button" class="hoa-reel__add" data-hoa-reel-add data-handle="${h}" data-variant="" data-title="${esc(s.name)}" data-price="${s.now}" data-compare="${s.was}" data-image="${s.img}"${s.sold ? ' disabled' : ''}><span>${s.sold ? 'Sold out' : 'Add to bag'}</span></button>
+              </div>
+            </div>`;
+  }
   const reels = !reelSet.length ? '' : `
   <section class="hoa-reels hoa-reels--product" id="product-films" data-hoa-reels>
     <div class="hoa-wrap">
@@ -798,7 +860,10 @@
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)
   const pair = '<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="' + handle + '" hidden></section>';
 
-  root.innerHTML = hero + featuresSection + collage + story + theFragrance + craft + fragranceNotes + whySection + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
+  // Attention flow, mirroring templates/product.json:
+  //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft, reviews) → discover more.
+  // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
+  root.innerHTML = hero + theFragrance + collage + story + whySection + craft + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');

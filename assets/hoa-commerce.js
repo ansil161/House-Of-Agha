@@ -558,7 +558,7 @@
     var cur = product(handle), comp = cur && product(PAIRS[handle]);
     if (!cur || !comp) return '';
     var q = bundleQuote([cur.handle, comp.handle]);
-    return '<div class="container"><header class="pdp-heading pdp-heading--left"><span class="pdp-eyebrow">Complete your collection</span><h2>Pair it with</h2></header>' +
+    return '<div class="container"><header class="pdp-heading pdp-heading--left"><span class="pdp-eyebrow">Complete your fragrance wardrobe</span><h2>Pair it with</h2></header>' +
       '<div class="hoa-pair__card"><div class="hoa-pair__imgs"><a href="' + esc(comp.url) + '" class="hoa-pair__img" aria-label="' + esc(comp.name) + '">' + thumb(cur, '') + '</a><span class="hoa-pair__plus" aria-hidden="true">+</span>' +
       '<a href="' + esc(comp.url) + '" class="hoa-pair__img" aria-label="' + esc(comp.name) + '">' + thumb(comp, '') + '</a></div>' +
       '<div class="hoa-pair__body"><p class="hoa-pair__names">' + esc(cur.name) + ' + ' + esc(comp.name) + '</p>' +

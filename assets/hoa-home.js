@@ -121,9 +121,12 @@
         }
       });
     }
+    // While the bottle journey runs, the first slide's bottle is the one that travels:
+    // never auto-advance to another fragrance's bottle (see initHeroBottleJourney).
+    var locked = heroLiftActive();
     function schedule() {
       clearTimeout(heroTimer);
-      if (reduceMotion || slides.length < 2 || !visible || document.hidden) return;
+      if (reduceMotion || locked || slides.length < 2 || !visible || document.hidden) return;
       heroTimer = setTimeout(function () { show(current + 1); schedule(); }, interval);
     }
     dots.forEach(function (d) {
@@ -430,70 +433,177 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Hero → Signature Fragrances: the Oud Fury bottle travels and docks   */
-  /* One element throughout: detached from the hero into #main-content   */
-  /* (position: absolute, coordinates in "main" space so it can cross    */
-  /* the hero/bridge/carousel section boundaries without being clipped), */
-  /* scroll-scrubbed by hand (no gsap scrub, so docking never fights the */
-  /* tween over inline styles), then reparented into the carousel's      */
-  /* first slot once the scroll range completes. Reversible on scroll up.*/
+  /* Hero → Signature Fragrances: ONE bottle, first screen to carousel    */
+  /* The travelling element is [data-hoa-hero-bottle]: the hero photo's  */
+  /* own bottle, cut from that frame and resting in place over the       */
+  /* painted-out backdrop (sections/hoa-hero.liquid). Nothing is swapped */
+  /* or duplicated; the same node is transformed the whole way.          */
+  /*   A  lift    inside the photo it eases forward past the wood chip   */
+  /*              standing in front of it (chip overlay fades, it grows) */
+  /*   B  travel  moved into #main-content so it can cross section edges */
+  /*              it flies on a slight arc, turning gently, to the card  */
+  /*   C  dock    reparented into the first card's product footprint     */
+  /* Scroll-scrubbed by hand (no gsap scrub fighting the reparenting),   */
+  /* fully reversible on scroll up.                                      */
   /* ------------------------------------------------------------------ */
+  function heroLiftActive() {
+    return hasGsap() && !reduceMotion && !!document.querySelector('[data-hoa-hero] [data-hoa-hero-bottle]') &&
+      !!document.querySelector('[data-hoa-cf] [data-hoa-cf-card][data-index="0"]');
+  }
+
   function initHeroBottleJourney() {
-    if (!hasGsap() || reduceMotion) return;
+    if (!heroLiftActive()) return;
     var heroEl = document.querySelector('[data-hoa-hero]');
-    var slot = document.querySelector('[data-hoa-hero-bottle-slot]');
-    var bottle = document.querySelector('[data-hoa-hero-bottle]');
-    var bridge = document.querySelector('[data-hoa-bridge]');
-    var cf = document.querySelector('[data-hoa-cf]');
-    var dock = cf && cf.querySelector('[data-hoa-cf-card][data-index="0"]');
+    var slot = heroEl.querySelector('[data-hoa-hero-bottle-slot]');
+    var bottle = heroEl.querySelector('[data-hoa-hero-bottle]');
+    var chip = heroEl.querySelector('[data-hoa-hero-chip]');
+    var veil = heroEl.querySelector('.hoa-hero__veil');
+    var card = document.querySelector('[data-hoa-cf] [data-hoa-cf-card][data-index="0"]');
+    var pic = card.querySelector('.hoa-cf__pic') || card;
+    var nativeImg = pic.querySelector('img');
+    var img = bottle.querySelector('img');
     var main = document.getElementById('main-content');
-    if (!heroEl || !slot || !bottle || !bridge || !cf || !dock || !main) return;
+    if (!slot || !img || !main) return;
 
-    var nativePic = dock.querySelector('.hoa-cf__pic');
-    if (nativePic) nativePic.style.visibility = 'hidden';
+    // The card's own photo steps aside; the hero bottle lands in its footprint.
+    var dock = document.createElement('span');
+    dock.className = 'hoa-cf__dock';
+    pic.appendChild(dock);
+    pic.classList.add('hoa-cf__pic--lift');
+    var dockAlt = nativeImg ? nativeImg.alt : '';
 
-    main.appendChild(bottle);
-    bottle.classList.add('hoa-bottle-journey');
+    var LIFT = 0.1;   // stage A length, as a share of the hero's height of scroll
+    var GROW = 0.06;  // stage A: how far the bottle comes forward
+    var ARC = 0.05;   // stage B: sideways bow of the flight, share of viewport width
+    var easeA = gsap.parseEase('power1.inOut');
+    var easeB = gsap.parseEase('sine.inOut');
+    var lerp = function (x, y, t) { return x + (y - x) * t; };
 
-    function metrics() {
+    var mode = 'rest';  // rest | fly | dock
+    var split = 0.1;    // progress where A hands over to B (set on refresh)
+    var boxA = null;    // bottle box (main coords) at the handover
+
+    function rel(r) {
       var mr = main.getBoundingClientRect();
-      var sr = slot.getBoundingClientRect();
-      var dr = dock.getBoundingClientRect();
-      return {
-        sTop: sr.top - mr.top, sLeft: sr.left - mr.left, sW: sr.width, sH: sr.height,
-        eTop: dr.top - mr.top, eLeft: dr.left - mr.left, eW: dr.width, eH: dr.height
+      return { top: r.top - mr.top, left: r.left - mr.left, width: r.width, height: r.height };
+    }
+
+    // The bottle at the end of stage A (grown about its base), in main coords.
+    function liftedBox() {
+      var r = rel(slot.getBoundingClientRect());
+      var w = r.width * (1 + GROW), h = r.height * (1 + GROW);
+      return { top: r.top + r.height - h, left: r.left - (w - r.width) / 2, width: w, height: h };
+    }
+
+    // Hero copy lying over the resting bottle (e.g. the headline on phones) would be
+    // jumped over when the bottle leaves the photo, so it recedes during stage A instead.
+    // filter: opacity() leaves the entrance / scroll tweens' own opacity alone.
+    var copy = Array.prototype.slice.call(heroEl.querySelectorAll('.hoa-hero__eyebrow, .hoa-hero__word, .hoa-hero__lede, .hoa-hero__cta'));
+    var overlapping = [];
+    function findOverlaps() {
+      copy.forEach(function (el) { el.style.filter = ''; });
+      var b = liftedBox();
+      overlapping = copy.filter(function (el) {
+        var range = document.createRange();
+        range.selectNodeContents(el);   // the text's own extent, not the full-width block
+        var r = rel(range.getBoundingClientRect());
+        return r.left < b.left + b.width && r.left + r.width > b.left && r.top < b.top + b.height && r.top + r.height > b.top;
+      });
+    }
+    function fadeCopy(q) {
+      overlapping.forEach(function (el) { el.style.filter = q > 0 ? 'opacity(' + (1 - q).toFixed(3) + ')' : ''; });
+    }
+
+    // At rest the hero veil shades the bottle. Carry that exact shading onto it as it
+    // leaves the veil (read from the live CSS, so desktop and mobile both match).
+    function captureVeil(box) {
+      var bg = veil ? getComputedStyle(veil).backgroundImage : '';
+      var re = /rgba?\(([^)]+)\)\s*([\d.]+)%/g, m, stops = [];
+      while ((m = re.exec(bg))) {
+        var c = m[1].split(',').map(parseFloat);
+        stops.push({ at: parseFloat(m[2]) / 100, rgb: c.slice(0, 3).join(','), a: c.length > 3 ? c[3] : 1 });
+      }
+      var alphaAt = function (y) {
+        if (!stops.length || y < 0 || y > 1) return 0;
+        for (var i = 1; i < stops.length; i++) {
+          if (y <= stops[i].at) return lerp(stops[i - 1].a, stops[i].a, (y - stops[i - 1].at) / ((stops[i].at - stops[i - 1].at) || 1));
+        }
+        return stops[stops.length - 1].a;
       };
+      var hr = rel(heroEl.getBoundingClientRect());
+      var rgb = stops.length ? stops[0].rgb : '12,10,8';
+      var g = [];
+      for (var k = 0; k <= 6; k++) {
+        var y = (box.top + box.height * k / 6 - hr.top) / hr.height;
+        g.push('rgba(' + rgb + ',' + alphaAt(y).toFixed(3) + ') ' + Math.round(k / 6 * 100) + '%');
+      }
+      bottle.style.setProperty('--hoa-lift-veil', 'linear-gradient(180deg,' + g.join(',') + ')');
+      bottle.style.setProperty('--hoa-lift-mask', 'url("' + (img.currentSrc || img.src) + '")');
     }
 
-    var tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-    tl.fromTo(bottle, {
-      top: function () { return metrics().sTop; }, left: function () { return metrics().sLeft; },
-      width: function () { return metrics().sW; }, height: function () { return metrics().sH; }, rotation: 0
-    }, {
-      top: function () { return metrics().eTop; }, left: function () { return metrics().eLeft; },
-      width: function () { return metrics().eW; }, height: function () { return metrics().eH; }, duration: 4
-    }, 0)
-      // The bottle is invisible at rest (hero must look unchanged); it emerges
-      // from the hero photo's own bottle the instant the visitor starts scrolling.
-      .fromTo(bottle, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0)
-      .to(bottle, { rotation: -5, duration: 1 }, 0)
-      .to(bottle, { rotation: 8, duration: 1 }, 1)
-      .to(bottle, { rotation: -3, duration: 1 }, 2)
-      .to(bottle, { rotation: 0, duration: 1 }, 3);
-    tl.progress(0);
-
-    var docked = false;
-    function dockIt() {
-      docked = true;
-      dock.appendChild(bottle);
+    function place(parent) {
+      if (bottle.parentNode !== parent) parent.appendChild(bottle);
+    }
+    function toRest() {
+      if (mode === 'rest') return;
+      place(slot);
+      bottle.classList.remove('hoa-bottle-journey');
       gsap.set(bottle, { clearProps: 'top,left,width,height,transform' });
-      bottle.alt = 'Oud Fury Eau de Parfum';
+      img.alt = '';
+      mode = 'rest';
     }
-    function undockIt(p) {
-      docked = false;
-      main.appendChild(bottle);
-      bottle.alt = '';
-      tl.progress(p);
+    function toFly() {
+      if (mode === 'fly') return;
+      if (mode === 'rest') {
+        gsap.set(bottle, { clearProps: 'transform' });
+        boxA = liftedBox();
+        captureVeil(boxA);
+      }
+      place(main);
+      bottle.classList.add('hoa-bottle-journey');
+      img.alt = '';
+      mode = 'fly';
+    }
+    function toDock() {
+      if (mode === 'dock') return;
+      place(dock);
+      bottle.classList.remove('hoa-bottle-journey');
+      gsap.set(bottle, { clearProps: 'top,left,width,height,transform' });
+      img.alt = dockAlt;
+      mode = 'dock';
+    }
+
+    function render(p) {
+      if (p < split) {
+        // A: still part of the photo, coming forward past the chip.
+        toRest();
+        var q = easeA(Math.max(0, p) / split);
+        gsap.set(bottle, { scale: 1 + GROW * q, transformOrigin: '50% 100%' });
+        if (chip) chip.style.opacity = String(1 - q);
+        fadeCopy(q);
+        return;
+      }
+      if (chip) chip.style.opacity = '0';
+      fadeCopy(1);
+      if (p >= 1) { toDock(); return; }
+      // B: the same node, free of the hero, flies to the card.
+      toFly();
+      // Its centre moves linearly with the scroll, so it holds its place on screen
+      // instead of scrolling away; only the size eases.
+      var t = (p - split) / (1 - split);
+      var e = easeB(t);
+      var d = rel(dock.getBoundingClientRect());
+      var w = lerp(boxA.width, d.width, e), h = lerp(boxA.height, d.height, e);
+      var cx = lerp(boxA.left + boxA.width / 2, d.left + d.width / 2, t) + Math.sin(Math.PI * t) * ARC * window.innerWidth;
+      var cy = lerp(boxA.top + boxA.height / 2, d.top + d.height / 2, t);
+      gsap.set(bottle, {
+        top: cy - h / 2,
+        left: cx - w / 2,
+        width: w,
+        height: h,
+        rotation: Math.sin(Math.PI * 2 * t) * -6 * (1 - t)
+      });
+      bottle.style.setProperty('--hoa-lift-veil-o', String(Math.max(0, 1 - t / 0.3)));
     }
 
     var st = ScrollTrigger.create({
@@ -501,25 +611,25 @@
       start: 'top top',
       endTrigger: dock,
       end: 'center 55%',
-      onUpdate: function (self) {
-        var p = self.progress;
-        if (p >= 1) { if (!docked) { tl.progress(1); dockIt(); } }
-        else { if (docked) undockIt(p); else tl.progress(p); }
-      },
+      onUpdate: function (self) { render(self.progress); },
       onRefresh: function (self) {
-        tl.invalidate();
-        if (!docked) tl.progress(self.progress);
+        split = Math.min(0.4, Math.max(0.02, heroEl.offsetHeight * LIFT / ((self.end - self.start) || 1)));
+        // Layout changed: re-measure the handover against it.
+        if (mode === 'fly') toRest();
+        findOverlaps();
+        render(self.progress);
       }
     });
 
     cleanups.push(function () {
       st.kill();
-      tl.kill();
-      if (nativePic) nativePic.style.visibility = '';
-      bottle.classList.remove('hoa-bottle-journey');
+      toRest();
       gsap.set(bottle, { clearProps: 'all' });
-      bottle.alt = '';
-      slot.appendChild(bottle);
+      ['--hoa-lift-veil', '--hoa-lift-veil-o', '--hoa-lift-mask'].forEach(function (n) { bottle.style.removeProperty(n); });
+      if (chip) chip.style.opacity = '';
+      copy.forEach(function (el) { el.style.filter = ''; });
+      pic.classList.remove('hoa-cf__pic--lift');
+      dock.remove();
     });
   }
 
