@@ -167,6 +167,7 @@
     },
     "craft": {
       "type": "agha-pdp-craft",
+      "disabled": true,
       "blocks": {
         "source": {
           "type": "step",

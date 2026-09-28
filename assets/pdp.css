@@ -4220,6 +4220,24 @@ html:has(.pdp) body {
 .pdp-proof__icon .pdx-icon { display: block; width: 34px; height: 34px; }
 .pdp-proof__title { font-size: 0.72rem; font-weight: 800; line-height: 1.15; letter-spacing: 0.01em; text-transform: uppercase; color: var(--pdp-ink); }
 .pdp-proof__text { font-size: 0.68rem; line-height: 1.35; color: var(--pdp-ink-soft); }
+/* Placed under the four "More views" photos in the gallery column (wider than the buy column) */
+.pdp-media > .pdp-proofs {
+  margin: clamp(18px, 2vw, 28px) 0 0;
+  padding: clamp(20px, 2vw, 28px) 0;
+  border-top: 1px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
+}
+.pdp-media > .pdp-proofs .pdp-proof { gap: 7px; padding: 6px 12px; }
+.pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 40px; height: 40px; }
+.pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.8rem; }
+.pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.74rem; }
+@media (max-width: 768px) {
+  .pdp-media > .pdp-proofs { margin: 16px 0 0; padding: 16px 0; }
+  .pdp-media > .pdp-proofs .pdp-proof { padding: 4px 3px; }
+  .pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 30px; height: 30px; }
+  .pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.62rem; }
+  .pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.6rem; }
+}
 @media (max-width: 768px) {
   .pdp-proof { padding: 4px 4px; }
   .pdp-proof__icon .pdx-icon { width: 28px; height: 28px; }
@@ -4645,4 +4663,48 @@ html:has(.pdp) body {
 }
 @media (min-width: 641px) and (max-width: 989px) {
   .pdp-fill.is-live { --bw: min(60vw, 460px, calc((100dvh - var(--pdp-header-offset, 96px)) * 0.5)); }
+}
+
+/* ---------- Bottle fill · step boxes (2026-09-28) ----------
+   Each step (Source, Compound, Macerate, Finish) sits in its own rounded box: warm
+   off-white card, hairline edge, soft diffused shadow. The current step lifts slightly
+   and takes an accent edge. Same 2×2 layout around the bottle; phones get stacked boxes. */
+.pdp-fill__step {
+  box-sizing: border-box;
+  padding: clamp(18px, 1.8vw, 26px) clamp(20px, 2vw, 28px);
+  border-radius: 22px;
+  background: #FBF8F3;
+  box-shadow:
+    inset 0 0 0 1px var(--fl-line),
+    0 18px 40px -28px rgba(26, 22, 18, 0.28);
+}
+.pdp-fill__step .pdp-fill__text { margin-bottom: 0; }
+@media (min-width: 990px) {
+  .pdp-fill__steps { row-gap: clamp(14px, 2.4vh, 28px); }
+  .pdp-fill__step { max-width: 38ch; }
+}
+.pdp-fill.is-live .pdp-fill__step {
+  transition: opacity 0.7s var(--fl-ease), transform 0.8s var(--fl-ease), box-shadow 0.7s var(--fl-ease), background-color 0.7s var(--fl-ease);
+}
+.pdp-fill.is-live .pdp-fill__step.is-current {
+  background: #FFFFFF;
+  box-shadow:
+    inset 0 0 0 1px rgba(168, 113, 47, 0.45),
+    0 24px 50px -26px rgba(168, 113, 47, 0.35);
+}
+@media (min-width: 990px) {
+  .pdp-fill.is-live .pdp-fill__step.is-current { transform: translateY(-4px); }
+}
+@media (max-width: 989px) {
+  .pdp-fill__steps { gap: 12px; border-top: 0; }
+  .pdp-fill__step,
+  .pdp-fill__step--a,
+  .pdp-fill__step--b,
+  .pdp-fill__step--c,
+  .pdp-fill__step--d {
+    padding: 22px 22px 24px;
+    border-bottom: 0;
+  }
+  .pdp-fill.is-live .pdp-fill__steps { gap: 0; width: 100%; }
+  .pdp-fill.is-live .pdp-fill__step { padding: 18px 20px 20px; }
 }

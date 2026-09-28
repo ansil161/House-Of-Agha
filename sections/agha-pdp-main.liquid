@@ -179,6 +179,19 @@
             {%- endfor -%}
           </div>
         {%- endif -%}
+        {%- comment -%} "Why we are better" proofs (blocks type `proof`): one row of four under the photos {%- endcomment -%}
+        {%- assign proof_blocks = section.blocks | where: 'type', 'proof' -%}
+        {%- if proof_blocks.size > 0 -%}
+          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+            {%- for block in proof_blocks -%}
+              <li class="pdp-proof" {{ block.shopify_attributes }}>
+                <span class="pdp-proof__icon">{% render 'pdx-icon', name: block.settings.icon %}</span>
+                <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
+                {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
       </div>
 
       {%- comment -%}
@@ -590,26 +603,11 @@
         {%- endif -%}
 
         <div class="pdp-accordion" data-pdp-hero-item>
-          {%- comment -%}
-            Description, with the house's "Why we are better" proofs (blocks type `proof`) in one row under the text.
-          {%- endcomment -%}
-          {%- assign proof_blocks = section.blocks | where: 'type', 'proof' -%}
-          {%- if pdp.description_html != blank or proof_blocks.size > 0 -%}
+          {%- if pdp.description_html != blank -%}
             <details data-pdp-accordion open>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
               <div class="pdp-accordion__body">
                 {{ pdp.description_html }}
-                {%- if proof_blocks.size > 0 -%}
-                  <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-                    {%- for block in proof_blocks -%}
-                      <li class="pdp-proof" {{ block.shopify_attributes }}>
-                        <span class="pdp-proof__icon">{% render 'pdx-icon', name: block.settings.icon %}</span>
-                        <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
-                        {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                {%- endif -%}
               </div>
             </details>
           {%- endif -%}

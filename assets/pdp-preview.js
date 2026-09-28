@@ -158,6 +158,9 @@
           <div class="pdp-more" aria-label="More views">
             ${images.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
           </div>
+          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
+          </ul>
         </div>
 
         <!-- Purchase console: mirrors sections/agha-pdp-main.liquid -->
@@ -285,11 +288,7 @@
           <div class="pdp-accordion" data-pdp-hero-item>
             <details data-pdp-accordion open>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body"><p>${esc(product.description)}</p>
-                <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-                  ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
-                </ul>
-              </div>
+              <div class="pdp-accordion__body"><p>${esc(product.description)}</p></div>
             </details>
             ${notesList.length ? `
             <details data-pdp-accordion>
@@ -518,6 +517,10 @@
     'oud-fury': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
     'agha-blue': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
     maha: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    'oud-of-dark-paradise': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    'sea-smoke': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    'tobacco-enigma': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+    shamamah: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
     'oud-royal': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] }
   };
   const tfMock = DEV_FRAGRANCE_MOCK[handle];
@@ -857,7 +860,27 @@
                 ${h === handle ? '' : `<a class="hoa-reel__view" href="${s.url}">View product</a>`}
                 <button type="button" class="hoa-reel__add" data-hoa-reel-add data-handle="${h}" data-variant="" data-title="${esc(s.name)}" data-price="${s.now}" data-compare="${s.was}" data-image="${s.img}"${s.sold ? ' disabled' : ''}><span>${s.sold ? 'Sold out' : 'Add to bag'}</span></button>
               </div>
-            </div>`;
+            </div>
+            ${reelPanelHtml(h, s)}`;
+  }
+  // Viewer panel (mirrors the <template data-hoa-reel-panel> in sections/hoa-reels.liquid)
+  function reelPanelHtml(h, s) {
+    const p = AGHA_PRODUCTS[h] || {};
+    const shots = (p.images || []).slice(0, 6);
+    return `
+            <template data-hoa-reel-panel>
+              <div class="hoa-rvp__gallery" data-rvp-gallery>${shots.map((src) => `<figure class="hoa-rvp__shot"><img src="${src}" alt="${esc(s.name)}" decoding="async"></figure>`).join('')}</div>
+              <div class="hoa-rvp__body">
+                <h3 class="hoa-rvp__name">${esc(s.name)}</h3>
+                <p class="hoa-rvp__price"><b>${s.now}</b>${s.was ? `<s><span class="hoa-sr">MRP </span>${s.was}</s>` : ''}</p>
+                ${p.description ? `<div class="hoa-rvp__desc"><h4>Description</h4><p class="hoa-rvp__text" data-rvp-text>${esc(p.description)}</p><button type="button" class="hoa-rvp__more-text" data-rvp-more hidden>Read more</button></div>` : ''}
+              </div>
+              <div class="hoa-rvp__foot">
+                <a class="hoa-rvp__info" href="${s.url}">More info</a>
+                <button type="button" class="hoa-rvp__add" data-hoa-reel-add data-handle="${h}" data-variant="" data-title="${esc(s.name)}" data-price="${s.now}" data-compare="${s.was}" data-image="${s.img}"${s.sold ? ' disabled' : ''}><span>${s.sold ? 'Sold out' : 'Add to bag'}</span></button>
+                <button type="button" class="hoa-rvp__bag" data-rvp-bag aria-label="Open bag"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11l-1-12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="hoa-rvp__count cart-count">0</span></button>
+              </div>
+            </template>`;
   }
   const reels = !reelSet.length ? '' : `
   <section class="hoa-reels hoa-reels--product" id="product-films" data-hoa-reels>
@@ -884,7 +907,7 @@
   // Attention flow, mirroring templates/product.json:
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft, reviews) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + theFragrance + collage + story + craft + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
+  root.innerHTML = hero + theFragrance + collage + story + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');

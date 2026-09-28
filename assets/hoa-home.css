@@ -1689,8 +1689,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   position: relative; display: flex; align-items: center; justify-content: center; gap: clamp(12px, 3vw, 40px);
   width: 100%; height: 100%; padding: 24px;
 }
-.hoa-reelview__col { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(400px, 100%); }
-.hoa-reelview__stage { width: min(420px, calc((100vh - 220px) * 9 / 16), 100%); }
 .hoa-reelview__stage { position: relative; margin: 0; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; background: #000; }
 .hoa-reelview__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hoa-reelview__toggle { position: absolute; inset: 0; z-index: 1; padding: 0; border: 0; background: none; cursor: pointer; }
@@ -1727,36 +1725,148 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reelview__nav { flex: none; width: 52px; height: 52px; }
 .hoa-reelview__nav[hidden] { display: none; }
 .hoa-reelview__nav svg { width: 22px; height: 22px; }
-.hoa-reelview__shop .hoa-reel__shop,
-.hoa-reelview__shop { margin: 0; }
-.hoa-reelview__shop {
-  display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 10px 12px;
-  width: min(380px, 100%); padding: 12px; border-radius: 14px; background: #fff; color: var(--hoa-ink);
-}
-.hoa-reelview__shop[hidden] { display: none; }
-.hoa-reelview__shop .hoa-reel__thumb { width: 48px; }
-.hoa-reelview__shop .hoa-reel__acts { grid-column: 1 / -1; margin: 0; }
-.hoa-reelview__shop .hoa-reel__view, .hoa-reelview__shop .hoa-reel__add { height: 42px; }
 .hoa-reelview button:focus-visible, .hoa-reelview a:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 2px; }
 
 @media (max-width: 640px) {
   .hoa-reelview__inner { padding: 0; gap: 0; }
-  .hoa-reelview__col { width: 100%; height: 100%; gap: 0; align-items: stretch; }
-  .hoa-reelview__stage { flex: 1; width: 100%; aspect-ratio: auto; border-radius: 0; }
-  .hoa-reelview__shop { width: 100%; }
   .hoa-reelview__nav { position: absolute; z-index: 3; top: 50%; width: 42px; height: 42px; margin-top: -21px; background: rgba(12, 10, 8, 0.35); }
   .hoa-reelview__nav--prev { left: 10px; }
   .hoa-reelview__nav--next { right: 10px; }
   .hoa-reelview__close { top: 14px; right: 64px; width: 40px; height: 40px; background: rgba(12, 10, 8, 0.42); }
-  .hoa-reelview__shop {
-    grid-template-columns: 44px minmax(0, 1fr); border-radius: 18px 18px 0 0;
-    padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
-  }
-  .hoa-reelview__shop .hoa-reel__acts { grid-column: 1 / -1; }
-  .hoa-reelview__shop .hoa-reel__view, .hoa-reelview__shop .hoa-reel__add { flex: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hoa-reelview[open] { animation: none; }
+}
+
+/* Viewer card: film on the left, the product beside it (image gallery, name, price, description, buy row) */
+.hoa-reelview {
+  --rv-h: min(720px, calc(100dvh - 64px));
+  --rv-panel: clamp(340px, 34vw, 440px);
+}
+.hoa-reelview__card {
+  display: grid;
+  grid-template-columns: auto var(--rv-panel);
+  height: var(--rv-h);
+  max-width: calc(100vw - 160px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--hoa-paper);
+  box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.7);
+}
+.hoa-reelview__stage { height: 100%; width: auto; aspect-ratio: 9 / 16; border-radius: 0; }
+.hoa-reelview__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--hoa-ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.hoa-reelview__panel[hidden] { display: none; }
+
+.hoa-rvp__gallery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 78%;
+  gap: 8px;
+  padding: 16px 16px 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 16px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20, 18, 16, 0.3) transparent;
+}
+.hoa-rvp__shot { margin: 0; aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; background: #fff; scroll-snap-align: start; }
+.hoa-rvp__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hoa-rvp__gallery:has(> :only-child) { grid-auto-columns: 100%; }
+
+.hoa-rvp__body { flex: 1; padding: 6px 22px 20px; }
+.hoa-rvp__name { margin: 0; font-family: var(--hoa-sans); font-size: 1.2rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; text-transform: none; }
+.hoa-rvp__price { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 0; font-variant-numeric: tabular-nums; }
+.hoa-rvp__price b { font-size: 1.05rem; font-weight: 600; }
+.hoa-rvp__price s { font-size: 0.9rem; color: var(--hoa-mute); }
+.hoa-rvp__desc { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--hoa-line); }
+.hoa-rvp__desc h4 { margin: 0 0 6px; font-family: var(--hoa-sans); font-size: 0.86rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.hoa-rvp__text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--hoa-ink-2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+.hoa-rvp__desc.is-open .hoa-rvp__text { -webkit-line-clamp: unset; display: block; }
+.hoa-rvp__more-text { margin-top: 6px; padding: 0; border: 0; background: none; font: 600 0.84rem/1.4 var(--hoa-sans); color: var(--hoa-ink); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+
+.hoa-rvp__foot {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr auto;
+  gap: 10px;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--hoa-line);
+  background: var(--hoa-paper);
+}
+.hoa-rvp__info,
+.hoa-rvp__add,
+.hoa-rvp__bag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: 10px;
+  font: 600 0.9rem/1 var(--hoa-sans);
+  cursor: pointer;
+  transition: background-color 0.3s var(--hoa-ease), color 0.3s var(--hoa-ease), border-color 0.3s var(--hoa-ease), transform 0.2s var(--hoa-ease);
+}
+.hoa-rvp__info { border: 1px solid var(--hoa-ink); color: var(--hoa-ink); text-decoration: none; background: transparent; }
+.hoa-rvp__info:hover { background: rgba(20, 18, 16, 0.05); }
+.hoa-rvp__add { border: 1px solid var(--hoa-ink); background: var(--hoa-ink); color: var(--hoa-paper); }
+.hoa-rvp__add:hover { background: #2a2622; }
+.hoa-rvp__add.is-added { background: #2f5d46; border-color: #2f5d46; }
+.hoa-rvp__add:disabled { opacity: 0.45; cursor: not-allowed; }
+.hoa-rvp__info:active, .hoa-rvp__add:active, .hoa-rvp__bag:active { transform: scale(0.98); }
+.hoa-rvp__bag { position: relative; width: 48px; padding: 0; border: 1px solid var(--hoa-ink); background: transparent; color: var(--hoa-ink); }
+.hoa-rvp__bag svg { width: 22px; height: 22px; }
+.hoa-rvp__bag .hoa-rvp__count {
+  position: absolute; top: -7px; right: -7px;
+  display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; margin: 0;
+  border-radius: 10px; background: #c8412f; color: #fff;
+  font: 700 0.7rem/1 var(--hoa-sans); box-shadow: 0 0 0 2px var(--hoa-paper);
+}
+.hoa-rvp__bag .hoa-rvp__count:empty,
+.hoa-rvp__bag .hoa-rvp__count[hidden] { display: none; }
+
+/* No template (e.g. a film with no product data): the compact strip sits in the panel */
+.hoa-reelview__panel.is-strip { justify-content: flex-end; padding: 16px; }
+.hoa-reelview__panel.is-strip .hoa-reel__acts { margin-top: 12px; }
+
+@media (max-width: 900px) {
+  .hoa-reelview { --rv-panel: 320px; --rv-h: min(620px, calc(100dvh - 48px)); }
+  .hoa-reelview__card { max-width: calc(100vw - 32px); }
+  .hoa-reelview__nav { position: absolute; z-index: 3; top: 50%; margin-top: -26px; }
+  .hoa-reelview__nav--prev { left: 8px; }
+  .hoa-reelview__nav--next { right: 8px; }
+}
+/* Phones: film on top, product panel scrolls beneath it with the buy row pinned to the bottom */
+@media (max-width: 640px) {
+  .hoa-reelview__card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 52dvh minmax(0, 1fr);
+    width: 100%; height: 100dvh; max-width: none; border-radius: 0; box-shadow: none;
+  }
+  .hoa-reelview__stage { width: 100%; height: 100%; aspect-ratio: auto; }
+  .hoa-reelview__nav { top: 26dvh; margin-top: -21px; }
+  .hoa-rvp__gallery { grid-auto-columns: 42%; padding: 12px 14px 8px; }
+  .hoa-rvp__body { padding: 4px 16px 16px; }
+  .hoa-rvp__name { font-size: 1.05rem; }
+  .hoa-rvp__foot { padding-inline: 14px; }
 }
 
 .hoa-reels__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

@@ -244,6 +244,46 @@
               </button>
             </div>
           </div>
+          {%- comment -%} Viewer panel: copied beside the film when it opens full screen (assets/hoa-reels.js) {%- endcomment -%}
+          <template data-hoa-reel-panel>
+            <div class="hoa-rvp__gallery" data-rvp-gallery>
+              {%- if sp != blank and sp.id != blank and sp.images.size > 0 -%}
+                {%- for im in sp.images limit: 6 -%}
+                  <figure class="hoa-rvp__shot"><img src="{{ im | image_url: width: 800 }}" alt="{{ im.alt | default: shop_name | escape }}" width="{{ im.width }}" height="{{ im.height }}" decoding="async"></figure>
+                {%- endfor -%}
+              {%- else -%}
+                {%- for c in reels_catalog.products -%}
+                  {%- if c.handle == r_handle -%}
+                    <figure class="hoa-rvp__shot"><img src="{{ c.imageMain }}" alt="{{ c.name | escape }}" width="1200" height="1500" decoding="async"></figure>
+                    <figure class="hoa-rvp__shot"><img src="{{ c.imageMood }}" alt="{{ c.name | escape }} campaign photograph" width="1200" height="1500" decoding="async"></figure>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+            <div class="hoa-rvp__body">
+              <h3 class="hoa-rvp__name">{{ shop_name }}</h3>
+              <p class="hoa-rvp__price"><b>{{ shop_now }}</b>{% if shop_was != blank %}<s><span class="hoa-sr">MRP </span>{{ shop_was }}</s>{% endif %}</p>
+              {%- assign shop_desc = '' -%}
+              {%- if sp != blank and sp.id != blank -%}{%- assign shop_desc = sp.description | strip_html | strip -%}{%- endif -%}
+              {%- if shop_desc != blank -%}
+                <div class="hoa-rvp__desc">
+                  <h4>Description</h4>
+                  <p class="hoa-rvp__text" data-rvp-text>{{ shop_desc }}</p>
+                  <button type="button" class="hoa-rvp__more-text" data-rvp-more hidden>Read more</button>
+                </div>
+              {%- endif -%}
+            </div>
+            <div class="hoa-rvp__foot">
+              <a class="hoa-rvp__info" href="{{ shop_url }}">More info</a>
+              <button type="button" class="hoa-rvp__add" data-hoa-reel-add data-handle="{{ r_handle }}" data-variant="{{ shop_variant }}" data-title="{{ shop_name | escape }}" data-price="{{ shop_now }}" data-compare="{{ shop_was }}" data-image="{{ shop_img }}"{% unless shop_available %} disabled{% endunless %}>
+                <span>{% if shop_available %}Add to bag{% else %}Sold out{% endif %}</span>
+              </button>
+              <button type="button" class="hoa-rvp__bag" data-rvp-bag aria-label="Open bag">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11l-1-12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 10V6.5a3 3 0 0 1 6 0V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="hoa-rvp__count cart-count">{{ cart.item_count }}</span>
+              </button>
+            </div>
+          </template>
         {%- endif -%}
       </li>
     {%- endunless -%}

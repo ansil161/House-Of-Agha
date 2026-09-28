@@ -297,6 +297,15 @@
   /* ---------------- Shop: add to bag + full-screen viewer (product page) ---------------- */
   var isShopify = Boolean(window.Shopify && window.Shopify.routes);
 
+  // The viewer's bag icon mirrors the header count; the badge hides at zero
+  function syncBagCount() {
+    var head = document.querySelector('.hoa-header .cart-count');
+    document.querySelectorAll('.hoa-rvp__count').forEach(function (c) {
+      if (head) c.textContent = head.textContent;
+      c.hidden = !c.textContent || c.textContent.trim() === '0';
+    });
+  }
+
   function addToBag(btn) {
     if (!btn || btn.disabled || btn.getAttribute('aria-busy') === 'true') return;
     var d = btn.dataset;
@@ -317,6 +326,7 @@
       btn.classList.remove('is-loading');
       if (!ok) return;
       btn.classList.add('is-added');
+      syncBagCount();
       label.textContent = 'Added ✓';
       clearTimeout(btn._hoaT);
       btn._hoaT = setTimeout(function () { btn.classList.remove('is-added'); label.textContent = original; }, 1800);
@@ -362,7 +372,7 @@
       '<div class="hoa-reelview__inner">' +
         '<button type="button" class="hoa-reelview__close" data-rv-close aria-label="Close film">' + ICON_CLOSE + '</button>' +
         '<button type="button" class="hoa-reelview__nav hoa-reelview__nav--prev" data-rv-step="-1" aria-label="Previous film">' + ICON_PREV + '</button>' +
-        '<div class="hoa-reelview__col">' +
+        '<div class="hoa-reelview__card">' +
           '<figure class="hoa-reelview__stage">' +
             '<video class="hoa-reelview__video" data-rv-video playsinline loop preload="auto"></video>' +
             '<button type="button" class="hoa-reelview__toggle" data-rv-toggle aria-label="Pause film"><span class="hoa-reelview__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg></span></button>' +
@@ -370,7 +380,7 @@
             '<span class="hoa-reelview__count" data-rv-count></span>' +
             '<span class="hoa-reelview__bar" aria-hidden="true"><i data-rv-bar></i></span>' +
           '</figure>' +
-          '<div class="hoa-reelview__shop" data-rv-shop></div>' +
+          '<div class="hoa-reelview__panel" data-rv-shop></div>' +
         '</div>' +
         '<button type="button" class="hoa-reelview__nav hoa-reelview__nav--next" data-rv-step="1" aria-label="Next film">' + ICON_NEXT + '</button>' +
       '</div>';
@@ -412,8 +422,19 @@
       video.load();
       setMuted(v.muted);
       play();
+      // Product panel beside the film: the card's <template>, else its compact shop strip
+      var tpl = reel.querySelector('template[data-hoa-reel-panel]');
       var strip = reel.querySelector('[data-hoa-reel-shop]');
-      shop.innerHTML = strip ? strip.innerHTML : '';
+      shop.innerHTML = '';
+      shop.classList.toggle('is-strip', !tpl);
+      if (tpl) shop.appendChild(tpl.content.cloneNode(true));
+      else if (strip) shop.innerHTML = strip.innerHTML;
+      shop.scrollTop = 0;
+      syncBagCount();
+      var text = shop.querySelector('[data-rvp-text]');
+      var more = shop.querySelector('[data-rvp-more]');
+      // "Read more" only when the clamped description actually overflows (measured once the dialog is laid out)
+      if (text && more) requestAnimationFrame(function () { more.hidden = text.scrollHeight <= text.clientHeight + 2; });
       shop.querySelectorAll('img').forEach(function (im) { im.loading = 'eager'; });
       // A fresh copy: never carry the card's momentary Adding / Added state
       shop.querySelectorAll('[data-hoa-reel-add]').forEach(function (b) {
@@ -422,7 +443,7 @@
         var s = b.querySelector('span');
         if (s && !b.disabled) s.textContent = 'Add to bag';
       });
-      shop.hidden = !strip;
+      shop.hidden = !tpl && !strip;
       count.textContent = (v.index + 1) + ' / ' + n;
       dlg.querySelectorAll('[data-rv-step]').forEach(function (b) { b.hidden = n < 2; });
       bar.style.transform = 'scaleX(0)';
@@ -437,6 +458,20 @@
     soundBtn.addEventListener('click', function () { setMuted(!v.muted); if (video.paused) play(); });
     dlg.addEventListener('click', function (e) {
       if (e.target === dlg || e.target.closest('[data-rv-close]')) { dlg.close(); return; }
+      var more = e.target.closest('[data-rvp-more]');
+      if (more) {
+        var box = more.closest('.hoa-rvp__desc');
+        var open = box.classList.toggle('is-open');
+        more.textContent = open ? 'Read less' : 'Read more';
+        return;
+      }
+      // Bag icon: close the film, then open the theme's bag drawer
+      if (e.target.closest('[data-rvp-bag]')) {
+        dlg.close();
+        var toggleBag = document.querySelector('.js-cart-toggle');
+        if (toggleBag) toggleBag.click();
+        return;
+      }
       var step = e.target.closest('[data-rv-step]');
       if (step) v.show(v.index + Number(step.dataset.rvStep));
     });
@@ -446,7 +481,7 @@
     });
     // Swipe left / right between films on touch screens
     var sx = null;
-    dlg.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchstart', function (e) { sx = e.target.closest && e.target.closest('[data-rvp-gallery]') ? null : e.touches[0].clientX; }, { passive: true });
     dlg.addEventListener('touchend', function (e) {
       if (sx == null) return;
       var dx = e.changedTouches[0].clientX - sx;
