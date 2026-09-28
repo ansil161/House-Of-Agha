@@ -1423,90 +1423,6 @@ html:has(.pdp) body {
 }
 
 /* ==========================================================================
-   05 — CRAFT (step cards)
-   ========================================================================== */
-
-.pdp-craft {
-  background: var(--pdp-soft);
-}
-
-.pdp-steps-wrap {
-  position: relative;
-}
-
-.pdp-steps {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  list-style: none;
-}
-
-.pdp-steps__line {
-  position: absolute;
-  z-index: 1;
-  top: 43px;
-  /* From the first step's number to the last one's (24px padding + 20px radius) */
-  left: 44px;
-  right: calc((100% - 48px) / 4 - 44px);
-  height: 2px;
-  background: var(--pdp-line);
-  overflow: hidden;
-}
-
-.pdp-steps__progress {
-  position: absolute;
-  inset: 0;
-  background: var(--pdp-ink);
-  transform-origin: left;
-}
-
-.pdp-step {
-  position: relative;
-  padding: 24px;
-  border-radius: var(--pdp-radius-lg);
-  background: var(--color-white);
-  transition: transform 0.35s var(--ease-editorial), box-shadow 0.35s var(--ease-editorial);
-}
-
-.pdp-step:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--pdp-shadow);
-}
-
-.pdp-step__index {
-  position: relative;
-  z-index: 2;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--pdp-soft-2);
-  font-size: 0.8rem;
-  font-weight: 700;
-  transition: background-color 0.4s, color 0.4s;
-}
-
-.pdp-step.is-active .pdp-step__index,
-.pdp-no-motion .pdp-step__index {
-  background: var(--pdp-ink);
-  color: var(--color-white);
-}
-
-.pdp-step__title {
-  margin-top: 20px;
-  font-size: 1.5rem;
-  font-weight: 500;
-}
-
-.pdp-step__text {
-  margin-top: 10px;
-  font-size: 0.86rem;
-  line-height: 1.65;
-  color: var(--pdp-ink-soft);
-}
-
-/* ==========================================================================
    06 — REVIEWS
    ========================================================================== */
 
@@ -1797,17 +1713,12 @@ html:has(.pdp) body {
     padding-left: 0;
   }
 
-  .pdp-features__grid,
-  .pdp-steps {
+  .pdp-features__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .pdp-collage > .pdp-collage__bottle {
     grid-column: 1 / -1;
-  }
-
-  .pdp-steps__line {
-    display: none;
   }
 
   .pdp-collage {
@@ -2013,8 +1924,7 @@ html:has(.pdp) body {
     padding: 22px 14px;
   }
 
-  .pdp-collage,
-  .pdp-steps {
+  .pdp-collage {
     grid-template-columns: 1fr;
   }
 
@@ -4315,4 +4225,424 @@ html:has(.pdp) body {
   .pdp-proof__icon .pdx-icon { width: 28px; height: 28px; }
   .pdp-proof__title { font-size: 0.62rem; }
   .pdp-proof__text { font-size: 0.6rem; }
+}
+
+/* ==========================================================================
+   BOTTLE FILL — "How it's made" (third redesign, 2026-09-28; user picked this concept)
+   Light paper section. Static by default: full bottle, four steps around it (listed on phones).
+   With GSAP, initFill in pdp.js adds .is-live: the stage pins, colour rises inside a pale copy of the
+   bottle (--lvl = clip from the top), a meniscus rides the level, the day counter ticks and the steps
+   appear in turn. One accent: amber bronze.
+   ========================================================================== */
+.pdp-fill {
+  --fl-bg: #ffffff;
+  --fl-ink: #1a1612;
+  --fl-soft: #5b534a;
+  --fl-muted: #968b7f;
+  --fl-line: rgba(26, 22, 18, 0.12);
+  --fl-accent: #a8712f;
+  --fl-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --lvl: 0%;
+  --men: 0;
+  --bw: min(40vw, 480px, calc((100dvh - var(--pdp-header-offset, 96px)) * 0.64));
+  position: relative;
+  padding-top: clamp(88px, 10vw, 152px);
+  padding-bottom: clamp(64px, 7vw, 112px);
+  background: var(--fl-bg);
+  color: var(--fl-ink);
+}
+
+/* Head */
+.pdp-fill__head {
+  max-width: 780px;
+  margin: 0 auto clamp(32px, 4vw, 56px);
+  text-align: center;
+}
+.pdp-fill__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--fl-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fl-soft);
+}
+.pdp-fill__eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fl-accent);
+}
+.pdp-fill__title {
+  margin-top: 24px;
+  font-family: var(--font-serif);
+  font-size: clamp(2.9rem, 6.4vw, 6rem);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  color: var(--fl-ink);
+}
+.pdp-fill__title em {
+  font-style: italic;
+  color: var(--fl-accent);
+  letter-spacing: -0.035em;
+}
+.pdp-fill__intro {
+  max-width: 46ch;
+  margin: 22px auto 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--fl-soft);
+  text-wrap: pretty;
+}
+
+/* Stage: bottle and the step overlay share one grid cell */
+.pdp-fill__stage {
+  position: relative;
+  /* Opaque on purpose: the pinned stage is its own stacking context, and the bottle's
+     multiply blend (which drops the photo's white) needs a solid backdrop inside it. */
+  isolation: isolate;
+  background: radial-gradient(38% 46% at 50% 52%, rgba(214, 160, 88, 0.16), transparent 70%), var(--fl-bg);
+}
+.pdp-fill__grid {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+.pdp-fill__grid > * { grid-area: 1 / 1; }
+
+.pdp-fill__bottle {
+  position: relative;
+  width: var(--bw);
+  aspect-ratio: 4 / 5;
+  margin: 0;
+}
+.pdp-fill__bottle img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+/* The "empty" flacon: a pale, clear-glass version of the same photo */
+.pdp-fill__empty {
+  filter: grayscale(1);
+  opacity: 0.2;
+}
+.pdp-fill__full { clip-path: inset(var(--lvl) 0 0 0); }
+.pdp-fill__meniscus {
+  position: absolute;
+  left: 33%;
+  width: 34%;
+  top: var(--lvl);
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(236, 180, 96, 0.95) 20%, rgba(255, 226, 170, 1) 50%, rgba(236, 180, 96, 0.95) 80%, transparent);
+  box-shadow: 0 0 14px 2px rgba(226, 160, 72, 0.55);
+  opacity: var(--men);
+  pointer-events: none;
+}
+.pdp-fill__day {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.pdp-fill__day-label,
+.pdp-fill__day-total {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fl-muted);
+}
+.pdp-fill__day-num {
+  min-width: 2ch;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 2.8vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: center;
+  color: var(--fl-ink);
+}
+
+/* Steps around the bottle: a | bottle | b over c | bottle | d */
+.pdp-fill__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--bw) * 0.5) minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr;
+  column-gap: clamp(24px, 4vw, 72px);
+  pointer-events: none;
+}
+.pdp-fill__step { max-width: 34ch; pointer-events: auto; }
+.pdp-fill__step--a { grid-area: 1 / 1; align-self: center; justify-self: end; text-align: right; }
+.pdp-fill__step--b { grid-area: 1 / 3; align-self: center; justify-self: start; }
+.pdp-fill__step--c { grid-area: 2 / 1; align-self: center; justify-self: end; text-align: right; }
+.pdp-fill__step--d { grid-area: 2 / 3; align-self: center; justify-self: start; }
+.pdp-fill__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.pdp-fill__step--a .pdp-fill__meta,
+.pdp-fill__step--c .pdp-fill__meta { justify-content: flex-end; }
+.pdp-fill__when {
+  padding: 5px 11px;
+  border: 1px solid var(--fl-line);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fl-soft);
+}
+.pdp-fill__name {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3vw, 2.9rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--fl-ink);
+}
+.pdp-fill__text {
+  margin-top: 12px;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  color: var(--fl-soft);
+  text-wrap: pretty;
+}
+
+/* ---- Live (scroll-driven) ---- */
+.pdp-fill.is-live .pdp-fill__track { height: 300vh; }
+.pdp-fill.is-live .pdp-fill__stage {
+  position: sticky;
+  top: var(--pdp-header-offset, 96px);
+  height: calc(100dvh - var(--pdp-header-offset, 96px));
+  display: flex;
+  align-items: center;
+}
+.pdp-fill.is-live .pdp-fill__grid { width: 100%; }
+.pdp-fill.is-live .pdp-fill__step {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--fl-ease), transform 0.8s var(--fl-ease);
+}
+.pdp-fill.is-live .pdp-fill__step.is-on { opacity: 0.42; transform: none; }
+.pdp-fill.is-live .pdp-fill__step.is-current { opacity: 1; transform: none; }
+
+/* ---- Tablet + phones ---- */
+@media (max-width: 989px) {
+  .pdp-fill { --bw: min(76vw, 380px); }
+  .pdp-fill__grid { display: block; }
+  .pdp-fill__bottle { margin: 0 auto; }
+  .pdp-fill__steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 0;
+    height: auto;
+    margin-top: 36px;
+    border-top: 1px solid var(--fl-line);
+  }
+  .pdp-fill__step,
+  .pdp-fill__step--a,
+  .pdp-fill__step--b,
+  .pdp-fill__step--c,
+  .pdp-fill__step--d {
+    grid-area: auto;
+    max-width: none;
+    justify-self: stretch;
+    text-align: left;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--fl-line);
+  }
+  .pdp-fill__step--a .pdp-fill__meta,
+  .pdp-fill__step--c .pdp-fill__meta { justify-content: flex-start; }
+
+  /* Live on phones: bottle above, one step at a time in the same slot */
+  .pdp-fill.is-live {
+    --bw: min(72vw, 360px, calc((100dvh - var(--pdp-header-offset, 72px)) * 0.42));
+  }
+  .pdp-fill.is-live .pdp-fill__grid { display: flex; flex-direction: column; align-items: center; }
+  .pdp-fill.is-live .pdp-fill__steps {
+    display: grid;
+    margin-top: 20px;
+    border-top: 0;
+    max-width: 420px;
+  }
+  .pdp-fill.is-live .pdp-fill__step {
+    grid-area: 1 / 1;
+    padding: 0;
+    border: 0;
+    text-align: center;
+  }
+  .pdp-fill.is-live .pdp-fill__meta { justify-content: center; margin-bottom: 10px; }
+  .pdp-fill.is-live .pdp-fill__text { margin-top: 8px; font-size: 0.88rem; line-height: 1.6; }
+  .pdp-fill.is-live .pdp-fill__step.is-on { opacity: 0; }
+  .pdp-fill.is-live .pdp-fill__step.is-current { opacity: 1; }
+  .pdp-fill__name { font-size: 2.2rem; }
+  .pdp-fill__text { font-size: 0.92rem; }
+}
+@media (max-width: 640px) {
+  .pdp-fill__title { font-size: clamp(2.7rem, 12.5vw, 3.5rem); }
+}
+
+/* ---------- Bottle fill · enhancements (2026-09-28, same design, more life) ----------
+   Cap lifts off (--cap 0→1) and seals at the end, an amber stream pours while --stream is 1,
+   bubbles rise under the surface, a glint sweeps the
+   glass once sealed (.is-sealed), and the halo warms with progress (--p). Static defaults = the
+   finished, sealed bottle. */
+.pdp-fill {
+  --p: 1;
+  --cap: 0;
+  --stream: 0;
+  --fill-cap: 34%;
+}
+.pdp-fill__stage { background: var(--fl-bg); }
+
+/* Glass body and cap are separate copies of the same photo */
+.pdp-fill__empty { clip-path: inset(var(--fill-cap) 0 0 0); }
+.pdp-fill__full { clip-path: inset(max(var(--lvl), var(--fill-cap)) 0 0 0); }
+.pdp-fill__bottle img.pdp-fill__cap {
+  /* Tight to the cap (it starts ~16% down, ~38–60% across) so the tilted copy carries no white */
+  clip-path: inset(14% 34% calc(100% - var(--fill-cap)) 34%);
+  transform: translate3d(calc(var(--cap) * -3%), calc(var(--cap) * -12%), 0) rotate(calc(var(--cap) * -8deg));
+  transform-origin: 50% 28%;
+}
+
+/* Warm halo behind the flacon, stronger as it fills */
+.pdp-fill__halo {
+  position: absolute;
+  inset: -12% -55%;
+  background: radial-gradient(closest-side, rgba(222, 158, 78, 0.3), rgba(222, 158, 78, 0.08) 60%, transparent);
+  opacity: calc(0.25 + var(--p) * 0.75);
+  transform: scale(calc(0.8 + var(--p) * 0.2));
+  pointer-events: none;
+}
+
+/* Pour stream: from under the lifted cap down to the liquid surface */
+.pdp-fill__stream {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  width: max(3px, 0.8%);
+  height: max(0%, calc(max(var(--lvl), var(--fill-top)) - 25%));
+  transform: translateX(-50%);
+  border-radius: 0 0 3px 3px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, rgba(214, 150, 70, 0), rgba(200, 130, 52, 0.92) 16%, rgba(158, 94, 34, 0.96));
+  opacity: var(--stream);
+  transition: opacity 0.35s var(--fl-ease);
+  pointer-events: none;
+}
+.pdp-fill__stream::after {
+  content: '';
+  position: absolute;
+  inset: -100% 0 0;
+  background: repeating-linear-gradient(to bottom, rgba(255, 232, 190, 0) 0 14px, rgba(255, 232, 190, 0.7) 14px 18px, rgba(255, 232, 190, 0) 18px 30px);
+}
+.pdp-fill.is-live .pdp-fill__stream::after { animation: pdp-fill-flow 0.5s linear infinite; }
+@keyframes pdp-fill-flow { to { transform: translateY(30px); } }
+
+/* Bubbles, clipped to the liquid inside the glass */
+.pdp-fill__bubbles {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(max(var(--lvl), var(--fill-top)) 35% 13% 35%);
+  opacity: var(--stream);
+  transition: opacity 0.6s var(--fl-ease);
+  pointer-events: none;
+}
+.pdp-fill__bubbles i {
+  position: absolute;
+  bottom: 13%;
+  left: calc(35.5% + var(--i) * 3.1%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 228, 176, 0.75);
+  box-shadow: 0 0 4px rgba(255, 210, 140, 0.6);
+  opacity: 0;
+}
+.pdp-fill.is-live .pdp-fill__bubbles i {
+  animation: pdp-fill-bubble calc(1.7s + var(--i) * 0.19s) cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation-delay: calc(var(--i) * -0.41s);
+}
+.pdp-fill__bubbles i:nth-child(3n) { width: 3px; height: 3px; }
+.pdp-fill__bubbles i:nth-child(3n + 1) { width: 5px; height: 5px; }
+@keyframes pdp-fill-bubble {
+  0% { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translate3d(calc(var(--bw) * 0.012), calc(var(--bw) * -0.62), 0) scale(1); opacity: 0; }
+}
+
+/* Glint across the glass once sealed */
+.pdp-fill__glint {
+  position: absolute;
+  left: 33.2%;
+  width: 33.6%;
+  top: var(--fill-top);
+  height: calc(var(--fill-bottom) - var(--fill-top));
+  overflow: hidden;
+  border-radius: 6px;
+  pointer-events: none;
+}
+.pdp-fill__glint::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 244, 222, 0.5) 45%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 244, 222, 0.5) 55%, transparent);
+  transform: translateX(-130%) skewX(-12deg);
+}
+.pdp-fill.is-live.is-sealed .pdp-fill__glint::before {
+  transform: translateX(260%) skewX(-12deg);
+  transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+
+/* Current step: a short accent rule grows toward the bottle */
+.pdp-fill__meta::after {
+  content: '';
+  width: 0;
+  height: 1px;
+  background: var(--fl-accent);
+  transition: width 0.8s var(--fl-ease);
+}
+.pdp-fill__step--a .pdp-fill__meta::after,
+.pdp-fill__step--c .pdp-fill__meta::after { order: 3; }
+.pdp-fill__step--b .pdp-fill__meta,
+.pdp-fill__step--d .pdp-fill__meta { flex-direction: row; }
+.pdp-fill__step--b .pdp-fill__meta::after,
+.pdp-fill__step--d .pdp-fill__meta::after { order: -1; }
+.pdp-fill.is-live .pdp-fill__step.is-current .pdp-fill__meta::after { width: 36px; }
+
+@media (max-width: 989px) {
+  .pdp-fill__meta::after { display: none; }
+  }
+@media (prefers-reduced-motion: reduce) {
+  .pdp-fill__stream::after,
+  .pdp-fill__bubbles i { animation: none !important; }
+}
+@media (min-width: 641px) and (max-width: 989px) {
+  .pdp-fill.is-live { --bw: min(60vw, 460px, calc((100dvh - var(--pdp-header-offset, 96px)) * 0.5)); }
 }

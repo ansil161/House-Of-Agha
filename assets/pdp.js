@@ -811,17 +811,57 @@
         if (right.length) tl.to(right, { autoAlpha: 1, x: 0, y: 0, duration: 1, stagger: 0.15, ease, clearProps: 'transform' }, 0.45);
       });
 
-      /* Craft — steps rise in turn while the progress line draws across */
-      const steps = $('[data-pdp-steps]', scope);
-      if (steps) {
-        const stepEls = $$('[data-pdp-step]', steps);
-        gsap.set(stepEls, { autoAlpha: 0, y: 40 });
-        const progress = $('[data-pdp-steps-progress]', steps);
-        const tl = gsap.timeline({ scrollTrigger: { trigger: steps, start: 'top 80%', once: true } });
-        tl.to(stepEls, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12, ease, clearProps: 'transform' });
-        if (progress) tl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: 'power2.inOut' }, 0.1);
-        stepEls.forEach((step, i) => tl.call(() => step.classList.add('is-active'), null, 0.35 + i * 0.3));
-      }
+      /* How it's made — the bottle fills up. The stage pins (CSS .is-live) while the track scrolls.
+         Choreography over progress p: the cap lifts (0.04–0.12), the stream pours and the level,
+         meniscus, marker and day counter rise (0.12–0.84), the cap drops back (0.86–0.94) and the
+         bottle is sealed (glint) from 0.95. Steps: source 0, compound 0.12, macerate 0.4, finish 0.9. */
+      $$('[data-pdp-fill]', scope).forEach((sec) => {
+        const track = $('[data-pdp-fill-track]', sec);
+        const steps = $$('[data-pdp-fill-step]', sec);
+        if (!track || !steps.length) return;
+        const dayEl = $('[data-pdp-fill-day]', sec);
+        const days = parseInt(sec.dataset.days, 10) || 90;
+        const css = getComputedStyle(sec);
+        const top = parseFloat(css.getPropertyValue('--fill-top')) || 37;
+        const bottom = parseFloat(css.getPropertyValue('--fill-bottom')) || 88;
+        const capAt = parseFloat(css.getPropertyValue('--fill-cap')) || 34;
+        const at = steps.length === 4 ? [0, 0.12, 0.4, 0.9] : steps.map((_, i) => i / steps.length);
+        const clamp01 = (v) => Math.min(1, Math.max(0, v));
+        const smooth = (v) => v * v * (3 - 2 * v);
+        let shownDay = -1;
+        const paint = (p) => {
+          const lift = smooth(clamp01((p - 0.04) / 0.08));
+          const back = smooth(clamp01((p - 0.86) / 0.08));
+          const pour = clamp01((p - 0.12) / 0.72);
+          // As the cap seals, colour also reaches the collar between the glass top and the cap
+          const lvl = pour < 1 ? bottom - (bottom - top) * pour : top - (top - capAt) * back;
+          const men = pour <= 0 ? 0 : pour < 1 ? Math.min(1, pour * 12) : Math.max(0, 1 - back * 3);
+          const st = sec.style;
+          st.setProperty('--p', p.toFixed(3));
+          st.setProperty('--lvl', lvl.toFixed(2) + '%');
+          st.setProperty('--men', men.toFixed(2));
+          st.setProperty('--cap', (lift * (1 - back)).toFixed(3));
+          st.setProperty('--stream', pour > 0.002 && pour < 0.995 ? '1' : '0');
+          sec.classList.toggle('is-sealed', p >= 0.95);
+          const day = Math.round(pour * days);
+          if (dayEl && day !== shownDay) { dayEl.textContent = day; shownDay = day; }
+          let current = 0;
+          steps.forEach((el, i) => { if (p >= at[i]) current = i; });
+          steps.forEach((el, i) => {
+            el.classList.toggle('is-on', p >= at[i] && i !== current);
+            el.classList.toggle('is-current', i === current);
+          });
+        };
+        sec.classList.add('is-live');
+        paint(0);
+        const state = { p: 0 };
+        gsap.to(state, {
+          p: 1,
+          ease: 'none',
+          onUpdate: () => paint(state.p),
+          scrollTrigger: { trigger: track, start: () => `top ${parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96}px`, end: 'bottom bottom', scrub: 0.5, invalidateOnRefresh: true }
+        });
+      });
 
       /* Scroll-linked depth on the large images (not on small screens) */
       const mm = gsap.matchMedia();
@@ -1090,6 +1130,14 @@
       motionCtx = null;
       // Tweens that never started don't restore their pre-state on revert; clear it explicitly
       window.gsap?.set('[data-pdp-reveal], [data-pdp-hero-item], [data-pdp-card], [data-pdp-step], [data-pdp-stage], [data-pdp-fnote], [data-pdp-fnotes-image], .pdp-fnote__rule, [data-pdp-tf-visual], [data-pdp-tf-block], .pdp-tf__wave path, .pdp-tf__particle', { clearProps: 'transform,opacity,visibility' });
+      // Bottle fill: back to the static state (unpinned, full bottle, every step shown)
+      $$('[data-pdp-fill]').forEach((sec) => {
+        sec.classList.remove('is-live', 'is-sealed');
+        ['--lvl', '--men', '--p', '--cap', '--stream'].forEach((v) => sec.style.removeProperty(v));
+        const day = $('[data-pdp-fill-day]', sec);
+        if (day) day.textContent = sec.dataset.days || '90';
+        $$('[data-pdp-fill-step]', sec).forEach((el) => el.classList.remove('is-on', 'is-current'));
+      });
     }
     cleanups.splice(0).forEach((fn) => fn());
   }

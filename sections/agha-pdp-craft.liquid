@@ -1,32 +1,68 @@
 {% comment %}
-  AGHA PDP — 05 CRAFT
-  How the product is made, as numbered step cards joined by a progress line.
-  Heritage backdrop: Deccan jaali / rosette line pattern (assets/pdx-heritage.svg) on the top and bottom
-  edges, styled at the end of assets/pdp-editorial.css.
+  AGHA PDP — 05 CRAFT ("How it's made"), third redesign 2026-09-28: the bottle fills up.
+  Light section. A bottle cut-out sits in a pinned stage; as the visitor scrolls, colour (the liquid)
+  rises inside a pale "empty" copy of the bottle, a meniscus line rides the level, a day counter ticks
+  0 → total days, and the four steps appear around the bottle in turn (one at a time on phones).
+  Enhanced the same day: the cap (a third copy clipped above cap_split) lifts off and seals the bottle
+  at the end, an amber stream pours in, bubbles rise,
+  a glint sweeps the glass once sealed, and the halo warms as it fills.
+  Scroll logic: the [data-pdp-fill] block in assets/pdp.js (GSAP ScrollTrigger) — it adds .is-live.
+  Without JS or with reduced motion nothing pins: the bottle shows full and every step is listed.
+  Styles: "BOTTLE FILL" block at the end of assets/pdp.css. Mirrored in assets/pdp-preview.js.
+  The liquid top/bottom settings are the glass edges as % of the image height (defaults fit the
+  hoa-product-oud-fury cut-out: glass from 37% to 88%).
 {% endcomment %}
-{{ 'pdp-editorial.css' | asset_url | stylesheet_tag }}
-<script>
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('pdx-js');
-</script>
-<script src="{{ 'pdp-editorial.js' | asset_url }}" defer></script>
 {%- if section.blocks.size > 0 -%}
-<section class="pdp pdp-section pdp-craft" data-pdp-craft style="--pdx-heritage: url('{{ 'pdx-heritage.svg' | asset_url }}')">
+{%- assign total_days = section.settings.total_days | default: 90 -%}
+<section class="pdp pdp-fill" data-pdp-fill data-days="{{ total_days }}" aria-labelledby="fill-title-{{ section.id }}"
+  style="--fill-top: {{ section.settings.liquid_top }}%; --fill-bottom: {{ section.settings.liquid_bottom }}%; --fill-cap: {{ section.settings.cap_split }}%;">
   <div class="container">
-    <header class="pdp-heading" data-pdp-reveal>
-      <span class="pdp-eyebrow">{{ section.settings.eyebrow }}</span>
-      <h2>{{ section.settings.heading }}</h2>
+    <header class="pdp-fill__head" data-pdp-reveal>
+      <span class="pdp-fill__eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pdp-fill__title" id="fill-title-{{ section.id }}">
+        {{ section.settings.heading }}
+        {%- if section.settings.heading_em != blank %} <em>{{ section.settings.heading_em }}</em>{% endif -%}
+      </h2>
+      {%- if section.settings.intro != blank -%}<p class="pdp-fill__intro">{{ section.settings.intro }}</p>{%- endif -%}
     </header>
-    <div class="pdp-steps-wrap" data-pdp-steps>
-      <span class="pdp-steps__line" aria-hidden="true"><span class="pdp-steps__progress" data-pdp-steps-progress></span></span>
-      <ol class="pdp-steps">
-        {%- for block in section.blocks -%}
-          <li class="pdp-step" data-pdp-step {{ block.shopify_attributes }}>
-            <span class="pdp-step__index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
-            <h3 class="pdp-step__title">{{ block.settings.title }}</h3>
-            {%- if block.settings.text != blank -%}<p class="pdp-step__text">{{ block.settings.text }}</p>{%- endif -%}
-          </li>
-        {%- endfor -%}
-      </ol>
+  </div>
+
+  <div class="pdp-fill__track" data-pdp-fill-track>
+    <div class="pdp-fill__stage">
+      <div class="container pdp-fill__grid">
+        <figure class="pdp-fill__bottle">
+          {%- if section.settings.bottle != blank -%}
+            {%- capture bottle_src -%}{{ section.settings.bottle | image_url: width: 1200 }}{%- endcapture -%}
+          {%- else -%}
+            {%- capture bottle_src -%}{{ 'hoa-product-oud-fury.webp' | asset_url }}{%- endcapture -%}
+          {%- endif -%}
+          <span class="pdp-fill__halo" aria-hidden="true"></span>
+          <img class="pdp-fill__empty" src="{{ bottle_src }}" alt="" aria-hidden="true" loading="lazy" width="1200" height="1500">
+          <img class="pdp-fill__full" src="{{ bottle_src }}" alt="{{ product.title | default: 'House of Agha' | escape }} flacon" loading="lazy" width="1200" height="1500">
+          <span class="pdp-fill__bubbles" aria-hidden="true">{%- for i in (1..9) -%}<i style="--i: {{ i }}"></i>{%- endfor -%}</span>
+          <span class="pdp-fill__meniscus" aria-hidden="true"></span>
+          <span class="pdp-fill__glint" aria-hidden="true"></span>
+          <span class="pdp-fill__stream" aria-hidden="true"></span>
+          <img class="pdp-fill__cap" src="{{ bottle_src }}" alt="" aria-hidden="true" loading="lazy" width="1200" height="1500">
+          <figcaption class="pdp-fill__day" aria-hidden="true">
+            <span class="pdp-fill__day-label">Day</span>
+            <span class="pdp-fill__day-num" data-pdp-fill-day>{{ total_days }}</span>
+            <span class="pdp-fill__day-total">/ {{ total_days }}</span>
+          </figcaption>
+        </figure>
+
+        <ol class="pdp-fill__steps">
+          {%- for block in section.blocks -%}
+            <li class="pdp-fill__step pdp-fill__step--{% cycle 'a', 'b', 'c', 'd' %}" data-pdp-fill-step {{ block.shopify_attributes }}>
+              <div class="pdp-fill__meta">
+                {%- if block.settings.when != blank -%}<span class="pdp-fill__when">{{ block.settings.when }}</span>{%- endif -%}
+              </div>
+              <h3 class="pdp-fill__name">{{ block.settings.title }}</h3>
+              {%- if block.settings.text != blank -%}<p class="pdp-fill__text">{{ block.settings.text }}</p>{%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
     </div>
   </div>
 </section>
@@ -37,7 +73,14 @@
   "name": "Agha PDP · Craft",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it's made" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Ninety days to a flacon" }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ninety days" },
+    { "type": "text", "id": "heading_em", "label": "Heading, italic part", "default": "to a flacon" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "info": "Leave empty to hide." },
+    { "type": "number", "id": "total_days", "label": "Days counted", "default": 90 },
+    { "type": "image_picker", "id": "bottle", "label": "Bottle cut-out", "info": "A bottle on a plain white background, 4:5. Falls back to the Oud Fury cut-out." },
+    { "type": "range", "id": "liquid_top", "label": "Glass top (% of image height)", "min": 0, "max": 100, "step": 1, "default": 37 },
+    { "type": "range", "id": "liquid_bottom", "label": "Glass bottom (% of image height)", "min": 0, "max": 100, "step": 1, "default": 88 },
+    { "type": "range", "id": "cap_split", "label": "Cap bottom (% of image height)", "info": "Where the cap ends; it lifts off while the bottle fills and seals it at the end.", "min": 0, "max": 100, "step": 1, "default": 34 }
   ],
   "blocks": [
     {
@@ -46,6 +89,7 @@
       "limit": 4,
       "settings": [
         { "type": "text", "id": "title", "label": "Title", "default": "Source" },
+        { "type": "text", "id": "when", "label": "When", "info": "Short time marker, e.g. Day 1 or Days 1–90." },
         { "type": "textarea", "id": "text", "label": "Text" }
       ]
     }

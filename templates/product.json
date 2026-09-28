@@ -172,6 +172,7 @@
           "type": "step",
           "settings": {
             "title": "Source",
+            "when": "Before day one",
             "text": "Wild Cambodian agarwood from Assam, Florentine iris root aged for three years, and Madagascan pink pepper — harvested by hand."
           }
         },
@@ -179,6 +180,7 @@
           "type": "step",
           "settings": {
             "title": "Compound",
+            "when": "Day 1",
             "text": "Each extrait is compounded at an uncompromised 35% oil concentration, where traditional houses dilute to 12–15%."
           }
         },
@@ -186,6 +188,7 @@
           "type": "step",
           "settings": {
             "title": "Macerate",
+            "when": "Days 1–90",
             "text": "The unpolished mixture matures inside temperature-stabilised obsidian vaults for 90 days, so the molecules bind without harsh alcohol top notes."
           }
         },
@@ -193,6 +196,7 @@
           "type": "step",
           "settings": {
             "title": "Finish",
+            "when": "Day 90",
             "text": "Each flacon is laser-engraved with its batch code and compounding date, then hand-wrapped in matte black hardboard."
           }
         }
@@ -204,9 +208,10 @@
         "finish"
       ],
       "settings": {
-        "label": "05 — The making",
-        "heading": "Ninety days to a flacon",
-        "caption": "Plate II — The discovery collection"
+        "eyebrow": "How it's made",
+        "heading": "Ninety days",
+        "heading_em": "to a flacon",
+        "intro": "Most of the making is waiting. The oil rests for ninety days before it is bottled, so it wears warm and close instead of sharp."
       }
     },
     "experience": {

@@ -403,30 +403,52 @@
   </section>` : '';
 
   /* --------------------------------------------------------------- 05 Craft */
+  // Mirrors sections/agha-pdp-craft.liquid ("the bottle fills up") and its product.json blocks.
+  const fillDays = 90;
   const steps = [
-    ['Source', 'Wild Cambodian agarwood from Assam, Florentine iris root aged for three years, and Madagascan pink pepper — harvested by hand.'],
-    ['Compound', 'Each extrait is compounded at an uncompromised 35% oil concentration, where traditional houses dilute to 12–15%.'],
-    ['Macerate', 'The mixture matures in temperature-stabilised obsidian vaults for 90 days, so it wears without a harsh alcohol opening.'],
-    ['Finish', 'Each flacon is laser-engraved with its batch code and compounding date, then hand-wrapped in matte black hardboard.']
+    ['Source', 'Before day one', 'Wild Cambodian agarwood from Assam, Florentine iris root aged for three years, and Madagascan pink pepper — harvested by hand.'],
+    ['Compound', 'Day 1', 'Each extrait is compounded at an uncompromised 35% oil concentration, where traditional houses dilute to 12–15%.'],
+    ['Macerate', 'Days 1–90', 'The mixture matures in temperature-stabilised obsidian vaults for 90 days, so it wears without a harsh alcohol opening.'],
+    ['Finish', 'Day 90', 'Each flacon is laser-engraved with its batch code and compounding date, then hand-wrapped in matte black hardboard.']
   ];
+  const fillBottle = '/assets/hoa-product-oud-fury.webp';
 
   const craft = `
-  <section class="pdp pdp-section pdp-craft" data-pdp-craft>
+  <section class="pdp pdp-fill" data-pdp-fill data-days="${fillDays}" aria-labelledby="fill-title" style="--fill-top: 37%; --fill-bottom: 88%; --fill-cap: 34%;">
     <div class="container">
-      <header class="pdp-heading" data-pdp-reveal>
-        <span class="pdp-eyebrow">How it's made</span>
-        <h2>Ninety days to a flacon</h2>
+      <header class="pdp-fill__head" data-pdp-reveal>
+        <span class="pdp-fill__eyebrow">How it's made</span>
+        <h2 class="pdp-fill__title" id="fill-title">Ninety days <em>to a flacon</em></h2>
+        <p class="pdp-fill__intro">Most of the making is waiting. The oil rests for ninety days before it is bottled, so it wears warm and close instead of sharp.</p>
       </header>
-      <div class="pdp-steps-wrap" data-pdp-steps>
-        <span class="pdp-steps__line" aria-hidden="true"><span class="pdp-steps__progress" data-pdp-steps-progress></span></span>
-        <ol class="pdp-steps">
-        ${steps.map(([title, text], i) => `
-          <li class="pdp-step" data-pdp-step>
-            <span class="pdp-step__index">${pad(i + 1)}</span>
-            <h3 class="pdp-step__title">${title}</h3>
-            <p class="pdp-step__text">${text}</p>
-          </li>`).join('')}
-        </ol>
+    </div>
+    <div class="pdp-fill__track" data-pdp-fill-track>
+      <div class="pdp-fill__stage">
+        <div class="container pdp-fill__grid">
+          <figure class="pdp-fill__bottle">
+            <span class="pdp-fill__halo" aria-hidden="true"></span>
+            <img class="pdp-fill__empty" src="${fillBottle}" alt="" aria-hidden="true" loading="lazy" width="1200" height="1500">
+            <img class="pdp-fill__full" src="${fillBottle}" alt="${esc(niceTitle)} flacon" loading="lazy" width="1200" height="1500">
+            <span class="pdp-fill__bubbles" aria-hidden="true">${Array.from({ length: 9 }, (_, i) => `<i style="--i: ${i + 1}"></i>`).join('')}</span>
+            <span class="pdp-fill__meniscus" aria-hidden="true"></span>
+            <span class="pdp-fill__glint" aria-hidden="true"></span>
+            <span class="pdp-fill__stream" aria-hidden="true"></span>
+            <img class="pdp-fill__cap" src="${fillBottle}" alt="" aria-hidden="true" loading="lazy" width="1200" height="1500">
+            <figcaption class="pdp-fill__day" aria-hidden="true">
+              <span class="pdp-fill__day-label">Day</span>
+              <span class="pdp-fill__day-num" data-pdp-fill-day>${fillDays}</span>
+              <span class="pdp-fill__day-total">/ ${fillDays}</span>
+            </figcaption>
+          </figure>
+          <ol class="pdp-fill__steps">
+          ${steps.map(([title, when, text], i) => `
+            <li class="pdp-fill__step pdp-fill__step--${'abcd'[i]}" data-pdp-fill-step>
+              <div class="pdp-fill__meta"><span class="pdp-fill__when">${when}</span></div>
+              <h3 class="pdp-fill__name">${title}</h3>
+              <p class="pdp-fill__text">${text}</p>
+            </li>`).join('')}
+          </ol>
+        </div>
       </div>
     </div>
   </section>`;
