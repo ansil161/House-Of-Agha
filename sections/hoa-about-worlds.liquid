@@ -10,6 +10,12 @@
   block's position (or the "Number" override), the total is the block count, the name and link
   come from the picked product (or the text fields), the image from the image picker (or the
   fallback theme asset), the tint from the colour setting.
+
+  Hyderabad dress (2026-09-28): the canvas is a night arcade. Each photograph sits inside a
+  Qutb Shahi pointed arch with a brass arch outline around it (drawn in when the world is in
+  focus), a faint jaali lattice covers the stage, a line skyline of the city (Charminar, the
+  Qutb Shahi tombs, Golconda's wall; assets/hoa-skyline.svg) drifts slower than the canvas,
+  the world number is repeated large in Urdu numerals, and progress is a string of pearls.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -19,14 +25,29 @@
     assign total_label = total | prepend: '0'
   endif
 -%}
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500&display=swap&text=%DB%B0%DB%B1%DB%B2%DB%B3%DB%B4%DB%B5%DB%B6%DB%B7%DB%B8%DB%B9">
 <section class="hoa-ab-worlds" id="worlds" data-hoa-ab-worlds aria-labelledby="worlds-{{ section.id }}-title">
   <div class="hoa-ab-worlds__pin" data-hoa-ab-pin>
+    <span class="hoa-ab-worlds__jaali" aria-hidden="true"></span>
+    <span class="hoa-ab-worlds__skyline" aria-hidden="true" data-hoa-ab-skyline></span>
     <header class="hoa-wrap hoa-ab-worlds__head">
       <div class="hoa-ab-worlds__intro">
+        {%- if s.chip != blank -%}<p class="hoa-ab-worlds__chip"><span aria-hidden="true"></span>{{ s.chip }}</p>{%- endif -%}
         <h2 class="hoa-ab-h2" id="worlds-{{ section.id }}-title">{{ s.heading }}{% if s.heading_serif != blank %} <span class="hoa-ab-muted">{{ s.heading_serif }}</span>{% endif %}</h2>
         {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
       </div>
-
+      {%- if total > 1 -%}
+        <nav class="hoa-ab-worlds__pearls" aria-label="Worlds" data-hoa-ab-pearls>
+          <p class="hoa-ab-worlds__count" aria-hidden="true"><b data-hoa-ab-count>01</b> / {{ total_label }}</p>
+          <ol>
+            {%- for block in section.blocks -%}
+              {%- assign pearl_name = block.settings.product.title | default: block.settings.name -%}
+              <li><button type="button" class="hoa-ab-pearl" data-hoa-ab-pearl="{{ forloop.index0 }}" aria-label="Go to {{ pearl_name | escape }}"></button></li>
+            {%- endfor -%}
+          </ol>
+        </nav>
+      {%- endif -%}
     </header>
 
     <div class="hoa-ab-worlds__viewport">
@@ -67,14 +88,17 @@
             if forloop.first
               assign eager = 'eager'
             endif
+            assign w_no_ur = w_no | append: '' | replace: '0', '۰' | replace: '1', '۱' | replace: '2', '۲' | replace: '3', '۳' | replace: '4', '۴' | replace: '5', '۵' | replace: '6', '۶' | replace: '7', '۷' | replace: '8', '۸' | replace: '9', '۹'
           -%}
           <li class="hoa-ab-world{% if long_name %} hoa-ab-world--long{% endif %}" data-hoa-ab-world data-variant="{{ variant }}" data-tint="{{ b.tint | default: '#2b241d' }}" style="--hoa-tint: {{ b.tint | default: '#2b241d' }};" {{ block.shopify_attributes }}>
             <a class="hoa-ab-world__media" href="{{ w_url }}" tabindex="-1" data-hoa-ab-media>
               <span class="hoa-ab-world__frame">
                 {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: alt_text, sizes: '(min-width: 768px) 44vh, 92vw', loading: eager, class: 'hoa-ab-world__img' -%}
               </span>
+              <svg class="hoa-ab-world__arch" viewBox="0 0 100 125" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M0 125 V44 C0 22 28 9 50 0 C72 9 100 22 100 44 V125"/></svg>
             </a>
             <div class="hoa-ab-world__body" data-hoa-ab-body>
+              <span class="hoa-ab-world__ur" lang="ur" aria-hidden="true">{{ w_no_ur }}</span>
               <p class="hoa-ab-world__kicker" data-hoa-ab-meta>World {{ w_no }} <span>/ {{ total_label }}</span></p>
               <h3 class="hoa-ab-world__name" data-hoa-ab-title><a href="{{ w_url }}">{{ w_name }}</a></h3>
               <p class="hoa-ab-world__meta" data-hoa-ab-meta>
@@ -84,7 +108,7 @@
               {%- if b.line != blank -%}<p class="hoa-ab-world__line" data-hoa-ab-meta>{{ b.line }}</p>{%- endif -%}
               <a class="hoa-ab-world__cta" href="{{ w_url }}" data-hoa-ab-meta aria-label="{{ cta }}: {{ w_name | escape }}">
                 <span>{{ cta }}</span>
-                <svg viewBox="0 0 24 8" fill="none" aria-hidden="true"><path d="M0 4h22M18.5 1L22 4l-3.5 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="hoa-ab-world__cta-ic" aria-hidden="true"><svg viewBox="0 0 24 8" fill="none"><path d="M0 4h22M18.5 1L22 4l-3.5 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </a>
             </div>
           </li>
@@ -101,6 +125,7 @@
   "class": "hoa-ab-section",
   "max_blocks": 12,
   "settings": [
+    { "type": "text", "id": "chip", "label": "Label", "default": "Seven worlds · One city" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "One house," },
     { "type": "text", "id": "heading_serif", "label": "Heading, muted part", "default": "seven worlds." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Scroll to travel through them." }

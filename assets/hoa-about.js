@@ -8,7 +8,9 @@
      Stacking cards .. cards stick under the header; the card underneath recedes
                        as the next one arrives (storytelling, one idea at a time).
      Seven worlds .... the section pins and one canvas pans sideways; each world
-                       comes into focus at the centre (storytelling). Wide screens;
+                       comes into focus at the centre, its brass arch draws in and a
+                       pearl lights on the string; the Hyderabad skyline drifts slower
+                       behind (storytelling, depth). Wide screens;
                        phones get a stacked version, reduced motion a static one.
      Closing card .... grows from slightly inset to full size before the shop
                        button (emphasis).
@@ -65,6 +67,9 @@
       return {
         pin: section.querySelector('[data-hoa-ab-pin]'),
         track: section.querySelector('[data-hoa-ab-track]'),
+        skyline: section.querySelector('[data-hoa-ab-skyline]'),
+        pearls: gsap.utils.toArray('[data-hoa-ab-pearl]', section),
+        count: section.querySelector('[data-hoa-ab-count]'),
         worlds: gsap.utils.toArray('[data-hoa-ab-world]', section)
       };
     }
@@ -88,6 +93,8 @@
       var n = p.worlds.length;
       var centers = [];
       var active = -1;
+      var SKY = 0.3; // the skyline drifts at 30% of the canvas speed (depth)
+      var skyX = p.skyline ? gsap.quickSetter(p.skyline, 'x', 'px') : null;
       section.classList.add('is-panning');
 
       // Pad the canvas so the first and last world can sit exactly at the centre.
@@ -99,18 +106,30 @@
         p.track.style.paddingRight = Math.max(0, (window.innerWidth - last.offsetWidth) / 2) + 'px';
         centers = p.worlds.map(function (w) { return w.offsetLeft + w.offsetWidth / 2; });
       };
-      var distance = function () { measure(); return Math.max(0, p.track.scrollWidth - window.innerWidth); };
+      var distance = function () {
+        measure();
+        var d = Math.max(0, p.track.scrollWidth - window.innerWidth);
+        if (p.skyline) p.skyline.style.width = Math.ceil(window.innerWidth + d * SKY + 2) + 'px';
+        return d;
+      };
 
       var setActive = function (i) {
         if (i === active) return;
         active = i;
         p.worlds.forEach(function (w, k) { w.classList.toggle('is-active', k === i); });
+        p.pearls.forEach(function (b, k) {
+          b.classList.toggle('is-active', k === i);
+          b.classList.toggle('is-past', k < i);
+          if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+        });
+        if (p.count) p.count.textContent = (i < 9 ? '0' : '') + (i + 1);
         var tint = p.worlds[i].getAttribute('data-tint');
         if (tint) p.pin.style.setProperty('--tint', tint);
       };
 
       var sync = function () {
         var x = gsap.getProperty(p.track, 'x');
+        if (skyX) skyX(x * SKY);
         var mid = window.innerWidth / 2;
         var best = 0;
         var bestD = Infinity;
@@ -137,6 +156,18 @@
         }
       });
 
+      // Pearls: jump to a world (its centre lands mid-screen)
+      var onPearl = function (e) {
+        var i = +e.currentTarget.getAttribute('data-hoa-ab-pearl');
+        var st = pan.scrollTrigger;
+        var d = st.end - st.start;
+        var total = Math.max(1, p.track.scrollWidth - window.innerWidth);
+        var y = st.start + gsap.utils.clamp(0, 1, (centers[i] - window.innerWidth / 2) / total) * d;
+        if (window.hoaLenis) window.hoaLenis.scrollTo(y, { duration: 1.6 });
+        else window.scrollTo({ top: y, behavior: 'smooth' });
+      };
+      p.pearls.forEach(function (b) { b.addEventListener('click', onPearl); });
+
       // Focus: each world eases in as it nears the centre, holds, then steps back.
       p.worlds.forEach(function (w) {
         var b = bits(w);
@@ -159,6 +190,8 @@
         p.track.style.paddingRight = '';
         p.pin.style.removeProperty('--tint');
         p.worlds.forEach(function (w) { w.classList.remove('is-active'); });
+        p.pearls.forEach(function (b) { b.removeEventListener('click', onPearl); b.classList.remove('is-active', 'is-past'); b.removeAttribute('aria-current'); });
+        if (p.skyline) { p.skyline.style.width = ''; gsap.set(p.skyline, { clearProps: 'transform' }); }
       };
     });
 
@@ -187,6 +220,7 @@
           end: 'bottom 55%',
           onToggle: function (self) {
             if (!self.isActive) return;
+            p.worlds.forEach(function (o) { o.classList.toggle('is-active', o === w); });
             var tint = w.getAttribute('data-tint');
             if (tint) p.pin.style.setProperty('--tint', tint);
           }
@@ -196,6 +230,7 @@
       return function () {
         section.classList.remove('is-scrolly');
         p.pin.style.removeProperty('--tint');
+        p.worlds.forEach(function (w) { w.classList.remove('is-active'); });
       };
     });
   }
