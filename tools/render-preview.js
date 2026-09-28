@@ -353,6 +353,33 @@ async function renderTemplate(name, templateGlobals) {
   }
   console.log('footer on', all.length, 'pages');
 
+  // Message strip (sections/hoa-message-strip.liquid): layout/theme.liquid renders it right after
+  // the header on the collection and product templates only, so mirror that in shop.html / product.html.
+  {
+    const src = fs.readFileSync(path.join(THEME, 'sections/hoa-message-strip.liquid'), 'utf8');
+    const schema = readSchema(src);
+    const section = { id: 'hoa-message-strip', settings: defaults(schema.settings), blocks: [] };
+    const html = (await engine.parseAndRender(src, Object.assign({}, globals, { section }))).trim();
+    const block = '\n  <!-- Message strip · sections/hoa-message-strip.liquid (rendered by the preview build) -->\n' +
+      `  <div id="shopify-section-hoa-message-strip" class="shopify-section ${schema.class}">${html}</div>\n  <!-- /Message strip -->`;
+    for (const f of ['shop.html', 'product.html']) {
+      const file = path.join(THEME, f);
+      let page = fs.readFileSync(file, 'utf8');
+      page = page
+        .replace(/\n[ \t]*<!-- Message strip[\s\S]*?<!-- \/Message strip -->/, '')
+        .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-message-strip\.css">\n/, '')
+        .replace(/[ \t]*<script src="\/?assets\/hoa-message-strip\.js" defer><\/script>\n/, '');
+      const menuEnd = page.indexOf('</nav>', page.indexOf('<nav class="hoa-menu"'));
+      if (menuEnd < 0) { console.warn('no header menu in', f); continue; }
+      const at = menuEnd + '</nav>'.length;
+      page = page.slice(0, at) + block + page.slice(at);
+      const pre = (page.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+      page = page.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-message-strip.css">\n  <script src="${pre}assets/hoa-message-strip.js" defer></script>\n</head>`);
+      fs.writeFileSync(file, page);
+    }
+    console.log('message strip on shop.html, product.html');
+  }
+
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {

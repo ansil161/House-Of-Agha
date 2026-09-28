@@ -56,6 +56,11 @@
     {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-shop.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- if template.name == 'collection' or template.name == 'product' -%}
+    {%- comment -%} Message strip under the navbar (sections/hoa-message-strip.liquid) {%- endcomment -%}
+    {{ 'hoa-message-strip.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'hoa-message-strip.js' | asset_url }}" defer></script>
+  {%- endif -%}
   {%- if template.name == 'page' and template.suffix == 'wishlist' -%}
     {{ 'agha-wishlist.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'agha-wishlist-page.js' | asset_url }}" defer></script>
@@ -71,6 +76,7 @@
 
   <!-- Navigation Header -->
   {% render 'header' %}
+  {%- if template.name == 'collection' or template.name == 'product' -%}{% section 'hoa-message-strip' %}{%- endif -%}
 
   <!-- Main Content Layout -->
   <main id="main-content" role="main">

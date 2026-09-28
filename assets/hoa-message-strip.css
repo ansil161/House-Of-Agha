@@ -1,0 +1,82 @@
+/* ==========================================================================
+   HOUSE OF AGHA — MESSAGE STRIP (sections/hoa-message-strip.liquid)
+   A thin ink band fixed directly under the fixed navbar, with a brass hairline.
+   Loaded on the Shop and product templates only (layout/theme.liquid).
+   ========================================================================== */
+
+:root { --hoa-strip-h: 40px; }             /* band + 2px accent line */
+@media (max-width: 960px) { :root { --hoa-strip-h: 36px; } }
+
+.hoa-strip {
+  position: fixed;
+  top: var(--hoa-header-h);                /* the navbar's own height; the header is untouched */
+  left: 0;
+  right: 0;
+  z-index: 998;                            /* under the header (1000) and the mobile menu sheet (999) */
+  height: var(--hoa-strip-h);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--hoa-gutter, 20px);
+  background: var(--hoa-strip-bg, #141210);
+  color: var(--hoa-strip-fg, #F6F1E7);
+  border-bottom: 2px solid var(--hoa-strip-accent, #B08D57);
+  overflow: hidden;
+  contain: layout paint;
+}
+.hoa-strip__msg {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--hoa-sans, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+.hoa-strip__type { display: inline-flex; align-items: center; }
+.hoa-strip__sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* The caret: only once the line is animated. Solid while typing/erasing, a slow blink at rest. */
+.hoa-strip__caret {
+  display: none;
+  width: 1px;
+  height: 1.1em;
+  margin-left: 3px;
+  background: var(--hoa-strip-accent, #B08D57);
+}
+.hoa-strip.is-animated .hoa-strip__caret { display: inline-block; animation: hoa-strip-blink 1.1s steps(1, end) infinite; }
+.hoa-strip.is-animated.is-typing .hoa-strip__caret { animation: none; opacity: 1; }
+@keyframes hoa-strip-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+
+@media (max-width: 960px) { .hoa-strip__msg { font-size: 0.74rem; } }
+@media (max-width: 480px) { .hoa-strip__msg { font-size: 0.72rem; } }
+
+/* ---------- Room for it under the fixed header ----------
+   Content already clears the navbar via --hoa-header-h (Shop) and --pdp-header-offset (PDP);
+   on pages with the strip, those grow by its height. Only inside <main>, so the header itself
+   (which also sizes from --hoa-header-h) and the mobile menu are unaffected.
+   Literal px for the PDP value: assets/pdp.js parseFloat()s it. */
+:root:has(.hoa-strip) main { --hoa-header-h: calc(76px + var(--hoa-strip-h)); }
+:root:has(.hoa-strip) { --pdp-header-offset: 136px; }                 /* 96 + 40 */
+@media (max-width: 960px) {
+  :root:has(.hoa-strip) main { --hoa-header-h: calc(64px + var(--hoa-strip-h)); }
+  :root:has(.hoa-strip) { --pdp-header-offset: 132px; }               /* 96 + 36 */
+}
+@media (max-width: 768px) {
+  :root:has(.hoa-strip) { --pdp-header-offset: 108px; }               /* 72 + 36 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-strip.is-animated .hoa-strip__caret { display: none; }
+}

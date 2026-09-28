@@ -1,0 +1,35 @@
+{% comment %}
+  House of Agha · message strip. A thin dark band fixed directly under the navbar,
+  rendered by layout/theme.liquid on the Shop (collection) and product templates only.
+  The line types itself out from the centre, holds, erases and types again, with a
+  brass caret (assets/hoa-message-strip.js, GSAP). Reduced motion or no JS: the full
+  line, still. The full message is always available to assistive tech (sr-only).
+  Styles + the content offset it adds under the fixed header: assets/hoa-message-strip.css.
+{% endcomment %}
+{%- assign s = section.settings -%}
+{%- if s.message != blank -%}
+<div class="hoa-strip" data-hoa-strip
+  data-type-ms="{{ s.type_ms }}" data-hold="{{ s.hold | times: 1000 }}"
+  style="--hoa-strip-bg: {{ s.bg }}; --hoa-strip-fg: {{ s.fg }}; --hoa-strip-accent: {{ s.accent }};">
+  <p class="hoa-strip__msg">
+    <span class="hoa-strip__sr">{{ s.message | escape }}</span>
+    <span class="hoa-strip__type" aria-hidden="true"><span class="hoa-strip__text" data-hoa-strip-text>{{ s.message | escape }}</span><span class="hoa-strip__caret"></span></span>
+  </p>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "HOA Message strip",
+  "tag": "div",
+  "class": "hoa-strip-section",
+  "settings": [
+    { "type": "text", "id": "message", "label": "Message", "default": "Discover the Art of House of Agha", "info": "One short line. Leave empty to hide the strip." },
+    { "type": "range", "id": "type_ms", "label": "Typing speed (ms per letter)", "min": 40, "max": 160, "step": 10, "unit": "ms", "default": 90 },
+    { "type": "range", "id": "hold", "label": "Hold the full line (seconds)", "min": 1, "max": 8, "step": 0.5, "unit": "s", "default": 2.5 },
+    { "type": "color", "id": "bg", "label": "Background", "default": "#141210" },
+    { "type": "color", "id": "fg", "label": "Text", "default": "#F6F1E7" },
+    { "type": "color", "id": "accent", "label": "Accent line + caret", "default": "#B08D57" }
+  ]
+}
+{% endschema %}
