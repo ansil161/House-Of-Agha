@@ -57,6 +57,16 @@
         "card_bottle"
       ]
     },
+    "hyderabad": {
+      "type": "hoa-about-hyderabad",
+      "blocks": {
+        "note_city": { "type": "note", "settings": { "icon": "arch", "kicker": "1591", "title": "The Qutb Shahi city", "text": "Founded by Muhammad Quli Qutb Shah, with the Charminar at its heart." } },
+        "note_attar": { "type": "note", "settings": { "icon": "attar", "kicker": "The old city", "title": "The attar lanes", "text": "Around the Charminar, fragrance has been blended and sold for generations." } },
+        "note_pearls": { "type": "note", "settings": { "icon": "pearl", "kicker": "City of pearls", "title": "Ivory and gold", "text": "Hyderabad's pearl trade gave the city its lustre, and this house its palette." } }
+      },
+      "block_order": ["note_city", "note_attar", "note_pearls"],
+      "settings": {}
+    },
     "worlds": {
       "type": "hoa-about-worlds",
       "blocks": {
@@ -164,6 +174,7 @@
   "order": [
     "hero",
     "stack",
+    "hyderabad",
     "worlds",
     "closing"
   ]

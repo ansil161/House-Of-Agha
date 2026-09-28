@@ -43,6 +43,38 @@
             "title": "5 ml sample included",
             "text": "Try it on skin before you open the flacon."
           }
+        },
+        "proof_certified": {
+          "type": "proof",
+          "settings": {
+            "icon": "badge",
+            "title": "Certified\nperfumers",
+            "text": "Hong Kong\nSchool of Perfumery"
+          }
+        },
+        "proof_parfum": {
+          "type": "proof",
+          "settings": {
+            "icon": "bottle",
+            "title": "35% pure\nparfum",
+            "text": "Extrait de parfum"
+          }
+        },
+        "proof_aged": {
+          "type": "proof",
+          "settings": {
+            "icon": "hourglass",
+            "title": "Aged for\nweeks",
+            "text": "Smooth and refined"
+          }
+        },
+        "proof_ifra": {
+          "type": "proof",
+          "settings": {
+            "icon": "ifra",
+            "title": "IFRA\ncertified",
+            "text": "High-grade, skin safe"
+          }
         }
       },
       "block_order": [
@@ -50,7 +82,11 @@
         "value_wearer",
         "value_strength",
         "shipping",
-        "sample"
+        "sample",
+        "proof_certified",
+        "proof_parfum",
+        "proof_aged",
+        "proof_ifra"
       ],
       "settings": {
         "offers_heading": "Exclusive offers",
@@ -328,50 +364,6 @@
         "heading_serif": "in motion.",
         "only_current_product": true
       }
-    },
-    "why": {
-      "type": "agha-pdp-why",
-      "blocks": {
-        "certified": {
-          "type": "benefit",
-          "settings": {
-            "icon": "badge",
-            "title": "Certified\nperfumers",
-            "text": "Hong Kong\nSchool of Perfumery"
-          }
-        },
-        "parfum": {
-          "type": "benefit",
-          "settings": {
-            "icon": "bottle",
-            "title": "35% pure\nparfum",
-            "text": "Extrait de parfum"
-          }
-        },
-        "aged": {
-          "type": "benefit",
-          "settings": {
-            "icon": "hourglass",
-            "title": "Aged for\nweeks",
-            "text": "Smooth and refined"
-          }
-        },
-        "ifra": {
-          "type": "benefit",
-          "settings": {
-            "icon": "ifra",
-            "title": "IFRA\ncertified",
-            "text": "High-grade, skin safe"
-          }
-        }
-      },
-      "block_order": [
-        "certified",
-        "parfum",
-        "aged",
-        "ifra"
-      ],
-      "settings": {}
     }
   },
   "order": [
@@ -379,7 +371,6 @@
     "the_fragrance",
     "story",
     "details",
-    "why",
     "composition",
     "craft",
     "experience",

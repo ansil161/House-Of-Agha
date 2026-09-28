@@ -103,6 +103,23 @@
   const notes = product.notes || {};
   const notesList = [['Top', notes.top], ['Heart', notes.heart], ['Base', notes.base]].filter(([, v]) => v);
 
+  /* ------------------------------------ Why we are better: proof blocks inside Description (templates/product.json `proof` blocks) */
+  const pdxIcon = (name) => {
+    const paths = {
+      badge: '<path d="M32 2 L37.4 5.7 L44 5.2 L46.8 11.2 L52.8 14 L52.3 20.6 L56 26 L52.3 31.4 L52.8 38 L46.8 40.8 L44 46.8 L37.4 46.3 L32 50 L26.6 46.3 L20 46.8 L17.2 40.8 L11.2 38 L11.7 31.4 L8 26 L11.7 20.6 L11.2 14 L17.2 11.2 L20 5.2 L26.6 5.7 Z"/><circle cx="32" cy="26" r="15"/><path d="M25 26l5 5 9-10"/><path d="M23 47l-5 14 9-4 5 5V50M41 47l5 14-9-4"/>',
+      bottle: '<rect x="25" y="4" width="14" height="9"/><path d="M22 13h20v6H22z"/><rect x="16" y="19" width="32" height="41"/><rect x="22" y="29" width="20" height="24"/><path d="M22 43h20"/>',
+      hourglass: '<path d="M14 6h36M14 58h36M18 6c0 12 14 16 14 26S18 46 18 58M46 6c0 12-14 16-14 26s14 14 14 26"/><path d="M24 52c4-2 12-2 16 0M28 14h8"/>',
+      ifra: '<path d="M11 46A26 26 0 1 1 22 55"/><text x="32" y="40" text-anchor="middle" font-family="Georgia, \'Times New Roman\', serif" font-size="20" fill="currentColor" stroke="none">ifra</text>'
+    };
+    return `<svg class="pdx-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths[name]}</svg>`;
+  };
+  const whyItems = [
+    ['badge', 'Certified<br>perfumers', 'Hong Kong<br>School of Perfumery'],
+    ['bottle', '35% pure<br>parfum', 'Extrait de parfum'],
+    ['hourglass', 'Aged for<br>weeks', 'Smooth and refined'],
+    ['ifra', 'IFRA<br>certified', 'High-grade, skin safe']
+  ];
+
   /* ---------------------------------------------------------------- 01 Hero */
   const hero = `
   <section class="pdp pdp-hero" data-pdp-main data-money-format="₹{{amount_no_decimals}}" data-product-title="${esc(niceTitle)}" data-product-handle="${handle}">
@@ -266,9 +283,13 @@
             </ul>
           </div>
           <div class="pdp-accordion" data-pdp-hero-item>
-            <details data-pdp-accordion>
+            <details data-pdp-accordion open>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body"><p>${esc(product.description)}</p></div>
+              <div class="pdp-accordion__body"><p>${esc(product.description)}</p>
+                <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+                  ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
+                </ul>
+              </div>
             </details>
             ${notesList.length ? `
             <details data-pdp-accordion>
@@ -652,32 +673,6 @@
   </section>`;
 
 
-  /* ------------------------------------------------ Why we are better (mirrors sections/agha-pdp-why.liquid) */
-  const pdxIcon = (name) => {
-    const paths = {
-      badge: '<path d="M32 2 L37.4 5.7 L44 5.2 L46.8 11.2 L52.8 14 L52.3 20.6 L56 26 L52.3 31.4 L52.8 38 L46.8 40.8 L44 46.8 L37.4 46.3 L32 50 L26.6 46.3 L20 46.8 L17.2 40.8 L11.2 38 L11.7 31.4 L8 26 L11.7 20.6 L11.2 14 L17.2 11.2 L20 5.2 L26.6 5.7 Z"/><circle cx="32" cy="26" r="15"/><path d="M25 26l5 5 9-10"/><path d="M23 47l-5 14 9-4 5 5V50M41 47l5 14-9-4"/>',
-      bottle: '<rect x="25" y="4" width="14" height="9"/><path d="M22 13h20v6H22z"/><rect x="16" y="19" width="32" height="41"/><rect x="22" y="29" width="20" height="24"/><path d="M22 43h20"/>',
-      hourglass: '<path d="M14 6h36M14 58h36M18 6c0 12 14 16 14 26S18 46 18 58M46 6c0 12-14 16-14 26s14 14 14 26"/><path d="M24 52c4-2 12-2 16 0M28 14h8"/>',
-      ifra: '<path d="M11 46A26 26 0 1 1 22 55"/><text x="32" y="40" text-anchor="middle" font-family="Georgia, \'Times New Roman\', serif" font-size="20" fill="currentColor" stroke="none">ifra</text>'
-    };
-    return `<svg class="pdx-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths[name]}</svg>`;
-  };
-  const whyItems = [
-    ['badge', 'Certified<br>perfumers', 'Hong Kong<br>School of Perfumery'],
-    ['bottle', '35% pure<br>parfum', 'Extrait de parfum'],
-    ['hourglass', 'Aged for<br>weeks', 'Smooth and refined'],
-    ['ifra', 'IFRA<br>certified', 'High-grade, skin safe']
-  ];
-  const whySection = `
-  <section class="pdx pdx-why" data-pdx-why>
-    <div class="pdx-wrap">
-      <h2 class="pdx-heading" data-pdx-in>Why we are better</h2>
-      <div class="pdx-why__grid">
-        ${whyItems.map((w, i) => `<div class="pdx-why__item" style="--i: ${i}"><span class="pdx-why__icon">${pdxIcon(w[0])}</span><h3 class="pdx-why__title">${w[1]}</h3><p class="pdx-why__text">${w[2]}</p></div>`).join('')}
-      </div>
-    </div>
-  </section>`;
-
   /* ------------------------------------------- Customer reviews summary (mirrors sections/agha-pdp-review-summary.liquid) */
   // Preview only: the split of ratings is derived from the mock average + count, and the photo strip reuses product shots.
   const dist = (() => {
@@ -867,7 +862,7 @@
   // Attention flow, mirroring templates/product.json:
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft, reviews) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + theFragrance + collage + story + whySection + craft + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
+  root.innerHTML = hero + theFragrance + collage + story + craft + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');

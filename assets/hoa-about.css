@@ -191,6 +191,142 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 }
 
 /* ==========================================================================
+   02b Composed in Hyderabad (sections/hoa-about-hyderabad.liquid)
+   One card: a sand panel with the Charminar line drawing, the city's name in Urdu
+   behind it and a Deccan jaali border top and bottom; the story and heritage notes beside.
+   Palette from the city: pearl ivory, sand, antique brass. Same surfaces and radii as the bento.
+   ========================================================================== */
+.hoa-ab-hyd { padding: 0 0 var(--ab-space); }
+.hoa-ab-hyd__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--ab-r);
+  background: #F3EDE2;
+}
+.hoa-ab-hyd__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(440px, 44vw, 640px);
+  padding: 64px 24px 76px;
+  overflow: hidden;
+  border-radius: var(--ab-r-in);
+  background: #E8DDC8;
+  color: #8A6A34;
+  isolation: isolate;
+}
+/* Deccan jaali lattice along the top and bottom edges of the panel */
+.hoa-ab-hyd__visual::before,
+.hoa-ab-hyd__visual::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: url("hoa-jaali.svg") repeat-x center / 30px 30px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.hoa-ab-hyd__visual::before { top: 12px; }
+.hoa-ab-hyd__visual::after { bottom: 12px; }
+.hoa-ab-hyd__art { position: relative; z-index: 1; display: block; width: min(80%, 430px); height: auto; overflow: visible; }
+.hoa-ab-hyd__ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.hoa-ab-hyd__urdu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 0;
+  margin: -0.7em 0 0;
+  font-family: 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Segoe UI', serif;
+  font-size: clamp(4.5rem, 11vw, 10.5rem);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  color: rgba(138, 106, 52, 0.14);
+  pointer-events: none;
+  user-select: none;
+}
+.hoa-ab-hyd__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #8A6A34;
+}
+.hoa-ab-hyd__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 22px;
+  padding: clamp(18px, 3.4vw, 52px);
+}
+.hoa-ab-hyd__text { margin: 0; max-width: 46ch; font-size: 1rem; line-height: 1.65; color: var(--hoa-ink-2); }
+.hoa-ab-hyd__notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hoa-ab-hyd__note {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 18px 16px 20px;
+  border-radius: var(--ab-r-in);
+  background: #FBF8F2;
+}
+.hoa-ab-hyd__icon { display: block; width: 30px; height: 30px; margin-bottom: 6px; color: #9A7638; }
+.hoa-ab-hyd__icon svg { display: block; width: 100%; height: 100%; }
+.hoa-ab-hyd__kicker { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hoa-mute); }
+.hoa-ab-hyd__note b { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em; }
+.hoa-ab-hyd__note-text { font-size: 0.84rem; line-height: 1.5; color: var(--hoa-ink-2); }
+
+@media (max-width: 899px) {
+  .hoa-ab-hyd__card { grid-template-columns: 1fr; }
+  .hoa-ab-hyd__visual { min-height: 0; padding: 60px 20px 80px; }
+  .hoa-ab-hyd__art { width: min(78%, 340px); }
+}
+@media (max-width: 640px) {
+  .hoa-ab-hyd__notes { grid-template-columns: 1fr; }
+  .hoa-ab-hyd__note { grid-template-columns: 30px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
+  .hoa-ab-hyd__icon { grid-row: 1 / span 3; margin: 2px 0 0; }
+}
+
+/* Hyderabad touches on the other About sections
+   · the tall bento photo stands inside a Qutb Shahi (Charminar) pointed arch
+   · a faint brass jaali lattice runs across the dark closing card */
+.hoa-ab-tile--b {
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+}
+.hoa-ab-cta { position: relative; isolation: isolate; }
+.hoa-ab-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: url("hoa-jaali.svg") repeat 0 0 / 44px 44px;
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+/* ==========================================================================
    03 The seven worlds
    One continuous canvas. Base = the stacked layout (phones, reduced motion, no JS).
    hoa-about.js adds .is-panning (768px+, motion allowed): the section pins and the canvas

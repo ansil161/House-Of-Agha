@@ -242,6 +242,24 @@
         onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1.1, ease: ease, stagger: 0.1, overwrite: true }); }
       });
 
+      /* 02b Composed in Hyderabad: the Charminar draws itself line by line as the card
+         scrolls in, and the Urdu city name surfaces behind it. */
+      var hyd = document.querySelector('[data-hoa-ab-hyd]');
+      if (hyd) {
+        var panel = hyd.querySelector('.hoa-ab-hyd__visual');
+        gsap.fromTo(hyd.querySelectorAll('.hoa-ab-hyd__ln'), { strokeDashoffset: 1 }, {
+          strokeDashoffset: 0, ease: 'none', stagger: 0.035,
+          scrollTrigger: { trigger: panel, start: 'top 85%', end: 'center 45%', scrub: 0.6 }
+        });
+        var urdu = hyd.querySelector('[data-hoa-ab-hyd-urdu]');
+        if (urdu) {
+          gsap.fromTo(urdu, { opacity: 0, y: 50 }, {
+            opacity: 1, y: -30, ease: 'none',
+            scrollTrigger: { trigger: panel, start: 'top bottom', end: 'bottom top', scrub: true }
+          });
+        }
+      }
+
       /* 04 Closing card grows to full size */
       var cta = document.querySelector('[data-hoa-ab-cta]');
       if (cta) {

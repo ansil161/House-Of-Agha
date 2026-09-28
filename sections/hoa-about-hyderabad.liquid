@@ -1,0 +1,140 @@
+{%- comment -%}
+  House of Agha · About 02b · Composed in Hyderabad
+  The house's city, told through its own lines: a Charminar line drawing (drawn by hand as
+  paths, not a photo) that draws itself as the section scrolls in, the city's name in Urdu
+  (حیدرآباد) behind it, a Deccan jaali lattice (assets/hoa-jaali.svg) along the card edge,
+  and three heritage notes (blocks). Complete and fully drawn without JS; motion in
+  assets/hoa-about.js (initHyderabad). Copy is city heritage, editable in the theme editor.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- if s.urdu != blank -%}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500&display=swap&text={{ s.urdu | url_encode }}">
+{%- endif -%}
+<section class="hoa-ab-hyd" id="hyderabad" data-hoa-ab-hyd>
+  <div class="hoa-wrap">
+    <div class="hoa-ab-hyd__card">
+      <div class="hoa-ab-hyd__visual">
+        {%- if s.urdu != blank -%}<p class="hoa-ab-hyd__urdu" lang="ur" dir="rtl" aria-hidden="true" data-hoa-ab-hyd-urdu>{{ s.urdu }}</p>{%- endif -%}
+        <svg class="hoa-ab-hyd__art" viewBox="0 0 420 470" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:0" d="M20 454 H400"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:0" d="M34 454 V440 H386 V454"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:1" d="M107 440 V222 M313 440 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:2" d="M128 440 V236 H292 V440"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:2" d="M148 440 V332 C148 290 178 264 210 250 C242 264 272 290 272 332 V440"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:2" d="M73 440 V300 M107 440 V300"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:2" d="M313 440 V300 M347 440 V300"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M160 440 V336 C160 300 184 278 210 266 C236 278 260 300 260 336 V440"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M75 292 V204 M105 292 V204"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M65 300 H115 V292 H65 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M67 204 H113 V196 H67 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M69 128 H111 V120 H69 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M315 292 V204 M345 292 V204"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M305 300 H355 V292 H305 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M307 204 H353 V196 H307 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:3" d="M309 128 H351 V120 H309 Z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M150 262 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M270 262 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M100 228 H320 M104 222 H316"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M77 196 V128 M103 196 V128"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M68 300 L74 307 M112 300 L106 307 M90 300 V307"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M70 204 L76 211 M110 204 L104 211 M90 204 V211"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M72 128 L78 135 M108 128 L102 135 M90 128 V135"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M84 274 V264 Q84 258 90 254 Q96 258 96 264 V274"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M84 184 V174 Q84 168 90 164 Q96 168 96 174 V184"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M317 196 V128 M343 196 V128"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M308 300 L314 307 M352 300 L346 307 M330 300 V307"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M310 204 L316 211 M350 204 L344 211 M330 204 V211"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M312 128 L318 135 M348 128 L342 135 M330 128 V135"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M324 274 V264 Q324 258 330 254 Q336 258 336 264 V274"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:4" d="M324 184 V174 Q324 168 330 164 Q336 168 336 174 V184"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M150 253 V271 M141 262 H159 M143.6 255.6 L156.4 268.4 M156.4 255.6 L143.6 268.4"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M270 253 V271 M261 262 H279 M263.6 255.6 L276.4 268.4 M276.4 255.6 L263.6 268.4"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M112 228 q4 7 8 0 M124 228 q4 7 8 0 M136 228 q4 7 8 0 M148 228 q4 7 8 0 M160 228 q4 7 8 0 M172 228 q4 7 8 0 M184 228 q4 7 8 0 M196 228 q4 7 8 0 M208 228 q4 7 8 0 M220 228 q4 7 8 0 M232 228 q4 7 8 0 M244 228 q4 7 8 0 M256 228 q4 7 8 0 M268 228 q4 7 8 0 M280 228 q4 7 8 0 M292 228 q4 7 8 0 M304 228 q4 7 8 0"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M126.0 222 V192 Q126.0 176 139.6 166 Q153.2 176 153.2 192 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M161.2 222 V192 Q161.2 176 174.79999999999998 166 Q188.39999999999998 176 188.39999999999998 192 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M196.4 222 V192 Q196.4 176 210.0 166 Q223.60000000000002 176 223.60000000000002 192 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M231.60000000000002 222 V192 Q231.60000000000002 176 245.20000000000002 166 Q258.8 176 258.8 192 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M266.8 222 V192 Q266.8 176 280.4 166 Q294.0 176 294.0 192 V222"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M80 120 V96 M100 120 V96 M78 96 H102"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M78 96 C73 80 82 66 90 58 C98 66 107 80 102 96"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M320 120 V96 M340 120 V96 M318 96 H342"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:5" d="M318 96 C313 80 322 66 330 58 C338 66 347 80 342 96"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M108 158 H312 M112 152 H308"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M112 152 V134 H308 V152"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M81 90 H99"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M90 58 V40 M86 48 H94"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M90 36 m-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M321 90 H339"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M330 58 V40 M326 48 H334"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:6" d="M330 36 m-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:7" d="M118 143 l6 -6 l6 6 l-6 6 z M134 143 l6 -6 l6 6 l-6 6 z M150 143 l6 -6 l6 6 l-6 6 z M166 143 l6 -6 l6 6 l-6 6 z M182 143 l6 -6 l6 6 l-6 6 z M198 143 l6 -6 l6 6 l-6 6 z M214 143 l6 -6 l6 6 l-6 6 z M230 143 l6 -6 l6 6 l-6 6 z M246 143 l6 -6 l6 6 l-6 6 z M262 143 l6 -6 l6 6 l-6 6 z M278 143 l6 -6 l6 6 l-6 6 z M294 143 l6 -6 l6 6 l-6 6 z"/>
+        <path class="hoa-ab-hyd__ln" pathLength="1" style="--o:7" d="M114 134 v-6 h8 v6 M130 134 v-6 h8 v6 M146 134 v-6 h8 v6 M162 134 v-6 h8 v6 M178 134 v-6 h8 v6 M194 134 v-6 h8 v6 M210 134 v-6 h8 v6 M226 134 v-6 h8 v6 M242 134 v-6 h8 v6 M258 134 v-6 h8 v6 M274 134 v-6 h8 v6 M290 134 v-6 h8 v6"/>
+        </svg>
+        {%- if s.caption != blank -%}<p class="hoa-ab-hyd__caption">{{ s.caption }}</p>{%- endif -%}
+      </div>
+      <div class="hoa-ab-hyd__copy">
+        {%- if s.chip != blank -%}<p class="hoa-ab-chip" data-hoa-ab-up>{{ s.chip }}</p>{%- endif -%}
+        <h2 class="hoa-ab-h2" data-hoa-ab-up>{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
+        {%- if s.text != blank -%}<p class="hoa-ab-hyd__text" data-hoa-ab-up>{{ s.text }}</p>{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <ul class="hoa-ab-hyd__notes" role="list">
+            {%- for block in section.blocks -%}
+              {%- assign b = block.settings -%}
+              <li class="hoa-ab-hyd__note" data-hoa-ab-up {{ block.shopify_attributes }}>
+                <span class="hoa-ab-hyd__icon" aria-hidden="true">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    {%- case b.icon -%}
+                      {%- when 'attar' -%}<path d="M13 4h6v3h-6zM12 7h8M14 7v3c-4 1.5-6 4.6-6 8.5C8 23.6 11.6 28 16 28s8-4.4 8-9.5C24 14.6 22 11.5 18 10V7"/><path d="M11 20c2.5 1.4 7.5 1.4 10 0"/>
+                      {%- when 'pearl' -%}<circle cx="16" cy="17" r="8"/><path d="M12.5 13.8a4.2 4.2 0 0 1 3.5-2"/><path d="M4 9c3 1.6 5.3 3.3 7 5M28 9c-3 1.6-5.3 3.3-7 5"/>
+                      {%- when 'jaali' -%}<path d="M16 5 27 16 16 27 5 16Z"/><path d="M8.2 8.2h15.6v15.6H8.2Z"/><circle cx="16" cy="16" r="2.4"/>
+                      {%- else -%}<path d="M7 28V15c0-4.6 4-8.3 9-10.5 5 2.2 9 5.9 9 10.5v13"/><path d="M11 28V16.5c0-3.2 2.4-5.8 5-7.3 2.6 1.5 5 4.1 5 7.3V28M4 28h24"/>
+                    {%- endcase -%}
+                  </svg>
+                </span>
+                {%- if b.kicker != blank -%}<span class="hoa-ab-hyd__kicker">{{ b.kicker }}</span>{%- endif -%}
+                <b>{{ b.title }}</b>
+                {%- if b.text != blank -%}<span class="hoa-ab-hyd__note-text">{{ b.text }}</span>{%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: Hyderabad",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "chip", "label": "Label", "default": "Composed in Hyderabad" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A city that has always worn its fragrance." },
+    { "type": "text", "id": "heading_muted", "label": "Heading, muted part", "default": "Ours begins there." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "House of Agha is composed in Hyderabad, the city Muhammad Quli Qutb Shah built around the Charminar in 1591, and known ever since for its courts, its pearls and the attar sellers of the old city. Its arches and lattices are the lines you see across this page." },
+    { "type": "text", "id": "urdu", "label": "City name in Urdu (decorative)", "default": "حیدرآباد", "info": "Drawn large and faint behind the illustration. Leave empty to hide." },
+    { "type": "text", "id": "caption", "label": "Illustration caption", "default": "Charminar · 1591" }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Heritage note",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "arch", "options": [
+          { "value": "arch", "label": "Qutb Shahi arch" },
+          { "value": "attar", "label": "Attar vial" },
+          { "value": "pearl", "label": "Pearl" },
+          { "value": "jaali", "label": "Jaali" }
+        ] },
+        { "type": "text", "id": "kicker", "label": "Small label" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "About: Hyderabad" }]
+}
+{% endschema %}

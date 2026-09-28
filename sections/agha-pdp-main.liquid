@@ -590,10 +590,27 @@
         {%- endif -%}
 
         <div class="pdp-accordion" data-pdp-hero-item>
-          {%- if pdp.description_html != blank -%}
-            <details data-pdp-accordion>
+          {%- comment -%}
+            Description, with the house's "Why we are better" proofs (blocks type `proof`) in one row under the text.
+          {%- endcomment -%}
+          {%- assign proof_blocks = section.blocks | where: 'type', 'proof' -%}
+          {%- if pdp.description_html != blank or proof_blocks.size > 0 -%}
+            <details data-pdp-accordion open>
               <summary>Description<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
-              <div class="pdp-accordion__body">{{ pdp.description_html }}</div>
+              <div class="pdp-accordion__body">
+                {{ pdp.description_html }}
+                {%- if proof_blocks.size > 0 -%}
+                  <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+                    {%- for block in proof_blocks -%}
+                      <li class="pdp-proof" {{ block.shopify_attributes }}>
+                        <span class="pdp-proof__icon">{% render 'pdx-icon', name: block.settings.icon %}</span>
+                        <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
+                        {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
             </details>
           {%- endif -%}
           {%- if top_notes != blank or heart_notes != blank or base_notes != blank -%}
@@ -796,6 +813,24 @@
             { "value": "delivery", "label": "Delivery" }
           ]
         }
+      ]
+    },
+    {
+      "type": "proof",
+      "name": "Why we are better (in Description)",
+      "limit": 4,
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "badge", "options": [
+          { "value": "badge", "label": "Certified badge" },
+          { "value": "bottle", "label": "Perfume bottle" },
+          { "value": "hourglass", "label": "Hourglass" },
+          { "value": "ifra", "label": "IFRA mark" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "drop", "label": "Drop" },
+          { "value": "shield", "label": "Shield" }
+        ] },
+        { "type": "textarea", "id": "title", "label": "Title", "info": "A new line starts a new row.", "default": "Certified perfumers" },
+        { "type": "textarea", "id": "text", "label": "Description" }
       ]
     },
     {
