@@ -483,7 +483,12 @@
 
           {%- comment -%} Buy more, save more: painted by assets/pdp-buybox.js from the quantity tiers. Stacked
             choice rows right above the purchase, so the saving is picked before the button is pressed {%- endcomment -%}
-          <fieldset class="pdp-offers" data-pdp-offers data-unit="{{ s.offer_unit | default: 'bottle' }}" hidden>
+          {%- comment -%} Option images: the product's own photo (1 / 2 / 3 bottles), or a photo picked per option in the section settings {%- endcomment -%}
+          <fieldset class="pdp-offers" data-pdp-offers data-unit="{{ s.offer_unit | default: 'bottle' }}"
+            {%- if product.featured_image %} data-image="{{ product.featured_image | image_url: width: 240 }}"{% endif -%}
+            {%- if s.offer_image_1 != blank %} data-image-1="{{ s.offer_image_1 | image_url: width: 240 }}"{% endif -%}
+            {%- if s.offer_image_2 != blank %} data-image-2="{{ s.offer_image_2 | image_url: width: 240 }}"{% endif -%}
+            {%- if s.offer_image_3 != blank %} data-image-3="{{ s.offer_image_3 | image_url: width: 240 }}"{% endif %} hidden>
             <legend class="pdp-offers__legend"><span>{{ s.offer_heading | default: 'Buy more, save more' }}</span></legend>
             <div class="pdp-offers__list" data-pdp-offers-list></div>
           </fieldset>
@@ -840,6 +845,9 @@
     { "type": "range", "id": "free_shipping_threshold", "label": "Free shipping above (₹)", "min": 0, "max": 10000, "step": 250, "default": 0, "info": "0 = use the catalog threshold. Match your Shopify shipping rates." },
     { "type": "text", "id": "offer_heading", "label": "Multi-buy heading", "default": "Buy more, save more" },
     { "type": "text", "id": "offer_unit", "label": "Multi-buy unit (singular)", "default": "bottle", "info": "Shown as \"2 bottles\" on each option. Savings come from the quantity tiers in the catalog data." },
+    { "type": "image_picker", "id": "offer_image_1", "label": "Multi-buy image: Single", "info": "Optional. Without it, the option shows the product's own photo." },
+    { "type": "image_picker", "id": "offer_image_2", "label": "Multi-buy image: Duo", "info": "Optional. Without it, the option shows two of the product's bottles." },
+    { "type": "image_picker", "id": "offer_image_3", "label": "Multi-buy image: Trio", "info": "Optional. Without it, the option shows three of the product's bottles." },
     { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown under the price, only while the selected variant has a compare-at price." },
     { "type": "header", "content": "Pay later" },
     { "type": "range", "id": "emi_installments", "label": "Instalments", "min": 0, "max": 6, "step": 1, "default": 0, "info": "0 = hidden. Turn on only if your checkout offers pay-in-instalments (Snapmint, Simpl, Razorpay…)." },

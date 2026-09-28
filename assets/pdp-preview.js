@@ -205,7 +205,7 @@
               </div>
             </fieldset>
 
-            <fieldset class="pdp-offers" data-pdp-offers data-unit="bottle" hidden>
+            <fieldset class="pdp-offers" data-pdp-offers data-unit="bottle" data-image="${esc(String(images[0] || '').replace(/(hoa-product-[a-z-]+)\.webp$/, '$1-sm.webp'))}" hidden>
               <legend class="pdp-offers__legend"><span>Buy more, save more</span></legend>
               <div class="pdp-offers__list" data-pdp-offers-list></div>
             </fieldset>

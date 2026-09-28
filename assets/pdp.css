@@ -4217,3 +4217,45 @@ html:has(.pdp) body {
 .pdp-console .pdp-accordion { border-color: #EEEEEE; }
 .pdp-console .pdp-deliver__label svg,
 .pdp-console .pdp-trust__icon { color: var(--cv-wine); }
+
+/* ==========================================================================
+   Buy more, save more: option photos (assets/pdp-buybox.js)
+   One square tile per option. By default it holds the product's own studio photo,
+   1 / 2 / 3 bottles side by side (white backdrop multiplied into the tile);
+   a photo picked per option in the section settings fills the tile instead.
+   ========================================================================== */
+.pdp-offer__img,
+.pdp-console .pdp-offer__img {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #F4F1EC;
+  isolation: isolate;
+}
+.pdp-offer__img img {
+  position: absolute;
+  top: -9%;
+  left: 50%;
+  width: auto;
+  max-width: none;
+  height: 118%;               /* the studio shot has wide margins: this brings the bottle to ~85% of the tile */
+  transform: translateX(-50%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.pdp-offer__img[data-n="2"] img:nth-child(1) { left: 38%; }
+.pdp-offer__img[data-n="2"] img:nth-child(2) { left: 62%; }
+.pdp-offer__img[data-n="3"] img { height: 104%; top: -2%; }
+.pdp-offer__img[data-n="3"] img:nth-child(1) { left: 29%; }
+.pdp-offer__img[data-n="3"] img:nth-child(2) { left: 50%; height: 114%; top: -7%; }
+.pdp-offer__img[data-n="3"] img:nth-child(3) { left: 71%; }
+.pdp-offer__img--own img { inset: 0; top: 0; left: 0; width: 100%; height: 100%; transform: none; object-fit: cover; mix-blend-mode: normal; }
+.pdp-offer.is-selected .pdp-offer__img { box-shadow: inset 0 0 0 1px rgba(20, 18, 16, 0.14); }
+@media (max-width: 480px) {
+  .pdp-offer__img,
+  .pdp-console .pdp-offer__img { width: 54px; height: 54px; }
+}

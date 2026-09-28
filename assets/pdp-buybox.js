@@ -1,4 +1,4 @@
-/* PDP purchase options ("Choose your set"): Single / Duo / Trio.
+/* PDP purchase options ("Choose your set"): Single / Duo / Trio, each with a product photo.
    Reads the quantity tiers from the catalog (window.HOA.settings.quantityTiers) and the unit price
    of the selected size from the page, paints the offers into [data-pdp-offers-list], and drives the
    existing quantity field, so pdp.js add-to-bag / buy-now keep working unchanged.
@@ -36,11 +36,22 @@
 
     const bottle = '<svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="1.5" width="5" height="3.5"/><path d="M4 5h8v2.5H4z"/><rect x="2.5" y="7.5" width="11" height="15"/><path d="M2.5 14h11"/></svg>';
     const tag = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.6V2.8c0-.4.3-.8.8-.8h5.8L14 7.4a1 1 0 0 1 0 1.4l-4.9 4.900a1 1 0 0 1-1.400 0z"/><circle cx="5.500" cy="5.500" r="1"/></svg>';
+    // Option picture: a photo picked for that option in the theme editor (data-image-1/2/3), else the
+    // product's own photo repeated 1 / 2 / 3 times, else the line-drawn bottles.
+    const productImg = box.dataset.image || ($('.pdp-media img, [data-pdp-gallery] img') || {}).currentSrc || '';
+    const esc = (v) => String(v).replace(/[&"<>]/g, (c) => ({ '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[c]));
+    const picture = (s, i) => {
+      const own = box.dataset['image' + (i + 1)];
+      if (own) return `<span class="pdp-offer__img pdp-offer__img--own" aria-hidden="true"><img src="${esc(own)}" alt="" loading="lazy" decoding="async"></span>`;
+      const n = Math.min(s.qty, 3);
+      if (productImg) return `<span class="pdp-offer__img" data-n="${n}" aria-hidden="true">${`<img src="${esc(productImg)}" alt="" loading="lazy" decoding="async">`.repeat(n)}</span>`;
+      return `<span class="pdp-offer__icon" aria-hidden="true">${bottle.repeat(n)}</span>`;
+    };
     list.innerHTML = steps.map((s, i) => `
       <label class="pdp-offer" data-pdx-offer="${s.qty}">
         <input type="radio" name="pdx-offer" value="${s.qty}"${i === 0 ? ' checked' : ''}>
         <span class="pdp-offer__radio" aria-hidden="true"></span>
-        <span class="pdp-offer__icon" aria-hidden="true">${bottle.repeat(Math.min(s.qty, 3))}</span>
+        ${picture(s, i)}
         <span class="pdp-offer__body">
           <span class="pdp-offer__name">${names[i] || s.qty + ' ' + unit + 's'}</span>
           <span class="pdp-offer__meta">${s.qty} ${unit}${s.qty > 1 ? 's' : ''}${s.pct ? `<em class="pdp-offer__save">${tag}Save ${s.pct}%</em>` : ''}</span>
