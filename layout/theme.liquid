@@ -66,6 +66,7 @@
   {%- endif -%}
 </head>
 <body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
+  {% render 'preloader' %}
 
   <!-- Navigation Header -->
   {% render 'header' %}

@@ -372,6 +372,21 @@ async function renderTemplate(name, templateGlobals) {
     console.log('message strip on shop.html, product.html');
   }
 
+  // Preloader (snippets/preloader.liquid): layout/theme.liquid renders it right after <body> on
+  // every page, with the theme-settings defaults from config/settings_schema.json.
+  {
+    const settings = {};
+    for (const g of JSON.parse(fs.readFileSync(path.join(THEME, 'config/settings_schema.json'), 'utf8'))) Object.assign(settings, defaults(g.settings));
+    const pl = (await engine.parseAndRender(fs.readFileSync(path.join(THEME, 'snippets/preloader.liquid'), 'utf8'), Object.assign({}, globals, { settings, request: { design_mode: false } }))).trim();
+    for (const f of all) {
+      const file = path.join(THEME, f);
+      let html = fs.readFileSync(file, 'utf8').replace(/\n[ \t]*<!-- Preloader ·[\s\S]*?<!-- \/Preloader -->/, '');
+      if (pl) html = html.replace(/(<body[^>]*>)/, (m) => m + '\n  <!-- Preloader · snippets/preloader.liquid (rendered by the preview build) -->\n' + pl + '\n  <!-- /Preloader -->');
+      fs.writeFileSync(file, html);
+    }
+    console.log('preloader on', all.length, 'pages');
+  }
+
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {

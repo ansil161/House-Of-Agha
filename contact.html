@@ -98,6 +98,91 @@
   <script src="assets/agha-wishlist-drawer.js" defer></script>
 </head>
 <body>
+  <!-- Preloader · snippets/preloader.liquid (rendered by the preview build) -->
+<style>
+html.pl-on{overflow:hidden}html.pl-skip .pl{display:none}
+.pl{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;align-content:center;gap:18px;background:var(--pl-bg)}
+.pl svg{width:min(34vw,170px);height:auto;overflow:visible}
+.pl canvas{position:absolute;inset:0;width:100%;height:100%;filter:blur(3px);pointer-events:none}
+.pl .st{fill:none;stroke:var(--pl-a);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .95s cubic-bezier(.65,0,.35,1)}
+.pl-draw .st{stroke-dashoffset:0}
+.pl .cv{fill:var(--pl-bg)}
+#pl-liq{fill:rgba(201,162,95,.1);opacity:0;transition:opacity .5s}
+.pl-fill #pl-liq{opacity:1}
+#pl-cap,#pl-pump{transform-box:fill-box;transform-origin:50% 100%}
+#pl-cap{transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .55s}
+.pl-open #pl-cap{transform:translateY(-34px) rotate(-10deg);opacity:0}
+#pl-pump{transition:transform .13s ease-in-out}
+.pl-press #pl-pump{transform:translateY(6px)}
+.pl-b{margin:0;color:var(--pl-a);font:500 11px/1 sans-serif;letter-spacing:.42em;text-transform:uppercase;opacity:0;transition:opacity .8s .6s}
+.pl-draw .pl-b{opacity:.85}
+</style>
+<script>try{document.documentElement.classList.add(sessionStorage.getItem('pl_seen')?'pl-skip':'pl-on')}catch(e){document.documentElement.classList.add('pl-on')}</script>
+<div class="pl" id="pl" aria-hidden="true" style="--pl-a:#c9a25f;--pl-bg:#ffffff">
+  <canvas></canvas>
+  <!-- BOTTLE SVG: swap for the real bottle. Keep: class="st" + pathLength="1" on every visible stroke,
+       #pl-liq (liquid), #pl-pump (moves when pressed), #tip (nozzle point, invisible),
+       #pl-cap (lifted off; class="cv" fills it so it hides the pump). -->
+  <svg viewBox="0 0 200 300" focusable="false">
+    <rect id="pl-liq" x="48" y="150" width="104" height="122" rx="8"/>
+    <rect class="st" pathLength="1" x="40" y="112" width="120" height="168" rx="14"/>
+    <rect class="st" pathLength="1" x="62" y="170" width="76" height="54" rx="2"/>
+    <path class="st" pathLength="1" d="M84 112V94"/>
+    <path class="st" pathLength="1" d="M116 112V94"/>
+    <rect class="st" pathLength="1" x="78" y="84" width="44" height="12" rx="2"/>
+    <g id="pl-pump">
+      <path class="st" pathLength="1" d="M100 84V66"/>
+      <rect class="st" pathLength="1" x="86" y="52" width="28" height="14" rx="3"/>
+      <path class="st" pathLength="1" d="M86 58H76"/>
+      <rect id="tip" x="73" y="57" width="2" height="2" fill="none"/>
+    </g>
+    <g id="pl-cap">
+      <rect class="st cv" pathLength="1" x="74" y="34" width="52" height="62" rx="4"/>
+      <path class="st" pathLength="1" d="M74 48H126"/>
+    </g>
+  </svg>
+  <!-- /BOTTLE SVG -->
+  <p class="pl-b">House of Agha</p>
+</div>
+<script>
+(function(){
+var d=document,h=d.documentElement,o=d.getElementById('pl');if(!o)return;
+if(h.classList.contains('pl-skip')){o.remove();return}
+try{sessionStorage.setItem('pl_seen','1')}catch(e){}
+var loaded=d.readyState=='complete',shown=1,out=0,raf=0,P=[],W,H;
+addEventListener('load',function(){loaded=true});
+function end(){o.remove();h.classList.remove('pl-on');shown=0}
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){o.style.transition='opacity .2s';requestAnimationFrame(function(){o.style.opacity=0});setTimeout(end,220);return}
+var cv=o.querySelector('canvas'),cx=cv.getContext('2d'),tip=d.getElementById('tip'),r=Math.min(devicePixelRatio||1,2);
+function size(){W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;cx.setTransform(r,0,0,r,0,0)}
+size();addEventListener('resize',size);
+function nz(){var b=tip.getBoundingClientRect();return[b.left+b.width/2,b.top+b.height/2]}
+function wait(ms){return new Promise(function(f){setTimeout(f,ms)})}
+function tick(){raf=0;cx.clearRect(0,0,W,H);cx.fillStyle='#d6b98a';
+for(var i=P.length;i--;){var q=P[i];q.x+=q.vx;q.y+=q.vy;q.vx*=.955;q.vy=q.vy*.955-.03;q.r+=.55;
+if(++q.l>q.L){P.splice(i,1);continue}cx.globalAlpha=.45*(1-q.l/q.L);cx.beginPath();cx.arc(q.x,q.y,q.r,0,6.2832);cx.fill()}
+if(P.length&&shown)raf=requestAnimationFrame(tick)}
+function emit(n,pw){var p=nz();for(var i=0;i<n;i++){var a=Math.PI+.12+(Math.random()*2-1)*.35,s=(2+Math.random()*6)*pw;
+P.push({x:p[0],y:p[1],vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:3+Math.random()*6,l:0,L:70+Math.random()*50})}
+if(!raf)raf=requestAnimationFrame(tick)}
+function spray(n,pw){o.classList.add('pl-press');return wait(130).then(function(){emit(n,pw);o.classList.remove('pl-press');return wait(130)})}
+function reveal(){if(out)return;out=1;o.style.pointerEvents='none';
+var p=nz(),M=Math.hypot(W,H),t0=performance.now();
+(function f(now){var t=Math.min(1,(now-t0)/1500),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,R=e*M,
+m='radial-gradient(circle at '+p[0]+'px '+p[1]+'px,transparent '+R+'px,#000 '+(R+160)+'px)';
+o.style.webkitMaskImage=o.style.maskImage=m;t<1?requestAnimationFrame(f):end()})(t0)}
+setTimeout(reveal,8000);
+var st=o.querySelectorAll('.st');
+for(var i=0;i<st.length;i++)st[i].style.transitionDelay=i*80+'ms';
+requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('pl-draw')})});
+wait(950+80*(st.length-1)).then(function(){o.classList.add('pl-fill');return wait(350)})
+.then(function(){o.classList.add('pl-open');return wait(600)})
+.then(function loop(k){k=k||0;if(out)return;
+if(k<3||!loaded)return spray(40,1).then(function(){return wait(420)}).then(function(){return loop(k+1)});
+return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
+})();
+</script>
+  <!-- /Preloader -->
 
   <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->
   <header class="header hoa-header" data-hoa-header>
