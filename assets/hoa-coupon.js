@@ -302,12 +302,7 @@
   });
 
   // The delay counts from full page load, not from script parse.
-  // While the opening intro is up, the delay starts when it lifts, not at page load.
   function schedule() {
-    if (document.documentElement.classList.contains('hoa-intro-active')) {
-      document.addEventListener('hoa:intro-reveal', function () { setTimeout(open, delay); }, { once: true });
-      return;
-    }
     setTimeout(open, delay);
   }
   if (document.readyState === 'complete') schedule();
