@@ -494,18 +494,6 @@
           </fieldset>
 
 
-          {%- comment -%} 7 · Pay later: only when the store's checkout really offers instalments (setting) {%- endcomment -%}
-          {%- if s.emi_installments > 1 -%}
-            {%- assign emi_first = current_variant.price | divided_by: s.emi_installments -%}
-            <p class="pdp-emi" data-pdp-emi data-installments="{{ s.emi_installments }}">
-              <span class="pdp-emi__icon">{% render 'agha-pdp-icon', icon: 'card' %}</span>
-              <span class="pdp-emi__copy">
-                <span>Pay <b data-pdp-emi-now>{{ emi_first | money }}</b> now<span class="pdp-emi__rest"> + {{ s.emi_installments | minus: 1 }} monthly {{ s.emi_installments | minus: 1 | pluralize: 'payment', 'payments' }}</span></span>
-                {%- if s.emi_note != blank -%}<small>{{ s.emi_note }}</small>{%- endif -%}
-              </span>
-            </p>
-          {%- endif -%}
-
           {%- comment -%} 8 · Purchase {%- endcomment -%}
           <div class="pdp-buy">
             <div class="pdp-qty" data-pdp-qty>
@@ -526,6 +514,20 @@
 
           {%- if section.settings.show_dynamic_checkout -%}
             <div class="pdp-dynamic-checkout">{{ form | payment_button }}</div>
+          {%- endif -%}
+
+          {%- comment -%} 9 · Payment badges: the store's own enabled payment methods (Shopify's icons), right under the buttons {%- endcomment -%}
+          {%- if s.show_secure -%}
+            <div class="pdp-paybadges">
+              <span class="pdp-paybadges__label">{% render 'agha-pdp-icon', icon: 'secure' %}{{ s.secure_title }}</span>
+              {%- if shop.enabled_payment_types.size > 0 -%}
+                <ul class="pdp-paybadges__list" role="list" aria-label="Accepted payment methods">
+                  {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
+                </ul>
+              {%- elsif s.secure_text != blank -%}
+                <span class="pdp-paybadges__text">{{ s.secure_text }}</span>
+              {%- endif -%}
+            </div>
           {%- endif -%}
 
           {%- liquid
@@ -584,18 +586,6 @@
                 </li>
               {%- endif -%}
             </ul>
-            {%- if s.show_secure -%}
-              <div class="pdp-trust__pay">
-                <span class="pdp-trust__secure">{% render 'agha-pdp-icon', icon: 'secure' %}{{ s.secure_title }}</span>
-                {%- if shop.enabled_payment_types.size > 0 -%}
-                  <ul class="pdp-payments" role="list" aria-label="Accepted payment methods">
-                    {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
-                  </ul>
-                {%- elsif s.secure_text != blank -%}
-                  <span class="pdp-trust__secure-text">{{ s.secure_text }}</span>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
           </div>
         {%- endif -%}
 
@@ -849,11 +839,8 @@
     { "type": "image_picker", "id": "offer_image_2", "label": "Multi-buy image: Duo", "info": "Optional. Without it, the option shows two of the product's bottles." },
     { "type": "image_picker", "id": "offer_image_3", "label": "Multi-buy image: Trio", "info": "Optional. Without it, the option shows three of the product's bottles." },
     { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown under the price, only while the selected variant has a compare-at price." },
-    { "type": "header", "content": "Pay later" },
-    { "type": "range", "id": "emi_installments", "label": "Instalments", "min": 0, "max": 6, "step": 1, "default": 0, "info": "0 = hidden. Turn on only if your checkout offers pay-in-instalments (Snapmint, Simpl, Razorpay…)." },
-    { "type": "text", "id": "emi_note", "label": "Pay later note", "info": "Only state terms your provider actually offers." },
-    { "type": "header", "content": "Secure checkout" },
-    { "type": "checkbox", "id": "show_secure", "label": "Show secure checkout + payment icons", "default": true },
+    { "type": "header", "content": "Payment badges" },
+    { "type": "checkbox", "id": "show_secure", "label": "Show payment badges under the buttons", "default": true, "info": "Shopify's icons for the payment methods enabled on the store (Settings > Payments)." },
     { "type": "text", "id": "secure_title", "label": "Title", "default": "Secure checkout" },
     { "type": "text", "id": "secure_text", "label": "Text (when no payment icons)", "default": "Payments are processed securely by Shopify." },
     { "type": "header", "content": "Delivery" },

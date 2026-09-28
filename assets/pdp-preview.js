@@ -46,6 +46,18 @@
     check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
     sparkle: '<path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/><path d="M19 16c.2 1.5.8 2.1 2.3 2.3-1.5.2-2.1.8-2.3 2.3-.2-1.5-.8-2.1-2.3-2.3 1.5-.2 2.1-.8 2.3-2.3z"/>'
   };
+
+  // Payment badges. On Shopify these are the store's enabled methods drawn by payment_type_svg_tag;
+  // here, simple stand-ins in the same 38 × 24 card so the row reads the same.
+  const badge = (label, inner) => `<li><svg viewBox="0 0 38 24" width="38" height="24" role="img" aria-label="${label}"><rect x=".5" y=".5" width="37" height="23" rx="3" fill="#fff" stroke="#E2E0DC"/>${inner}</svg></li>`;
+  const PAY_BADGES = [
+    badge('Visa', '<text x="19" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" font-style="italic" fill="#1A1F71">VISA</text>'),
+    badge('Mastercard', '<circle cx="15.5" cy="12" r="6" fill="#EB001B"/><circle cx="22.5" cy="12" r="6" fill="#F79E1B"/><path d="M19 7.1a6 6 0 0 1 0 9.8 6 6 0 0 1 0-9.8z" fill="#FF5F00"/>'),
+    badge('RuPay', '<text x="17" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" font-style="italic" fill="#1B3F8B">RuPay</text><path d="M29 8l4 4-4 4z" fill="#F37021"/><path d="M26.5 8l4 4-4 4z" fill="#128A43"/>'),
+    badge('UPI', '<text x="16.5" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700" font-style="italic" fill="#5F6368">UPI</text><path d="M26 7l3.5 5L26 17z" fill="#F37021"/><path d="M28.5 7l3.5 5-3.5 5z" fill="#128A43"/>'),
+    badge('American Express', '<rect x="3" y="4" width="32" height="16" rx="2" fill="#2E77BC"/><text x="19" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" font-weight="700" fill="#fff">AMEX</text>'),
+    badge('Google Pay', '<text x="19" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" font-weight="700"><tspan fill="#4285F4">G</tspan><tspan fill="#5F6368"> Pay</tspan></text>')
+  ].join('');
   const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
 
   // Mirrors Shopify's product.variants JSON (prices in minor units)
@@ -210,14 +222,6 @@
               <div class="pdp-offers__list" data-pdp-offers-list></div>
             </fieldset>
 
-            <p class="pdp-emi" data-pdp-emi data-installments="3">
-              <span class="pdp-emi__icon">${icon('card')}</span>
-              <span class="pdp-emi__copy">
-                <span>Pay <b data-pdp-emi-now>${money(Math.ceil(unitRupees / 3))}</b> now<span class="pdp-emi__rest"> + 2 monthly payments</span></span>
-                <small>Interest-free with eligible pay-later options at checkout</small>
-              </span>
-            </p>
-
             <div class="pdp-buy">
               <div class="pdp-qty" data-pdp-qty>
                 <button type="button" data-pdp-qty-step="-1" aria-label="Decrease quantity" disabled>−</button>
@@ -233,6 +237,10 @@
               <button type="button" class="pdp-icon-btn" data-pdp-wishlist data-wishlist-toggle data-wishlist-handle="${esc(handle)}" aria-pressed="false" aria-label="Save to wishlist">${icon('heart')}</button>
             </div>
             <button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-buynow" data-pdp-buy-now>Buy it now</button>
+            <div class="pdp-paybadges">
+              <span class="pdp-paybadges__label">${icon('secure')}Secure checkout</span>
+              <ul class="pdp-paybadges__list" role="list" aria-label="Accepted payment methods">${PAY_BADGES}</ul>
+            </div>
             <p class="pdp-stock" data-pdp-stock data-state="${stockNow.state}" role="status">${stockNow.text || 'In stock · ready to dispatch'}</p>
             <p class="pdp-sr" data-pdp-live role="status" aria-live="polite"></p>
           </form>
@@ -256,10 +264,6 @@
                 ['seal', 'Numbered and batch-coded', 'Every flacon is laser-engraved with its batch code and compounding date.']
               ].map(([ic, t, d]) => `<li class="pdp-trust__item"><span class="pdp-trust__icon">${icon(ic)}</span><span><b>${t}</b><small>${d}</small></span></li>`).join('')}
             </ul>
-            <div class="pdp-trust__pay">
-              <span class="pdp-trust__secure">${icon('secure')}Secure checkout</span>
-              <span class="pdp-trust__secure-text">Payments are processed securely by Shopify.</span>
-            </div>
           </div>
           <div class="pdp-accordion" data-pdp-hero-item>
             <details data-pdp-accordion>

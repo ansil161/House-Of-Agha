@@ -55,8 +55,6 @@
       "settings": {
         "offers_heading": "Exclusive offers",
         "offer_heading": "Buy more, save more",
-        "emi_installments": 3,
-        "emi_note": "Interest-free with eligible pay-later options at checkout",
         "show_dynamic_checkout": true,
         "show_delivery": true,
         "free_shipping_text": "Complimentary shipping on orders above ₹5,000.",

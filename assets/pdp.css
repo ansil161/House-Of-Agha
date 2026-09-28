@@ -4259,3 +4259,31 @@ html:has(.pdp) body {
   .pdp-offer__img,
   .pdp-console .pdp-offer__img { width: 54px; height: 54px; }
 }
+
+/* ==========================================================================
+   Payment badges under the purchase buttons (sections/agha-pdp-main.liquid ·
+   the store's enabled methods via payment_type_svg_tag). Replaces the old pay-later bar.
+   ========================================================================== */
+.pdp-paybadges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  margin-top: 14px;
+}
+.pdp-paybadges__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pdp-muted);
+}
+.pdp-paybadges__label svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.pdp-paybadges__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.pdp-paybadges__list li { display: block; line-height: 0; }
+.pdp-paybadges__list svg { display: block; width: 38px; height: 24px; }
+.pdp-paybadges__text { font-size: 0.76rem; color: var(--pdp-muted); }

@@ -327,3 +327,18 @@
   .pdx-js .pdp-craft.is-in::before,
   .pdx-js .pdp-craft.is-in::after { opacity: 0.12; }
 }
+
+/* ---------- Why we are better: all four in one row (2026-09-28, user request) ----------
+   Same icons, titles and text; only the grid changes from 2 x 2 to 1 x 4, with a hairline
+   between neighbours instead of the cross. Phones keep one row with smaller type. */
+.pdx-why__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 1120px; }
+.pdx-why__item::after { content: none !important; }
+.pdx-why__item::before { content: "" !important; top: 0; right: 0; bottom: 0; width: 1px; height: auto; left: auto; transform-origin: top; }
+.pdx-why__item:last-child::before { content: none !important; }
+@media (max-width: 700px) {
+  .pdx-why__item { padding: 20px 4px; }
+  .pdx-icon { width: 34px; }
+  .pdx-why__icon { margin-bottom: 10px; }
+  .pdx-why__title { font-size: 0.66rem; letter-spacing: 0; }
+  .pdx-why__text { margin-top: 6px; font-size: 0.6rem; }
+}
