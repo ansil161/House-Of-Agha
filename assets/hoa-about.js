@@ -7,10 +7,10 @@
                        while scrolling (depth, subtle).
      Stacking cards .. cards stick under the header; the card underneath recedes
                        as the next one arrives (storytelling, one idea at a time).
-     Seven worlds .... the section pins and one canvas pans sideways; each world
-                       comes into focus at the centre, its brass arch draws in and a
-                       pearl lights on the string; the Hyderabad skyline drifts slower
-                       behind (storytelling, depth). Wide screens;
+     Seven worlds .... the section pins behind carved palace doors that swing open;
+                       then one canvas pans sideways, each world comes into focus at
+                       the centre, a pearl lights and the Hyderabad skyline drifts
+                       behind (entrance, then storytelling). Wide screens;
                        phones get a stacked version, reduced motion a static one.
      Closing card .... grows from slightly inset to full size before the shop
                        button (emphasis).
@@ -52,12 +52,15 @@
   }
 
   /* ---------------- 03 The seven worlds ----------------
-     Wide (768px+, motion allowed): the section pins; vertical scroll pans one continuous
-     canvas sideways. Each world comes into focus as it nears the centre (scrubbed against
-     the pan via containerAnimation), the counter rolls and the section takes a faint tint
-     from the world in focus. The pan distance is measured, never fixed.
-     Phones (motion allowed): the worlds stack; each settles into view and drives a sticky
-     counter. Reduced motion: nothing here runs, the static stack from the CSS is shown.
+     Wide (768px+, motion allowed): the palace gate, then the canvas. The section pins behind
+     a pair of carved doors; the first stretch of scroll swings them open (inward) and the
+     stage behind settles forward. The rest of the scroll pans one continuous canvas sideways;
+     each world comes into focus as it nears the centre, its brass arch draws in, a pearl
+     lights, the tint follows and the skyline drifts slower (depth). One scrubbed timeline:
+     doors take 1 unit, the pan PAN units; focus is computed from the canvas position on
+     every update, so it never drifts from the pan. The pan distance is measured, never fixed.
+     Phones (motion allowed): the worlds stack; each settles into view. Reduced motion:
+     nothing here runs, the static stack from the CSS is shown (no doors).
      Everything is created inside the shared gsap.matchMedia (mm), so destroy() / resize
      tear it down cleanly and Theme Editor reloads never leave duplicate ScrollTriggers. */
   function initSevenWorlds() {
@@ -68,8 +71,8 @@
         pin: section.querySelector('[data-hoa-ab-pin]'),
         track: section.querySelector('[data-hoa-ab-track]'),
         skyline: section.querySelector('[data-hoa-ab-skyline]'),
+        gate: section.querySelector('[data-hoa-ab-gate]'),
         pearls: gsap.utils.toArray('[data-hoa-ab-pearl]', section),
-        count: section.querySelector('[data-hoa-ab-count]'),
         worlds: gsap.utils.toArray('[data-hoa-ab-world]', section)
       };
     }
@@ -84,17 +87,21 @@
       };
     }
 
-    /* Wide screens: pinned horizontal canvas */
+    /* Wide screens: palace gate + pinned horizontal canvas */
     mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', function () {
       var section = scope();
       if (!section) return;
       var p = parts(section);
       if (!p.pin || !p.track || !p.worlds.length) return;
       var n = p.worlds.length;
+      var b = p.worlds.map(bits);
       var centers = [];
+      var dist = 0;
       var active = -1;
-      var SKY = 0.3; // the skyline drifts at 30% of the canvas speed (depth)
-      var skyX = p.skyline ? gsap.quickSetter(p.skyline, 'x', 'px') : null;
+      var SKY = 0.3;                 // skyline speed relative to the canvas
+      var DOOR = p.gate ? 1 : 0;     // timeline units for the doors
+      var PAN = 6;                   // timeline units for the pan
+      var stage = [section.querySelector('.hoa-ab-worlds__head'), section.querySelector('.hoa-ab-worlds__viewport')];
       section.classList.add('is-panning');
 
       // Pad the canvas so the first and last world can sit exactly at the centre.
@@ -105,93 +112,96 @@
         p.track.style.paddingLeft = Math.max(0, (window.innerWidth - first.offsetWidth) / 2) + 'px';
         p.track.style.paddingRight = Math.max(0, (window.innerWidth - last.offsetWidth) / 2) + 'px';
         centers = p.worlds.map(function (w) { return w.offsetLeft + w.offsetWidth / 2; });
-      };
-      var distance = function () {
-        measure();
-        var d = Math.max(0, p.track.scrollWidth - window.innerWidth);
-        if (p.skyline) p.skyline.style.width = Math.ceil(window.innerWidth + d * SKY + 2) + 'px';
-        return d;
+        dist = Math.max(0, p.track.scrollWidth - window.innerWidth);
+        if (p.skyline) p.skyline.style.width = Math.ceil(window.innerWidth + dist * SKY + 2) + 'px';
+        return dist;
       };
 
       var setActive = function (i) {
         if (i === active) return;
         active = i;
         p.worlds.forEach(function (w, k) { w.classList.toggle('is-active', k === i); });
-        p.pearls.forEach(function (b, k) {
-          b.classList.toggle('is-active', k === i);
-          b.classList.toggle('is-past', k < i);
-          if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+        p.pearls.forEach(function (el, k) {
+          el.classList.toggle('is-active', k === i);
+          el.classList.toggle('is-past', k < i);
+          if (k === i) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
         });
-        if (p.count) p.count.textContent = (i < 9 ? '0' : '') + (i + 1);
         var tint = p.worlds[i].getAttribute('data-tint');
         if (tint) p.pin.style.setProperty('--tint', tint);
       };
 
+      // Focus: each world eases in as it nears the centre, holds, then steps back.
       var sync = function () {
         var x = gsap.getProperty(p.track, 'x');
-        if (skyX) skyX(x * SKY);
         var mid = window.innerWidth / 2;
+        var span = window.innerWidth * 0.6;
         var best = 0;
         var bestD = Infinity;
         for (var i = 0; i < n; i++) {
-          var d = Math.abs(centers[i] + x - mid);
-          if (d < bestD) { bestD = d; best = i; }
+          var off = centers[i] + x - mid;
+          if (Math.abs(off) < bestD) { bestD = Math.abs(off); best = i; }
+          var t = gsap.utils.clamp(-1, 1, off / span);   // +1 waiting right, -1 gone left
+          var f = 1 - t * t;                               // focus 0..1
+          var w = b[i];
+          gsap.set(w.media, { opacity: 0.35 + 0.65 * f, scale: 0.92 + 0.08 * f });
+          if (w.title) gsap.set(w.title, { opacity: 0.3 + 0.7 * f, y: (t > 0 ? 44 : -28) * (1 - f) });
+          gsap.set(w.meta, { opacity: gsap.utils.clamp(0, 1, (f - 0.4) / 0.5), y: 18 * (1 - f) });
+          if (w.img) gsap.set(w.img, { xPercent: -5 * t });
         }
+        if (p.skyline) gsap.set(p.skyline, { x: x * SKY });
         setActive(best);
       };
 
-      var pan = gsap.to(p.track, {
-        x: function () { return -distance(); },
-        ease: 'none',
+      var tl = gsap.timeline({
+        defaults: { ease: 'none' },
         onUpdate: sync,
         scrollTrigger: {
           trigger: p.pin,
           start: 'top top',
-          end: function () { return '+=' + distance(); },
+          end: function () { return '+=' + Math.round(measure() * (PAN + DOOR) / PAN); },
           pin: true,
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onRefresh: function () { sync(); }
+          onRefresh: function () { measure(); sync(); }
         }
       });
 
+      if (p.gate) {
+        var leafL = p.gate.querySelector('[data-hoa-ab-leaf="l"]');
+        var leafR = p.gate.querySelector('[data-hoa-ab-leaf="r"]');
+        var copy = p.gate.querySelector('[data-hoa-ab-gate-copy]');
+        tl.to(copy, { opacity: 0, scale: 0.9, duration: 0.3, ease: 'power1.in' }, 0.02)
+          .fromTo(leafL, { rotateY: 0 }, { rotateY: -88, duration: 0.85, ease: 'power2.inOut' }, 0.1)
+          .fromTo(leafR, { rotateY: 0 }, { rotateY: 88, duration: 0.85, ease: 'power2.inOut' }, 0.1)
+          .fromTo(stage, { scale: 0.94, opacity: 0.4 }, { scale: 1, opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.1)
+          .set(p.gate, { autoAlpha: 0 }, DOOR);
+      }
+      tl.fromTo(p.track, { x: 0 }, { x: function () { return -dist; }, duration: PAN }, DOOR);
+
       // Pearls: jump to a world (its centre lands mid-screen)
       var onPearl = function (e) {
-        var i = +e.currentTarget.getAttribute('data-hoa-ab-pearl');
-        var st = pan.scrollTrigger;
-        var d = st.end - st.start;
-        var total = Math.max(1, p.track.scrollWidth - window.innerWidth);
-        var y = st.start + gsap.utils.clamp(0, 1, (centers[i] - window.innerWidth / 2) / total) * d;
+        var k = +e.currentTarget.getAttribute('data-hoa-ab-pearl');
+        var st = tl.scrollTrigger;
+        var frac = dist ? gsap.utils.clamp(0, 1, (centers[k] - window.innerWidth / 2) / dist) : 0;
+        var y = st.start + ((DOOR + frac * PAN) / (DOOR + PAN)) * (st.end - st.start);
         if (window.hoaLenis) window.hoaLenis.scrollTo(y, { duration: 1.6 });
         else window.scrollTo({ top: y, behavior: 'smooth' });
       };
-      p.pearls.forEach(function (b) { b.addEventListener('click', onPearl); });
-
-      // Focus: each world eases in as it nears the centre, holds, then steps back.
-      p.worlds.forEach(function (w) {
-        var b = bits(w);
-        var tl = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: { trigger: w, containerAnimation: pan, start: 'left 92%', end: 'right 8%', scrub: true }
-        });
-        tl.fromTo(b.media, { opacity: 0.35, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.4 }, 0)
-          .fromTo(b.media, { opacity: 1, scale: 1 }, { opacity: 0.35, scale: 0.92, duration: 0.4, immediateRender: false }, 0.6)
-          .fromTo(b.title, { opacity: 0.3, y: 44 }, { opacity: 1, y: 0, duration: 0.4 }, 0)
-          .fromTo(b.title, { opacity: 1, y: 0 }, { opacity: 0.3, y: -28, duration: 0.4, immediateRender: false }, 0.6)
-          .fromTo(b.meta, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.04 }, 0.1)
-          .fromTo(b.meta, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, 0.68);
-        if (b.img) tl.fromTo(b.img, { xPercent: -5 }, { xPercent: 5, duration: 1 }, 0);
-      });
+      p.pearls.forEach(function (el) { el.addEventListener('click', onPearl); });
+      measure();
+      sync();
 
       return function () {
         section.classList.remove('is-panning');
         p.track.style.paddingLeft = '';
         p.track.style.paddingRight = '';
+        if (p.skyline) p.skyline.style.width = '';
         p.pin.style.removeProperty('--tint');
         p.worlds.forEach(function (w) { w.classList.remove('is-active'); });
-        p.pearls.forEach(function (b) { b.removeEventListener('click', onPearl); b.classList.remove('is-active', 'is-past'); b.removeAttribute('aria-current'); });
-        if (p.skyline) { p.skyline.style.width = ''; gsap.set(p.skyline, { clearProps: 'transform' }); }
+        b.forEach(function (w) { gsap.set([w.media, w.title, w.img].concat(w.meta).filter(Boolean), { clearProps: 'opacity,transform' }); });
+        if (p.skyline) gsap.set(p.skyline, { clearProps: 'transform' });
+        p.pearls.forEach(function (el) { el.removeEventListener('click', onPearl); el.classList.remove('is-active', 'is-past'); el.removeAttribute('aria-current'); });
       };
     });
 

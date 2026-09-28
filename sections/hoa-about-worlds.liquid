@@ -1,10 +1,10 @@
 {%- comment -%}
   House of Agha · About 03 · The seven worlds
 
-  One continuous editorial canvas. Wide screens (768px+): the section pins and vertical scroll
-  pans the canvas sideways while each world comes into focus at the centre (GSAP ScrollTrigger,
-  assets/hoa-about.js -> initSevenWorlds). Phones: the worlds stack and each one settles into
-  view as you scroll. Reduced motion / no JS: the same stack, static and complete.
+  Wide screens (768px+): the section pins behind a pair of carved palace doors (.hoa-ab-gate).
+  The first scroll swings them open; then vertical scroll pans the canvas sideways while each
+  world comes into focus at the centre (GSAP ScrollTrigger, assets/hoa-about.js ->
+  initSevenWorlds). Phones: the worlds stack and each one settles into view as you scroll. Reduced motion / no JS: the same stack, static and complete.
 
   Every block is one world (one fragrance). Nothing here is hard-coded: the number is the
   block's position (or the "Number" override), the total is the block count, the name and link
@@ -31,6 +31,18 @@
   <div class="hoa-ab-worlds__pin" data-hoa-ab-pin>
     <span class="hoa-ab-worlds__jaali" aria-hidden="true"></span>
     <span class="hoa-ab-worlds__skyline" aria-hidden="true" data-hoa-ab-skyline></span>
+    <div class="hoa-ab-gate" aria-hidden="true" data-hoa-ab-gate>
+      <span class="hoa-ab-gate__leaf hoa-ab-gate__leaf--l" data-hoa-ab-leaf="l"></span>
+      <span class="hoa-ab-gate__leaf hoa-ab-gate__leaf--r" data-hoa-ab-leaf="r"></span>
+      <div class="hoa-ab-gate__copy" data-hoa-ab-gate-copy>
+        <span class="hoa-ab-gate__seal">
+          <svg viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><rect x="12" y="12" width="28" height="28"/><rect x="12" y="12" width="28" height="28" transform="rotate(45 26 26)"/><circle cx="26" cy="26" r="8"/><circle cx="26" cy="26" r="2.2" fill="currentColor"/></svg>
+        </span>
+        {%- if s.gate_kicker != blank -%}<p class="hoa-ab-gate__kicker">{{ s.gate_kicker }}</p>{%- endif -%}
+        {%- if s.gate_title != blank -%}<p class="hoa-ab-gate__title">{{ s.gate_title }}</p>{%- endif -%}
+        {%- if s.gate_hint != blank -%}<p class="hoa-ab-gate__hint">{{ s.gate_hint }}</p>{%- endif -%}
+      </div>
+    </div>
     <header class="hoa-wrap hoa-ab-worlds__head">
       <div class="hoa-ab-worlds__intro">
         {%- if s.chip != blank -%}<p class="hoa-ab-worlds__chip"><span aria-hidden="true"></span>{{ s.chip }}</p>{%- endif -%}
@@ -39,7 +51,6 @@
       </div>
       {%- if total > 1 -%}
         <nav class="hoa-ab-worlds__pearls" aria-label="Worlds" data-hoa-ab-pearls>
-          <p class="hoa-ab-worlds__count" aria-hidden="true"><b data-hoa-ab-count>01</b> / {{ total_label }}</p>
           <ol>
             {%- for block in section.blocks -%}
               {%- assign pearl_name = block.settings.product.title | default: block.settings.name -%}
@@ -128,7 +139,11 @@
     { "type": "text", "id": "chip", "label": "Label", "default": "Seven worlds · One city" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "One house," },
     { "type": "text", "id": "heading_serif", "label": "Heading, muted part", "default": "seven worlds." },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Scroll to travel through them." }
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Every fragrance has its own setting, colour and bottle. Scroll to travel through them." },
+    { "type": "header", "content": "Palace doors (desktop entrance)" },
+    { "type": "text", "id": "gate_kicker", "label": "Small label", "default": "House of Agha · Hyderabad" },
+    { "type": "text", "id": "gate_title", "label": "Title on the doors", "default": "Enter the seven worlds" },
+    { "type": "text", "id": "gate_hint", "label": "Hint", "default": "Scroll to open" }
   ],
   "blocks": [
     {

@@ -1,87 +1,42 @@
 {% comment %}
   SHOP · Page head
-  Full-bleed campaign photo (Oud Fury in embers by default). On desktop the photo is pushed
-  right so the bottle sits clear of the copy and the left side falls into espresso black.
-  Left: pill eyebrow, sans + italic serif title with the live count, copy, pill CTA.
-  Right: a "Pictured" card for the product in the photo (from the catalogue).
-  Under the buttons: the bottle line-up with count and from-price. The offer marquee runs
-  directly underneath.
+  Light editorial hero on the page's own paper. A sunlit campaign photo (Sea Smoke by the
+  pool by default) fills the right of the section and dissolves into the paper behind the
+  copy, so the image reads as the background without flipping the page to a dark theme.
+  Copy stays to four elements: eyebrow, title with the live count, one line of text, CTAs.
+  The count is filled in by hoa-shop.js. The offer marquee runs directly underneath.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
 {%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
 {%- assign catalog = catalog_json | parse_json -%}
-{%- assign products = catalog.products -%}
-{%- assign min_price = 9999999 -%}
-{%- assign featured = nil -%}
-{%- for p in products -%}
-  {%- assign pp = p.salePrice | default: p.regularPrice -%}
-  {%- if pp < min_price -%}{%- assign min_price = pp -%}{%- endif -%}
-  {%- if p.handle == s.feature_handle -%}{%- assign featured = p -%}{%- endif -%}
-{%- endfor -%}
 
 <section class="hoa-shop-head">
-  <div class="hoa-shop-head__bg" aria-hidden="true">
-    <picture class="hoa-shop-head__media">
+  <div class="hoa-shop-head__media" aria-hidden="true">
+    <picture>
       {%- if s.image_mobile != blank -%}
         <source media="(max-width: 767px)" srcset="{{ s.image_mobile | image_url: width: 1200 }}">
-      {%- else -%}
-        <source media="(max-width: 767px)" srcset="{{ 'hoa-craft-charcoal-sm.webp' | asset_url }} 700w, {{ 'hoa-craft-charcoal.webp' | asset_url }} 1200w" sizes="100vw">
       {%- endif -%}
       {%- if s.image != blank -%}
-        <img src="{{ s.image | image_url: width: 2400 }}" alt="" width="2000" height="1125" fetchpriority="high" decoding="async">
+        <img src="{{ s.image | image_url: width: 2000 }}" alt="" width="{{ s.image.width }}" height="{{ s.image.height }}" fetchpriority="high" decoding="async">
       {%- else -%}
-        <img src="{{ 'hoa-craft-embers.webp' | asset_url }}" srcset="{{ 'hoa-craft-embers-sm.webp' | asset_url }} 1000w, {{ 'hoa-craft-embers.webp' | asset_url }} 2000w" sizes="120vw" alt="" width="2000" height="1125" fetchpriority="high" decoding="async">
+        <img src="{{ 'hoa-world-poolside.webp' | asset_url }}" srcset="{{ 'hoa-world-poolside-sm.webp' | asset_url }} 700w, {{ 'hoa-world-poolside.webp' | asset_url }} 1200w" sizes="(max-width: 767px) 100vw, 62vw" alt="" width="1200" height="1200" fetchpriority="high" decoding="async">
       {%- endif -%}
     </picture>
-    <span class="hoa-shop-head__veil"></span>
-    <span class="hoa-shop-head__grain"></span>
   </div>
 
   <div class="hoa-wrap hoa-shop-head__inner">
     <div class="hoa-shop-head__copy">
-      {%- if s.kicker != blank -%}
-        <p class="hoa-shop-head__pill hoa-shop-head__in" style="--d:1"><span class="hoa-shop-head__pill-dot" aria-hidden="true"></span>{{ s.kicker }}</p>
-      {%- endif -%}
-      <h1 class="hoa-shop-head__title">
-        <span class="hoa-shop-head__line hoa-shop-head__in" style="--d:2">{{ s.heading }}</span>
-        {%- if s.heading_accent != blank %} <span class="hoa-shop-head__line hoa-shop-head__line--serif hoa-shop-head__in" style="--d:3"><em>{{ s.heading_accent }}</em><sup class="hoa-shop-head__count" data-hoa-total></sup></span>{%- endif -%}
-      </h1>
-      {%- if s.text != blank -%}<p class="hoa-shop-head__text hoa-shop-head__in" style="--d:4">{{ s.text }}</p>{%- endif -%}
-      <div class="hoa-shop-head__actions hoa-shop-head__in" style="--d:5">
-        <a class="hoa-shop-head__cta" href="#catalog">
-          <span>{{ s.cta_label }}</span>
-          <span class="hoa-shop-head__cta-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6.5 13.5 12 19l5.5-5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </a>
+      {%- if s.kicker != blank -%}<p class="hoa-shop-head__kicker hoa-shop-head__in" style="--d:0">{{ s.kicker }}</p>{%- endif -%}
+      <h1 class="hoa-shop-head__title hoa-shop-head__in" style="--d:1">{{ s.heading }}<sup class="hoa-shop-head__count" data-hoa-total></sup></h1>
+      {%- if s.text != blank -%}<p class="hoa-shop-head__text hoa-shop-head__in" style="--d:2">{{ s.text }}</p>{%- endif -%}
+      <div class="hoa-shop-head__actions hoa-shop-head__in" style="--d:3">
+        <a class="hoa-btn" href="#catalog"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
         {%- if s.link_1_label != blank -%}
-          <a class="hoa-shop-head__ghost" href="{{ s.link_1_url | default: '/pages/the-house' }}">{{ s.link_1_label }}</a>
+          <a class="hoa-shop-head__link" href="{{ s.link_1_url | default: '/pages/the-house' }}">{{ s.link_1_label }}</a>
         {%- endif -%}
       </div>
-      <div class="hoa-shop-head__lineup hoa-shop-head__in" style="--d:6">
-        <ul aria-hidden="true">
-          {%- for p in products limit: 7 -%}
-            <li style="--i:{{ forloop.index0 }}"><img src="{{ p.image }}" alt="" width="60" height="75" decoding="async"></li>
-          {%- endfor -%}
-        </ul>
-        <p><b>{{ products.size }} Eau de Parfum</b><span>from &#8377;{% if min_price >= 1000 %}{{ min_price | divided_by: 1000 | floor }},{{ min_price | modulo: 1000 | plus: 1000 | append: '' | slice: 1, 3 }}{% else %}{{ min_price }}{% endif %}</span></p>
-      </div>
     </div>
-
-    {%- if featured -%}
-      {%- assign f_price = featured.salePrice | default: featured.regularPrice -%}
-      <a class="hoa-shop-head__pictured hoa-shop-head__in" style="--d:7" href="/products/{{ featured.handle }}">
-        <span class="hoa-shop-head__pictured-core">
-          <span class="hoa-shop-head__pictured-img"><img src="{{ featured.image }}" alt="" width="120" height="150" decoding="async"></span>
-          <span class="hoa-shop-head__pictured-txt">
-            <small>{{ s.feature_kicker }}</small>
-            <b>{{ featured.name }}</b>
-            <span>{{ featured.family }} &middot; &#8377;{% if f_price >= 1000 %}{{ f_price | divided_by: 1000 | floor }},{{ f_price | modulo: 1000 | plus: 1000 | append: '' | slice: 1, 3 }}{% else %}{{ f_price }}{% endif %}</span>
-          </span>
-          <span class="hoa-shop-head__pictured-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7.5 16.5 16.5 7.5M9.5 7.5h7v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </span>
-      </a>
-    {%- endif -%}
-
   </div>
 
   {%- assign tiers = catalog.settings.quantityTiers -%}
@@ -108,17 +63,14 @@
   "tag": "div",
   "class": "hoa-shop-head-section",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Background image (landscape)", "info": "Shifted right on desktop so the subject sits beside the copy. Defaults to Oud Fury in embers." },
-    { "type": "image_picker", "id": "image_mobile", "label": "Mobile background (square or portrait)" },
-    { "type": "text", "id": "kicker", "label": "Eyebrow pill", "default": "The collection · Eau de Parfum" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "All" },
-    { "type": "text", "id": "heading_accent", "label": "Heading, italic serif line", "default": "fragrances" },
+    { "type": "image_picker", "id": "image", "label": "Background image", "info": "Bright, airy photography works best: it fades into the page behind the title. Defaults to Sea Smoke by the pool." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (square)" },
+    { "type": "text", "id": "kicker", "label": "Eyebrow", "default": "Eau de Parfum" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "All fragrances" },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Seven Eau de Parfum from House of Agha. Filter by who will wear it or by scent family." },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop the collection" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop now" },
     { "type": "text", "id": "link_1_label", "label": "Secondary link", "default": "Our story" },
-    { "type": "url", "id": "link_1_url", "label": "Secondary link URL", "info": "Defaults to /pages/the-house" },
-    { "type": "text", "id": "feature_handle", "label": "Pictured product handle", "default": "oud-fury", "info": "The fragrance shown in the photo. Leave empty to hide the card." },
-    { "type": "text", "id": "feature_kicker", "label": "Pictured card label", "default": "Pictured" }
+    { "type": "url", "id": "link_1_url", "label": "Secondary link URL", "info": "Defaults to /pages/the-house" }
   ],
   "presets": [{ "name": "HOA Shop head" }]
 }

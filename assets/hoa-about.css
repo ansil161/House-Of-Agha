@@ -341,8 +341,8 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 /* ==========================================================================
    03 The seven worlds · a Hyderabad night arcade
    One continuous canvas. Base = the stacked layout (phones, reduced motion, no JS).
-   hoa-about.js adds .is-panning (768px+, motion allowed): the section pins and the canvas
-   pans sideways. It adds .is-scrolly on phones (the stack).
+   hoa-about.js adds .is-panning (768px+, motion allowed): the section pins, carved palace
+   doors over the stage swing open, then the canvas pans sideways. .is-scrolly = phones.
    Heritage dress: dark stage tinted by the world in focus, a faint jaali lattice, a line
    skyline of the city drifting behind (hoa-skyline.svg), every photograph set in a Qutb
    Shahi pointed arch with a brass outline, Urdu numerals, and a string of pearls for
@@ -408,8 +408,6 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 /* String of pearls: progress through the worlds (panning only) */
 .hoa-ab-worlds__pearls { display: none; align-items: center; gap: 22px; }
 .hoa-ab-worlds.is-panning .hoa-ab-worlds__pearls { display: flex; }
-.hoa-ab-worlds__count { margin: 0; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; color: var(--w-mute); font-variant-numeric: tabular-nums; }
-.hoa-ab-worlds__count b { font-weight: 600; color: var(--w-ivory); }
 .hoa-ab-worlds__pearls ol { position: relative; display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .hoa-ab-worlds__pearls ol::before {
   content: ""; position: absolute; left: 11px; right: 11px; top: 50%; height: 1px;
@@ -511,7 +509,7 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
   .hoa-ab-world__ur { font-size: 5.5rem; }
 }
 
-/* Pinned horizontal canvas (class added by hoa-about.js) */
+/* Pinned horizontal canvas (class added by hoa-about.js, 768px+) */
 .hoa-ab-worlds.is-panning { padding-bottom: 0; }
 .hoa-ab-worlds.is-panning .hoa-ab-worlds__pin {
   display: flex; flex-direction: column;
@@ -552,6 +550,60 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 .hoa-ab-worlds.is-panning .hoa-ab-world[data-variant='b'] { flex-direction: row-reverse; --mh: 88%; --ar: 3 / 4; --ms: flex-start; --bs: flex-end; }
 .hoa-ab-worlds.is-panning .hoa-ab-world[data-variant='c'] { --mh: 78%; --ar: 5 / 6; --ms: flex-end; --bs: flex-start; }
 
+/* The palace gate: two carved leaves over the whole stage that swing open (inward) on the
+   first scroll, revealing the canvas. Dark teak, an arched brass jaali panel on each leaf,
+   a brass rail where they meet, ring pulls and a medallion with the invitation.
+   Only in the pinned mode; hidden everywhere else. */
+.hoa-ab-gate { display: none; }
+.hoa-ab-worlds.is-panning .hoa-ab-gate {
+  position: absolute; inset: 0; z-index: 3; display: block; pointer-events: none;
+  perspective: 2400px;
+}
+.hoa-ab-gate__leaf {
+  position: absolute; top: 0; bottom: 0; width: 50%;
+  background:
+    radial-gradient(90% 55% at 50% 55%, rgba(200, 165, 102, 0.12), transparent 70%),
+    linear-gradient(180deg, #2A1D12 0%, #1A120B 55%, #100A06 100%);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.hoa-ab-gate__leaf--l { left: 0; transform-origin: 0 50%; box-shadow: inset -1px 0 0 rgba(200, 165, 102, 0.6), inset -24px 0 40px -24px rgba(0, 0, 0, 0.85); }
+.hoa-ab-gate__leaf--r { right: 0; transform-origin: 100% 50%; box-shadow: inset 1px 0 0 rgba(200, 165, 102, 0.6), inset 24px 0 40px -24px rgba(0, 0, 0, 0.85); }
+/* Arched jaali panel on each leaf */
+.hoa-ab-gate__leaf::before {
+  content: ""; position: absolute;
+  top: calc(var(--hoa-header-h) + 5vh); bottom: 7vh; left: 16%; right: 16%;
+  background: url("hoa-jaali.svg") repeat center / 46px 46px;
+  -webkit-mask: var(--w-arch) no-repeat center / 100% 100%;
+  mask: var(--w-arch) no-repeat center / 100% 100%;
+  opacity: 0.9;
+}
+/* Ring pulls near the meeting edge */
+.hoa-ab-gate__leaf::after {
+  content: ""; position: absolute; top: 56%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%;
+  border: 1.5px solid var(--w-brass);
+  box-shadow: 0 0 14px rgba(200, 165, 102, 0.4);
+}
+.hoa-ab-gate__leaf--l::after { right: 3.5%; }
+.hoa-ab-gate__leaf--r::after { left: 3.5%; }
+/* The invitation, centred over the seam */
+.hoa-ab-gate__copy {
+  position: absolute; left: 50%; top: 50%; z-index: 1;
+  display: grid; justify-items: center; gap: 14px;
+  transform: translate(-50%, -50%);
+  text-align: center; color: var(--w-ivory);
+}
+.hoa-ab-gate__seal {
+  display: grid; place-items: center; width: 92px; height: 92px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #2E2115, #120C07);
+  box-shadow: 0 0 0 1px rgba(200, 165, 102, 0.7), 0 0 0 7px rgba(18, 12, 7, 0.9), 0 0 0 8px rgba(200, 165, 102, 0.35), 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+  color: var(--w-brass);
+}
+.hoa-ab-gate__seal svg { width: 52px; height: 52px; }
+.hoa-ab-gate__kicker { margin: 6px 0 0; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--w-brass); }
+.hoa-ab-gate__title { margin: 0; font-size: clamp(1.8rem, 3.4vw, 3rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
+.hoa-ab-gate__hint { margin: 4px 0 0; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--w-mute); }
+
 @media (max-height: 700px) {
   .hoa-ab-worlds.is-panning .hoa-ab-world__line { display: none; }
 }
@@ -560,7 +612,6 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
   .hoa-ab-worlds.is-panning .hoa-ab-world__name { font-size: clamp(2.2rem, min(5.4vw, 9vh), 4.6rem); }
   .hoa-ab-worlds.is-panning .hoa-ab-world--long .hoa-ab-world__name { font-size: clamp(1.9rem, min(4.4vw, 8vh), 3.8rem); }
   .hoa-ab-worlds__pearls { gap: 14px; }
-  .hoa-ab-worlds__count { display: none; }
 }
 
 /* ==========================================================================
