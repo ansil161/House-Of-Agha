@@ -1,14 +1,24 @@
 {%- comment -%}
   House of Agha · About 02 · The story, in the house's own words
-  Long read: one large line held on the left (sticky on wide screens), the story
-  paragraphs and the four natural ingredients on the right.
+  Editorial layout: the large line runs across the top as a statement; below it the
+  Qutb Shahi miniature in a pointed arch with a gold hairline (left) balances the story
+  paragraphs and the four natural ingredients (right, centred on the portrait).
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-chapter">
   <div class="hoa-wrap hoa-ab-chapter__grid">
-    <div class="hoa-ab-chapter__aside">
-      <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede }}</p>
-    </div>
+    <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede }}</p>
+    {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
+      <figure class="hoa-ab-chapter__portrait" data-hoa-ab-up>
+        <div class="hoa-ab-chapter__arch">
+          <div class="hoa-ab-chapter__img" data-hoa-ab-parallax>
+            {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 36vw, 90vw' -%}
+          </div>
+          <svg class="hoa-ab-chapter__frame" viewBox="0 0 100 125" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M5 125V30C5 18 29 11.5 50 6c21 5.5 45 12 45 24v95"/></svg>
+        </div>
+        {%- if s.portrait_caption != blank -%}<figcaption>{{ s.portrait_caption }}</figcaption>{%- endif -%}
+      </figure>
+    {%- endif -%}
     <div class="hoa-ab-chapter__body">
       {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 }}</p>{%- endif -%}
       {%- if s.p2 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p2 }}</p>{%- endif -%}
@@ -34,6 +44,11 @@
     { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutb Shahi era." },
     { "type": "text", "id": "ingredients", "label": "Ingredients (comma separated)", "default": "Oud, Rose, Vetiver, Ambergris" },
     { "type": "text", "id": "ingredients_label", "label": "Ingredients list name (screen readers)", "default": "Natural ingredients we blend" },
+    { "type": "header", "content": "Portrait (under the large line)" },
+    { "type": "image_picker", "id": "portrait_image", "label": "Image" },
+    { "type": "text", "id": "portrait_asset", "label": "Fallback theme asset", "default": "hoa-qutb-shah" },
+    { "type": "text", "id": "portrait_alt", "label": "Alt text", "default": "Miniature portrait of a Qutb Shahi ruler in a jewelled turban, holding a rose" },
+    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutb Shahi miniature" },
     { "type": "textarea", "id": "p3", "label": "Paragraph 3", "default": "Our passion lies in bridging history and modernity. Deeply rooted in the past, our fragrances are made for today's connoisseurs: an elegant fusion of heritage and contemporary sophistication." }
   ],
   "presets": [{ "name": "About: story text" }]

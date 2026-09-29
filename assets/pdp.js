@@ -193,6 +193,7 @@
 
     // setActive(index, {scroll}): a variant's own image (or the lightbox closing on another image) asks for
     // that photograph to be the main one. Otherwise on phones it just records what is on screen.
+    const phoneStripQ = () => thumbMode && window.matchMedia('(max-width: 768px)').matches;
     const setActive = (index, { scroll = false } = {}) => {
       if (!slides[index]) return;
       if (wallMode() && n > 1) {
@@ -201,16 +202,18 @@
         return;
       }
       markActive(index);
-      if (scroll && track && !thumbMode) {
+      if (scroll && track && (!thumbMode || phoneStripQ())) {
         const el = slides[index];
         track.scrollTo({ left: el.offsetLeft - (parseFloat(getComputedStyle(track).paddingLeft) || 0), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
       }
     };
 
-    // Phones: the visible image is the one most on screen; the bar follows the strip's scroll
-    if (story && n > 1 && !thumbMode && 'IntersectionObserver' in window) {
+    // Phones: the visible image is the one most on screen; the bar follows the strip's scroll.
+    // The thumbnail gallery is a swipe strip on phones as well (pdp.css "MOBILE PDP").
+    const phoneStrip = () => thumbMode && window.matchMedia('(max-width: 768px)').matches;
+    if (story && n > 1 && 'IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
-        if (wallMode()) return;
+        if (wallMode() || (thumbMode && !phoneStrip())) return;
         const best = entries.filter((e) => e.isIntersecting).sort((x, y) => y.intersectionRatio - x.intersectionRatio)[0];
         if (best) markActive(slides.indexOf(best.target));
       }, { threshold: [0.25, 0.5, 0.75] });
@@ -573,19 +576,40 @@
     const anchor = $('.pdp-buy', main);
     if (!dock || !anchor || !('IntersectionObserver' in window)) return;
     const dockBtn = $('[data-pdp-dock-add]', dock);
+    const phone = window.matchMedia('(max-width: 768px)');
+    // Phones get Buy now in the bar too; it runs the page's own Buy now (same handler, no duplicate logic)
+    const pageBuyNow = $('[data-pdp-buy-now]', main);
+    let dockBuy = $('[data-pdp-dock-buy]', dock);
+    if (pageBuyNow && !dockBuy && dockBtn) {
+      dockBuy = document.createElement('button');
+      dockBuy.type = 'button';
+      dockBuy.className = 'pdp-btn pdp-dock__buy';
+      dockBuy.setAttribute('data-pdp-dock-buy', '');
+      dockBuy.tabIndex = -1;
+      dockBuy.textContent = pageBuyNow.textContent.trim() || 'Buy now';
+      dockBtn.after(dockBuy);
+      listen(dockBuy, 'click', () => pageBuyNow.click());
+    }
     let pastCta = false;
+    let ctaInView = true;
     let nearEnd = false;
     const update = () => {
-      const visible = pastCta && !nearEnd;
+      // Phones: shown whenever the page's own buttons are off screen (also before them, so the first
+      // screen always has a way to buy). Wider screens: only after scrolling past them.
+      const visible = (phone.matches ? !ctaInView : pastCta) && !nearEnd;
+      document.documentElement.classList.toggle('pdp-dock-on', visible && phone.matches);
+      if (dockBuy) dockBuy.tabIndex = visible ? 0 : -1;
       dock.classList.toggle('is-visible', visible);
       dock.setAttribute('aria-hidden', String(!visible));
       if (dockBtn) dockBtn.tabIndex = visible ? 0 : -1;
     };
 
     const ctaObserver = new IntersectionObserver(([entry]) => {
+      ctaInView = entry.isIntersecting;
       pastCta = !entry.isIntersecting && entry.boundingClientRect.top < 0;
       update();
     });
+    listen(phone, 'change', update);
     ctaObserver.observe(anchor);
 
     const footer = $('.footer') || $('[data-pdp-finale]');
@@ -664,6 +688,9 @@
 
   /* ------------------------------------------------------------- Accordions */
   function initAccordions(scope) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      $$('.pdp-hero details[data-pdp-accordion][open]', scope).forEach((d) => { d.open = false; });
+    }
     $$('details[data-pdp-accordion]', scope).forEach((details) => {
       const summary = $('summary', details);
       const body = $('.pdp-accordion__body', details);

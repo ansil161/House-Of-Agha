@@ -507,7 +507,7 @@
         });
       };
       mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', function () {
-        ledeTween(lede.closest('.hoa-ab-chapter__grid') || lede, 'top 70%', 'bottom 75%');
+        ledeTween(lede, 'top 82%', 'bottom 38%');
       });
       mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)', function () {
         ledeTween(lede, 'top 85%', 'bottom 45%');

@@ -1504,6 +1504,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 /* Track bleeds to the right viewport edge so the next card is always cut off. */
 .hoa-reels__viewport { margin-right: calc(var(--hoa-gutter) * -1); }
 .hoa-reels__track {
+  position: relative;   /* contains the absolutely positioned .hoa-sr labels, which otherwise widened the page on phones */
   --reel-gap: clamp(14px, 1.4vw, 22px);
   --reel-count: 4;
   display: flex; gap: var(--reel-gap);

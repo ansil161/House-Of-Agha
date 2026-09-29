@@ -4708,3 +4708,301 @@ html:has(.pdp) body {
   .pdp-fill.is-live .pdp-fill__steps { gap: 0; width: 100%; }
   .pdp-fill.is-live .pdp-fill__step { padding: 18px 20px 20px; }
 }
+
+/* ==========================================================================
+   MOBILE PDP (2026-09-29) · phones ≤768px only, desktop untouched
+   A phone composition, not the desktop squeezed: full-bleed swipe gallery →
+   name → rating → price → one compact offer → options → Add to bag / Buy now →
+   trust → delivery → proofs → details (closed) … and a persistent purchase bar.
+   The gallery and the console are flattened with display: contents so their
+   pieces can be ordered as one sequence (markup stays shared with desktop).
+   ========================================================================== */
+@media (max-width: 768px) {
+  body .pdp-hero {
+    --m-pad: 16px;
+    --m-accent: var(--cv-wine, #0F5A45);
+    --m-ink: #141210;
+    --m-mute: #6B6B6B;
+    --m-line: rgba(20, 18, 16, 0.1);
+  }
+  body .pdp-hero > .container { padding-inline: var(--m-pad); }
+  body .pdp-hero .pdp-breadcrumb { display: none; }
+
+  /* One sequence */
+  body .pdp-hero .pdp-hero__grid { display: flex; flex-direction: column; gap: 0; }
+  body .pdp-hero .pdp-media,
+  body .pdp-hero .pdp-info,
+  body .pdp-hero .pdp-console__id,
+  body .pdp-hero .pdp-form { display: contents; }
+  body .pdp-hero .pdp-stage { order: 1; }
+  body .pdp-hero .pdp-console__family { order: 2; }
+  body .pdp-hero .pdp-title { order: 3; }
+  body .pdp-hero .pdp-rating { order: 4; }
+  body .pdp-hero .pdp-price { order: 5; }
+  body .pdp-hero .pdp-deals { order: 6; }
+  body .pdp-hero .pdp-offers { order: 7; }
+  body .pdp-hero .pdp-buy { order: 8; }
+  body .pdp-hero .pdp-buynow { order: 9; }
+  body .pdp-hero .pdp-paybadges { order: 10; }
+  body .pdp-hero .pdp-stock { order: 11; }
+  body .pdp-hero .pdp-trust { order: 12; }
+  body .pdp-hero .pdp-deliver { order: 13; }
+  body .pdp-hero .pdp-values { order: 14; }
+  body .pdp-hero .pdp-proofs { order: 15; }
+  body .pdp-hero .pdp-accordion { order: 16; }
+  body .pdp-hero :where(.pdp-hero__grid > *, .pdp-media > *, .pdp-info > *, .pdp-console__id > *, .pdp-form > *) { margin-top: 0; }
+  /* The same offer lives in the offers list; the lede is the first line of Description */
+  body .pdp-hero .pdp-banner-offer,
+  body .pdp-hero .pdp-lede,
+  body .pdp-hero .pdp-thumbs,
+  body .pdp-hero .pdp-more,
+  body .pdp-hero .pdp-stage__badge { display: none; }
+
+  /* 1 · Hero gallery: full bleed, 4:5 like the photographs, swipe with snap */
+  body .pdp-hero .pdp-stage { position: relative; margin: 0 calc(var(--m-pad) * -1); width: auto; }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track {
+    display: flex;
+    aspect-ratio: auto;
+    /* the photographs are 4:5; on shorter phones leave room for name + price above the bar */
+    height: min(125vw, max(50svh, calc(100svh - 330px)));
+    max-height: none;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    border-radius: 0;
+  }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track::-webkit-scrollbar { display: none; }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide,
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide:first-child {
+    position: relative;
+    inset: auto;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    visibility: visible;
+    transition: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal; }
+  body .pdp-hero .pdp-slide__tags { top: 14px; left: var(--m-pad); }
+  /* Pagination: count + progress hairline, bottom centre */
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-story__progress {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transform: translateX(-50%);
+    font: 600 0.7rem/1 var(--hoa-sans, sans-serif);
+    letter-spacing: 0.08em;
+    color: var(--m-ink);
+    pointer-events: none;
+  }
+  body .pdp-hero .pdp-story__bar { position: relative; display: block; width: 48px; height: 2px; background: rgba(20, 18, 16, 0.18); overflow: hidden; }
+  body .pdp-hero .pdp-story__bar i { position: absolute; inset: 0; background: var(--m-ink); transform-origin: 0 50%; transform: scaleX(0.05); }
+  body .pdp-hero .pdp-expand { top: 12px; right: var(--m-pad); width: 44px; height: 44px; }
+
+  /* 2 · Identity: family kicker, name, rating right under it */
+  body .pdp-hero .pdp-console__family {
+    margin: 20px 0 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--m-accent);
+  }
+  body .pdp-hero .pdp-title { margin: 6px 0 0; font-size: clamp(1.6rem, 7.4vw, 1.9rem); line-height: 1.1; }
+  body .pdp-hero .pdp-rating { margin: 8px 0 0; font-size: 0.86rem; }
+
+  /* 3 · Price: the amount leads, MRP and % secondary, one quiet line for savings + tax */
+  body .pdp-hero .pdp-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 16px 0 0; padding: 0; border: 0; }
+  body .pdp-hero .pdp-price__amount { font-size: clamp(1.7rem, 8vw, 1.95rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  body .pdp-hero .pdp-price__compare { font-size: 0.95rem; color: var(--m-mute); }
+  body .pdp-hero .pdp-price__note { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; width: 100%; margin: 4px 0 0; font-size: 0.78rem; }
+  body .pdp-hero .pdp-savings { padding: 4px 8px; font-size: 0.72rem; }
+  body .pdp-hero .pdp-price__tax { color: var(--m-mute); }
+
+  /* 4 · Offers: compact rows (no ticket cards), the welcome code first */
+  body .pdp-hero .pdp-deals { margin: 26px 0 0; }
+  body .pdp-hero .pdp-deals__head { margin: 0 0 8px; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--m-mute); }
+  body .pdp-hero .pdp-deals__list { display: grid; grid-auto-flow: row; grid-template-columns: 1fr; gap: 8px; overflow: visible; padding: 0; margin: 0; scroll-snap-type: none; }
+  body .pdp-hero .pdp-deals .pdp-deal,
+  body .pdp-hero .pdp-deals .pdp-deal--lead,
+  body .pdp-hero .pdp-deals .pdp-deal--auto {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: start;
+    align-items: center;
+    gap: 12px;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--m-line);
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: none;
+    -webkit-mask: none;
+            mask: none;
+  }
+  body .pdp-hero .pdp-deals .pdp-deal--lead { border-color: color-mix(in srgb, var(--m-accent) 35%, transparent); background: color-mix(in srgb, var(--m-accent) 5%, #FFFFFF); }
+  body .pdp-hero .pdp-deal::before, body .pdp-hero .pdp-deal::after { display: none; }
+  body .pdp-hero .pdp-deal__icon { width: 28px; height: 28px; margin: 0; }
+  body .pdp-hero .pdp-deals .pdp-deal__body { flex: 1 1 auto; align-content: center; text-align: start; justify-items: start; min-width: 0; display: grid; gap: 1px; padding: 0; border: 0; }
+  body .pdp-hero .pdp-deal__label { font-size: 0.64rem; letter-spacing: 0.12em; }
+  body .pdp-hero .pdp-deal__title { font-size: 0.92rem; line-height: 1.3; }
+  body .pdp-hero .pdp-deal__text { font-size: 0.74rem; color: var(--m-mute); }
+  body .pdp-hero .pdp-deals .pdp-deal__code,
+  body .pdp-hero .pdp-deals .pdp-deal__code.is-applied {
+    flex: none;
+    margin: 0;
+    border-top: 0;
+    align-self: center;
+    grid-column: auto;
+    width: auto;
+    min-height: 44px;
+    padding: 0 12px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+  body .pdp-hero .pdp-deal__code-text { font-size: 0.72rem; letter-spacing: 0.08em; }
+  body .pdp-hero .pdp-deal__code-act { min-width: 0; }
+  body .pdp-hero .pdp-deals .pdp-deal__auto { width: auto; margin: 0; padding: 0; border-top: 0; flex: none; font-size: 0.66rem; white-space: nowrap; }
+
+  /* 5 · Buy more: three compact options side by side */
+  body .pdp-hero .pdp-offers { margin: 18px 0 0; padding: 0; border: 0; min-width: 0; }
+  body .pdp-hero .pdp-offers__legend { margin: 0 0 8px; padding: 0; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--m-mute); }
+  body .pdp-hero .pdp-offers__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  body .pdp-hero .pdp-offer {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-content: center;
+    gap: 2px;
+    min-height: 84px;
+    padding: 12px 6px 10px;
+    border: 1px solid var(--m-line);
+    border-radius: 12px;
+    background: #FFFFFF;
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+  }
+  body .pdp-hero .pdp-offer:active { transform: scale(0.98); }
+  body .pdp-hero .pdp-offer.is-selected { border: 1.5px solid var(--m-accent); background: color-mix(in srgb, var(--m-accent) 5%, #FFFFFF); }
+  body .pdp-hero .pdp-offer__radio,
+  body .pdp-hero .pdp-offer__img { display: none; }
+  body .pdp-hero .pdp-offer__body { display: grid; gap: 1px; justify-items: center; }
+  body .pdp-hero .pdp-offer__name { font-size: 0.9rem; font-weight: 600; }
+  body .pdp-hero .pdp-offer__meta { display: grid; justify-items: center; gap: 4px; font-size: 0.7rem; color: var(--m-mute); }
+  body .pdp-hero .pdp-offer__save { margin: 0; font-size: 0.64rem; }
+  body .pdp-hero .pdp-offer__price { display: grid; justify-items: center; margin-top: 4px; }
+  body .pdp-hero .pdp-offer__price b { font-size: 0.92rem; }
+  body .pdp-hero .pdp-offer__price s { font-size: 0.68rem; }
+  body .pdp-hero .pdp-offer [class*="flag"], body .pdp-hero .pdp-offer__flag { top: -9px; right: 50%; transform: translateX(50%); font-size: 0.56rem; white-space: nowrap; }
+
+  /* 6 · Purchase: qty · Add to bag · wishlist, then Buy now */
+  body .pdp-hero .pdp-buy { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; margin: 18px 0 0; }
+  body .pdp-hero .pdp-qty { height: 52px; min-width: 0; }
+  body .pdp-hero .pdp-qty button { width: 40px; min-height: 44px; }
+  body .pdp-hero .pdp-qty input { width: 30px; }
+  body .pdp-hero .pdp-buy .pdp-add { height: 52px; min-height: 52px; padding: 0 14px; }
+  body .pdp-hero .pdp-buy .pdp-add__sep,
+  body .pdp-hero .pdp-buy .pdp-add__price { display: none; }
+  body .pdp-hero .pdp-buy .pdp-icon-btn { width: 52px; height: 52px; }
+  body .pdp-hero .pdp-buynow {
+    height: 52px;
+    margin: 8px 0 0;
+    border: 0;
+    background: var(--m-accent);
+    color: #FFFFFF;
+  }
+  body .pdp-hero .pdp-paybadges { margin: 14px 0 0; }
+  body .pdp-hero .pdp-stock { margin: 8px 0 0; font-size: 0.78rem; }
+
+  /* 7 · Trust, delivery, facts: compact, right after the buying decision */
+  body .pdp-hero .pdp-trust { margin: 20px 0 0; padding: 14px 0 0; border-top: 1px solid var(--m-line); }
+  body .pdp-hero .pdp-deliver { margin: 18px 0 0; }
+  body .pdp-hero .pdp-values { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; }
+  body .pdp-hero .pdp-proofs { margin: 18px 0 0; }
+
+  /* 8 · Details: closed accordions (pdp.js closes them on phones) */
+  body .pdp-hero .pdp-accordion { margin: 22px 0 0; }
+  body .pdp-hero .pdp-accordion summary { min-height: 52px; }
+
+  /* Sticky purchase bar: price · Add to bag · Buy now (pdp.js adds Buy now and shows the bar
+     whenever the page's own buttons are off screen) */
+  body .pdp-hero .pdp-dock {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    border-radius: 18px 18px 0 0;
+    border-width: 1px 0 0;
+    transform: translateY(calc(100% + 24px));
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 10px var(--m-pad) calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid var(--m-line);
+    box-shadow: 0 -12px 28px -20px rgba(20, 18, 16, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  body .pdp-hero .pdp-dock.is-visible { transform: none; }
+  body .pdp-hero .pdp-dock__inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  body .pdp-hero .pdp-dock__thumb,
+  body .pdp-hero .pdp-dock__inner > div,
+  body .pdp-hero .pdp-dock__spacer { display: none; }
+  body .pdp-hero .pdp-dock__prices { display: grid; gap: 2px; padding-right: 4px; line-height: 1.05; }
+  body .pdp-hero .pdp-dock__price { font-size: 1.08rem; font-weight: 700; }
+  body .pdp-hero .pdp-dock__was { font-size: 0.72rem; color: var(--m-mute); }
+  body .pdp-hero .pdp-dock .pdp-add,
+  body .pdp-hero .pdp-dock__buy {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    min-height: 48px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  body .pdp-hero .pdp-dock__buy { border: 0; background: var(--m-accent); color: #FFFFFF; text-transform: uppercase; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; }
+  body .pdp-hero .pdp-dock .pdp-add:active, body .pdp-hero .pdp-dock__buy:active { transform: scale(0.97); }
+  /* keep the last content clear of the bar */
+  html.pdp-dock-on body { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 360px) {
+  body .pdp-hero .pdp-dock__inner { gap: 6px; }
+  body .pdp-hero .pdp-dock__price { font-size: 0.98rem; }
+  body .pdp-hero .pdp-dock .pdp-add,
+  body .pdp-hero .pdp-dock__buy { padding: 0 6px; font-size: 0.64rem; letter-spacing: 0.04em; }
+  body .pdp-hero .pdp-buy { grid-template-columns: auto minmax(0, 1fr); }
+  body .pdp-hero .pdp-buy .pdp-icon-btn { display: none; }
+}
