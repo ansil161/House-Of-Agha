@@ -67,10 +67,12 @@
         {%- endif -%}
       </div>
 
-      <div class="hoa-ab-name__foot">
-        {%- if s.sources != blank -%}<p>{{ s.sources }}</p>{%- endif -%}
-        {%- if s.disclaimer != blank -%}<p>{{ s.disclaimer }}</p>{%- endif -%}
-      </div>
+      {%- if s.sources != blank or s.disclaimer != blank -%}
+        <div class="hoa-ab-name__foot">
+          {%- if s.sources != blank -%}<p>{{ s.sources }}</p>{%- endif -%}
+          {%- if s.disclaimer != blank -%}<p>{{ s.disclaimer }}</p>{%- endif -%}
+        </div>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -95,8 +97,8 @@
     { "type": "text", "id": "photo_alt", "label": "Alt text", "default": "An early photograph of Hyderabad's old city, with the Charminar at the end of a busy street" },
     { "type": "text", "id": "photo_caption", "label": "Caption", "default": "The old city and the Charminar, in an early photograph" },
     { "type": "header", "content": "Footer" },
-    { "type": "text", "id": "sources", "label": "Sources line", "default": "Sources: Wikipedia, Oxford Reference. Photographs: Wikimedia Commons, public domain." },
-    { "type": "text", "id": "disclaimer", "label": "Disclaimer", "default": "This website doesn't represent any religion or caste." }
+    { "type": "text", "id": "sources", "label": "Sources line", "info": "Optional line under the card." },
+    { "type": "text", "id": "disclaimer", "label": "Disclaimer", "info": "Optional line under the card." }
   ],
   "blocks": [
     {
