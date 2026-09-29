@@ -138,7 +138,6 @@
 @media (max-width: 639px) { .hoa-bundles__grid { grid-template-columns: 1fr; } .hoa-bundle--sig { grid-column: auto; } .hoa-bundle__media { aspect-ratio: 16 / 10; } }
 
 /* ---------------------------------------------------------------- bag */
-.cart-drawer-footer { max-height: 64%; overflow-y: auto; overscroll-behavior: contain; }
 .cart-count.is-bump { animation: hoa-bump 0.5s var(--hoa-ease, ease); }
 @keyframes hoa-bump { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
 
@@ -175,7 +174,7 @@
 .bag-empty__cta:hover { background: var(--color-black, #141210); color: #fff; }
 
 /* Coupon */
-.cart-drawer-footer.is-empty .bag-coupon, .cart-drawer-footer.is-empty .bag-trust { display: none; }
+.cart-drawer-footer.is-empty .bag-coupon { display: none; }
 .bag-coupon { margin: 0 0 14px; }
 .bag-coupon__toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; font: 500 0.82rem var(--hoa-sans, sans-serif); color: var(--color-black, #141210); }
 .bag-coupon__toggle svg { width: 10px; height: 6px; transition: transform 0.3s; }
@@ -212,28 +211,33 @@
 .cart-summary__row--saved dd { color: #6f552b; font-weight: 600; }
 .cart-total-price.is-flash, .cart-summary__row--saved.is-flash { animation: hoa-flash 0.7s var(--hoa-ease, ease); }
 @keyframes hoa-flash { 0% { opacity: 0.35; transform: translateY(3px); } 100% { opacity: 1; transform: none; } }
-.bag-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; margin: 0 0 14px; padding: 0; list-style: none; font: 500 0.66rem/1.4 var(--hoa-sans, sans-serif); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted, #6b665f); }
-.bag-trust li + li::before { content: '\00b7'; margin-right: 14px; }
+/* Trust badges under "Continue shopping" */
+.bag-badges { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--color-border-light, rgba(0,0,0,.1)); }
+.cart-drawer-footer.is-empty .bag-badges { display: none; }
+.bag-badges__row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.bag-badge { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.bag-badge svg { width: 34px; height: 34px; padding: 7px; box-sizing: border-box; border-radius: 50%; background: var(--color-bg-secondary, #f4f1ec); fill: none; stroke: #8a6a37; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.bag-badge span { font: 500 0.6rem/1.3 var(--hoa-sans, sans-serif); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted, #6b665f); }
+.bag-badges__pay { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px; margin: 12px 0 0; }
+.bag-badges__pay-label { margin-right: 3px; font: 500 0.6rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted, #6b665f); }
+.bag-pay { padding: 4px 7px; border: 1px solid var(--color-border-light, rgba(0,0,0,.1)); border-radius: 6px; background: #fff; font: 700 0.6rem/1 var(--hoa-sans, sans-serif); letter-spacing: 0.02em; color: var(--color-black, #141210); }
 
 @media (max-height: 700px) {
   .cart-drawer-header { padding: 16px 20px 10px; }
-  /* short screens: the whole drawer scrolls as one, the checkout button stays pinned to the bottom */
-  .cart-drawer { overflow-y: auto; }
-  .cart-drawer-body { flex: none; overflow: visible; }
-  .cart-drawer-footer { flex: none; padding: 10px 16px 12px; max-height: none; overflow: visible; }
+  .cart-drawer-footer { padding: 10px 16px 12px; }
   .cart-summary { gap: 3px; margin-bottom: 8px; }
   .cart-summary__row { font-size: 0.78rem; }
   .cart-summary__row--total { padding-top: 6px; }
   .cart-summary__row--total dd { font-size: 1.05rem; }
   .cart-summary__row--saved { padding: 4px 10px; }
   .bag-coupon { margin-bottom: 6px; }
-  .cart-checkout { padding: 12px 16px; }
   .cart-continue { margin-top: 6px; }
 }
 @media (max-height: 760px) {
-  .cart-drawer-footer { padding: 14px 18px 16px; max-height: 68%; }
+  .cart-drawer-footer { padding: 14px 18px 16px; }
   .cart-summary { gap: 6px; margin-bottom: 12px; }
-  .bag-trust { display: none; }
+  .bag-badges { margin-top: 10px; padding-top: 10px; }
+  .bag-badge svg { width: 30px; height: 30px; padding: 6px; }
   .bag-coupon { margin-bottom: 10px; }
 }
 @media (max-width: 479px) {
@@ -244,9 +248,62 @@
   .bag-ship__fill, .cart-count.is-bump, .bag-coupon__applied.is-new, .cart-total-price.is-flash, .cart-summary__row--saved.is-flash, .bag-coupon__input.is-error { animation: none; transition: none; }
 }
 
-/* The footer can scroll on short screens; keep the checkout button in view at all times */
-.cart-drawer-footer .cart-checkout { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -10px 14px -6px #fff; }
 
 /* "You may also like" on the product page: the shop's product cards, four across */
 .pdp-related-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 1023px) { .pdp-related-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Per-line "You save ₹X" — green savings text under the line price (cart drawer + bag page) */
+.cart-line__save { margin: 3px 0 0; font-size: 0.76rem; font-weight: 500; color: #2e8b3e; font-variant-numeric: tabular-nums; }
+
+/* Bag layout: lines, coupon and summary scroll as one; the pay bar (total + checkout) is always on screen */
+.cart-drawer-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; }
+.cart-drawer-scroll .cart-drawer-body { flex: 1 0 auto; overflow: visible; }
+.cart-drawer-scroll .cart-drawer-footer { flex: none; }
+.cart-drawer-footer .cart-continue { margin-top: 0; }
+.bag-paybar { flex: none; display: grid; gap: 10px; padding: 12px 22px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--color-border-light, rgba(0,0,0,.08)); background: #fff; box-shadow: 0 -12px 24px -18px rgba(8, 8, 8, 0.35); }
+.bag-paybar[hidden], .bag-deals[hidden], .bag-prepaid[hidden] { display: none; }
+.bag-paybar__row { display: flex; align-items: center; gap: 14px; }
+.bag-paybar__total { display: grid; flex: none; min-width: 0; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.bag-paybar__was { font-size: 0.78rem; color: var(--color-muted, #6b665f); }
+.bag-paybar__now { font: 700 1.25rem/1.15 var(--font-sans, sans-serif); letter-spacing: -0.02em; color: var(--color-black, #141210); }
+.bag-paybar__save { margin-top: 2px; font-size: 0.7rem; font-weight: 500; color: #2e8b3e; white-space: nowrap; }
+.bag-paybar .cart-checkout { flex: 1 1 auto; width: auto; padding: 11px 14px 11px 20px; gap: 10px; justify-content: space-between; }
+.cart-checkout__pay { display: inline-flex; margin-left: auto; }
+.cart-checkout__pay svg { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--color-black, #141210); }
+.cart-checkout__pay svg + svg { margin-left: -5px; }
+.bag-paybar .cart-checkout .cart-checkout__chev { width: 14px; height: 14px; }
+
+/* Limited time offers rail */
+.bag-deals { display: grid; gap: 8px; min-width: 0; }
+.bag-deals__head { display: flex; align-items: center; gap: 10px; }
+.bag-deals__title { margin: 0; font: 600 0.72rem/1 var(--font-sans, sans-serif); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-black, #141210); }
+.bag-deals__pill { padding: 4px 9px; border: 1px solid rgba(46, 139, 62, 0.35); border-radius: 7px; background: rgba(46, 139, 62, 0.09); color: #2e8b3e; font: 600 0.68rem/1 var(--font-sans, sans-serif); }
+.bag-deals__rail { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.bag-deals__rail::-webkit-scrollbar { display: none; }
+.bag-deal { flex: 0 0 82%; scroll-snap-align: start; display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--color-border-light, rgba(0,0,0,.08)); border-radius: 14px; background: #fff; }
+.bag-deal img { width: 52px; height: 64px; object-fit: cover; border-radius: 9px; background: var(--color-bg-secondary, #f4f1ec); mix-blend-mode: multiply; }
+.bag-deal__copy { min-width: 0; }
+.bag-deal__name { margin: 0 0 4px; font-size: 0.8rem; font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bag-deal__price { display: flex; align-items: baseline; gap: 6px; margin: 0; font-variant-numeric: tabular-nums; }
+.bag-deal__price s { font-size: 0.72rem; color: var(--color-muted, #6b665f); }
+.bag-deal__price b { font-size: 0.84rem; font-weight: 600; }
+.bag-deal__add { align-self: end; padding: 7px 14px; border: 0; border-radius: 8px; background: var(--color-black, #141210); color: #fff; font: 600 0.74rem/1 var(--font-sans, sans-serif); cursor: pointer; transition: transform 0.2s; }
+.bag-deal__add:active { transform: scale(0.95); }
+.bag-deals__dots { display: flex; justify-content: center; gap: 5px; }
+.bag-deals__dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--color-border-light, rgba(0,0,0,.14)); transition: background-color 0.2s; }
+.bag-deals__dots span.is-on { background: var(--color-muted, #6b665f); }
+
+/* Prepaid offer line */
+.bag-prepaid { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 0; padding-top: 10px; border-top: 1px solid var(--color-border-light, rgba(0,0,0,.08)); color: #2e8b3e; font-size: 0.8rem; font-weight: 500; }
+.bag-prepaid svg { width: 16px; height: 16px; flex: none; color: #2e8b3e; }
+
+@media (max-height: 700px) {
+  .bag-paybar { gap: 8px; padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .bag-deal img { width: 42px; height: 52px; }
+  .bag-deal { grid-template-columns: 42px minmax(0, 1fr) auto; padding: 6px; }
+  .bag-deals__dots { display: none; }
+  .bag-prepaid { padding-top: 8px; }
+}
+/* very short screens: keep the items visible, drop the rail */
+@media (max-height: 560px) { .bag-deals { display: none !important; } }

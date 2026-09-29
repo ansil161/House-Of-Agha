@@ -247,12 +247,7 @@
       var c = document.createElement('div'); c.className = 'bag-coupon'; c.setAttribute('data-bag-coupon', '');
       sum.parentNode.insertBefore(c, sum);
     }
-    if (!f.querySelector('.bag-trust')) {
-      var t = document.createElement('ul'); t.className = 'bag-trust';
-      var items = MSG.trust || ['Secure checkout', 'Returns within 7 days', 'Authentic and batch-numbered'];
-      t.innerHTML = items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
-      sum.parentNode.insertBefore(t, sum.nextSibling);
-    }
+    // reassurance now lives in the static .bag-badges block (snippets/cart-drawer.liquid)
     return f;
   }
 
@@ -267,6 +262,7 @@
       '<p class="cart-line__meta">' + e(meta) + '</p>' +
       '<div class="cart-line__prices">' + (off ? '<s class="cart-line__was">' + money(u.regular * g.qty) + '</s>' : '') +
       '<span class="cart-line__price">' + money(u.price * g.qty) + '</span>' + (off ? '<span class="cart-line__off">' + off + '% off</span>' : '') + '</div>' +
+      (off ? '<p class="cart-line__save">You save ' + money((u.regular - u.price) * g.qty) + '</p>' : '') +
       (g.qty > 1 ? '<p class="cart-line__each">' + money(u.price) + ' each</p>' : '') +
       '<div class="cart-qty" role="group" aria-label="Quantity for ' + e(u.name) + '"><button type="button" data-cart-act="dec" aria-label="Decrease quantity">&minus;</button>' +
       '<span class="cart-qty__n" aria-live="polite">' + g.qty + '</span><button type="button" data-cart-act="inc" aria-label="Increase quantity">+</button></div></div></article>';
@@ -319,6 +315,35 @@
       '<button type="button" class="bag-cross__add" data-hoa-quick-add="' + esc(cand.handle) + '" aria-label="Add ' + esc(cand.name) + ' to bag">Add</button></div></section>';
   }
 
+  // "Limited time offers" rail in the pinned pay bar: every offer not already in the bag, deepest discount first
+  function dealsHtml(q) {
+    var inBag = {}; q.groups.forEach(function (g) { if (g.unit.handle) inBag[g.unit.handle] = 1; });
+    var list = fragrances().concat(SET ? [SET] : []).filter(function (p) { return p && p.hasOffer && !inBag[p.handle]; })
+      .sort(function (a, b) { return b.discountPercentage - a.discountPercentage; });
+    if (!list.length) return '';
+    var top = list[0].discountPercentage;
+    return '<div class="bag-deals__head"><p class="bag-deals__title">' + esc(settings.bagOffersTitle || 'Limited time offers') + '</p>' +
+      '<span class="bag-deals__pill">Upto ' + top + '% off</span></div>' +
+      '<div class="bag-deals__rail" data-bag-deals-rail>' + list.map(function (p) {
+        return '<article class="bag-deal"><img src="' + esc(p.image) + '" alt="" width="52" height="64" loading="lazy">' +
+          '<div class="bag-deal__copy"><p class="bag-deal__name">' + esc(p.name) + '</p>' +
+          '<p class="bag-deal__price"><s><span class="hoa-sr">Was </span>' + money(p.regularPrice) + '</s><b>' + money(p.price) + '</b></p></div>' +
+          '<button type="button" class="bag-deal__add" data-hoa-quick-add="' + esc(p.handle) + '" aria-label="Add ' + esc(p.name) + ' to bag">Add</button></article>';
+      }).join('') + '</div>' +
+      (list.length > 1 ? '<div class="bag-deals__dots" aria-hidden="true">' + list.map(function (p, i) { return '<span' + (i ? '' : ' class="is-on"') + '></span>'; }).join('') + '</div>' : '');
+  }
+
+  function bindDealsDots(box) {
+    var rail = box.querySelector('[data-bag-deals-rail]'), dots = box.querySelectorAll('.bag-deals__dots span');
+    if (!rail || !dots.length) return;
+    rail.addEventListener('scroll', function () {
+      var card = rail.firstElementChild, step = card ? card.getBoundingClientRect().width + 10 : 1;
+      var max = rail.scrollWidth - rail.clientWidth;
+      var i = rail.scrollLeft >= max - 2 ? dots.length - 1 : Math.round(rail.scrollLeft / step);
+      dots.forEach(function (d, k) { d.classList.toggle('is-on', k === i); });
+    }, { passive: true });
+  }
+
   function summaryHtml(q) {
     var rows = '<div class="cart-summary__row"><dt>Subtotal</dt><dd>' + money(q.regularTotal) + '</dd></div>';
     if (q.offerSavings > 0) rows += '<div class="cart-summary__row cart-summary__row--save"><dt>Offer savings</dt><dd>&minus;' + money(q.offerSavings) + '</dd></div>';
@@ -368,6 +393,27 @@
     document.querySelectorAll('[data-cart-count-label]').forEach(function (el) { el.textContent = total ? '(' + total + ') · ' + money(q.total) : ''; });
 
     if (footer) footer.classList.toggle('is-empty', total === 0);
+    var paybar = drawerEl('[data-bag-paybar]');
+    if (paybar) {
+      paybar.hidden = total === 0;
+      var pt = paybar.querySelector('[data-bag-paybar-total]');
+      if (pt) pt.innerHTML = (q.regularTotal > q.total ? '<s class="bag-paybar__was"><span class="hoa-sr">Was </span>' + money(q.regularTotal) + '</s>' : '') +
+        '<span class="bag-paybar__now"><span class="hoa-sr">Total </span>' + money(q.total) + '</span>' +
+        (q.totalSavings > 0 ? '<span class="bag-paybar__save">You save ' + money(q.totalSavings) + '</span>' : '');
+      var deals = paybar.querySelector('[data-bag-offers]');
+      if (deals && total) {
+        var keep = deals.querySelector('[data-bag-deals-rail]'), left = keep ? keep.scrollLeft : 0;
+        deals.innerHTML = dealsHtml(q);
+        deals.hidden = !deals.innerHTML;
+        var rail = deals.querySelector('[data-bag-deals-rail]');
+        if (rail) { rail.scrollLeft = left; bindDealsDots(deals); }
+      }
+      var pre = paybar.querySelector('[data-bag-prepaid]');
+      if (pre) {
+        pre.hidden = !settings.prepaidOffer;
+        pre.innerHTML = settings.prepaidOffer ? '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .8l1.7 1.3 2.1-.2.7 2 1.8 1.2-.7 2 .7 2-1.8 1.2-.7 2-2.1-.2L8 15.2l-1.7-1.3-2.1.2-.7-2-1.8-1.2.7-2-.7-2 1.8-1.2.7-2 2.1.2z" fill="currentColor"/><path d="M5.8 10.2l4.4-4.4" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/><circle cx="6.2" cy="6.2" r=".9" fill="#fff"/><circle cx="9.8" cy="9.8" r=".9" fill="#fff"/></svg><span>' + esc(settings.prepaidOffer) + '</span>' : '';
+      }
+    }
     var checkout = document.querySelector('[data-cart-checkout]');
     if (checkout) {
       checkout.setAttribute('aria-disabled', String(total === 0));
