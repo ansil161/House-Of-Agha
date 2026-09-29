@@ -1233,7 +1233,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
   <!-- Slide-out Bag Drawer · filled by AghaStore.updateCartUI (theme.js) -->
   <div class="cart-drawer-overlay js-cart-close"></div>
 
-  <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Your bag">
+  <aside class="cart-drawer" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Your bag">
     <div class="cart-drawer-header">
       <div class="cart-drawer-heading">
         <span class="editorial-label">YOUR SELECTION</span>
@@ -1285,7 +1285,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
           </li>
         </ul>
         <p class="bag-badges__pay"><span class="bag-badges__pay-label">We accept</span>
-          <span class="bag-pay">UPI</span><span class="bag-pay">Visa</span><span class="bag-pay">Mastercard</span><span class="bag-pay">RuPay</span><span class="bag-pay">COD</span>
+          <span class="bag-pay" title="UPI"><span class="hoa-sr">UPI</span><svg aria-hidden="true" viewBox="0 0 48 24"><text x="4" y="16.5" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="800" font-style="italic" fill="#5f6368">UPI</text><path d="M34 5l6 7-6 7z" fill="#097939"/><path d="M39 5l6 7-6 7z" fill="#ed752e"/></svg></span><span class="bag-pay" title="Visa"><span class="hoa-sr">Visa</span><svg aria-hidden="true" viewBox="0 0 48 24"><text x="24" y="17" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="900" font-style="italic" letter-spacing="-.3" fill="#1a1f71">VISA</text></svg></span><span class="bag-pay" title="Mastercard"><span class="hoa-sr">Mastercard</span><svg aria-hidden="true" viewBox="0 0 48 24"><circle cx="19" cy="12" r="8" fill="#eb001b"/><circle cx="29" cy="12" r="8" fill="#f79e1b"/><path d="M24 5.7a8 8 0 0 1 0 12.6 8 8 0 0 1 0-12.6z" fill="#ff5f00"/></svg></span><span class="bag-pay" title="RuPay"><span class="hoa-sr">RuPay</span><svg aria-hidden="true" viewBox="0 0 48 24"><text x="3" y="16.5" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="800" font-style="italic" letter-spacing="-.4" fill="#1b3a6b">RuPay</text><path d="M40 6l5 6-5 6z" fill="#f47920"/><path d="M38 9l3 3-3 3z" fill="#008c44"/></svg></span><span class="bag-pay" title="COD"><span class="hoa-sr">COD</span><svg aria-hidden="true" viewBox="0 0 48 24"><rect x="4" y="6.5" width="17" height="11" rx="2" fill="none" stroke="#2e8b3e" stroke-width="1.5"/><circle cx="12.5" cy="12" r="2.6" fill="none" stroke="#2e8b3e" stroke-width="1.4"/><text x="24" y="16.2" font-family="Arial,Helvetica,sans-serif" font-size="10.5" font-weight="800" fill="#141210">COD</text></svg></span>
         </p>
       </div>
     </div>
