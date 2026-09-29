@@ -10,7 +10,7 @@
   Without JS or with reduced motion nothing pins: the bottle shows full and every step is listed.
   Styles: "BOTTLE FILL" block at the end of assets/pdp.css. Mirrored in assets/pdp-preview.js.
   The liquid top/bottom settings are the glass edges as % of the image height (defaults fit the
-  hoa-product-oud-fury cut-out: glass from 37% to 88%).
+  hoa-cutout-oud-fury cut-out: glass from 37% to 88%).
 {% endcomment %}
 {%- if section.blocks.size > 0 -%}
 {%- assign total_days = section.settings.total_days | default: 90 -%}
@@ -34,7 +34,7 @@
           {%- if section.settings.bottle != blank -%}
             {%- capture bottle_src -%}{{ section.settings.bottle | image_url: width: 1200 }}{%- endcapture -%}
           {%- else -%}
-            {%- capture bottle_src -%}{{ 'hoa-product-oud-fury.webp' | asset_url }}{%- endcapture -%}
+            {%- capture bottle_src -%}{{ 'hoa-cutout-oud-fury.webp' | asset_url }}{%- endcapture -%}
           {%- endif -%}
           <span class="pdp-fill__halo" aria-hidden="true"></span>
           <img class="pdp-fill__empty" src="{{ bottle_src }}" alt="" aria-hidden="true" loading="lazy" width="1200" height="1500">
