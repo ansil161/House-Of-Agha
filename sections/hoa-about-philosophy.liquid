@@ -1,0 +1,68 @@
+{%- comment -%}
+  House of Agha · About 05 · Our philosophy
+  Heading, then a six-tile bento (one tile per pillar block). Rows are 6/3/3 then
+  3/3/6 columns. Every tile is a full-bleed campaign photograph with the pillar
+  written over a dark gradient at the foot (legible on any photo).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="hoa-ab-philo" id="philosophy">
+  <div class="hoa-wrap">
+    <h2 class="hoa-ab-h2 hoa-ab-philo__head">{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
+    <div class="hoa-ab-philo__grid">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- assign lines = b.lines | newline_to_br | split: '<br />' -%}
+        {%- if forloop.index == 1 or forloop.index == 6 -%}
+          {%- assign img_sizes = '(min-width: 1024px) 50vw, (min-width: 641px) 50vw, 100vw' -%}
+        {%- else -%}
+          {%- assign img_sizes = '(min-width: 1024px) 25vw, (min-width: 641px) 50vw, 100vw' -%}
+        {%- endif -%}
+        <article class="hoa-ab-pillar hoa-ab-pillar--{{ forloop.index }}" data-hoa-ab-pillar {{ block.shopify_attributes }}>
+          {%- if b.asset != blank or b.image != blank -%}
+            <div class="hoa-ab-pillar__media" aria-hidden="true">
+              <div class="hoa-ab-pillar__img" data-hoa-ab-parallax>
+                {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: img_sizes -%}
+              </div>
+            </div>
+          {%- endif -%}
+          <p class="hoa-ab-pillar__word" aria-hidden="true">{{ b.word }}</p>
+          <div class="hoa-ab-pillar__copy">
+            <h3 class="hoa-ab-pillar__title">{{ b.title }}</h3>
+            <ul class="hoa-ab-pillar__lines">
+              {%- for l in lines -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}
+            </ul>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: philosophy",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our philosophy." },
+    { "type": "text", "id": "heading_muted", "label": "Heading, muted part", "default": "What guides every bottle." }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "settings": [
+        { "type": "text", "id": "word", "label": "Key word" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "lines", "label": "Lines (one per line)" },
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Tiles 1 and 6 are wide: use a landscape photo at least 2000px wide." },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset" },
+        { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1200 },
+        { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1500 }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "About: philosophy" }]
+}
+{% endschema %}

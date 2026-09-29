@@ -1,0 +1,121 @@
+{%- comment -%}
+  House of Agha · About 04 · The name
+  A dictionary-style entry for "Agha", set in Hyderabad: a Deccan jaali band on the
+  card edge, the word and its Persian script above a Qutb Shahi tomb in a pointed arch
+  (left); an early photograph of the old city and the Charminar above four usages, each
+  with a Hyderabad line icon (right). Sources, photo credits and the disclaimer below.
+  Photos: Wikimedia Commons, public domain / CC0 (see the credits setting).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- if s.script != blank -%}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500&display=swap&text={{ s.script | url_encode }}">
+{%- endif -%}
+<section class="hoa-ab-name">
+  <div class="hoa-wrap">
+    <div class="hoa-ab-name__card">
+      <div class="hoa-ab-name__side">
+        <div class="hoa-ab-name__word">
+          <h2 class="hoa-ab-name__title"><span class="hoa-sr">The name </span>{{ s.word }}</h2>
+          {%- if s.script != blank -%}<p class="hoa-ab-name__script" lang="fa" dir="rtl">{{ s.script }}</p>{%- endif -%}
+          {%- if s.meaning != blank -%}<p class="hoa-ab-name__meaning">{{ s.meaning }}</p>{%- endif -%}
+        </div>
+        {%- if s.arch_asset != blank or s.arch_image != blank -%}
+          <figure class="hoa-ab-name__arch" data-hoa-ab-up>
+            <div class="hoa-ab-name__arch-img">
+              <div class="hoa-ab-name__img" data-hoa-ab-parallax>
+                {%- render 'hoa-img', name: s.arch_asset, image: s.arch_image, w: 1200, h: 1600, alt: s.arch_alt, sizes: '(min-width: 900px) 34vw, 90vw' -%}
+              </div>
+            </div>
+            {%- if s.arch_caption != blank -%}<figcaption>{{ s.arch_caption }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}
+      </div>
+
+      <div class="hoa-ab-name__main">
+        {%- if s.photo_asset != blank or s.photo_image != blank -%}
+          <figure class="hoa-ab-name__photo" data-hoa-ab-up>
+            <div class="hoa-ab-name__photo-img">
+              <div class="hoa-ab-name__img" data-hoa-ab-parallax>
+                {%- render 'hoa-img', name: s.photo_asset, image: s.photo_image, w: 2400, h: 1674, alt: s.photo_alt, sizes: '(min-width: 900px) 52vw, 100vw' -%}
+              </div>
+            </div>
+            {%- if s.photo_caption != blank -%}<figcaption>{{ s.photo_caption }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="hoa-ab-name__uses">
+            {%- for block in section.blocks -%}
+              {%- assign b = block.settings -%}
+              <div class="hoa-ab-name__use" data-hoa-ab-up {{ block.shopify_attributes }}>
+                <span class="hoa-ab-name__icon" aria-hidden="true">
+                  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    {%- case b.icon -%}
+                      {%- when 'qalam' -%}<path d="M22.5 4.5 27.5 9.5 12 25l-6.5 1.5L7 20z"/><path d="M19.5 7.5l5 5M7 20l5 5"/><path d="M4 28h9"/>
+                      {%- when 'crest' -%}<path d="M6 23 8 10.5l5.2 5.3L16 7l2.8 8.8 5.2-5.3L26 23z"/><path d="M6 26.5h20"/><circle cx="16" cy="19" r="1.6"/>
+                      {%- when 'pearl' -%}<circle cx="16" cy="17" r="8"/><path d="M12.5 13.8a4.2 4.2 0 0 1 3.5-2"/><path d="M4 9c3 1.6 5.3 3.3 7 5M28 9c-3 1.6-5.3 3.3-7 5"/>
+                      {%- when 'jaali' -%}<path d="M16 5 27 16 16 27 5 16Z"/><path d="M8.2 8.2h15.6v15.6H8.2Z"/><circle cx="16" cy="16" r="2.4"/>
+                      {%- else -%}<path d="M7 28V15c0-4.6 4-8.3 9-10.5 5 2.2 9 5.9 9 10.5v13"/><path d="M11 28V16.5c0-3.2 2.4-5.8 5-7.3 2.6 1.5 5 4.1 5 7.3V28M4 28h24"/>
+                    {%- endcase -%}
+                  </svg>
+                </span>
+                <dt>{{ b.label }}</dt>
+                <dd>{{ b.text }}</dd>
+              </div>
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+      </div>
+
+      <div class="hoa-ab-name__foot">
+        {%- if s.sources != blank -%}<p>{{ s.sources }}</p>{%- endif -%}
+        {%- if s.disclaimer != blank -%}<p>{{ s.disclaimer }}</p>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: the name",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "word", "label": "Word", "default": "Agha" },
+    { "type": "text", "id": "script", "label": "Word in Persian script", "default": "آقا" },
+    { "type": "textarea", "id": "meaning", "label": "Meaning", "default": "A title of respect, authority and nobility in Qutb Shahi culture." },
+    { "type": "header", "content": "Arch photo (left)" },
+    { "type": "image_picker", "id": "arch_image", "label": "Image (portrait)" },
+    { "type": "text", "id": "arch_asset", "label": "Fallback theme asset", "default": "hoa-hyd-tombs" },
+    { "type": "text", "id": "arch_alt", "label": "Alt text", "default": "A domed Qutb Shahi tomb in Hyderabad with arched colonnades" },
+    { "type": "text", "id": "arch_caption", "label": "Caption", "default": "Qutb Shahi Tombs, Hyderabad" },
+    { "type": "header", "content": "Wide photo (right)" },
+    { "type": "image_picker", "id": "photo_image", "label": "Image (landscape)" },
+    { "type": "text", "id": "photo_asset", "label": "Fallback theme asset", "default": "hoa-hyd-oldcity" },
+    { "type": "text", "id": "photo_alt", "label": "Alt text", "default": "An early photograph of Hyderabad's old city, with the Charminar at the end of a busy street" },
+    { "type": "text", "id": "photo_caption", "label": "Caption", "default": "The old city and the Charminar, in an early photograph" },
+    { "type": "header", "content": "Footer" },
+    { "type": "text", "id": "sources", "label": "Sources line", "default": "Sources: Wikipedia, Oxford Reference. Photographs: Wikimedia Commons, public domain." },
+    { "type": "text", "id": "disclaimer", "label": "Disclaimer", "default": "This website doesn't represent any religion or caste." }
+  ],
+  "blocks": [
+    {
+      "type": "use",
+      "name": "Usage",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "arch", "options": [
+          { "value": "qalam", "label": "Qalam (pen)" },
+          { "value": "crest", "label": "Crown" },
+          { "value": "arch", "label": "Qutb Shahi arch" },
+          { "value": "pearl", "label": "Pearl" },
+          { "value": "jaali", "label": "Jaali" }
+        ] },
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "About: the name" }]
+}
+{% endschema %}

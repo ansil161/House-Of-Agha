@@ -1,0 +1,56 @@
+{%- comment -%}
+  House of Agha · About 01 · Our story (opening): centered showcase
+  A centered headline, intro and button, then one wide photograph (Hyderabad's old city
+  and the Charminar) that opens from a framed window to the full width of the screen as
+  the page scrolls (assets/hoa-about.js: [data-hoa-ab-reveal]). Without JS or with
+  reduced motion the photo sits framed inside the page gutters.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="hoa-ab-hero hoa-ab-story" id="story" data-hoa-ab-hero>
+  <div class="hoa-wrap hoa-ab-story__head">
+    {%- if s.chip != blank -%}<p class="hoa-ab-chip" data-hoa-ab-line>{{ s.chip }}</p>{%- endif -%}
+    <h1 class="hoa-ab-hero__title hoa-ab-story__title">
+      <span class="hoa-ab-mask"><span data-hoa-ab-rise>{{ s.heading }}</span></span>
+      {%- if s.heading_muted != blank -%}
+        <span class="hoa-ab-mask"><span class="hoa-ab-muted" data-hoa-ab-rise>{{ s.heading_muted }}</span></span>
+      {%- endif -%}
+    </h1>
+    {%- if s.text != blank -%}<p class="hoa-ab-story__text" data-hoa-ab-line>{{ s.text }}</p>{%- endif -%}
+    {%- if s.cta_label != blank -%}
+      <a class="hoa-btn" href="{{ s.cta_url | default: '#philosophy' }}" data-hoa-ab-line><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+    {%- endif -%}
+  </div>
+
+  {%- if s.asset != blank or s.image != blank -%}
+    <figure class="hoa-ab-story__show" data-hoa-ab-reveal>
+      <div class="hoa-ab-story__window" data-hoa-ab-window>
+        <div class="hoa-ab-story__img" data-hoa-ab-window-img>
+          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2400, h: 1674, alt: s.alt, sizes: '100vw', loading: 'eager' -%}
+        </div>
+      </div>
+      {%- if s.caption != blank -%}<figcaption class="hoa-wrap hoa-ab-story__caption">{{ s.caption }}</figcaption>{%- endif -%}
+    </figure>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "About: our story",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "chip", "label": "Label", "default": "Our story" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Where tradition meets" },
+    { "type": "text", "id": "heading_muted", "label": "Heading, second line (muted)", "default": "timeless elegance." },
+    { "type": "textarea", "id": "text", "label": "Intro (keep it under 20 words)", "default": "Rooted in the Qutb Shahi heritage of Golconda and Hyderabad, we keep the royal art of fine perfumery alive." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Our philosophy" },
+    { "type": "url", "id": "cta_url", "label": "Button link", "info": "Leave empty to scroll to the philosophy section." },
+    { "type": "header", "content": "Wide photograph" },
+    { "type": "image_picker", "id": "image", "label": "Image (landscape, 2400px or wider)" },
+    { "type": "text", "id": "asset", "label": "Fallback theme asset", "default": "hoa-hyd-oldcity" },
+    { "type": "text", "id": "alt", "label": "Alt text", "default": "An early photograph of Hyderabad's old city, with the Charminar at the end of a busy street" },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Hyderabad's old city and the Charminar, in an early photograph" }
+  ],
+  "presets": [{ "name": "About: our story" }]
+}
+{% endschema %}

@@ -12,6 +12,14 @@
                        the centre, a pearl lights and the Hyderabad skyline drifts
                        behind (entrance, then storytelling). Wide screens;
                        phones get a stacked version, reduced motion a static one.
+     Our story ....... the old-city photograph opens from a framed window to the full
+                       screen width while scrolling (the city arrives).
+     Text ............ headline and philosophy words rise out of masks; the letters of
+                       Agha rise and آقا is revealed right to left, as it is written.
+     Story line ...... words sharpen from faint and soft to ink as the paragraphs are read.
+     Our name ........ the stage holds while one giant word changes script, Persian,
+                       Ottoman Turkish, Urdu, today (the word's journey, one step at a time).
+     Philosophy ...... photo tiles open from an arch into their frame (order, motif).
      Closing card .... grows from slightly inset to full size before the shop
                        button (emphasis).
 
@@ -245,6 +253,76 @@
     });
   }
 
+  // Runs cb once the spritz preloader (snippets/preloader.liquid) has lifted, so the
+  // opening motion is seen rather than played behind the overlay.
+  function afterIntro(cb) {
+    var h = document.documentElement;
+    if (!h.classList.contains('pl-on')) { cb(); return; }
+    var done = false;
+    var go = function () { if (done) return; done = true; mo.disconnect(); cb(); };
+    var mo = new MutationObserver(function () { if (!h.classList.contains('pl-on')) go(); });
+    mo.observe(h, { attributes: true, attributeFilter: ['class'] });
+    setTimeout(go, 10000); // never leave the opening parked if the preloader stalls
+  }
+
+  // Splits el's text into masked words: <span class="hoa-ab-wmask"><span class="hoa-ab-w">word</span></span>.
+  // Keeps child elements (e.g. .hoa-ab-muted, .hoa-sr) and splits inside them; runs once per element.
+  function maskWords(el) {
+    if (el._hoaMasked) return el._hoaMasked;
+    var out = [];
+    var walk = function (node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1) { if (!n.classList.contains('hoa-sr')) walk(n); return; }
+        if (n.nodeType !== 3 || !n.nodeValue.trim()) return;
+        var frag = document.createDocumentFragment();
+        n.nodeValue.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var m = document.createElement('span'); m.className = 'hoa-ab-wmask';
+          var w = document.createElement('span'); w.className = 'hoa-ab-w'; w.textContent = part;
+          m.appendChild(w); frag.appendChild(m); out.push(w);
+        });
+        node.replaceChild(frag, n);
+      });
+    };
+    walk(el);
+    el._hoaMasked = out;
+    return out;
+  }
+
+  // Splits the visible word of el into letters inside one mask (screen readers get aria-label).
+  function maskLetters(el) {
+    if (el._hoaLetters) return el._hoaLetters;
+    var label = el.textContent.replace(/\s+/g, ' ').trim();
+    var node = Array.prototype.slice.call(el.childNodes).reverse().find(function (n) { return n.nodeType === 3 && n.nodeValue.trim(); });
+    if (!node) return (el._hoaLetters = []);
+    el.setAttribute('aria-label', label);
+    var m = document.createElement('span'); m.className = 'hoa-ab-wmask'; m.setAttribute('aria-hidden', 'true');
+    var letters = node.nodeValue.trim().split('').map(function (c) {
+      var ch = document.createElement('span'); ch.className = 'hoa-ab-ch'; ch.textContent = c; m.appendChild(ch); return ch;
+    });
+    el.replaceChild(m, node);
+    Array.prototype.slice.call(el.querySelectorAll('.hoa-sr')).forEach(function (sr) { sr.setAttribute('aria-hidden', 'true'); });
+    el._hoaLetters = letters;
+    return letters;
+  }
+
+  // Wraps each word of el in a span once (kept across rebuilds); returns the spans.
+  function splitWords(el) {
+    if (el._hoaWords) return el._hoaWords;
+    var text = el.textContent.trim().split(/\s+/);
+    el.textContent = '';
+    el._hoaWords = text.map(function (w, i) {
+      var span = document.createElement('span');
+      span.className = 'hoa-ab-lede-word';
+      span.textContent = w;
+      el.appendChild(span);
+      if (i < text.length - 1) el.appendChild(document.createTextNode(' '));
+      return span;
+    });
+    return el._hoaWords;
+  }
+
   function build() {
     if (!hasGsap()) return;
     gsap.registerPlugin(ScrollTrigger);
@@ -256,18 +334,119 @@
        order, so the pin spacing must exist before the triggers further down the page. */
     initSevenWorlds();
 
+    /* 04 The meaning of our name: the stage holds under the header while one giant word
+       changes script with each scroll step (the word's journey, one idea at a time).
+       Added before any other trigger because .is-pinned makes the page taller. */
+    var word = document.querySelector('[data-hoa-ab-word]');
+    if (word) {
+      mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', function () {
+        var steps = gsap.utils.toArray('[data-hoa-ab-word-step]', word);
+        var marks = gsap.utils.toArray('.hoa-ab-word__mark', word);
+        if (steps.length < 2) return;
+        word.classList.add('is-pinned');
+        var current = -1;
+        var show = function (i) {
+          if (i === current) return;
+          current = i;
+          steps.forEach(function (el, k) {
+            el.classList.toggle('is-active', k === i);
+            el.classList.toggle('is-past', k < i);
+          });
+          marks.forEach(function (m, k) { m.classList.toggle('is-on', k <= i); });
+        };
+        show(0);
+        ScrollTrigger.create({
+          trigger: word.querySelector('.hoa-ab-word__track'),
+          start: 'top top+=' + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76),
+          end: 'bottom bottom',
+          onUpdate: function (self) { show(Math.min(steps.length - 1, Math.floor(self.progress * steps.length))); }
+        });
+        return function () {
+          word.classList.remove('is-pinned');
+          steps.forEach(function (el) { el.classList.remove('is-active', 'is-past'); });
+          marks.forEach(function (m) { m.classList.remove('is-on'); });
+        };
+      });
+    }
+
     mm.add('(prefers-reduced-motion: no-preference)', function () {
       var ease = 'expo.out';
 
       /* 01 Opening bento */
       var hero = document.querySelector('[data-hoa-ab-hero]');
       if (hero) {
-        gsap.timeline({ defaults: { ease: ease } })
-          .from(hero.querySelectorAll('[data-hoa-ab-rise]'), { yPercent: 110, duration: 1.3, stagger: 0.1 }, 0.05)
+        var intro = gsap.timeline({ defaults: { ease: ease }, paused: true });
+        afterIntro(function () { intro.play(); });
+        intro
+          .from(Array.prototype.slice.call(hero.querySelectorAll('[data-hoa-ab-rise]')).reduce(function (all, line) { return all.concat(maskWords(line)); }, []), {
+            yPercent: 115, rotate: 5, transformOrigin: '0% 100%', duration: 1.3, stagger: 0.07
+          }, 0.05)
           .from(hero.querySelectorAll('[data-hoa-ab-line]'), { y: 20, opacity: 0, duration: 1, stagger: 0.08 }, 0.3)
           .from(hero.querySelectorAll('[data-hoa-ab-tile]'), {
             y: 70, scale: 0.94, opacity: 0, duration: 1.4, stagger: 0.09, transformOrigin: '50% 100%'
           }, 0.35);
+      }
+
+      /* 01 Our story: the photograph opens from a framed window to the full width of the
+         screen as it scrolls up, and settles from a slight zoom (the city arrives). */
+      var win = document.querySelector('[data-hoa-ab-window]');
+      if (win) {
+        var headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76;
+        var winST = { trigger: win, start: 'top 88%', end: 'top top+=' + headerH, scrub: 0.6 };
+        gsap.fromTo(win, { '--win': 0 }, { '--win': 1, ease: 'none', scrollTrigger: winST });
+        var winImg = win.querySelector('[data-hoa-ab-window-img]');
+        if (winImg) gsap.fromTo(winImg, { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: Object.assign({}, winST) });
+      }
+
+      /* 04 The name: the letters of Agha rise one by one, the Persian آقا is revealed from
+         right to left (the direction it is written) and the meaning follows (reading order). */
+      var nameWord = document.querySelector('.hoa-ab-name__word');
+      if (nameWord) {
+        var nameTitle = nameWord.querySelector('.hoa-ab-name__title');
+        var letters = nameTitle ? maskLetters(nameTitle) : [];
+        var scriptEl = nameWord.querySelector('.hoa-ab-name__script');
+        var meaningEl = nameWord.querySelector('.hoa-ab-name__meaning');
+        var nameTl = gsap.timeline({ paused: true });
+        if (letters.length) nameTl.from(letters, { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.07 }, 0);
+        if (scriptEl) nameTl.fromTo(scriptEl, { clipPath: 'inset(-30% -10% -30% 100%)' }, { clipPath: 'inset(-30% -10% -30% 0%)', duration: 1.4, ease: 'power2.inOut', clearProps: 'clipPath' }, 0.35);
+        if (meaningEl) nameTl.from(meaningEl, { y: 18, opacity: 0, duration: 1, ease: 'quart.out' }, 0.8);
+        ScrollTrigger.create({ trigger: nameWord, start: 'top 82%', once: true, onEnter: function () { nameTl.play(); } });
+      }
+
+      /* 05 Philosophy heading: the words rise into place one by one as it arrives. */
+      var philoHead = document.querySelector('.hoa-ab-philo__head');
+      if (philoHead) {
+        var philoWords = maskWords(philoHead);
+        gsap.from(philoWords, {
+          yPercent: 115, rotate: 5, transformOrigin: '0% 100%', duration: 1.2, ease: 'expo.out', stagger: 0.06,
+          scrollTrigger: { trigger: philoHead, start: 'top 85%', once: true }
+        });
+      }
+
+      /* 03 Philosophy: each photo tile opens from an arch into its full frame as it
+         arrives, the photo settles and the words follow (echoes the arches, sets order). */
+      var pillars = gsap.utils.toArray('[data-hoa-ab-pillar]');
+      if (pillars.length) {
+        var archClip = 'inset(12% 9% 0% 9% round 260px 260px 24px 24px)';
+        var openClip = 'inset(0% 0% 0% 0% round 24px 24px 24px 24px)';
+        gsap.set(pillars, { clipPath: archClip });
+        gsap.set(pillars.map(function (el) { return el.querySelector('.hoa-ab-pillar__media'); }).filter(Boolean), { scale: 1.14 });
+        gsap.set(pillars.map(function (el) { return [el.querySelector('.hoa-ab-pillar__word'), el.querySelector('.hoa-ab-pillar__copy')]; }).flat().filter(Boolean), { opacity: 0, y: 24 });
+        ScrollTrigger.batch(pillars, {
+          start: 'top 88%',
+          once: true,
+          onEnter: function (batch) {
+            batch.forEach(function (el, i) {
+              var d = i * 0.12;
+              gsap.to(el, { clipPath: openClip, duration: 1.2, ease: 'quart.out', delay: d, clearProps: 'clipPath' });
+              var media = el.querySelector('.hoa-ab-pillar__media');
+              if (media) gsap.to(media, { scale: 1, duration: 1.6, ease: 'expo.out', delay: d });
+              gsap.to([el.querySelector('.hoa-ab-pillar__word'), el.querySelector('.hoa-ab-pillar__copy')].filter(Boolean), {
+                opacity: 1, y: 0, duration: 0.9, ease: 'quart.out', delay: d + 0.35, stagger: 0.08
+              });
+            });
+          }
+        });
       }
 
       // Photos drift a little inside their tiles and cards (the frames stay put).
@@ -314,6 +493,26 @@
         });
       }
     });
+
+    /* 02 Story line: its words light from faint to ink while the reader moves through the
+       paragraphs beside it (pace of reading). Wide screens: the line is sticky, so the
+       paragraphs drive it; phones: the line drives itself. */
+    var lede = document.querySelector('[data-hoa-ab-lede]');
+    if (lede) {
+      var words = splitWords(lede);
+      var ledeTween = function (trigger, start, end) {
+        return gsap.fromTo(words, { opacity: 0.14, filter: 'blur(3px)' }, {
+          opacity: 1, filter: 'blur(0px)', ease: 'none', stagger: 0.1,
+          scrollTrigger: { trigger: trigger, start: start, end: end, scrub: 0.5 }
+        });
+      };
+      mm.add('(min-width: 900px) and (prefers-reduced-motion: no-preference)', function () {
+        ledeTween(lede.closest('.hoa-ab-chapter__grid') || lede, 'top 70%', 'bottom 75%');
+      });
+      mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)', function () {
+        ledeTween(lede, 'top 85%', 'bottom 45%');
+      });
+    }
 
     /* 02 Stacking cards: only where the cards are sticky (see CSS, 760px+) */
     mm.add('(min-width: 760px) and (prefers-reduced-motion: no-preference)', function () {

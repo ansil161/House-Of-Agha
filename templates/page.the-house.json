@@ -1,180 +1,191 @@
 {
   "sections": {
-    "hero": {
-      "type": "hoa-about-hero",
+    "story": {
+      "type": "hoa-about-story",
       "settings": {}
     },
-    "stack": {
-      "type": "hoa-about-stack",
-      "settings": {},
-      "blocks": {
-        "card_place": {
-          "type": "card",
-          "settings": {
-            "chip": "Place",
-            "title": "A place comes first",
-            "text": "Black sand, cold stone, a garden in late sun. Each fragrance starts from one setting and stays true to it.",
-            "tint": "#E4DED5",
-            "dark": false,
-            "asset": "hoa-craft-sand",
-            "w": 2000,
-            "h": 1125,
-            "alt": "Oud of Dark Paradise standing on dark sand in a beam of light"
-          }
-        },
-        "card_materials": {
-          "type": "card",
-          "settings": {
-            "chip": "Materials",
-            "title": "Materials from that world",
-            "text": "Tobacco leaf and moss, bergamot and jasmine, oud wood and sea salt. The notes follow the place.",
-            "tint": "#1C1916",
-            "dark": true,
-            "asset": "hoa-ingredients-tobacco",
-            "w": 969,
-            "h": 969,
-            "alt": "Tobacco Enigma surrounded by moss, bergamot, lemon, cinnamon and jasmine"
-          }
-        },
-        "card_bottle": {
-          "type": "card",
-          "settings": {
-            "chip": "Bottle",
-            "title": "A bottle of its own",
-            "text": "No shared flacon. Each fragrance gets its own glass, cap and colour, so you can tell them apart on the shelf.",
-            "tint": "#EADFCB",
-            "dark": false,
-            "asset": "hoa-shamamah-lily",
-            "w": 1086,
-            "h": 1448,
-            "alt": "Shamamah with its crystal cap among golden lilies"
-          }
-        }
-      },
-      "block_order": [
-        "card_place",
-        "card_materials",
-        "card_bottle"
-      ]
+    "chapter": {
+      "type": "hoa-about-chapter",
+      "settings": {}
     },
     "hyderabad": {
       "type": "hoa-about-hyderabad",
       "blocks": {
-        "note_city": { "type": "note", "settings": { "icon": "arch", "kicker": "1591", "title": "The Qutb Shahi city", "text": "Founded by Muhammad Quli Qutb Shah, with the Charminar at its heart." } },
-        "note_attar": { "type": "note", "settings": { "icon": "attar", "kicker": "The old city", "title": "The attar lanes", "text": "Around the Charminar, fragrance has been blended and sold for generations." } },
-        "note_pearls": { "type": "note", "settings": { "icon": "pearl", "kicker": "City of pearls", "title": "Ivory and gold", "text": "Hyderabad's pearl trade gave the city its lustre, and this house its palette." } }
-      },
-      "block_order": ["note_city", "note_attar", "note_pearls"],
-      "settings": {}
-    },
-    "worlds": {
-      "type": "hoa-about-worlds",
-      "blocks": {
-        "world_oud_fury": {
-          "type": "world",
+        "note_city": {
+          "type": "note",
           "settings": {
-            "name": "Oud Fury",
-            "url": "/products/oud-fury",
-            "family": "Woody & Smoky",
-            "line": "Amber smoke, charred wood and a single shaft of evening light.",
-            "asset": "hoa-oud-fury-portrait",
-            "alt": "Oud Fury Eau de Parfum in its campaign setting",
-            "tint": "#2b160a"
+            "icon": "arch",
+            "kicker": "1591",
+            "title": "The Qutb Shahi city",
+            "text": "Founded by Muhammad Quli Qutb Shah, with the Charminar at its heart."
           }
         },
-        "world_agha_blue": {
-          "type": "world",
+        "note_attar": {
+          "type": "note",
           "settings": {
-            "name": "Agha Blue",
-            "url": "/products/agha-blue",
-            "family": "Fresh & Aquatic",
-            "line": "Ice caves, cold stone and the deep blue of a winter night.",
-            "asset": "hoa-agha-blue-portrait",
-            "alt": "Agha Blue Eau de Parfum in its campaign setting",
-            "tint": "#0a1a45"
+            "icon": "attar",
+            "kicker": "The old city",
+            "title": "The attar lanes",
+            "text": "Around the Charminar, fragrance has been blended and sold for generations."
           }
         },
-        "world_oud_of_dark_paradise": {
-          "type": "world",
+        "note_pearls": {
+          "type": "note",
           "settings": {
-            "name": "Oud of Dark Paradise",
-            "url": "/products/oud-of-dark-paradise",
-            "family": "Woody & Smoky",
-            "line": "Black sand, rising smoke and a room lit only by embers.",
-            "asset": "hoa-dark-paradise-portrait",
-            "alt": "Oud of Dark Paradise Eau de Parfum in its campaign setting",
-            "tint": "#15100d"
-          }
-        },
-        "world_maha": {
-          "type": "world",
-          "settings": {
-            "name": "Maha",
-            "url": "/products/maha",
-            "family": "Floral & Luminous",
-            "line": "Blossom, warm sand and late sun through an open window.",
-            "asset": "hoa-maha-portrait",
-            "alt": "Maha Eau de Parfum in its campaign setting",
-            "tint": "#5b3524"
-          }
-        },
-        "world_sea_smoke": {
-          "type": "world",
-          "settings": {
-            "name": "Sea Smoke",
-            "url": "/products/sea-smoke",
-            "family": "Fresh & Aquatic",
-            "line": "Clear water, pale stone and salt carried in on the wind.",
-            "asset": "hoa-sea-smoke-portrait",
-            "alt": "Sea Smoke Eau de Parfum in its campaign setting",
-            "tint": "#0b3a40"
-          }
-        },
-        "world_tobacco_enigma": {
-          "type": "world",
-          "settings": {
-            "name": "Tobacco Enigma",
-            "url": "/products/tobacco-enigma",
-            "family": "Aromatic & Green",
-            "line": "Tobacco leaf, moss and a forest floor after rain.",
-            "asset": "hoa-tobacco-enigma-portrait",
-            "alt": "Tobacco Enigma Eau de Parfum in its campaign setting",
-            "tint": "#2e3320"
-          }
-        },
-        "world_shamamah": {
-          "type": "world",
-          "settings": {
-            "name": "Shamamah",
-            "url": "/products/shamamah",
-            "family": "Floral & Luminous",
-            "line": "Jasmine, gilded columns and the hush of a palace garden.",
-            "asset": "hoa-shamamah-portrait",
-            "alt": "Shamamah Eau de Parfum in its campaign setting",
-            "tint": "#3d2f18"
+            "icon": "pearl",
+            "kicker": "City of pearls",
+            "title": "Ivory and gold",
+            "text": "Hyderabad's pearl trade gave the city its lustre, and this house its palette."
           }
         }
       },
       "block_order": [
-        "world_oud_fury",
-        "world_agha_blue",
-        "world_oud_of_dark_paradise",
-        "world_maha",
-        "world_sea_smoke",
-        "world_tobacco_enigma",
-        "world_shamamah"
+        "note_city",
+        "note_attar",
+        "note_pearls"
+      ],
+      "settings": {}
+    },
+    "name": {
+      "type": "hoa-about-name",
+      "blocks": {
+        "use_1": {
+          "type": "use",
+          "settings": {
+            "icon": "qalam",
+            "label": "In Persian",
+            "text": "Agha means lord, master or gentleman. It was used to address people of high status, such as noblemen and respected elders."
+          }
+        },
+        "use_2": {
+          "type": "use",
+          "settings": {
+            "icon": "crest",
+            "label": "In Ottoman times",
+            "text": "It named senior officials and military leaders, such as the Janissary Agha who commanded the elite troops."
+          }
+        },
+        "use_3": {
+          "type": "use",
+          "settings": {
+            "icon": "arch",
+            "label": "Across the region",
+            "text": "In many Middle Eastern and South Asian societies it is a term of respect for elders, teachers and community leaders."
+          }
+        },
+        "use_4": {
+          "type": "use",
+          "settings": {
+            "icon": "pearl",
+            "label": "Today",
+            "text": "It is still a respectful address in Iran, Turkey, Afghanistan and parts of India, often joined to a first or last name."
+          }
+        }
+      },
+      "block_order": [
+        "use_1",
+        "use_2",
+        "use_3",
+        "use_4"
+      ],
+      "settings": {}
+    },
+    "philosophy": {
+      "type": "hoa-about-philosophy",
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "word": "Legacy",
+            "title": "We build a legacy",
+            "lines": "A tribute to the rich heritage of fine perfumery.\nA vision to craft timeless fragrances.\nA journey to a global name rooted in tradition.",
+            "asset": "hoa-oud-fury-smoke",
+            "w": 2000,
+            "h": 1125
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "word": "Passion",
+            "title": "We are driven by passion",
+            "lines": "An unwavering love for the art of scent creation.\nSophistication blended with beauty.\nAn enduring connection to our patrons.",
+            "asset": "hoa-shamamah-lily",
+            "w": 1086,
+            "h": 1448
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "word": "Purpose",
+            "title": "We produce with purpose",
+            "lines": "Authentic, artisanal craftsmanship.\nSupport for skilled perfumers.\nResponsibility to tradition and the world.",
+            "asset": "hoa-world-hand",
+            "w": 1086,
+            "h": 1448
+          }
+        },
+        "pillar_4": {
+          "type": "pillar",
+          "settings": {
+            "word": "Innovation",
+            "title": "We spark innovation",
+            "lines": "Heritage in harmony with modernity.\nRoom for creativity and exploration.\nUnique, unforgettable fragrances.",
+            "asset": "hoa-craft-ice",
+            "w": 1200,
+            "h": 1854
+          }
+        },
+        "pillar_5": {
+          "type": "pillar",
+          "settings": {
+            "word": "Loyalty",
+            "title": "We value loyalty",
+            "lines": "Devotion to exceeding expectations.\nAn open dialogue with fragrance lovers.\nInvestment in our people and their artistry.",
+            "asset": "hoa-world-gift",
+            "w": 1086,
+            "h": 1448
+          }
+        },
+        "pillar_6": {
+          "type": "pillar",
+          "settings": {
+            "word": "Craft",
+            "title": "We commit to craftsmanship",
+            "lines": "A meticulous approach to every detail.\nOnly the finest ingredients.\nA passion for innovation in scent creation.",
+            "asset": "hoa-craft-embers",
+            "w": 2000,
+            "h": 1125
+          }
+        }
+      },
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3",
+        "pillar_4",
+        "pillar_5",
+        "pillar_6"
       ],
       "settings": {}
     },
     "closing": {
       "type": "hoa-about-closing",
-      "settings": {}
+      "settings": {
+        "heading": "Rediscover the power",
+        "heading_muted": "of fragrance.",
+        "text": "House of Agha, where every scent is a masterpiece.",
+        "cta_label": "Shop the collection"
+      }
     }
   },
   "order": [
-    "hero",
-    "stack",
+    "story",
+    "chapter",
     "hyderabad",
+    "name",
+    "philosophy",
     "closing"
   ]
 }

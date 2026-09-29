@@ -1,0 +1,41 @@
+{%- comment -%}
+  House of Agha · About 02 · The story, in the house's own words
+  Long read: one large line held on the left (sticky on wide screens), the story
+  paragraphs and the four natural ingredients on the right.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="hoa-ab-chapter">
+  <div class="hoa-wrap hoa-ab-chapter__grid">
+    <div class="hoa-ab-chapter__aside">
+      <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede }}</p>
+    </div>
+    <div class="hoa-ab-chapter__body">
+      {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 }}</p>{%- endif -%}
+      {%- if s.p2 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p2 }}</p>{%- endif -%}
+      {%- assign notes = s.ingredients | split: ',' -%}
+      {%- if notes.size > 0 -%}
+        <ul class="hoa-ab-chips hoa-ab-chapter__notes" aria-label="{{ s.ingredients_label | escape }}" data-hoa-ab-up>
+          {%- for n in notes -%}<li class="hoa-ab-chip">{{ n | strip }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if s.p3 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p3 }}</p>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About: story text",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "textarea", "id": "lede", "label": "Large line", "default": "Every fragrance tells a story: of bustling royal courts, serene palace gardens and the intoxicating allure of tradition." },
+    { "type": "textarea", "id": "p1", "label": "Paragraph 1", "default": "Welcome to House of Agha. Rooted in the rich heritage of the Qutb Shahi dynasty, we celebrate the art of fine perfumery inspired by the grandeur of Golconda and Hyderabad's golden era. Drawing from the royal legacy of aromatic indulgence, we craft fragrances that embody the sophistication and luxury once cherished by the Persian-Turkic rulers." },
+    { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutb Shahi era." },
+    { "type": "text", "id": "ingredients", "label": "Ingredients (comma separated)", "default": "Oud, Rose, Vetiver, Ambergris" },
+    { "type": "text", "id": "ingredients_label", "label": "Ingredients list name (screen readers)", "default": "Natural ingredients we blend" },
+    { "type": "textarea", "id": "p3", "label": "Paragraph 3", "default": "Our passion lies in bridging history and modernity. Deeply rooted in the past, our fragrances are made for today's connoisseurs: an elegant fusion of heritage and contemporary sophistication." }
+  ],
+  "presets": [{ "name": "About: story text" }]
+}
+{% endschema %}
