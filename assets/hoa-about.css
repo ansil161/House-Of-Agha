@@ -854,7 +854,6 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-ab-name__arch figcaption { color: rgba(255, 255, 255, 0.55); }
 .hoa-ab-name__photo figcaption { color: #6B6B6B; }
 .hoa-ab-name__arch-img, .hoa-ab-name__photo-img { background: #2A2A2A; }
-.hoa-ab-name__img img { filter: grayscale(1) contrast(1.05); }
 .hoa-ab-name__use {
   padding: 18px 16px 20px;
   background: #FFFFFF;
