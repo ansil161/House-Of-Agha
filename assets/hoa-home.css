@@ -1256,16 +1256,27 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-voices.is-animated .hoa-voice--5 { --vx: 18%; --vy: 0.78; }
 }
 
-/* Mobile: statement at the top, a readable deck of cards below it */
+/* Mobile: no pin. Statement, then a swipe row of cards (one full card + the edge of the next) */
 @media (max-width: 767px) {
-  .hoa-voices__intro { flex-direction: column; gap: 10px; }
+  .hoa-voices__stage { padding: 72px 0 64px; }
+  .hoa-voices__intro { flex-direction: column; gap: 10px; padding: 0 var(--hoa-gutter); }
   .hoa-voices__lede { text-align: left; }
-  .hoa-voices__statement { font-size: clamp(3rem, 15.5vw, 5rem); }
-  .hoa-voices__cards { grid-template-columns: 1fr; }
-  .hoa-voices.is-animated .hoa-voices__statement { justify-content: flex-start; padding-top: calc(var(--hoa-header-h) + 104px); }
-  .hoa-voices.is-animated .hoa-voice { --vw: min(86vw, 360px); --vx: 50%; --vy: 0.76; }
-  .hoa-voices.is-animated .hoa-voice:nth-child(n+6) { display: none; }
+  .hoa-voices__statement { margin: 20px var(--hoa-gutter) 28px; font-size: clamp(2.8rem, 14vw, 4.4rem); }
+  .hoa-voices__cards {
+    display: flex; gap: 12px;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+    padding: 4px var(--hoa-gutter) 20px; scroll-padding-inline: var(--hoa-gutter);
+    scrollbar-width: none;
+  }
+  .hoa-voices__cards::-webkit-scrollbar { display: none; }
+  .hoa-voice { flex: 0 0 min(82vw, 330px); scroll-snap-align: start; }
+  .hoa-voice__card { border-radius: 18px; padding: 20px; }
+  .hoa-voice__quote p { font-size: 0.98rem; }
 }
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .hoa-js .hoa-voice { animation: hoa-voice-in linear both; animation-timeline: view(inline); animation-range: entry 0% entry 60%; }
+}
+@keyframes hoa-voice-in { from { opacity: 0.35; transform: scale(0.94); } to { opacity: 1; transform: none; } }
 
 /* ==========================================================================
    FEATURED FILM — celebrity / testimonial video

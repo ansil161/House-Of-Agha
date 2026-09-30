@@ -96,7 +96,8 @@ const globals = {
   routes: {
     root_url: '/', all_products_collection_url: '/collections/all',
     account_url: '/account', account_login_url: '/account/login', account_register_url: '/account/register',
-    account_logout_url: '/account/logout', account_addresses_url: '/account/addresses'
+    account_logout_url: '/account/logout', account_addresses_url: '/account/addresses',
+    search_url: '/search'
   },
   shop: { customer_accounts_enabled: true, checkout: { guest_login: false } },
   all_country_option_tags: ['India', 'United Arab Emirates', 'United Kingdom', 'United States']
@@ -344,6 +345,20 @@ async function renderTemplate(name, templateGlobals) {
     fs.writeFileSync(file, html.replace(footerRe, () => block));
   }
   console.log('footer on', all.length, 'pages');
+
+  // Mobile layer (assets/hoa-mobile.css/.js): layout/theme.liquid loads it last on every page, after the
+  // template stylesheets, and sets viewport-fit=cover so env(safe-area-inset-*) works. Mirror both.
+  for (const f of all) {
+    const file = path.join(THEME, f);
+    let html = fs.readFileSync(file, 'utf8')
+      .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-mobile\.css">\n/, '')
+      .replace(/[ \t]*<script src="\/?assets\/hoa-mobile\.js" defer><\/script>\n/, '')
+      .replace(/<meta name="viewport" content="[^"]*">/, '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">');
+    const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
+    html = html.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-mobile.css">\n  <script src="${pre}assets/hoa-mobile.js" defer></script>\n</head>`);
+    fs.writeFileSync(file, html);
+  }
+  console.log('mobile layer on', all.length, 'pages');
 
   // Message strip (sections/hoa-message-strip.liquid): layout/theme.liquid renders it right after
   // the header on the collection and product templates only, so mirror that in shop.html / product.html.

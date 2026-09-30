@@ -525,3 +525,129 @@
 .hoa-shop-interlude__name { margin: 0; font-family: var(--hoa-serif); font-size: clamp(1.4rem, 1.15rem + 0.5vw, 1.75rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
 .hoa-shop-interlude__meta { margin: 6px 0 0; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hoa-mute); }
 .hoa-shop-interlude__link { margin: 12px 0 0; }
+
+/* ==========================================================================
+   PHONE: FILTER + SORT (<768px)
+   The desktop toolbar (a ~180px panel on phones) becomes one sticky row:
+   [Filter (n)] [Sort] [grid|list]. Filters open as a bottom sheet; Sort stays a
+   native select, so the phone's own picker handles it. Markup: sections/hoa-shop-catalog.liquid;
+   behaviour: initSheet() in assets/hoa-shop.js. From 768px up nothing below applies.
+   ========================================================================== */
+.hoa-shop-mbar, .hoa-shop-sheet__head, .hoa-shop-sheet__foot, .hoa-shop-sheet__scrim { display: none; }
+
+@media (max-width: 767px) {
+  .hoa-shop-bar {
+    position: sticky; top: var(--hoa-header-h); z-index: 20;
+    margin: 0 0 4px; border: 0; border-bottom: 1px solid var(--hoa-line); border-radius: 0;
+    background: rgba(246, 243, 238, 0.97); box-shadow: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none; /* a filter here would trap the fixed sheet inside the bar */
+  }
+  .hoa-shop-cat.is-sheet-open .hoa-shop-bar { z-index: 1001; }
+
+  /* ---- The sticky row ---- */
+  .hoa-shop-mbar { display: flex; align-items: center; gap: 8px; padding: 8px var(--hoa-gutter); }
+  .hoa-shop-mbar__filter {
+    flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 44px; padding: 0 14px; border: 1px solid var(--hoa-ink); border-radius: 999px;
+    background: var(--hoa-ink); color: var(--hoa-paper); font: 600 0.84rem var(--hoa-sans); cursor: pointer;
+  }
+  .hoa-shop-mbar__filter svg { width: 18px; height: 18px; flex: none; }
+  .hoa-shop-mbar__filter svg circle { fill: var(--hoa-ink); }
+  .hoa-shop-mbar__count {
+    display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+    background: var(--hoa-paper); color: var(--hoa-ink); font-size: 0.72rem; font-weight: 700;
+  }
+  .hoa-shop-mbar__count[hidden] { display: none; }
+  .hoa-shop-mbar__slot { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 8px; }
+  .hoa-shop-mbar .hoa-sort { flex: 1; min-width: 0; height: 44px; padding: 0 12px 0 16px; background: #fff; }
+  .hoa-shop-mbar .hoa-sort select { width: 100%; max-width: none; min-width: 0; height: 42px; field-sizing: fixed; text-overflow: ellipsis; font-size: 16px; }
+  .hoa-shop-mbar .hoa-fview { flex: none; background: #fff; }
+  .hoa-shop-mbar .hoa-fview .hoa-fview__btn { width: 40px; height: 42px; }
+
+  /* ---- The sheet ---- */
+  .hoa-shop-sheet__scrim { display: block; position: fixed; inset: 0; z-index: 1; background: rgba(12, 10, 8, 0.45); animation: hoa-sheet-fade 0.3s ease both; }
+  .hoa-shop-sheet__scrim[hidden] { display: none; }
+  .hoa-shop-bar .hoa-shop-bar__inner {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 2;
+    display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0;
+    max-height: min(88dvh, 760px); min-height: 0; max-width: none;
+    margin: 0; padding: 0 var(--hoa-gutter);
+    border-radius: 26px 26px 0 0; background: var(--hoa-paper);
+    box-shadow: 0 -24px 48px -24px rgba(12, 10, 8, 0.4);
+    overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 104%, 0); visibility: hidden;
+    transition: transform 0.45s var(--hoa-ease-in-out), visibility 0s linear 0.45s;
+  }
+  .hoa-shop-cat.is-sheet-open .hoa-shop-bar__inner { transform: none; visibility: visible; transition: transform 0.5s var(--hoa-ease), visibility 0s; }
+
+  .hoa-shop-sheet__head {
+    position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+    margin: 0 calc(var(--hoa-gutter) * -1); padding: 18px var(--hoa-gutter) 12px; background: var(--hoa-paper);
+  }
+  .hoa-shop-sheet__grip { position: absolute; top: 7px; left: 50%; width: 38px; height: 4px; margin-left: -19px; border-radius: 4px; background: rgba(20, 18, 16, 0.18); }
+  .hoa-shop-sheet__title { margin: 0; font-family: var(--hoa-serif); font-size: 1.6rem; font-weight: 500; letter-spacing: -0.01em; }
+  .hoa-shop-sheet__close {
+    display: grid; place-items: center; width: 44px; height: 44px; margin-right: -6px; padding: 0;
+    border: 1px solid var(--hoa-line); border-radius: 50%; background: #fff; color: var(--hoa-ink); cursor: pointer;
+  }
+  .hoa-shop-sheet__close svg { width: 15px; height: 15px; }
+
+  /* Each filter group reads as a labelled block */
+  .hoa-shop-bar .hoa-shop-bar__group,
+  .hoa-shop-bar .hoa-shop-bar__end {
+    order: 0; flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    width: auto; min-height: 0; margin: 0; padding: 18px 0; overflow: visible;
+    border: 0; border-top: 1px solid var(--hoa-line);
+  }
+  .hoa-shop-bar .hoa-shop-bar__group--for { border-top: 0; padding-top: 4px; }
+  .hoa-shop-bar [data-sheet-label]::before,
+  .hoa-shop-bar .hoa-shop-bar__group--family .hoa-shop-bar__label,
+  .hoa-shop-bar .hoa-price__title {
+    flex-basis: 100%; margin: 0 0 4px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--hoa-mute);
+  }
+  .hoa-shop-bar [data-sheet-label]::before { content: attr(data-sheet-label); }
+  .hoa-shop-bar .hoa-ftab, .hoa-shop-bar .hoa-ftag {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px;
+    border: 1px solid var(--hoa-line); border-radius: 999px; background: #fff; font-size: 0.9rem;
+  }
+  .hoa-shop-bar .hoa-ftab:first-child { padding-left: 18px; }
+  .hoa-shop-bar .hoa-ftab[aria-pressed='true'], .hoa-shop-bar .hoa-ftag[aria-pressed='true'] { border-color: var(--hoa-ink); background: var(--hoa-ink); color: var(--hoa-paper); }
+  .hoa-shop-bar .hoa-ftag--gift[aria-pressed='true'] { border-color: var(--hoa-brass); background: var(--hoa-brass); }
+
+  /* Price: the dropdown is laid open inside the sheet */
+  .hoa-shop-bar .hoa-price { position: static; width: 100%; }
+  .hoa-shop-bar .hoa-price__btn { display: none; }
+  .hoa-shop-bar .hoa-price__panel,
+  .hoa-shop-bar .hoa-price__panel[hidden] {
+    position: static; display: block; width: auto; padding: 0; border: 0; border-radius: 0;
+    background: none; box-shadow: none; animation: none;
+  }
+  .hoa-shop-bar .hoa-price__custom { border-top: 0; padding-top: 4px; }
+  .hoa-shop-bar .hoa-price__custom input { height: 44px; font-size: 16px; background: #fff; }
+  .hoa-shop-bar .hoa-price__apply { min-height: 44px; }
+
+  .hoa-shop-sheet__foot {
+    position: sticky; bottom: 0; z-index: 2; display: flex; gap: 10px;
+    margin: auto calc(var(--hoa-gutter) * -1) 0; padding: 12px var(--hoa-gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--hoa-paper); border-top: 1px solid var(--hoa-line);
+  }
+  .hoa-shop-sheet__reset, .hoa-shop-sheet__show {
+    min-height: 50px; border-radius: 999px; font: 600 0.8rem var(--hoa-sans); letter-spacing: 0.06em; cursor: pointer;
+  }
+  .hoa-shop-sheet__reset { flex: 0 0 auto; padding: 0 20px; border: 1px solid var(--hoa-line); background: #fff; color: var(--hoa-ink); }
+  .hoa-shop-sheet__show { flex: 1; padding: 0 16px; border: 0; background: var(--hoa-ink); color: var(--hoa-paper); }
+
+  .hoa-shop-cat__status { margin: 16px 0 14px; }
+  html.hoa-sheet-open, html.hoa-sheet-open body { overflow: hidden; }
+}
+@keyframes hoa-sheet-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .hoa-shop-bar .hoa-shop-bar__inner, .hoa-shop-cat.is-sheet-open .hoa-shop-bar__inner { transition: none; }
+  .hoa-shop-sheet__scrim { animation: none; }
+}
+@media (max-width: 360px) {
+  .hoa-shop-mbar { gap: 6px; }
+  .hoa-shop-mbar__filter { padding: 0 12px; gap: 6px; }
+  .hoa-shop-mbar .hoa-sort { padding: 0 8px 0 12px; }
+  .hoa-shop-mbar .hoa-fview .hoa-fview__btn { width: 36px; }
+}

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Addresses | House of Agha</title>
   <meta name="robots" content="noindex">
   <link rel="stylesheet" href="assets/theme.css">
@@ -98,6 +98,8 @@
   <script src="assets/wishlist-preview.js" defer></script>
   <script src="assets/agha-wishlist.js" defer></script>
   <script src="assets/agha-wishlist-drawer.js" defer></script>
+  <link rel="stylesheet" href="assets/hoa-mobile.css">
+  <script src="assets/hoa-mobile.js" defer></script>
 </head>
 <body class="hoa-account-page">
   <!-- Preloader · snippets/preloader.liquid (rendered by the preview build) -->
@@ -206,9 +208,15 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     </a>
 
     <ul class="hoa-header__nav hoa-header__nav--right">
-      <li class="hoa-header__hide-sm"><a class="hoa-header__wish" data-wishlist-open aria-haspopup="dialog" href="/pages/wishlist">Wishlist<sup class="hoa-header__wish-count" data-wishlist-count hidden></sup></a></li><li class="hoa-header__hide-sm"><a href="/account-login.html">Account</a></li><li>
+      <li class="hoa-header__hide-sm"><a class="hoa-header__wish" data-wishlist-open aria-haspopup="dialog" href="/pages/wishlist">Wishlist<sup class="hoa-header__wish-count" data-wishlist-count hidden></sup></a></li><li class="hoa-header__hide-sm"><a href="/account-login.html">Account</a></li><li class="hoa-header__show-sm">
+        <button class="hoa-header__icon-btn" type="button" data-hoa-search-open aria-haspopup="dialog" aria-controls="hoa-search" aria-label="Search fragrances">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </li>
+      <li>
         <button class="header-action-btn js-cart-toggle" type="button" aria-label="Open bag">
-          <span>Bag</span>
+          <svg class="hoa-header__bag-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.75 8.25h14.5l-1.1 11.5H5.85L4.75 8.25Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 8.25V7a3.5 3.5 0 0 1 7 0v1.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span class="hoa-header__bag-label">Bag</span>
           <span class="cart-count">0</span>
         </button>
       </li>
@@ -217,14 +225,58 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
 </header>
 
 <nav class="hoa-menu" id="hoa-menu" aria-label="Main">
+  <button class="hoa-menu__search" type="button" data-hoa-search-open aria-haspopup="dialog" aria-controls="hoa-search">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span>Search fragrances and families</span>
+  </button>
   <ul class="hoa-menu__links">
     <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
     <li><a href="/#fragrances"><span>02</span>Fragrances</a></li>
     <li><a href="/the-house.html"><span>03</span>The House</a></li>
     <li><a href="/private-access.html"><span>04</span>Private Access</a></li><li><a href="/account-login.html"><span>05</span>Sign <em>in</em></a></li><li><a href="/pages/wishlist" data-wishlist-open><span>06</span>Wish<em>list</em></a></li>
   </ul>
-  <p class="hoa-menu__foot">House of Agha · Eau de Parfum</p>
-</nav>
+  <div class="hoa-menu__shop">
+    <p class="hoa-menu__label">Shop by</p>
+    <ul class="hoa-menu__chips" role="list">
+      <li><a href="/shop.html?for=men">For him</a></li>
+      <li><a href="/shop.html?for=women">For her</a></li>
+      <li><a href="/shop.html?for=unisex">Unisex</a></li>
+      <li><a href="/shop.html?gift=1">Gifts</a></li>
+    </ul>
+  </div>
+  <div class="hoa-menu__foot">
+    <ul class="hoa-menu__care" role="list">
+      <li><a href="/shipping-returns.html">Shipping &amp; returns</a></li>
+      <li><a href="/faq.html">Questions</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+    <p>House of Agha · Eau de Parfum</p>
+  </div>
+</nav><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div>
   <!-- Message strip · sections/hoa-message-strip.liquid (rendered by the preview build) -->
   <div id="shopify-section-hoa-message-strip" class="shopify-section hoa-strip-section"><div class="hoa-strip" data-hoa-strip
   data-type-ms="90" data-hold="2500"
@@ -234,7 +286,103 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <span class="hoa-strip__type" aria-hidden="true"><span class="hoa-strip__text" data-hoa-strip-text>Discover the Art of House of Agha</span><span class="hoa-strip__caret"></span></span>
   </p>
 </div></div>
-  <!-- /Message strip -->
+  <!-- /Message strip --><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, rose, fresh…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div>
 
   <main id="main-content">
     <!-- Generated from templates/customers/addresses.json. Edit the Liquid sections, not this block. -->
@@ -629,8 +777,8 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
       </div>
 
       <nav class="hoa-footer__col" aria-labelledby="hoa-footer-shop">
-        <h3 class="hoa-footer__title" id="hoa-footer-shop">Shop</h3>
-        <ul class="footer-links" role="list">
+        <h3 class="hoa-footer__title" id="hoa-footer-shop"><button type="button" class="hoa-footer__toggle" aria-expanded="true" aria-controls="hoa-footer-shop-list" data-hoa-fold>Shop<span class="hoa-footer__fold-icon" aria-hidden="true"></span></button></h3>
+        <ul class="footer-links" role="list" id="hoa-footer-shop-list">
           <li><a href="/collections/all">All fragrances</a></li>
           <li><a href="/collections/all?for=men">For him</a></li>
           <li><a href="/collections/all?for=women">For her</a></li>
@@ -640,8 +788,8 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
       </nav>
 
       <nav class="hoa-footer__col" aria-labelledby="hoa-footer-house">
-        <h3 class="hoa-footer__title" id="hoa-footer-house">The House</h3>
-        <ul class="footer-links" role="list">
+        <h3 class="hoa-footer__title" id="hoa-footer-house"><button type="button" class="hoa-footer__toggle" aria-expanded="true" aria-controls="hoa-footer-house-list" data-hoa-fold>The House<span class="hoa-footer__fold-icon" aria-hidden="true"></span></button></h3>
+        <ul class="footer-links" role="list" id="hoa-footer-house-list">
           <li><a href="/pages/the-house">Our story</a></li>
           <li><a href="/pages/private-access">Private access</a></li>
           <li><a href="/account">Your account</a></li>
@@ -649,8 +797,8 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
       </nav>
 
       <nav class="hoa-footer__col" aria-labelledby="hoa-footer-care">
-        <h3 class="hoa-footer__title" id="hoa-footer-care">Client care</h3>
-        <ul class="footer-links" role="list">
+        <h3 class="hoa-footer__title" id="hoa-footer-care"><button type="button" class="hoa-footer__toggle" aria-expanded="true" aria-controls="hoa-footer-care-list" data-hoa-fold>Client care<span class="hoa-footer__fold-icon" aria-hidden="true"></span></button></h3>
+        <ul class="footer-links" role="list" id="hoa-footer-care-list">
           <li><a href="/pages/shipping-returns">Shipping &amp; returns</a></li>
           <li><a href="/pages/faq">Questions</a></li>
           <li><a href="/pages/contact">Contact</a></li>

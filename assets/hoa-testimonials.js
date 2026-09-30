@@ -10,7 +10,8 @@
      Phase 5  cards lift away, the statement lines part, the pin releases
 
    Desktop/tablet: free overlap around the giant statement.
-   Mobile: a readable deck — one card in front, the previous one receding.
+   Phones: no pin (it held the reader for ~5 screens); the static layout becomes a swipe row of
+   cards (assets/hoa-home.css, TESTIMONIALS mobile block).
    Reduced motion / no GSAP: nothing runs; the section is a static editorial layout.
 
    Architecture: gsap.context + gsap.matchMedia per section instance (WeakMap guard),
@@ -102,53 +103,6 @@
     if (intro) tl.to(intro, { autoAlpha: 0, y: -20, duration: 1.2, ease: 'power1.in' }, exitAt + 0.3);
   }
 
-  /* ---------------- Mobile: readable deck ---------------- */
-  function buildMobile(section, stage, lines, intro) {
-    var cards = visibleCards(section);
-    var n = cards.length;
-    if (!n) return;
-    var step = 1;
-
-    var tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: function () { return '+=' + window.innerHeight * (0.7 * n + 0.8); },
-        pin: stage,
-        refreshPriority: 1,   // below the fragrance pin (2), above ordinary triggers (0)
-        scrub: 0.6,
-        anticipatePin: 1,
-        invalidateOnRefresh: true
-      }
-    });
-
-    cards.forEach(function (card, i) {
-      var at = i * step;
-      var side = i % 2 ? 1 : -1;
-      // Arrive: rises from below on a slight diagonal, opaque early so it cleanly covers the card behind.
-      tl.fromTo(card,
-        { y: vh(62), x: vw(side * 6), rotation: side * 6, scale: 0.94 },
-        { y: 0, x: 0, rotation: side * 1.2, scale: 1, duration: 0.9, ease: 'power3.out', immediateRender: true },
-        at);
-      tl.fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'power1.out', immediateRender: true }, at);
-      // A physical deck: the next card lands on top and this one steps back (still opaque, only its
-      // top edge peeks out); it only fades once a third card arrives. Two cards at most, one readable.
-      if (i < n - 1) {
-        tl.to(card, { y: vh(-3.5), scale: 0.95, duration: 0.8, ease: 'power2.out' }, at + step);
-        tl.to(card, { y: vh(-7), autoAlpha: 0, duration: 0.5, ease: 'power1.in' }, at + step * 2);
-      }
-    });
-
-    var exitAt = (n - 1) * step + 1.3;
-    tl.to(cards[n - 1], { y: vh(-40), autoAlpha: 0, duration: 0.9, ease: 'power2.in' }, exitAt);
-    var partX = [-30, 20, 36];
-    lines.forEach(function (line, i) {
-      tl.to(line, { xPercent: partX[i % partX.length], autoAlpha: 0, duration: 1, ease: 'power2.in' }, exitAt + 0.15 + i * 0.08);
-    });
-    if (intro) tl.to(intro, { autoAlpha: 0, duration: 0.6 }, exitAt);
-  }
-
   /* ---------------- Lifecycle ---------------- */
   function init(section) {
     if (!section || instances.has(section)) return;
@@ -164,14 +118,12 @@
       var mm = gsap.matchMedia();
       mm.add({
         desktop: '(min-width: 1101px) and (prefers-reduced-motion: no-preference)',
-        tablet: '(min-width: 768px) and (max-width: 1100px) and (prefers-reduced-motion: no-preference)',
-        mobile: '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
+        tablet: '(min-width: 768px) and (max-width: 1100px) and (prefers-reduced-motion: no-preference)'
       }, function (context) {
         var c = context.conditions;
         section.classList.add('is-animated');    // switch CSS to the stage layout before measuring
         gsap.set(section.querySelectorAll('[data-hoa-voice]'), { xPercent: -50, yPercent: -50 }); // centre each card on its spot
-        if (c.mobile) buildMobile(section, stage, lines, intro);
-        else buildDesktop(section, stage, lines, intro, !!c.tablet);
+        buildDesktop(section, stage, lines, intro, !!c.tablet);
         return function () { section.classList.remove('is-animated'); };
       });
     }, section);

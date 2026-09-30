@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AGHA PERFUMES — High-Fashion Luxury Fragrance House</title>
   <meta name="description" content="AGHA PERFUMES is a luxury fragrance house crafting ultra-concentrated extraits de parfum (35% concentration). Enter the world of Agha.">
   
@@ -64,6 +64,9 @@
     {{ 'hoa-account.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-account.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- comment -%} Phone composition layer: loads last so it can recompose any template below 768px {%- endcomment -%}
+  {{ 'hoa-mobile.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'hoa-mobile.js' | asset_url }}" defer></script>
 </head>
 <body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
   {% render 'preloader' %}

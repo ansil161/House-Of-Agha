@@ -163,6 +163,12 @@
       });
 
       if (shown) shown.textContent = visible === total ? total + ' fragrances' : visible + ' of ' + total + ' fragrances';
+      // Phone bar + sheet: how many filters are on, and what "Show" will reveal
+      var active = (state.wearer !== 'all' ? 1 : 0) + (state.family ? 1 : 0) + (state.gift ? 1 : 0) + (bounds ? 1 : 0);
+      sec.querySelectorAll('[data-hoa-filter-count]').forEach(function (el) { el.textContent = active; el.hidden = !active; });
+      sec.querySelectorAll('[data-hoa-sheet-show]').forEach(function (el) {
+        el.textContent = visible ? 'Show ' + visible + (visible === 1 ? ' fragrance' : ' fragrances') : 'No matches';
+      });
       if (clear) clear.hidden = !filtered;
       if (empty) empty.hidden = visible > 0;
     }
@@ -231,6 +237,7 @@
     resets.forEach(function (r) { r.addEventListener('click', onReset); });
 
     apply(false);
+    initSheet(sec);
 
     cleanups.push(function () {
       tabs.forEach(function (b) { b.removeEventListener('click', onTab); });
@@ -246,6 +253,83 @@
         document.removeEventListener('pointerdown', onDocDown);
         document.removeEventListener('keydown', onKey);
       }
+    });
+  }
+
+  // Phones: Sort and the grid/list switch live in the sticky bar ([data-hoa-mbar-slot]) and the
+  // filters open as a bottom sheet (.hoa-shop-bar__inner). The same nodes move, so their listeners
+  // from initCatalog keep working; from 768px up they go back into the desktop toolbar.
+  function initSheet(sec) {
+    var sheet = sec.querySelector('[data-hoa-sheet]');
+    var slot = sec.querySelector('[data-hoa-mbar-slot]');
+    var openBtn = sec.querySelector('[data-hoa-sheet-open]');
+    var scrim = sec.querySelector('.hoa-shop-sheet__scrim');
+    var end = sec.querySelector('.hoa-shop-bar__end');
+    var sortEl = sec.querySelector('.hoa-sort');
+    var viewEl = sec.querySelector('.hoa-fview');
+    if (!sheet || !slot || !openBtn || !end) return;
+    var mq = window.matchMedia('(max-width: 767px)');
+    var isOpen = false;
+
+    function place() {
+      if (mq.matches) {
+        if (sortEl) slot.appendChild(sortEl);
+        if (viewEl) slot.appendChild(viewEl);
+        sheet.setAttribute('role', 'dialog');
+        sheet.setAttribute('aria-modal', 'true');
+      } else {
+        if (sortEl) end.appendChild(sortEl);
+        if (viewEl) end.appendChild(viewEl);
+        sheet.removeAttribute('role');
+        sheet.removeAttribute('aria-modal');
+        setOpen(false);
+      }
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') { setOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      var f = Array.prototype.filter.call(sheet.querySelectorAll('button, input, a[href]'), function (el) { return el.offsetParent !== null && !el.disabled; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+    function setOpen(open) {
+      if (open === isOpen) return;
+      isOpen = open;
+      sec.classList.toggle('is-sheet-open', open);
+      root.classList.toggle('hoa-sheet-open', open);
+      openBtn.setAttribute('aria-expanded', String(open));
+      if (scrim) scrim.hidden = !open;
+      if (open) {
+        document.addEventListener('keydown', onKey);
+        var first = sheet.querySelector('.hoa-shop-sheet__close');
+        setTimeout(function () { if (first) first.focus({ preventScroll: true }); }, 50);
+      } else {
+        document.removeEventListener('keydown', onKey);
+        if (mq.matches) openBtn.focus({ preventScroll: true });
+      }
+    }
+    var onOpen = function () { setOpen(true); };
+    var onClose = function (e) {
+      var t = e.target.closest('[data-hoa-sheet-close]');
+      if (!t) return;
+      setOpen(false);
+      // "Show N": a shorter grid can leave the reader below it, so bring its top back under the bar
+      if (t.hasAttribute('data-hoa-sheet-show') && sec.getBoundingClientRect().top < 0) {
+        sec.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    };
+    openBtn.addEventListener('click', onOpen);
+    sec.addEventListener('click', onClose);
+    if (mq.addEventListener) mq.addEventListener('change', place); else mq.addListener(place);
+    place();
+
+    cleanups.push(function () {
+      openBtn.removeEventListener('click', onOpen);
+      sec.removeEventListener('click', onClose);
+      if (mq.removeEventListener) mq.removeEventListener('change', place); else mq.removeListener(place);
+      document.removeEventListener('keydown', onKey);
+      root.classList.remove('hoa-sheet-open');
     });
   }
 

@@ -250,18 +250,26 @@
 
 /* ---------- Narrow card (2-up phone grid): the button drops under the name, full width ---------- */
 @container pc (max-width: 259px) {
-  .hoa-pc__tag { top: 8px; left: 8px; height: 22px; padding: 0 9px; gap: 5px; font-size: 8.5px; }
-  .hoa-pc__like { top: 7px; right: 7px; }
+  .hoa-pc__tag { top: 8px; left: 8px; height: 24px; padding: 0 9px; gap: 5px; font-size: 9.5px; letter-spacing: 0.06em; }
+  .hoa-pc__like { top: 6px; right: 6px; width: 40px; height: 40px; }
+  .hoa-pc__like svg { width: 18px; height: 18px; }
   .hoa-pc__bar { left: 8px; bottom: 8px; max-width: calc(100% - 16px); flex-wrap: wrap; gap: 1px 7px; padding: 5px 10px 6px; border-radius: 14px; }
-  .hoa-pc__bar .hoa-pc__now { flex-basis: 100%; }
+  .hoa-pc__bar .hoa-pc__now { flex-basis: 100%; font-size: 15px; }
+  .hoa-pc__bar .hoa-pc__was { font-size: 11px; }
+  .hoa-pc__bar .hoa-pc__off { font-size: 10.5px; }
   .hoa-pc__bar--offer .hoa-pc__was { padding-left: 0; }
   .hoa-pc__bar--offer .hoa-pc__was::before { display: none; }
-  .hoa-pc__info { grid-template-columns: minmax(0, 1fr); row-gap: 12px; padding: 12px 4px 12px; }
-  .hoa-pc__body { grid-column: 1; }
+  /* A column, with the button pinned to the bottom: cards in a row share one CTA line even when
+     a long name ("Oud of Dark Paradise") takes two lines */
+  .hoa-pc__info { display: flex; flex-direction: column; gap: 12px; padding: 12px 4px 12px; }
+  .hoa-pc__meta { font-size: 10.5px; }
+  .hoa-pc__chip { letter-spacing: 0.1em; }
   .hoa-pc__name { margin-top: 3px; }
   .hoa-pc__rating { margin-top: 7px; }
-  .hoa-pc__action { grid-column: 1; margin: 0; justify-items: stretch; gap: 8px; }
-  .hoa-pc__cta { width: 100%; height: 42px; }
+  .hoa-pc__count { font-size: 11.5px; }
+  .hoa-pc__action { margin: auto 0 0; justify-items: stretch; gap: 8px; }
+  .hoa-pc__cta { width: 100%; height: 44px; font-size: 11px; }
+  .hoa-pc__kind { font-size: 10px; letter-spacing: 0.16em; }
 }
 
 /* ---------- Hover (pointer devices only) ---------- */
