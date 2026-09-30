@@ -203,8 +203,12 @@
   var HEART_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.3S2.3 12.6 1 8.1C.2 5.2 2 2.4 5 2.4c2 0 3.6 1.2 5 3.1 1.4-1.9 3-3.1 5-3.1 3 0 4.8 2.8 4 5.7-1.3 4.5-9 9.2-9 9.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
   // o: handle, url, name, image, imageMood, family, wearer, now (text), was (text), off (number), rating, reviews,
   //    best, badge, sold, kind, compact, cls, action ('quick' | 'none' | html), attrs (extra article attributes), index
+  var BOTTLES = ['oud-fury', 'agha-blue', 'dark-paradise', 'maha', 'sea-smoke', 'tobacco-enigma', 'shamamah'];
   function pcMarkup(o) {
     var sold = !!o.sold, offer = !!o.was && !sold;
+    // Hover spin: see-through bottle over the studio shot's bottle, same folder as that image (twin of the Liquid snippet)
+    var bm = o.imageMood && o.image ? /^(.*\/)hoa-product-([a-z-]+?)(?:-sm)?\.webp(\?.*)?$/.exec(o.image) : null;
+    var bottle = bm && BOTTLES.indexOf(bm[2]) > -1 ? [bm[1] + 'hoa-bottle-' + bm[2] + '.webp' + (bm[3] || ''), bm[2]] : null;
     var rating = Number(o.rating) || 0, reviews = Number(o.reviews) || 0;
     var tag = o.best ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : o.isNew ? '<p class="hoa-pc__tag hoa-pc__tag--new">New</p>' : (o.badge ? '<p class="hoa-pc__tag">' + esc(o.badge) + '</p>' : '');
     var priceInner = '<span class="hoa-pc__now">' + esc(o.now) + '</span>' + (offer ? '<s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>' + esc(o.was) + '</s><span class="hoa-pc__off">' + o.off + '% off</span>' : '');
@@ -216,6 +220,7 @@
     return '<article class="hoa-pc' + (o.compact ? ' hoa-pc--compact' : '') + (o.cls ? ' ' + o.cls : '') + '" data-hoa-item data-product-id="' + esc(o.handle) + '" data-name="' + esc(o.name) + '" style="--i:' + (o.index || 0) + '"' + (o.attrs || '') + '>' +
       '<div class="hoa-pc__visual"><a class="hoa-pc__media" href="' + esc(o.url) + '" tabindex="-1" aria-hidden="true">' +
       '<span class="hoa-pc__img hoa-pc__img--product">' + (o.image ? '<img src="' + esc(o.image) + '" alt="" width="1200" height="1500" loading="lazy" decoding="async">' : '') + '</span>' +
+      (bottle ? '<span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="' + bottle[1] + '"><img class="hoa-pc__backdrop" src="' + esc(bottle[0].replace('hoa-bottle-', 'hoa-backdrop-')) + '" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="' + esc(bottle[0]) + '" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span>' : '') +
       (o.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(o.imageMood) + '" alt="" width="1080" height="1350" loading="lazy" decoding="async"></span>' : '') + '</a>' + tag +
       '<button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save ' + esc(o.name) + ' to your wishlist" data-hoa-like data-key="' + esc(o.handle) + '" data-wishlist-toggle data-wishlist-handle="' + esc(o.handle) + '" data-wishlist-title="' + esc(o.name) + '">' + HEART_ICON + '</button>' +
       (sold ? '<p class="hoa-pc__bar hoa-pc__bar--out"><span class="hoa-pc__now">Sold out</span></p>' : '<p class="hoa-pc__bar' + (offer ? ' hoa-pc__bar--offer' : '') + '">' + priceInner + '</p>') + '</div>' +

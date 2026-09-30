@@ -45,16 +45,21 @@
   assign s = section.settings
   assign ig_handle = s.instagram_handle | default: 'aghaperfumes' | remove: '@'
   assign ig_url = s.instagram_url | default: 'https://www.instagram.com/aghaperfumes/'
-  assign single = false
-  if s.only_current_product and product != blank
-    assign single = true
+  comment
+    single = shoppable product-film cards + full-screen viewer (the setting). filter = on a product page,
+    that product's film first; with no product (e.g. the home page) every film shows, in block order.
+  endcomment
+  assign single = s.only_current_product
+  assign filter = false
+  if single and product != blank
+    assign filter = true
   endif
   assign shown = 0
   comment
     On a product page the product's own film comes first, then the rest of the House's films (two passes).
   endcomment
   assign pass_count = 1
-  if single
+  if filter
     assign pass_count = 2
   endif
 -%}
@@ -82,7 +87,7 @@
       endif
 
       assign skip = false
-      if single
+      if filter
         if pass == 1 and r_handle != product.handle
           assign skip = true
         elsif pass == 2 and r_handle == product.handle
@@ -292,7 +297,7 @@
 {%- endcapture -%}
 
 {%- if shown > 0 -%}
-<section class="hoa-reels{% if single %} hoa-reels--product{% endif %}" id="instagram-reels" data-hoa-reels aria-labelledby="reels-{{ section.id }}-title">
+<section class="hoa-reels{% if single %} hoa-reels--product{% endif %}" id="reels-{{ section.id }}" data-hoa-reels aria-labelledby="reels-{{ section.id }}-title">
   <div class="hoa-wrap">
     <header class="hoa-reels__head">
       <div data-hoa-reveal>

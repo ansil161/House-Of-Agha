@@ -40,6 +40,8 @@ const server = http.createServer((req, res) => {
     url = 'faq.html';
   } else if (url === '/pages/shipping-returns' || url === '/shipping-returns' || url === '/shipping-returns.html') {
     url = 'shipping-returns.html';
+  } else if (url === '/checkout' || url === '/checkout.html') {
+    url = 'checkout.html';
   } else if (url.startsWith('/')) {
     url = url.substring(1);
   }

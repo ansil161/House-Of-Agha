@@ -12,7 +12,7 @@ const engine = new Liquid({ root: [path.join(THEME, 'snippets')], extname: '.liq
 engine.registerFilter('asset_url', (v) => 'assets/' + v);
 engine.registerFilter('stylesheet_tag', (v) => `<link rel="stylesheet" href="${v}">`);
 engine.registerFilter('handleize', (v) => String(v || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
-engine.registerFilter('money', (v) => '₹' + Number(v || 0).toLocaleString('en-IN'));
+engine.registerFilter('money', (v) => '₹' + (Number(v || 0) / 100).toLocaleString('en-IN')); // Shopify money: amounts are in paise
 engine.registerFilter('image_url', (v) => v);
 engine.registerFilter('image_tag', (v) => `<img src="${v}" alt="">`);
 engine.registerFilter('parse_json', (v) => JSON.parse(v));
@@ -162,7 +162,10 @@ async function renderTemplate(name, templateGlobals) {
   // live theme): swap whatever header they carry for the rendered snippet, plus the stylesheet it needs.
   const headerHtml = ('  <!-- Navigation Header · snippets/header.liquid (rendered by the preview build) -->\n  ' + header.trim())
     .replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url).replace(/^#/, '/#')}"`);
-  const inner = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && f !== 'index.html');
+  // checkout.html is a standalone preview page (no site header, footer or popups, like Shopify's checkout);
+  // only its catalog block is refreshed, further down.
+  const STANDALONE = ['checkout.html'];
+  const inner = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && f !== 'index.html' && !STANDALONE.includes(f));
   for (const f of inner) {
     const file = path.join(THEME, f);
     let html = fs.readFileSync(file, 'utf8');
@@ -207,16 +210,16 @@ async function renderTemplate(name, templateGlobals) {
   const order = {
     name: '#1042', customer_url: '/account/orders/1042', created_at: '2026-09-12T10:00:00Z',
     financial_status_label: 'Paid', fulfillment_status: 'fulfilled', fulfillment_status_label: 'Fulfilled', cancelled: false,
-    item_count: 3, total_price: 17640, line_items_subtotal_price: 16800, total_refunded_amount: 0,
-    line_items: [item('oud-fury', 'Oud Fury', 2, 5600), item('agha-blue', 'Agha Blue', 1, 5600)],
+    item_count: 3, total_price: 1764000, line_items_subtotal_price: 1680000, total_refunded_amount: 0,
+    line_items: [item('oud-fury', 'Oud Fury', 2, 560000), item('agha-blue', 'Agha Blue', 1, 560000)],
     cart_level_discount_applications: [], shipping_methods: [{ title: 'Express', price: 0 }],
-    tax_lines: [{ title: 'GST', rate_percentage: 5, price: 840 }],
+    tax_lines: [{ title: 'GST', rate_percentage: 5, price: 84000 }],
     shipping_address: home, billing_address: home
   };
   const orders = [
     order,
-    { name: '#1031', customer_url: '/account/orders/1031', created_at: '2026-08-02T10:00:00Z', financial_status_label: 'Paid', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: false, total_price: 5900 },
-    { name: '#1017', customer_url: '/account/orders/1017', created_at: '2026-05-21T10:00:00Z', financial_status_label: 'Refunded', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: true, total_price: 11200 }
+    { name: '#1031', customer_url: '/account/orders/1031', created_at: '2026-08-02T10:00:00Z', financial_status_label: 'Paid', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: false, total_price: 590000 },
+    { name: '#1017', customer_url: '/account/orders/1017', created_at: '2026-05-21T10:00:00Z', financial_status_label: 'Refunded', fulfillment_status: null, fulfillment_status_label: 'Unfulfilled', cancelled: true, total_price: 1120000 }
   ];
   const customer = {
     first_name: 'Aisha', last_name: 'Rahman', name: 'Aisha Rahman', email: 'aisha.rahman@example.com', phone: '+91 98200 00000',
@@ -256,7 +259,7 @@ async function renderTemplate(name, templateGlobals) {
   const couponCss = /[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-coupon\.css">\n/;
   const couponJs = /[ \t]*<script src="\/?assets\/hoa-coupon\.js" defer><\/script>\n/g;
   const couponBlockRe = /[ \t]*<!-- Welcome coupon popup[\s\S]*?<\/div>\s*<\/div>\s*<\/div>\n/;
-  const all = fs.readdirSync(THEME).filter((f) => f.endsWith('.html'));
+  const all = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && !STANDALONE.includes(f));
   // Editors / git can leave CRLF in the page shells, which breaks the line-based strips below and
   // doubles the injected scripts (wishlist drawer then opens and closes on one click). Normalise first.
   for (const f of all) {
@@ -299,6 +302,13 @@ async function renderTemplate(name, templateGlobals) {
     fs.writeFileSync(file, html);
   }
   console.log('commerce layer on', all.length, 'pages');
+  {
+    const file = path.join(THEME, 'checkout.html');
+    const html = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+    if (!catalogRe.test(html)) throw new Error('checkout.html: catalog block missing');
+    fs.writeFileSync(file, html.replace(catalogRe, () => '  ' + catalogScript + '\n'));
+    console.log('catalog on checkout.html');
+  }
 
   // The homepage opening intro (preloader) was removed from the theme on 2026-09-28; strip any copy
   // an earlier build left in index.html.
@@ -405,7 +415,7 @@ async function renderTemplate(name, templateGlobals) {
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)
   // still resolve under a plain static server. Generated, git-ignored, not part of the theme.
   const redirects = {
-    'collections/all': '/shop.html', 'collections': '/shop.html', 'pages/about': '/the-house.html'
+    'collections/all': '/shop.html', 'collections': '/shop.html', 'pages/about': '/the-house.html', 'checkout': '/checkout.html'
   };
   ['the-house', 'private-access', 'contact', 'faq', 'shipping-returns']
     .forEach((p) => { redirects['pages/' + p] = `/${p}.html`; });
@@ -419,7 +429,7 @@ async function renderTemplate(name, templateGlobals) {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'),
       `<!DOCTYPE html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${to}">` +
-      `<script>location.replace(${JSON.stringify(to)} + location.hash)</script><a href="${to}">Continue</a>\n`);
+      `<script>location.replace(${JSON.stringify(to)} + location.search + location.hash)</script><a href="${to}">Continue</a>\n`);
   }
   console.log('wrote', Object.keys(redirects).length, 'preview redirects');
 })().catch((e) => { console.error(e); process.exit(1); });

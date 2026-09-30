@@ -6,6 +6,7 @@
   "cleanUrls": false,
   "rewrites": [
     { "source": "/shop", "destination": "/shop.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/collections/:handle*", "destination": "/shop.html" },
     { "source": "/products/:handle*", "destination": "/product.html" },
     { "source": "/pages/the-house", "destination": "/the-house.html" },

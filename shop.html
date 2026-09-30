@@ -969,6 +969,198 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
       <input id="hoa-search-q" type="search" name="q" placeholder="Oud, rose, fresh…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
       <input type="hidden" name="type" value="product">
       <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
@@ -1111,7 +1303,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="oud-fury"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-oud-fury.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-oud-fury.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-oud-fury.webp"
     srcset="assets/hoa-alt-oud-fury-sm.webp 700w, assets/hoa-alt-oud-fury.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1142,7 +1334,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="agha-blue"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-agha-blue.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-agha-blue.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-agha-blue.webp"
     srcset="assets/hoa-alt-agha-blue-sm.webp 700w, assets/hoa-alt-agha-blue.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1173,7 +1365,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="dark-paradise"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-dark-paradise.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-dark-paradise.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-dark-paradise.webp"
     srcset="assets/hoa-alt-dark-paradise-sm.webp 700w, assets/hoa-alt-dark-paradise.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1217,7 +1409,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="maha"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-maha.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-maha.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-maha.webp"
     srcset="assets/hoa-alt-maha-sm.webp 700w, assets/hoa-alt-maha.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1248,7 +1440,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="sea-smoke"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-sea-smoke.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-sea-smoke.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-sea-smoke.webp"
     srcset="assets/hoa-alt-sea-smoke-sm.webp 700w, assets/hoa-alt-sea-smoke.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1277,7 +1469,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="tobacco-enigma"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-tobacco-enigma.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-tobacco-enigma.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-tobacco-enigma.webp"
     srcset="assets/hoa-alt-tobacco-enigma-sm.webp 700w, assets/hoa-alt-tobacco-enigma.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"
@@ -1306,7 +1498,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     sizes="(min-width: 1000px) 30vw, 50vw"
     width="1200" height="1500"
     alt=""
-    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--mood"><img
+    loading="lazy" decoding="async"></span><span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="shamamah"><img class="hoa-pc__backdrop" src="assets/hoa-backdrop-shamamah.webp" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="assets/hoa-bottle-shamamah.webp" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span><span class="hoa-pc__img hoa-pc__img--mood"><img
     src="assets/hoa-alt-shamamah.webp"
     srcset="assets/hoa-alt-shamamah-sm.webp 700w, assets/hoa-alt-shamamah.webp 1080w"
     sizes="(min-width: 1000px) 30vw, 50vw"

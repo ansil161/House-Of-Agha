@@ -126,12 +126,29 @@
     assign article = 'An'
   endif
   assign about = article | append: ' ' | append: fam_lc | append: ' Eau de Parfum from House of Agha.'
+
+  comment
+    Hover spin: the studio shot is split into its backdrop with the bottle painted out, file
+    assets/hoa-backdrop-NAME.webp, and a see-through colour-matched bottle, file
+    assets/hoa-bottle-NAME.webp, placed exactly where the photo's bottle stands, so on hover
+    only the bottle turns round while the backdrop holds still. Picked from the studio
+    image's file name; any other image, e.g. a Shopify upload, gets the plain fade.
+  endcomment
+  assign bottle_key = ''
+  if img_mood != blank and img_main contains 'hoa-product-'
+    assign bottle_key = img_main | split: 'hoa-product-' | last | split: '.' | first | append: '#' | replace: '-sm#', '' | remove: '#'
+    assign bottle_keys = 'oud-fury,agha-blue,dark-paradise,maha,sea-smoke,tobacco-enigma,shamamah' | split: ','
+    unless bottle_keys contains bottle_key
+      assign bottle_key = ''
+    endunless
+  endif
 -%}
 <article class="hoa-pc{% if compact == true or compact == 'true' %} hoa-pc--compact{% endif %}" data-hoa-item data-hoa-card data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
          data-image="{{ thumb }}" data-price="{{ sale_n }}" data-price-text="{{ now_text | escape }}"{% if has_offer %} data-compare-text="{{ was_text | escape }}" data-offer="true"{% endif %}{% if is_best %} data-best="true"{% endif %}>
   <div class="hoa-pc__visual">
     <a class="hoa-pc__media" href="{{ url }}" tabindex="-1" aria-hidden="true">
       <span class="hoa-pc__img hoa-pc__img--product">{{ img_main }}</span>
+      {%- if bottle_key != blank -%}<span class="hoa-pc__img hoa-pc__img--bottle" data-bottle="{{ bottle_key }}"><img class="hoa-pc__backdrop" src="{{ 'hoa-backdrop-' | append: bottle_key | append: '.webp' | asset_url }}" alt="" width="720" height="900" loading="lazy" decoding="async"><span class="hoa-pc__spin"><img src="{{ 'hoa-bottle-' | append: bottle_key | append: '.webp' | asset_url }}" alt="" width="290" height="760" loading="lazy" decoding="async"></span></span>{%- endif -%}
       {%- if img_mood != blank -%}<span class="hoa-pc__img hoa-pc__img--mood">{{ img_mood }}</span>{%- endif -%}
     </a>
     {%- if is_best -%}

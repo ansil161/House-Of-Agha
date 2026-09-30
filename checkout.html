@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Checkout | House of Agha</title>
+  <meta name="robots" content="noindex">
+  <!--
+    PREVIEW-ONLY CHECKOUT. On the live store /checkout is Shopify's own hosted checkout (it cannot be
+    built in the theme). This page mirrors that flow for the static preview: it reads the bag from
+    localStorage ('agha-bag'), prices it with assets/hoa-commerce.js and posts nowhere. The Pay button
+    is UI only; no payment is taken. tools/render-preview.js refreshes the catalog block below and
+    leaves the rest of this file alone (no site header, footer or popups on checkout).
+  -->
+  <link rel="stylesheet" href="assets/theme.css">
+  <link rel="stylesheet" href="assets/hoa-checkout.css">
+
+  <script type="application/json" id="hoa-catalog-data">{
+  "currency": "INR",
+  "settings": {
+    "freeShippingThreshold": 5000,
+    "lowStockThreshold": 5,
+    "quantityTiers": [
+      { "qty": 2, "percent": 10 },
+      { "qty": 3, "percent": 15 }
+    ],
+    "messages": {
+      "shipping": "Complimentary shipping on orders above ₹5,000",
+      "tiers": "Save more when you explore two fragrances",
+      "discover": "Discover your signature scent"
+    },
+    "trust": ["Secure checkout", "Returns within 7 days", "Authentic and batch-numbered"],
+    "returnsText": "Unopened flacons can be returned within 7 days",
+    "bagOffersTitle": "Limited time offers",
+    "prepaidOffer": "Save 5% extra on all prepaid orders"
+  },
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "Welcome offer",
+      "description": "10% off your first order",
+      "stackable": true
+    }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "Woody", "wearer": "men", "gift": true, "asset": "oud-fury",
+      "image": "assets/hoa-product-oud-fury-sm.webp", "imageMain": "assets/hoa-product-oud-fury.webp", "imageMood": "assets/hoa-alt-oud-fury.webp", "regularPrice": 5200, "salePrice": 4500,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 214, "inventory": 24 },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "Fresh", "wearer": "men", "gift": false, "asset": "agha-blue",
+      "image": "assets/hoa-product-agha-blue-sm.webp", "imageMain": "assets/hoa-product-agha-blue.webp", "imageMood": "assets/hoa-alt-agha-blue.webp", "regularPrice": 3600, "salePrice": 2880,
+      "isBestSeller": true, "rating": 4.8, "reviewCount": 128, "inventory": 18 },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "Woody", "wearer": "unisex", "gift": false, "asset": "dark-paradise",
+      "image": "assets/hoa-product-dark-paradise-sm.webp", "imageMain": "assets/hoa-product-dark-paradise.webp", "imageMood": "assets/hoa-alt-dark-paradise.webp", "regularPrice": 3999, "salePrice": 3199,
+      "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
+    { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
+      "image": "assets/hoa-product-maha-sm.webp", "imageMain": "assets/hoa-product-maha.webp", "imageMood": "assets/hoa-alt-maha.webp", "regularPrice": 2499, "salePrice": 1999,
+      "isBestSeller": false, "isNew": true, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
+      "image": "assets/hoa-product-sea-smoke-sm.webp", "imageMain": "assets/hoa-product-sea-smoke.webp", "imageMood": "assets/hoa-alt-sea-smoke.webp", "regularPrice": 1999, "salePrice": null,
+      "isBestSeller": false, "isNew": true, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
+      "image": "assets/hoa-product-tobacco-enigma-sm.webp", "imageMain": "assets/hoa-product-tobacco-enigma.webp", "imageMood": "assets/hoa-alt-tobacco-enigma.webp", "regularPrice": 4900, "salePrice": null,
+      "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
+    { "handle": "shamamah", "name": "Shamamah", "family": "Floral", "wearer": "women", "gift": false, "asset": "shamamah",
+      "image": "assets/hoa-product-shamamah-sm.webp", "imageMain": "assets/hoa-product-shamamah.webp", "imageMood": "assets/hoa-alt-shamamah.webp", "regularPrice": 1499, "salePrice": 1199,
+      "isBestSeller": false, "rating": 4.3, "reviewCount": 9, "inventory": 4 }
+  ],
+  "bundles": [
+    { "id": "discovery-set", "kind": "set", "handle": "discovery-set", "name": "The Discovery Set",
+      "tagline": "Three signature fragrances, 5 ml each",
+      "members": ["oud-fury", "agha-blue", "sea-smoke"],
+      "image": "assets/discovery_box.jpg", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "gift-set", "kind": "set", "handle": "royal-gift-set", "name": "The Royal Gift Set",
+      "tagline": "Five signature fragrances in the House of Agha keepsake case", "size": "5 fragrances, gift boxed",
+      "family": "Gift Set", "wearer": "unisex", "gift": true, "asset": "gift-set",
+      "members": ["oud-of-dark-paradise", "oud-fury", "tobacco-enigma", "agha-blue", "sea-smoke"],
+      "image": "assets/hoa-product-gift-set-sm.webp", "imageMain": "assets/hoa-product-gift-set.webp", "imageMood": "assets/hoa-alt-gift-set.webp",
+      "regularPrice": 14999, "salePrice": 12999, "isBestSeller": false, "isNew": true, "rating": 4.9, "reviewCount": 18, "inventory": 12 },
+    { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
+    { "id": "signature", "kind": "curated", "name": "The Signature Collection",
+      "tagline": "Our three best sellers, together",
+      "members": ["oud-fury", "tobacco-enigma", "agha-blue"] }
+  ],
+  "pairs": {
+    "oud-fury": "tobacco-enigma",
+    "tobacco-enigma": "oud-fury",
+    "agha-blue": "sea-smoke",
+    "sea-smoke": "agha-blue",
+    "maha": "shamamah",
+    "shamamah": "maha",
+    "oud-of-dark-paradise": "agha-blue"
+  }
+}
+</script>
+  <script src="assets/hoa-commerce.js" defer></script>
+  <script src="assets/hoa-checkout.js" defer></script>
+</head>
+<body class="hoa-co-page">
+
+  <!-- Floating header island: logo · progress · secure -->
+  <header class="hoa-co-top">
+    <div class="hoa-co-top__pill">
+      <a class="hoa-co-top__logo" href="index.html" aria-label="House of Agha home">
+        <img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156">
+      </a>
+      <nav class="hoa-co-progress" aria-label="Checkout steps">
+        <ol>
+          <li class="is-done"><a href="#" data-co-back><span class="hoa-co-progress__dot" aria-hidden="true"></span>Bag</a></li>
+          <li class="is-current" aria-current="step"><span class="hoa-co-progress__dot" aria-hidden="true"></span>Details</li>
+          <li><span class="hoa-co-progress__dot" aria-hidden="true"></span>Payment</li>
+        </ol>
+      </nav>
+      <p class="hoa-co-top__secure">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+        <span>Secure</span>
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content" class="hoa-co" data-hoa-checkout>
+
+    <div class="hoa-co-intro">
+      <span class="hoa-co-eyebrow">Checkout</span>
+      <h1 class="hoa-co-h1">Almost <em>yours.</em></h1>
+      <p class="hoa-co-lede">A few details and your fragrance leaves our Hyderabad atelier, sealed and batch-numbered.</p>
+    </div>
+
+    <div class="hoa-co-empty" data-co-empty hidden>
+      <p class="hoa-co-lede">Your bag is empty. Add a fragrance to check out.</p>
+      <a class="hoa-co-cta hoa-co-cta--inline" href="shop.html">
+        <span>Explore fragrances</span>
+        <span class="hoa-co-cta__icon" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></span>
+      </a>
+    </div>
+
+    <div class="hoa-co-layout" data-co-layout>
+
+      <!-- ORDER SUMMARY: dark receipt, sticky on wide screens, collapsible on phones -->
+      <aside class="hoa-co-sum" aria-labelledby="co-sum-title">
+        <div class="hoa-co-sum__shell">
+          <div class="hoa-co-sum__core">
+            <button type="button" class="hoa-co-sum__toggle" data-co-sum-toggle aria-expanded="false" aria-controls="co-sum-panel">
+              <span class="hoa-co-sum__toggle-label">
+                <span data-co-sum-toggle-text>Show order summary</span>
+                <svg class="hoa-co-sum__chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+              </span>
+              <span class="hoa-co-sum__toggle-total" data-co-total-short></span>
+            </button>
+
+            <div class="hoa-co-sum__panel" id="co-sum-panel">
+              <header class="hoa-co-sum__head">
+                <h2 class="hoa-co-sum__title" id="co-sum-title">Your order</h2>
+                <span class="hoa-co-sum__count" data-co-count></span>
+              </header>
+              <ul class="hoa-co-lines" data-co-lines></ul>
+
+              <div class="hoa-co-coupon" data-co-coupon></div>
+
+              <dl class="hoa-co-rows" data-co-rows></dl>
+
+              <details class="hoa-co-gst" data-co-gst>
+                <summary>
+                  <span>GST breakdown</span>
+                  <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+                </summary>
+                <dl class="hoa-co-gst__rows" data-co-gst-rows></dl>
+                <p class="hoa-co-gst__note" data-co-gst-note></p>
+              </details>
+
+              <!-- YOU MAY ALSO LIKE: two picks, right under the total -->
+              <section class="hoa-co-upsell" aria-labelledby="co-recs-h" data-co-recs hidden>
+                <h3 class="hoa-co-upsell__title" id="co-recs-h">You may also like</h3>
+                <ul class="hoa-co-upsell__list" data-co-recs-rail></ul>
+              </section>
+
+              <ul class="hoa-co-assure">
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v4h4"/></svg>7-day returns</li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.1 1.6 2.6-.2.9 2.5 2.2 1.4-.8 2.5.8 2.5-2.2 1.4-.9 2.5-2.6-.2L12 18.6l-2.1-1.6-2.6.2-.9-2.5-2.2-1.4.8-2.5-.8-2.5 2.2-1.4.9-2.5 2.6.2z"/><path d="M9.2 10.9l1.9 1.9 3.8-3.8"/></svg>100% authentic</li>
+                <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v12H3z"/><path d="M3 11h18"/></svg>GST invoice</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- DETAILS -->
+      <form class="hoa-co-form" data-co-form novalidate>
+
+        <!-- 1 · CONTACT -->
+        <section class="hoa-co-card" aria-labelledby="co-contact-h">
+          <div class="hoa-co-card__core">
+            <header class="hoa-co-card__head">
+              <span class="hoa-co-card__n" aria-hidden="true">01</span>
+              <h2 id="co-contact-h">Contact</h2>
+              <a class="hoa-co-card__aside" href="account-login.html">Have an account? <u>Sign in</u></a>
+            </header>
+            <div class="hoa-co-grid">
+              <div class="hoa-co-field hoa-co-field--full" data-co-field="email">
+                <input class="hoa-co-input" id="co-email" name="email" type="email" placeholder=" " autocomplete="email" autocapitalize="off" spellcheck="false" inputmode="email" required aria-describedby="co-email-msg">
+                <label for="co-email">Email address</label>
+                <p class="hoa-co-msg" id="co-email-msg">Order confirmation and GST invoice are sent here.</p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--full hoa-co-field--tel" data-co-field="phone">
+                <span class="hoa-co-dial" data-co-dial aria-hidden="true">+91</span>
+                <input class="hoa-co-input" id="co-phone" name="phone" type="tel" placeholder=" " autocomplete="tel-national" inputmode="tel" required aria-describedby="co-phone-msg">
+                <label for="co-phone">Mobile number</label>
+                <p class="hoa-co-msg" id="co-phone-msg">For delivery updates on SMS and WhatsApp.</p>
+              </div>
+              <label class="hoa-co-check hoa-co-field--full">
+                <input type="checkbox" name="news" id="co-news" checked>
+                <span class="hoa-co-check__box" aria-hidden="true"></span>
+                <span>Email me about new fragrances and private offers</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · DELIVERY -->
+        <section class="hoa-co-card" aria-labelledby="co-delivery-h">
+          <div class="hoa-co-card__core">
+            <header class="hoa-co-card__head">
+              <span class="hoa-co-card__n" aria-hidden="true">02</span>
+              <h2 id="co-delivery-h">Delivery address</h2>
+            </header>
+            <div class="hoa-co-grid">
+              <div class="hoa-co-field hoa-co-field--full hoa-co-field--select" data-co-field="country">
+                <select class="hoa-co-input" id="co-country" name="country" autocomplete="country-name">
+                  <option value="IN" selected>India</option>
+                  <option value="AE">United Arab Emirates</option>
+                  <option value="SA">Saudi Arabia</option>
+                  <option value="QA">Qatar</option>
+                  <option value="SG">Singapore</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="US">United States</option>
+                </select>
+                <label for="co-country">Country / region</label>
+              </div>
+              <div class="hoa-co-field" data-co-field="first">
+                <input class="hoa-co-input" id="co-first" name="first_name" type="text" placeholder=" " autocomplete="given-name" required aria-describedby="co-first-msg">
+                <label for="co-first">First name</label>
+                <p class="hoa-co-msg" id="co-first-msg"></p>
+              </div>
+              <div class="hoa-co-field" data-co-field="last">
+                <input class="hoa-co-input" id="co-last" name="last_name" type="text" placeholder=" " autocomplete="family-name" required aria-describedby="co-last-msg">
+                <label for="co-last">Last name</label>
+                <p class="hoa-co-msg" id="co-last-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--full" data-co-field="address1">
+                <input class="hoa-co-input" id="co-address1" name="address1" type="text" placeholder=" " autocomplete="address-line1" required aria-describedby="co-address1-msg">
+                <label for="co-address1">House no., building, street</label>
+                <p class="hoa-co-msg" id="co-address1-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--full" data-co-field="address2">
+                <input class="hoa-co-input" id="co-address2" name="address2" type="text" placeholder=" " autocomplete="address-line2">
+                <label for="co-address2">Area, landmark (optional)</label>
+              </div>
+              <div class="hoa-co-field hoa-co-field--third" data-co-field="pin">
+                <input class="hoa-co-input" id="co-pin" name="zip" type="text" placeholder=" " autocomplete="postal-code" inputmode="numeric" maxlength="6" required aria-describedby="co-pin-msg">
+                <label for="co-pin" data-co-pin-label>PIN code</label>
+                <p class="hoa-co-msg" id="co-pin-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--third" data-co-field="city">
+                <input class="hoa-co-input" id="co-city" name="city" type="text" placeholder=" " autocomplete="address-level2" required aria-describedby="co-city-msg">
+                <label for="co-city">City</label>
+                <p class="hoa-co-msg" id="co-city-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--third hoa-co-field--select" data-co-field="state">
+                <select class="hoa-co-input" id="co-state" name="province" autocomplete="address-level1" required aria-describedby="co-state-msg">
+                  <option value="" selected disabled hidden></option>
+                </select>
+                <label for="co-state">State</label>
+                <p class="hoa-co-msg" id="co-state-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--third" data-co-field="region" hidden>
+                <input class="hoa-co-input" id="co-region" name="region" type="text" placeholder=" " autocomplete="address-level1" aria-describedby="co-region-msg">
+                <label for="co-region">State / province</label>
+                <p class="hoa-co-msg" id="co-region-msg"></p>
+              </div>
+              <div class="hoa-co-field hoa-co-field--full" data-co-field="gstin">
+                <input class="hoa-co-input" id="co-gstin" name="gstin" type="text" placeholder=" " autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="15" aria-describedby="co-gstin-msg">
+                <label for="co-gstin">GSTIN for business invoice (optional)</label>
+                <p class="hoa-co-msg" id="co-gstin-msg">Add your GSTIN to claim input tax credit.</p>
+              </div>
+              <label class="hoa-co-check hoa-co-field--full">
+                <input type="checkbox" name="save" id="co-save" checked>
+                <span class="hoa-co-check__box" aria-hidden="true"></span>
+                <span>Save these details for next time</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · SHIPPING (depends on the customer's delivery area) -->
+        <section class="hoa-co-card" aria-labelledby="co-ship-h">
+          <div class="hoa-co-card__core">
+            <header class="hoa-co-card__head">
+              <span class="hoa-co-card__n" aria-hidden="true">03</span>
+              <h2 id="co-ship-h">Shipping method</h2>
+            </header>
+            <!-- PIN checker: mirrors the address PIN field both ways -->
+            <div class="hoa-co-pincheck" data-co-pincheck>
+              <div class="hoa-co-field hoa-co-pincheck__field" data-co-field="shippin">
+                <input class="hoa-co-input" id="co-ship-pin" name="ship_pin" type="text" placeholder=" " autocomplete="off" inputmode="numeric" maxlength="6" aria-describedby="co-ship-pin-msg">
+                <label for="co-ship-pin">Delivery PIN code</label>
+              </div>
+              <button type="button" class="hoa-co-pincheck__btn" data-co-pin-check>Check</button>
+              <p class="hoa-co-msg hoa-co-pincheck__msg" id="co-ship-pin-msg" data-co-pin-msg>See delivery options and dates for your area.</p>
+            </div>
+            <div class="hoa-co-ship" data-co-ship aria-live="polite"></div>
+            <p class="hoa-co-msg hoa-co-msg--error" id="co-ship-msg" data-co-ship-msg hidden></p>
+          </div>
+        </section>
+
+        <!-- 4 · PAYMENT (UI only) -->
+        <section class="hoa-co-card hoa-co-card--pay" aria-labelledby="co-pay-h">
+          <div class="hoa-co-card__core">
+            <header class="hoa-co-card__head">
+              <span class="hoa-co-card__n" aria-hidden="true">04</span>
+              <h2 id="co-pay-h">Payment</h2>
+            </header>
+            <p class="hoa-co-pay-note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+              <span>Encrypted and secure. Choose UPI, card or net banking on the next screen.</span>
+            </p>
+            <p class="hoa-co-pay-icons" aria-label="We accept">
+              <img src="assets/hoa-pay-upi.png" alt="UPI" width="40" height="28"><img src="assets/hoa-pay-gpay.png" alt="Google Pay" width="40" height="28"><img src="assets/hoa-pay-visa.png" alt="Visa" width="40" height="28"><img src="assets/hoa-pay-mastercard.png" alt="Mastercard" width="40" height="28"><img src="assets/hoa-pay-rupay.png" alt="RuPay" width="40" height="28"><img src="assets/hoa-pay-amex.png" alt="American Express" width="40" height="28">
+            </p>
+
+            <div class="hoa-co-paybox">
+              <div class="hoa-co-paybox__total">
+                <span>Total to pay<small data-co-gst-inline></small></span>
+                <strong data-co-total-pay></strong>
+              </div>
+              <button type="submit" class="hoa-co-cta" data-co-pay>
+                <span class="hoa-co-cta__label">Pay now</span>
+                <span class="hoa-co-cta__icon" aria-hidden="true">
+                  <svg class="hoa-co-cta__arrow" viewBox="0 0 16 16"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg>
+                  <span class="hoa-co-cta__spin"></span>
+                </span>
+              </button>
+              <p class="hoa-co-status" data-co-status role="status" hidden></p>
+              <p class="hoa-co-legal">By paying you agree to our <a href="shipping-returns.html">shipping &amp; returns policy</a>.</p>
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+
+  </main>
+
+</body>
+</html>
