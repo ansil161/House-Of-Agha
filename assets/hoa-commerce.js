@@ -214,7 +214,7 @@
     return '<article class="hoa-pc' + (o.compact ? ' hoa-pc--compact' : '') + (o.cls ? ' ' + o.cls : '') + '" data-hoa-item data-product-id="' + esc(o.handle) + '" data-name="' + esc(o.name) + '" style="--i:' + (o.index || 0) + '"' + (o.attrs || '') + '>' +
       '<div class="hoa-pc__visual"><a class="hoa-pc__media" href="' + esc(o.url) + '" tabindex="-1" aria-hidden="true">' +
       '<span class="hoa-pc__img hoa-pc__img--product">' + (o.image ? '<img src="' + esc(o.image) + '" alt="" width="1200" height="1500" loading="lazy" decoding="async">' : '') + '</span>' +
-      (o.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(o.imageMood) + '" alt="" width="1200" height="1607" loading="lazy" decoding="async"></span>' : '') + '</a>' + tag +
+      (o.imageMood ? '<span class="hoa-pc__img hoa-pc__img--mood"><img src="' + esc(o.imageMood) + '" alt="" width="1080" height="1350" loading="lazy" decoding="async"></span>' : '') + '</a>' + tag +
       '<button type="button" class="hoa-pc__like" aria-pressed="false" aria-label="Save ' + esc(o.name) + ' to your wishlist" data-hoa-like data-key="' + esc(o.handle) + '" data-wishlist-toggle data-wishlist-handle="' + esc(o.handle) + '" data-wishlist-title="' + esc(o.name) + '">' + HEART_ICON + '</button>' +
       (sold ? '<p class="hoa-pc__bar hoa-pc__bar--out"><span class="hoa-pc__now">Sold out</span></p>' : '<p class="hoa-pc__bar' + (offer ? ' hoa-pc__bar--offer' : '') + '">' + priceInner + '</p>') + '</div>' +
       '<div class="hoa-pc__info"><div class="hoa-pc__body">' +

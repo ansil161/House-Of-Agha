@@ -246,7 +246,7 @@
         {%- for p in catalog.products -%}
           {%- liquid
             assign p_asset = 'hoa-product-' | append: p.asset
-            assign m_asset = 'hoa-' | append: p.asset | append: '-portrait'
+            assign m_asset = 'hoa-alt-' | append: p.asset
             assign thumb_file = p_asset | append: '-sm.webp'
             assign thumb = thumb_file | asset_url
             assign purl = '/products/' | append: p.handle
@@ -258,7 +258,7 @@
             endif
           -%}
           {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
-          {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1200, h: 1607, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1080, h: 1350, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
           {%- render 'hoa-shop-card',
             index: forloop.index0,
             handle: p.handle,
