@@ -199,11 +199,20 @@
       "blocks": {
         "reel_oud_fury": {
           "type": "reel",
-          "settings": {}
+          "settings": {
+            "video": "hoa-reel-review-ouds.mp4",
+            "poster_asset": "hoa-reel-review-ouds-poster",
+            "poster_alt": "A House of Agha gift box holding the full fragrance range"
+          }
         },
         "reel_agha_blue": {
           "type": "reel",
-          "settings": {}
+          "settings": {
+            "video": "hoa-reel-maha-garden.mp4",
+            "poster_asset": "hoa-reel-maha-garden-poster",
+            "poster_alt": "A woman in a garden holding Maha",
+            "fallback_handle": "maha"
+          }
         },
         "reel_dark_paradise": {
           "type": "reel",
@@ -213,7 +222,11 @@
         },
         "reel_maha": {
           "type": "reel",
-          "settings": {}
+          "settings": {
+            "video": "hoa-reel-maha-unboxing.mp4",
+            "poster_asset": "hoa-reel-maha-unboxing-poster",
+            "poster_alt": "Unboxing Maha from its pink gift box"
+          }
         }
       },
       "block_order": [
@@ -388,8 +401,8 @@
     "discover",
     "art",
     "collection",
-    "films",
     "testimonials",
+    "films",
     "world"
   ]
 }

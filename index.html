@@ -78,6 +78,12 @@
       "tagline": "Three signature fragrances, 5 ml each",
       "members": ["oud-fury", "agha-blue", "sea-smoke"],
       "image": "assets/discovery_box.jpg", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "gift-set", "kind": "set", "handle": "royal-gift-set", "name": "The Royal Gift Set",
+      "tagline": "Five signature fragrances in the House of Agha keepsake case", "size": "5 fragrances, gift boxed",
+      "family": "Gift Set", "wearer": "unisex", "gift": true, "asset": "gift-set",
+      "members": ["oud-of-dark-paradise", "oud-fury", "tobacco-enigma", "agha-blue", "sea-smoke"],
+      "image": "assets/hoa-product-gift-set-sm.webp", "imageMain": "assets/hoa-product-gift-set.webp", "imageMood": "assets/hoa-alt-gift-set.webp",
+      "regularPrice": 14999, "salePrice": 12999, "isBestSeller": false, "isNew": true, "rating": 4.9, "reviewCount": 18, "inventory": 12 },
     { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
     { "id": "signature", "kind": "curated", "name": "The Signature Collection",
       "tagline": "Our three best sellers, together",
@@ -902,184 +908,6 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
 
 </div>
 
-    <!-- films · sections/hoa-reels.liquid -->
-    <div id="shopify-section-films" class="shopify-section hoa-reels-section"><section class="hoa-reels" id="instagram-reels" data-hoa-reels aria-labelledby="reels-films-title">
-  <div class="hoa-wrap">
-    <header class="hoa-reels__head">
-      <div data-hoa-reveal>
-        <p class="hoa-eyebrow">On Instagram</p>
-        <h2 class="hoa-h2" id="reels-films-title">Watch the <em>reels.</em></h2>
-      </div>
-      <div class="hoa-reels__nav" data-hoa-reveal><a class="hoa-link" href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener">Follow @houseofagha</a><div class="hoa-reels__arrows">
-          <button type="button" class="hoa-reels__arrow" data-hoa-reels-prev aria-label="Previous reels">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button type="button" class="hoa-reels__arrow" data-hoa-reels-next aria-label="Next reels">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <div class="hoa-reels__viewport">
-      <ul class="hoa-reels__track" data-hoa-reels-track role="list" tabindex="0" aria-label="Instagram reels">
-        <li class="hoa-reel" data-hoa-reel >
-        <div class="hoa-reel__frame">
-          <div class="hoa-reel__stage" data-hoa-reel-stage><img
-    src="assets/hoa-oud-fury-portrait.webp"
-    srcset="assets/hoa-oud-fury-portrait-sm.webp 700w, assets/hoa-oud-fury-portrait.webp 1200w"
-    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
-    width="1200" height="1607"
-    alt="Oud Fury"
-    loading="lazy" decoding="async" class="hoa-reel__poster"><video
-                class="hoa-reel__video"
-                data-hoa-reel-video
-                muted
-                loop
-                playsinline
-                preload="none"
-                disablepictureinpicture
-                data-src="https://videos.pexels.com/video-files/7816005/7816005-sd_540_960_25fps.mp4"
-                aria-label="Oud Fury reel"
-              ></video><a class="hoa-reel__open" href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="Watch the Oud Fury reel on Instagram (opens in a new tab)"></a>
-
-            <div class="hoa-reel__ig">
-              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
-              <span class="hoa-reel__handle">@houseofagha</span>
-              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
-            </div><div class="hoa-reel__controls">
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
-                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
-                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
-                </button>
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
-                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div><span class="hoa-reel__badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
-              Reel
-            </span></div>
-        </div></li><li class="hoa-reel" data-hoa-reel >
-        <div class="hoa-reel__frame">
-          <div class="hoa-reel__stage" data-hoa-reel-stage><img
-    src="assets/hoa-agha-blue-portrait.webp"
-    srcset="assets/hoa-agha-blue-portrait-sm.webp 700w, assets/hoa-agha-blue-portrait.webp 1200w"
-    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
-    width="1200" height="1607"
-    alt="Agha Blue"
-    loading="lazy" decoding="async" class="hoa-reel__poster"><video
-                class="hoa-reel__video"
-                data-hoa-reel-video
-                muted
-                loop
-                playsinline
-                preload="none"
-                disablepictureinpicture
-                data-src="https://videos.pexels.com/video-files/6764969/6764969-sd_540_960_25fps.mp4"
-                aria-label="Agha Blue reel"
-              ></video><a class="hoa-reel__open" href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="Watch the Agha Blue reel on Instagram (opens in a new tab)"></a>
-
-            <div class="hoa-reel__ig">
-              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
-              <span class="hoa-reel__handle">@houseofagha</span>
-              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
-            </div><div class="hoa-reel__controls">
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
-                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
-                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
-                </button>
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
-                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div><span class="hoa-reel__badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
-              Reel
-            </span></div>
-        </div></li><li class="hoa-reel" data-hoa-reel >
-        <div class="hoa-reel__frame">
-          <div class="hoa-reel__stage" data-hoa-reel-stage><img
-    src="assets/hoa-dark-paradise-portrait.webp"
-    srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w"
-    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
-    width="1200" height="1607"
-    alt="Oud of Dark Paradise"
-    loading="lazy" decoding="async" class="hoa-reel__poster"><video
-                class="hoa-reel__video"
-                data-hoa-reel-video
-                muted
-                loop
-                playsinline
-                preload="none"
-                disablepictureinpicture
-                data-src="assets/hoa-reel-oud-of-dark-paradise.mp4"
-                aria-label="Oud of Dark Paradise reel"
-              ></video><a class="hoa-reel__open" href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="Watch the Oud of Dark Paradise reel on Instagram (opens in a new tab)"></a>
-
-            <div class="hoa-reel__ig">
-              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
-              <span class="hoa-reel__handle">@houseofagha</span>
-              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
-            </div><div class="hoa-reel__controls">
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
-                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
-                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
-                </button>
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
-                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div><span class="hoa-reel__badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
-              Reel
-            </span></div>
-        </div></li><li class="hoa-reel" data-hoa-reel >
-        <div class="hoa-reel__frame">
-          <div class="hoa-reel__stage" data-hoa-reel-stage><img
-    src="assets/hoa-maha-portrait.webp"
-    srcset="assets/hoa-maha-portrait-sm.webp 700w, assets/hoa-maha-portrait.webp 1200w"
-    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
-    width="1200" height="1607"
-    alt="Maha"
-    loading="lazy" decoding="async" class="hoa-reel__poster"><video
-                class="hoa-reel__video"
-                data-hoa-reel-video
-                muted
-                loop
-                playsinline
-                preload="none"
-                disablepictureinpicture
-                data-src="https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4"
-                aria-label="Maha reel"
-              ></video><a class="hoa-reel__open" href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="Watch the Maha reel on Instagram (opens in a new tab)"></a>
-
-            <div class="hoa-reel__ig">
-              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
-              <span class="hoa-reel__handle">@houseofagha</span>
-              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
-            </div><div class="hoa-reel__controls">
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
-                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
-                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
-                </button>
-                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
-                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div><span class="hoa-reel__badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
-              Reel
-            </span></div>
-        </div></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<script src="assets/hoa-reels.js" defer></script>
-</div>
-
     <!-- testimonials · sections/hoa-testimonials.liquid -->
     <div id="shopify-section-testimonials" class="shopify-section hoa-voices-section"><section class="hoa-voices" id="testimonials" data-hoa-voices aria-labelledby="voices-testimonials-title">
   <div class="hoa-voices__stage" data-hoa-voices-stage>
@@ -1151,6 +979,184 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
 <script src="assets/hoa-testimonials.js" defer></script>
 
 
+</div>
+
+    <!-- films · sections/hoa-reels.liquid -->
+    <div id="shopify-section-films" class="shopify-section hoa-reels-section"><section class="hoa-reels" id="instagram-reels" data-hoa-reels aria-labelledby="reels-films-title">
+  <div class="hoa-wrap">
+    <header class="hoa-reels__head">
+      <div data-hoa-reveal>
+        <p class="hoa-eyebrow">On Instagram</p>
+        <h2 class="hoa-h2" id="reels-films-title">Watch the <em>reels.</em></h2>
+      </div>
+      <div class="hoa-reels__nav" data-hoa-reveal><a class="hoa-link" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener">Follow @aghaperfumes</a><div class="hoa-reels__arrows">
+          <button type="button" class="hoa-reels__arrow" data-hoa-reels-prev aria-label="Previous reels">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="hoa-reels__arrow" data-hoa-reels-next aria-label="Next reels">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="hoa-reels__viewport">
+      <ul class="hoa-reels__track" data-hoa-reels-track role="list" tabindex="0" aria-label="Instagram reels">
+        <li class="hoa-reel" data-hoa-reel >
+        <div class="hoa-reel__frame">
+          <div class="hoa-reel__stage" data-hoa-reel-stage><img
+    src="assets/hoa-reel-review-ouds-poster.webp"
+    srcset="assets/hoa-reel-review-ouds-poster-sm.webp 700w, assets/hoa-reel-review-ouds-poster.webp 1200w"
+    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
+    width="1200" height="1607"
+    alt="A House of Agha gift box holding the full fragrance range"
+    loading="lazy" decoding="async" class="hoa-reel__poster"><video
+                class="hoa-reel__video"
+                data-hoa-reel-video
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                data-src="assets/hoa-reel-review-ouds.mp4"
+                aria-label="Oud Fury reel"
+              ></video><a class="hoa-reel__open" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="Watch the Oud Fury reel on Instagram (opens in a new tab)"></a>
+
+            <div class="hoa-reel__ig">
+              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
+              <span class="hoa-reel__handle">@aghaperfumes</span>
+              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+            </div><div class="hoa-reel__controls">
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
+                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
+                </button>
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
+                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div><span class="hoa-reel__badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
+              Reel
+            </span></div>
+        </div></li><li class="hoa-reel" data-hoa-reel >
+        <div class="hoa-reel__frame">
+          <div class="hoa-reel__stage" data-hoa-reel-stage><img
+    src="assets/hoa-reel-maha-garden-poster.webp"
+    srcset="assets/hoa-reel-maha-garden-poster-sm.webp 700w, assets/hoa-reel-maha-garden-poster.webp 1200w"
+    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
+    width="1200" height="1607"
+    alt="A woman in a garden holding Maha"
+    loading="lazy" decoding="async" class="hoa-reel__poster"><video
+                class="hoa-reel__video"
+                data-hoa-reel-video
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                data-src="assets/hoa-reel-maha-garden.mp4"
+                aria-label="maha reel"
+              ></video><a class="hoa-reel__open" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="Watch the maha reel on Instagram (opens in a new tab)"></a>
+
+            <div class="hoa-reel__ig">
+              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
+              <span class="hoa-reel__handle">@aghaperfumes</span>
+              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+            </div><div class="hoa-reel__controls">
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
+                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
+                </button>
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
+                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div><span class="hoa-reel__badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
+              Reel
+            </span></div>
+        </div></li><li class="hoa-reel" data-hoa-reel >
+        <div class="hoa-reel__frame">
+          <div class="hoa-reel__stage" data-hoa-reel-stage><img
+    src="assets/hoa-dark-paradise-portrait.webp"
+    srcset="assets/hoa-dark-paradise-portrait-sm.webp 700w, assets/hoa-dark-paradise-portrait.webp 1200w"
+    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
+    width="1200" height="1607"
+    alt="Oud of Dark Paradise"
+    loading="lazy" decoding="async" class="hoa-reel__poster"><video
+                class="hoa-reel__video"
+                data-hoa-reel-video
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                data-src="assets/hoa-reel-oud-of-dark-paradise.mp4"
+                aria-label="Oud of Dark Paradise reel"
+              ></video><a class="hoa-reel__open" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="Watch the Oud of Dark Paradise reel on Instagram (opens in a new tab)"></a>
+
+            <div class="hoa-reel__ig">
+              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
+              <span class="hoa-reel__handle">@aghaperfumes</span>
+              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+            </div><div class="hoa-reel__controls">
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
+                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
+                </button>
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
+                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div><span class="hoa-reel__badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
+              Reel
+            </span></div>
+        </div></li><li class="hoa-reel" data-hoa-reel >
+        <div class="hoa-reel__frame">
+          <div class="hoa-reel__stage" data-hoa-reel-stage><img
+    src="assets/hoa-reel-maha-unboxing-poster.webp"
+    srcset="assets/hoa-reel-maha-unboxing-poster-sm.webp 700w, assets/hoa-reel-maha-unboxing-poster.webp 1200w"
+    sizes="(min-width: 1101px) 22vw, (min-width: 768px) 38vw, 74vw"
+    width="1200" height="1607"
+    alt="Unboxing Maha from its pink gift box"
+    loading="lazy" decoding="async" class="hoa-reel__poster"><video
+                class="hoa-reel__video"
+                data-hoa-reel-video
+                muted
+                loop
+                playsinline
+                preload="none"
+                disablepictureinpicture
+                data-src="assets/hoa-reel-maha-unboxing.mp4"
+                aria-label="Maha reel"
+              ></video><a class="hoa-reel__open" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="Watch the Maha reel on Instagram (opens in a new tab)"></a>
+
+            <div class="hoa-reel__ig">
+              <span class="hoa-reel__avatar" aria-hidden="true">A</span>
+              <span class="hoa-reel__handle">@aghaperfumes</span>
+              <svg class="hoa-reel__glyph" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+            </div><div class="hoa-reel__controls">
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel">
+                  <svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg>
+                  <svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg>
+                </button>
+                <button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false">
+                  <svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div><span class="hoa-reel__badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>
+              Reel
+            </span></div>
+        </div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script src="assets/hoa-reels.js" defer></script>
 </div>
 
     <!-- world · sections/hoa-world.liquid -->
@@ -1229,7 +1235,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
         <a href="/" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
         <p class="hoa-footer__about">A Hyderabad fragrance house composing concentrated Eau de Parfum from oud, amber and rare florals. Made to linger, for those who notice.</p>
         <ul class="hoa-footer__social" role="list">
-          <li><a href="https://www.instagram.com/houseofagha/" target="_blank" rel="noopener" aria-label="House of Agha on Instagram (opens in a new tab)">
+          <li><a href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="House of Agha on Instagram (opens in a new tab)">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
           </a></li>
           <li><a href="/pages/contact" aria-label="Contact House of Agha">

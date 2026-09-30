@@ -72,6 +72,17 @@ const AGHA_PRODUCTS = {
     sizes: { 'Eau de Parfum': 4700 },
     reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]
   },
+  'royal-gift-set': {
+    title: "THE ROYAL GIFT SET",
+    family: "Gift Set",
+    eyebrow: 'Gift Set',
+    images: ['/assets/hoa-product-gift-set.webp', '/assets/hoa-alt-gift-set.webp'],
+    description: "Oud of Dark Paradise, Oud Fury, Tobacco Enigma, Agha Blue and Sea Smoke, laid in the House of Agha keepsake case.",
+    // Mirrors the gift-set entry in snippets/hoa-catalog-data.liquid (the bag prices from the catalog).
+    sizes: { 'Gift Set': 12999 },
+    compare: { 'Gift Set': 14999 },
+    reviews: [{ rating: 5, author: "Rhea S.", location: "Hyderabad", verified: true, body: "Gave the gift set for an anniversary. The case alone made the moment, and he wears a different one every day." }]
+  },
   // Older placeholder catalogue (not priced by the shared catalog).
   'oud-royal': {
     title: 'OUD ROYAL',

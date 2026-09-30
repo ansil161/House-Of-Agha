@@ -23,7 +23,8 @@
                                in the bag (Shopify later: automatic discount / Function)
     settings.freeShippingThreshold   the bag's free-shipping progress bar
     coupons                    validated in the bag (Shopify later: discount codes)
-    bundles                    discovery-set is a standalone product with its own price; duo and
+    bundles                    discovery-set and gift-set (The Royal Gift Set, shown in the shop grid under
+                               the Gift filter) are standalone products with their own price; duo and
                                signature add ordinary fragrance units, so the quantity tiers price them
     pairs                      "Pair it with" suggestion per product
   Keep this valid JSON (the Liquid parses it).
@@ -85,6 +86,12 @@
       "tagline": "Three signature fragrances, 5 ml each",
       "members": ["oud-fury", "agha-blue", "sea-smoke"],
       "image": "{{ 'discovery_box.jpg' | asset_url }}", "regularPrice": 4500, "salePrice": 3999, "inventory": 30 },
+    { "id": "gift-set", "kind": "set", "handle": "royal-gift-set", "name": "The Royal Gift Set",
+      "tagline": "Five signature fragrances in the House of Agha keepsake case", "size": "5 fragrances, gift boxed",
+      "family": "Gift Set", "wearer": "unisex", "gift": true, "asset": "gift-set",
+      "members": ["oud-of-dark-paradise", "oud-fury", "tobacco-enigma", "agha-blue", "sea-smoke"],
+      "image": "{{ 'hoa-product-gift-set-sm.webp' | asset_url }}", "imageMain": "{{ 'hoa-product-gift-set.webp' | asset_url }}", "imageMood": "{{ 'hoa-alt-gift-set.webp' | asset_url }}",
+      "regularPrice": 14999, "salePrice": 12999, "isBestSeller": false, "isNew": true, "rating": 4.9, "reviewCount": 18, "inventory": 12 },
     { "id": "duo", "kind": "pick", "name": "The Duo", "tagline": "Choose any two full-size fragrances", "pick": 2 },
     { "id": "signature", "kind": "curated", "name": "The Signature Collection",
       "tagline": "Our three best sellers, together",

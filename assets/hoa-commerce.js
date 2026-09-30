@@ -54,7 +54,7 @@
     return {
       kind: kind, handle: p.handle, name: p.name, family: p.family || '', wearer: p.wearer || '', gift: !!p.gift,
       asset: p.asset || '', image: img(p.image), imageMain: img(p.imageMain), imageMood: img(p.imageMood), url: kind === 'fragrance' ? '/products/' + p.handle : '/collections/all#bundles',
-      tagline: p.tagline || '', members: p.members || [],
+      tagline: p.tagline || '', members: p.members || [], size: p.size || '',
       regularPrice: reg, salePrice: hasOffer ? sale : null, hasOffer: hasOffer,
       price: hasOffer ? sale : reg,
       discountPercentage: hasOffer ? Math.round((reg - sale) / reg * 100) : 0,
@@ -70,6 +70,8 @@
   (RAW.bundles || []).forEach(function (b) { BUNDLES[b.id] = b; });
   var SET = BUNDLES['discovery-set'] ? normalise(BUNDLES['discovery-set'], 'set') : null;
   if (SET) PRODUCTS[SET.handle] = SET;
+  // Other boxed sets (the Royal Gift Set) are standalone products too: priced from the catalog, never tier-discounted.
+  (RAW.bundles || []).forEach(function (b) { if (b.kind === 'set' && b.id !== 'discovery-set') PRODUCTS[b.handle] = normalise(b, 'set'); });
   var PAIRS = RAW.pairs || {};
 
   function product(handle) { return PRODUCTS[handle] || null; }
@@ -111,7 +113,7 @@
   /* ---------------------------------------------------------------- lines */
   function makeItem(handle, size) {
     var p = product(handle);
-    return { id: handle + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e4), handle: handle, size: size || (p && p.kind === 'set' ? '3 × 5 ml' : 'Eau de Parfum') };
+    return { id: handle + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e4), handle: handle, size: size || (p && p.kind === 'set' ? (p.size || '3 × 5 ml') : 'Eau de Parfum') };
   }
 
   // A bag entry is one unit. Known products are priced from the catalog (never from stored text),

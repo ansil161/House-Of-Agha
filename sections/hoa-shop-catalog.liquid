@@ -281,6 +281,42 @@
           -%}
           {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
         {%- endfor -%}
+
+        {%- comment -%} Boxed gift sets (catalog bundles with a family, e.g. The Royal Gift Set) sit after the fragrances and show under the Gift filter. {%- endcomment -%}
+        {%- for b in catalog.bundles -%}
+          {%- if b.kind != 'set' or b.family == blank -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign p_asset = 'hoa-product-' | append: b.asset
+            assign m_asset = 'hoa-alt-' | append: b.asset
+            assign purl = '/products/' | append: b.handle
+            assign sale_v = b.salePrice | default: b.regularPrice
+            assign gift_v = b.gift | append: ''
+            assign card_index = catalog.products.size | plus: forloop.index0
+          -%}
+          {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1080, h: 1350, alt: b.name, sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1080, h: 1350, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}{%- endcapture -%}
+          {%- render 'hoa-shop-card',
+            index: card_index,
+            handle: b.handle,
+            url: purl,
+            name: b.name,
+            family: b.family,
+            wearer: b.wearer,
+            gift: gift_v,
+            img_main: img_main,
+            img_mood: img_mood,
+            thumb: b.image,
+            available: true,
+            sale_price: sale_v,
+            regular_price: b.regularPrice,
+            rating: b.rating,
+            review_count: b.reviewCount,
+            best_seller: b.isBestSeller,
+            is_new_flag: b.isNew,
+            kind: 'Gift Set',
+            product_id: b.handle
+          -%}
+        {%- endfor -%}
       {%- endif -%}
     </div>
 

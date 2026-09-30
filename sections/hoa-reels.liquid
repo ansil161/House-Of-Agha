@@ -43,8 +43,8 @@
 {%- assign reels_catalog = reels_catalog_json | parse_json -%}
 {%- liquid
   assign s = section.settings
-  assign ig_handle = s.instagram_handle | default: 'houseofagha' | remove: '@'
-  assign ig_url = s.instagram_url | default: 'https://www.instagram.com/houseofagha/'
+  assign ig_handle = s.instagram_handle | default: 'aghaperfumes' | remove: '@'
+  assign ig_url = s.instagram_url | default: 'https://www.instagram.com/aghaperfumes/'
   assign single = false
   if s.only_current_product and product != blank
     assign single = true
@@ -334,8 +334,8 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "On Instagram" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Watch the" },
     { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "reels." },
-    { "type": "text", "id": "instagram_handle", "label": "Instagram handle", "default": "houseofagha" },
-    { "type": "url", "id": "instagram_url", "label": "Instagram profile link", "default": "https://www.instagram.com/houseofagha/" },
+    { "type": "text", "id": "instagram_handle", "label": "Instagram handle", "default": "aghaperfumes" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram profile link", "default": "https://www.instagram.com/aghaperfumes/" },
     { "type": "text", "id": "follow_label", "label": "Follow link label", "default": "Follow" },
     { "type": "checkbox", "id": "only_current_product", "label": "Product page mode: only this product's videos", "info": "Turn on when this section sits on a product page. Shows just the videos of the product being viewed, with no Instagram branding or links.", "default": false }
   ],
