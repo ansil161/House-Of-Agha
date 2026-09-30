@@ -471,9 +471,21 @@
       var hyd = document.querySelector('[data-hoa-ab-hyd]');
       if (hyd) {
         var panel = hyd.querySelector('.hoa-ab-hyd__visual');
-        gsap.fromTo(hyd.querySelectorAll('.hoa-ab-hyd__ln'), { strokeDashoffset: 1 }, {
-          strokeDashoffset: 0, ease: 'none', stagger: 0.035,
-          scrollTrigger: { trigger: panel, start: 'top 85%', end: 'center 45%', scrub: 0.6 }
+        // Build from the ground up: each tier (data-o) draws its lines, then its arched
+        // openings fill in with ink, so the building rises storey by storey while scrolling.
+        var build = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: { trigger: panel, start: 'top 80%', end: 'bottom 55%', scrub: 0.7 }
+        });
+        var tiers = {};
+        hyd.querySelectorAll('[data-o]').forEach(function (el) {
+          var o = +el.getAttribute('data-o');
+          (tiers[o] = tiers[o] || { ln: [], fill: [] })[el.classList.contains('hoa-ab-hyd__fill') ? 'fill' : 'ln'].push(el);
+        });
+        Object.keys(tiers).map(Number).sort(function (a, b) { return a - b; }).forEach(function (o) {
+          var at = o * 0.62;
+          if (tiers[o].ln.length) build.fromTo(tiers[o].ln, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, stagger: 0.04 }, at);
+          if (tiers[o].fill.length) build.fromTo(tiers[o].fill, { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.03 }, at + 0.7);
         });
         var urdu = hyd.querySelector('[data-hoa-ab-hyd-urdu]');
         if (urdu) {

@@ -153,7 +153,7 @@
             ${images.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
           </div>
           <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
+            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
           </ul>
         </div>
 
@@ -912,13 +912,24 @@
     </div>
   </section>`;
 
+  // Benefits marquee: mirrors sections/hoa-fragrance-benefits.liquid with the blocks in templates/product.json
+  // (plant-based / vegan / cruelty free are switched off there until confirmed, so they are left out here too).
+  const bnfItems = [['Artisanal perfumery', 'perfume'], ['Fine fragrance oils', 'drop'], ['Crafted with precision', 'precision'],
+    ['IFRA certified', 'seal'], ['Certified perfumers', 'certificate']]
+    .map(([text, icon]) => `<li class="hoa-bnf__item"><span class="hoa-bnf__icon" style="--hoa-bnf-icon: url('/assets/hoa-bnf-${icon}.png')" aria-hidden="true"></span><span class="hoa-bnf__text">${esc(text)}</span></li>`).join('');
+  const benefits = `
+  <section class="hoa-bnf hoa-bnf--dark" data-hoa-bnf data-duration="42" data-hover="slow" aria-label="The house standard">
+    <div class="hoa-bnf__viewport" data-hoa-bnf-viewport><ul class="hoa-bnf__track" data-hoa-bnf-track role="list">${bnfItems}</ul></div>
+    <p class="hoa-bnf__credit"><a href="https://icons8.com" target="_blank" rel="noopener">Icons by Icons8</a></p>
+  </section>`;
+
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)
   const pair = '<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="' + handle + '" hidden></section>';
 
   // Attention flow, mirroring templates/product.json:
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft, reviews) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + theFragrance + collage + story + fragranceNotes + reviewSummary + reviewsSection + gallery + faq + reels + pair + related + finale;
+  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + reviewSummary + reviewsSection + gallery + faq + reels + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');
@@ -926,6 +937,8 @@
   });
   window.HOA?.initPair?.();
   window.AghaPDP?.init();
+  if (window.HOA_BNF) window.HOA_BNF.init();
+  else { const b = document.createElement('script'); b.src = '/assets/hoa-benefits.js'; document.body.appendChild(b); }
   if (window.HOA_PGAL) window.HOA_PGAL.init();
   else { const g = document.createElement('script'); g.src = '/assets/hoa-pgal.js'; document.body.appendChild(g); }
   if (reels) {

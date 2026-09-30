@@ -4242,6 +4242,8 @@ html:has(.pdp) body {
 .pdp-proof + .pdp-proof { border-left: 1px solid #E4E4E4; }
 .pdp-proof__icon { display: grid; margin-bottom: 4px; color: var(--pdp-ink); }
 .pdp-proof__icon .pdx-icon { display: block; width: 34px; height: 34px; }
+/* Supplied brand icons (assets/hoa-proof-*.svg) sit one size up: their artwork fills less of the box than the line icons */
+.pdp-proof__icon .pdp-proof__art { display: block; width: 44px; height: 44px; object-fit: contain; }
 .pdp-proof__title { font-size: 0.72rem; font-weight: 800; line-height: 1.15; letter-spacing: 0.01em; text-transform: uppercase; color: var(--pdp-ink); }
 .pdp-proof__text { font-size: 0.68rem; line-height: 1.35; color: var(--pdp-ink-soft); }
 /* Placed under the four "More views" photos in the gallery column (wider than the buy column) */
@@ -4253,12 +4255,14 @@ html:has(.pdp) body {
 }
 .pdp-media > .pdp-proofs .pdp-proof { gap: 7px; padding: 6px 12px; }
 .pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 40px; height: 40px; }
+.pdp-media > .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 50px; height: 50px; }
 .pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.8rem; }
 .pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.74rem; }
 @media (max-width: 768px) {
   .pdp-media > .pdp-proofs { margin: 16px 0 0; padding: 16px 0; }
   .pdp-media > .pdp-proofs .pdp-proof { padding: 4px 3px; }
   .pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 30px; height: 30px; }
+  .pdp-media > .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 36px; height: 36px; }
   .pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.62rem; }
   .pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.6rem; }
 }

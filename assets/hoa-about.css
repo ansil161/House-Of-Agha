@@ -218,8 +218,9 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   padding: 64px 24px 76px;
   overflow: hidden;
   border-radius: var(--ab-r-in);
-  background: radial-gradient(120% 90% at 50% 40%, #1E1E1E 0%, #0B0B0B 70%);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  color: #0B0B0B;
   isolation: isolate;
 }
 /* Deccan jaali lattice along the top and bottom edges of the panel */
@@ -230,16 +231,18 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   left: 0;
   right: 0;
   height: 30px;
-  background: #FFFFFF;
+  background: #0B0B0B;
   -webkit-mask: url("hoa-jaali.svg") repeat-x center / 30px 30px;
   mask: url("hoa-jaali.svg") repeat-x center / 30px 30px;
-  opacity: 0.35;
+  opacity: 0.12;
   pointer-events: none;
 }
 .hoa-ab-hyd__visual::before { top: 12px; }
 .hoa-ab-hyd__visual::after { bottom: 12px; }
-.hoa-ab-hyd__art { position: relative; z-index: 1; display: block; width: min(80%, 430px); height: auto; overflow: visible; }
+.hoa-ab-hyd__art { position: relative; z-index: 1; display: block; width: min(74%, 400px); height: auto; overflow: visible; }
 .hoa-ab-hyd__ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
+/* the arched openings: solid ink, like the voids of the real building */
+.hoa-ab-hyd__fill { fill: currentColor; stroke: none; }
 .hoa-ab-hyd__urdu {
   position: absolute;
   left: 0;
@@ -253,7 +256,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   line-height: 1.4;
   text-align: center;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.07);
+  color: rgba(0, 0, 0, 0.045);
   pointer-events: none;
   user-select: none;
 }
@@ -269,7 +272,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   letter-spacing: 0.2em;
   text-align: center;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(0, 0, 0, 0.62);
 }
 .hoa-ab-hyd__copy {
   display: flex;
@@ -315,7 +318,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 @media (max-width: 899px) {
   .hoa-ab-hyd__card { grid-template-columns: 1fr; }
   .hoa-ab-hyd__visual { min-height: 0; padding: 60px 20px 80px; }
-  .hoa-ab-hyd__art { width: min(78%, 340px); }
+  .hoa-ab-hyd__art { width: min(76%, 320px); }
 }
 @media (max-width: 640px) {
   .hoa-ab-hyd__notes { grid-template-columns: 1fr; }
@@ -644,7 +647,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-ab-cta .hoa-ab-muted { color: rgba(255, 255, 255, 0.5); }
 .hoa-ab-cta__copy p { margin: 0; max-width: 36ch; font-size: 1rem; line-height: 1.6; color: rgba(255, 255, 255, 0.72); }
 .hoa-ab-cta__copy .hoa-btn { margin-top: auto; }
-.hoa-ab-cta__media { position: relative; margin: 0; overflow: hidden; border-radius: var(--ab-r-in); background: #2b160a; }
+.hoa-ab-cta__media { position: relative; margin: 0; overflow: hidden; border-radius: var(--ab-r-in); background: #0a1a45; }
 .hoa-ab-cta__img { position: absolute; inset: -8% 0; }
 .hoa-ab-cta__img img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); display: block; }
 
@@ -799,8 +802,10 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
           mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
 }
+/* the wide photo is shown whole inside the landscape frame, centred, with its own rounded corners */
 .hoa-ab-name__photo-img { aspect-ratio: 16 / 10; border-radius: var(--ab-r-in); }
-.hoa-ab-name__photo .hoa-ab-name__img img { object-position: var(--pos, center); }
+.hoa-ab-name__photo .hoa-ab-name__img { inset: 0; display: flex; justify-content: center; }
+.hoa-ab-name__photo .hoa-ab-name__img img { width: auto; max-width: 100%; object-fit: contain; border-radius: var(--ab-r-in); }
 .hoa-ab-name__img { position: absolute; inset: -5% 0; }
 .hoa-ab-name__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .hoa-ab-name__arch .hoa-ab-name__img img { object-position: 50% 30%; }
@@ -854,7 +859,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-ab-name__meaning { color: rgba(255, 255, 255, 0.72); }
 .hoa-ab-name__arch figcaption { color: rgba(255, 255, 255, 0.55); }
 .hoa-ab-name__photo figcaption { color: #6B6B6B; }
-.hoa-ab-name__arch-img, .hoa-ab-name__photo-img { background: #2A2A2A; }
+.hoa-ab-name__arch-img { background: #2A2A2A; }
+.hoa-ab-name__photo-img { background: transparent; }
 .hoa-ab-name__use {
   padding: 18px 16px 20px;
   background: #FFFFFF;

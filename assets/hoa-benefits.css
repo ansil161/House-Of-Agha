@@ -1,0 +1,138 @@
+/* ==========================================================================
+   HOUSE OF AGHA · PDP benefits marquee (sections/hoa-fragrance-benefits.liquid)
+   A quiet editorial ticker: icon + small tracked uppercase line, a faint dot
+   between items, no boxes. Movement is transform-only (assets/hoa-benefits.js).
+   ========================================================================== */
+
+.hoa-bnf {
+  --bnf-bg: #0C0A08;
+  --bnf-fg: #FFFFFF;
+  --bnf-gap: clamp(44px, 5.4vw, 80px);
+  --bnf-icon: 20px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bnf-bg);
+  color: var(--bnf-fg);
+  font-family: var(--hoa-sans, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+.hoa-bnf--light {
+  --bnf-bg: #FFFFFF;
+  --bnf-fg: #141210;
+  border-block: 1px solid rgba(20, 18, 16, 0.08);
+}
+
+/* Soft fade at both edges so items glide in and out instead of being cut */
+.hoa-bnf__viewport {
+  overflow: hidden;
+  padding-block: clamp(18px, 1.8vw, 26px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.hoa-bnf__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: transform;
+}
+
+/* Every item carries its own trailing gap and dot, so the repeated group tiles without a seam */
+.hoa-bnf__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  padding-right: var(--bnf-gap);
+  opacity: 0.86;
+  transition: opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.hoa-bnf__item::after {
+  content: '';
+  position: absolute;
+  right: calc(var(--bnf-gap) / 2 - 2px);
+  top: 50%;
+  width: 4px; height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.32;
+}
+.hoa-bnf__item:hover { opacity: 1; }
+
+.hoa-bnf__icon {
+  width: var(--bnf-icon);
+  height: var(--bnf-icon);
+  flex-shrink: 0;
+  background: currentColor;
+  -webkit-mask: var(--hoa-bnf-icon) center / contain no-repeat;
+          mask: var(--hoa-bnf-icon) center / contain no-repeat;
+}
+
+.hoa-bnf__text {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hoa-bnf__credit {
+  position: absolute;
+  right: 10px;
+  bottom: 3px;
+  margin: 0;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  opacity: 0.32;
+}
+.hoa-bnf__credit a { color: inherit; text-decoration: none; }
+.hoa-bnf__credit a:hover { text-decoration: underline; }
+
+/* CSS fallback when GSAP is not on the page; JS sets the distance and duration */
+.hoa-bnf.is-css .hoa-bnf__track {
+  animation: hoa-bnf-loop var(--bnf-duration, 42s) linear infinite;
+}
+.hoa-bnf.is-css.is-paused .hoa-bnf__track,
+.hoa-bnf.is-css.is-offscreen .hoa-bnf__track { animation-play-state: paused; }
+@keyframes hoa-bnf-loop {
+  to { transform: translate3d(var(--bnf-shift, -50%), 0, 0); }
+}
+
+/* Entrance: opacity + 8px rise, once, when the strip reaches the viewport */
+.hoa-bnf.is-armed { opacity: 0; transform: translate3d(0, 8px, 0); }
+.hoa-bnf.is-armed.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1), transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@media (max-width: 1024px) {
+  .hoa-bnf { --bnf-gap: 56px; }
+}
+@media (max-width: 767.98px) {
+  .hoa-bnf { --bnf-gap: 44px; --bnf-icon: 17px; }
+  .hoa-bnf__viewport { padding-block: 17px; }
+  .hoa-bnf__text { font-size: 10px; letter-spacing: 0.12em; }
+  .hoa-bnf__item { gap: 8px; }
+}
+
+/* Reduced motion: no ticker, a static row the visitor can scroll sideways */
+@media (prefers-reduced-motion: reduce) {
+  .hoa-bnf__viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: none;
+            mask-image: none;
+    padding-inline: clamp(16px, 4vw, 56px);
+  }
+  .hoa-bnf__viewport::-webkit-scrollbar { display: none; }
+  .hoa-bnf__track { animation: none !important; transform: none !important; will-change: auto; }
+  .hoa-bnf__item[data-hoa-bnf-clone] { display: none; }
+  .hoa-bnf.is-armed { opacity: 1; transform: none; }
+}

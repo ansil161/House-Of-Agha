@@ -32,11 +32,12 @@
         {%- endif -%}
       </div>
 
+      {%- comment -%} The wide photo is shown whole inside its landscape frame (no crop), centred on the card. {%- endcomment -%}
       <div class="hoa-ab-name__main">
         {%- if s.photo_asset != blank or s.photo_image != blank -%}
-          <figure class="hoa-ab-name__photo"{% if s.photo_focus != blank %} style="--pos: {{ s.photo_focus }}"{% endif %} data-hoa-ab-up>
+          <figure class="hoa-ab-name__photo" data-hoa-ab-up>
             <div class="hoa-ab-name__photo-img">
-              <div class="hoa-ab-name__img" data-hoa-ab-parallax>
+              <div class="hoa-ab-name__img">
                 {%- render 'hoa-img', name: s.photo_asset, image: s.photo_image, w: s.photo_w, h: s.photo_h, alt: s.photo_alt, sizes: '(min-width: 900px) 52vw, 100vw' -%}
               </div>
             </div>
@@ -96,7 +97,7 @@
     { "type": "text", "id": "photo_asset", "label": "Fallback theme asset", "default": "hoa-hyd-oldcity" },
     { "type": "number", "id": "photo_w", "label": "Fallback asset width", "default": 2400 },
     { "type": "number", "id": "photo_h", "label": "Fallback asset height", "default": 1674 },
-    { "type": "text", "id": "photo_focus", "label": "Crop focus (CSS object-position)", "info": "e.g. 50% 40%. The frame is landscape, so a portrait photo is cropped." },
+    { "type": "text", "id": "photo_focus", "label": "Crop focus (unused)", "info": "The photo is shown whole inside the frame, so no crop focus is needed." },
     { "type": "text", "id": "photo_alt", "label": "Alt text", "default": "An early photograph of Hyderabad's old city, with the Charminar at the end of a busy street" },
     { "type": "text", "id": "photo_caption", "label": "Caption", "default": "The old city and the Charminar, in an early photograph" },
     { "type": "header", "content": "Footer" },

@@ -442,10 +442,97 @@
         "feature_first": true,
         "interval": 3
       }
+    },
+    "benefits": {
+      "type": "hoa-fragrance-benefits",
+      "blocks": {
+        "artisanal": {
+          "type": "benefit",
+          "settings": {
+            "enabled": true,
+            "text": "Artisanal perfumery",
+            "icon": "perfume"
+          }
+        },
+        "oils": {
+          "type": "benefit",
+          "settings": {
+            "enabled": true,
+            "text": "Fine fragrance oils",
+            "icon": "drop"
+          }
+        },
+        "precision": {
+          "type": "benefit",
+          "settings": {
+            "enabled": true,
+            "text": "Crafted with precision",
+            "icon": "precision"
+          }
+        },
+        "ifra": {
+          "type": "benefit",
+          "settings": {
+            "enabled": true,
+            "text": "IFRA certified",
+            "icon": "seal"
+          }
+        },
+        "perfumers": {
+          "type": "benefit",
+          "settings": {
+            "enabled": true,
+            "text": "Certified perfumers",
+            "icon": "certificate"
+          }
+        },
+        "plant": {
+          "type": "benefit",
+          "settings": {
+            "enabled": false,
+            "text": "Plant-based ingredients",
+            "icon": "plant"
+          }
+        },
+        "vegan": {
+          "type": "benefit",
+          "settings": {
+            "enabled": false,
+            "text": "100% vegan",
+            "icon": "vegan"
+          }
+        },
+        "cruelty": {
+          "type": "benefit",
+          "settings": {
+            "enabled": false,
+            "text": "Cruelty free",
+            "icon": "cruelty-free"
+          }
+        }
+      },
+      "block_order": [
+        "artisanal",
+        "oils",
+        "precision",
+        "ifra",
+        "perfumers",
+        "plant",
+        "vegan",
+        "cruelty"
+      ],
+      "settings": {
+        "label": "The house standard",
+        "scheme": "dark",
+        "duration": 42,
+        "hover": "slow",
+        "show_credit": true
+      }
     }
   },
   "order": [
     "main",
+    "benefits",
     "the_fragrance",
     "story",
     "details",

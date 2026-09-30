@@ -185,7 +185,15 @@
           <ul class="pdp-proofs" role="list" aria-label="Why we are better">
             {%- for block in proof_blocks -%}
               <li class="pdp-proof" {{ block.shopify_attributes }}>
-                <span class="pdp-proof__icon">{% render 'pdx-icon', name: block.settings.icon %}</span>
+                {%- assign proof_art = 'badge,bottle,hourglass,ifra' | split: ',' -%}
+                <span class="pdp-proof__icon">
+                  {%- if proof_art contains block.settings.icon -%}
+                    {%- assign proof_src = 'hoa-proof-' | append: block.settings.icon | append: '.svg' -%}
+                    <img class="pdp-proof__art" src="{{ proof_src | asset_url }}" alt="" width="40" height="40" loading="lazy" decoding="async">
+                  {%- else -%}
+                    {% render 'pdx-icon', name: block.settings.icon %}
+                  {%- endif -%}
+                </span>
                 <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
                 {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
               </li>

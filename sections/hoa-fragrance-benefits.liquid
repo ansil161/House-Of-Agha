@@ -1,0 +1,117 @@
+{%- comment -%}
+  House of Agha · PDP fragrance benefits marquee
+  A slow editorial ticker of the house's standards (icon + short uppercase line), placed right
+  under the buy area. The list is duplicated by assets/hoa-benefits.js so it loops without a seam;
+  GSAP drives it when the page has GSAP, otherwise a CSS transform animation does. Hover slows it.
+  Reduced motion: no movement, a static row that scrolls sideways.
+  Styles: assets/hoa-benefits.css.
+
+  Every benefit is a block (icon, text, show/hide), so claims can be switched off until they are
+  confirmed. Ingredient and ethics claims (plant-based, vegan, cruelty free) ship hidden by default.
+
+  Icons: Icons8 "iOS" outline set (assets/hoa-bnf-*.png, 100 px PNG, free licence: keep the
+  "Icons by Icons8" credit on unless the store holds a paid Icons8 licence). They are drawn as CSS
+  masks, so they always take the text colour. A block can upload its own icon instead.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- capture items -%}
+  {%- for block in section.blocks -%}
+    {%- assign b = block.settings -%}
+    {%- if b.enabled == false or b.text == blank -%}{%- continue -%}{%- endif -%}
+    {%- liquid
+      if b.custom_icon != blank
+        assign icon_url = b.custom_icon | image_url: width: 96
+      elsif b.icon != 'none'
+        assign icon_file = 'hoa-bnf-' | append: b.icon | append: '.png'
+        assign icon_url = icon_file | asset_url
+      else
+        assign icon_url = blank
+      endif
+    -%}
+    <li class="hoa-bnf__item" {{ block.shopify_attributes }}>
+      {%- if icon_url != blank -%}
+        <span class="hoa-bnf__icon" style="--hoa-bnf-icon: url('{{ icon_url }}')" aria-hidden="true"></span>
+      {%- endif -%}
+      <span class="hoa-bnf__text">{{ b.text | escape }}</span>
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if items != blank -%}
+  {{ 'hoa-benefits.css' | asset_url | stylesheet_tag }}
+  <section class="hoa-bnf hoa-bnf--{{ s.scheme | default: 'dark' }}" data-hoa-bnf data-duration="{{ s.duration | default: 42 }}" data-hover="{{ s.hover | default: 'slow' }}" aria-label="{{ s.label | default: 'The house standard' | escape }}">
+    <div class="hoa-bnf__viewport" data-hoa-bnf-viewport>
+      <ul class="hoa-bnf__track" data-hoa-bnf-track role="list">
+        {{ items }}
+      </ul>
+    </div>
+    {%- if s.show_credit -%}
+      <p class="hoa-bnf__credit"><a href="https://icons8.com" target="_blank" rel="noopener">Icons by Icons8</a></p>
+    {%- endif -%}
+  </section>
+  <script src="{{ 'hoa-benefits.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PDP: benefits marquee",
+  "tag": "div",
+  "class": "hoa-bnf-section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "The house standard" },
+    {
+      "type": "select", "id": "scheme", "label": "Colour", "default": "dark",
+      "options": [
+        { "value": "dark", "label": "Black strip, white text" },
+        { "value": "light", "label": "White strip, black text" }
+      ]
+    },
+    { "type": "range", "id": "duration", "label": "Seconds per loop", "min": 25, "max": 70, "step": 1, "unit": "s", "default": 42, "info": "Slower reads better. 35 to 50 is recommended." },
+    {
+      "type": "select", "id": "hover", "label": "On hover", "default": "slow",
+      "options": [
+        { "value": "slow", "label": "Slow down" },
+        { "value": "pause", "label": "Pause" },
+        { "value": "none", "label": "Keep moving" }
+      ]
+    },
+    { "type": "checkbox", "id": "show_credit", "label": "Show \"Icons by Icons8\" credit", "default": true, "info": "Required by the free Icons8 licence. Turn off only with a paid Icons8 licence or your own icons." }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "checkbox", "id": "enabled", "label": "Show this benefit", "default": true, "info": "Only show claims that are true for this fragrance." },
+        { "type": "text", "id": "text", "label": "Text", "default": "Artisanal perfumery", "info": "Shown in uppercase. Keep it to two or three words." },
+        {
+          "type": "select", "id": "icon", "label": "Icon", "default": "perfume",
+          "options": [
+            { "value": "perfume", "label": "Atomiser" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "precision", "label": "Caliper" },
+            { "value": "plant", "label": "Sprout" },
+            { "value": "vegan", "label": "Vegan heart" },
+            { "value": "cruelty-free", "label": "Rabbit" },
+            { "value": "seal", "label": "Seal" },
+            { "value": "certificate", "label": "Certificate" },
+            { "value": "none", "label": "No icon" }
+          ]
+        },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (optional)", "info": "Replaces the icon above. Use a transparent PNG or SVG in a thin outline style; it is recoloured to match the text." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Benefits marquee",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Artisanal perfumery", "icon": "perfume" } },
+        { "type": "benefit", "settings": { "text": "Fine fragrance oils", "icon": "drop" } },
+        { "type": "benefit", "settings": { "text": "Crafted with precision", "icon": "precision" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

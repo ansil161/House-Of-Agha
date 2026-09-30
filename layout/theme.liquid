@@ -28,6 +28,7 @@
   <!-- Mock catalog + pricing engine: must load before theme.js (the bag and product data read window.HOA) -->
   {% render 'hoa-catalog-script' %}
   <script src="{{ 'hoa-commerce.js' | asset_url }}" defer></script>
+  <script src="{{ 'hoa-card-3d.js' | asset_url }}" defer></script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'hero-scroll.js' | asset_url }}" defer></script>
   <script src="{{ 'hoa-coupon.js' | asset_url }}" defer></script>
