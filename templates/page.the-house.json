@@ -99,9 +99,9 @@
             "word": "Legacy",
             "title": "We build a legacy",
             "lines": "A tribute to the rich heritage of fine perfumery.\nA vision to craft timeless fragrances.\nA journey to a global name rooted in tradition.",
-            "asset": "hoa-oud-fury-smoke",
-            "w": 2000,
-            "h": 1125
+            "asset": "hoa-philo-legacy",
+            "w": 1600,
+            "h": 1986
           }
         },
         "pillar_2": {
@@ -121,7 +121,7 @@
             "word": "Purpose",
             "title": "We produce with purpose",
             "lines": "Authentic, artisanal craftsmanship.\nSupport for skilled perfumers.\nResponsibility to tradition and the world.",
-            "asset": "hoa-world-hand",
+            "asset": "hoa-philo-purpose",
             "w": 1086,
             "h": 1448
           }
@@ -132,9 +132,9 @@
             "word": "Innovation",
             "title": "We spark innovation",
             "lines": "Heritage in harmony with modernity.\nRoom for creativity and exploration.\nUnique, unforgettable fragrances.",
-            "asset": "hoa-craft-ice",
-            "w": 1200,
-            "h": 1854
+            "asset": "hoa-philo-innovation",
+            "w": 1254,
+            "h": 1254
           }
         },
         "pillar_5": {

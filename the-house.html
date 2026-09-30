@@ -351,6 +351,30 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
       <input id="hoa-search-q" type="search" name="q" placeholder="Oud, rose, fresh…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
       <input type="hidden" name="type" value="product">
       <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
@@ -553,10 +577,10 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <h2 class="hoa-ab-h2 hoa-ab-philo__head">Our philosophy. <span class="hoa-ab-muted">What guides every bottle.</span></h2>
     <div class="hoa-ab-philo__grid"><article class="hoa-ab-pillar hoa-ab-pillar--1" data-hoa-ab-pillar ><div class="hoa-ab-pillar__media" aria-hidden="true">
               <div class="hoa-ab-pillar__img" data-hoa-ab-parallax><img
-    src="assets/hoa-oud-fury-smoke.webp"
-    srcset="assets/hoa-oud-fury-smoke-sm.webp 1000w, assets/hoa-oud-fury-smoke.webp 2000w"
+    src="assets/hoa-philo-legacy.webp"
+    srcset="assets/hoa-philo-legacy-sm.webp 1000w, assets/hoa-philo-legacy.webp 1600w"
     sizes="(min-width: 1024px) 50vw, (min-width: 641px) 50vw, 100vw"
-    width="2000" height="1125"
+    width="1600" height="1986"
     alt=""
     loading="lazy" decoding="async"></div>
             </div><p class="hoa-ab-pillar__word" aria-hidden="true">Legacy</p>
@@ -579,8 +603,8 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
           </div>
         </article><article class="hoa-ab-pillar hoa-ab-pillar--3" data-hoa-ab-pillar ><div class="hoa-ab-pillar__media" aria-hidden="true">
               <div class="hoa-ab-pillar__img" data-hoa-ab-parallax><img
-    src="assets/hoa-world-hand.webp"
-    srcset="assets/hoa-world-hand-sm.webp 700w, assets/hoa-world-hand.webp 1086w"
+    src="assets/hoa-philo-purpose.webp"
+    srcset="assets/hoa-philo-purpose-sm.webp 700w, assets/hoa-philo-purpose.webp 1086w"
     sizes="(min-width: 1024px) 25vw, (min-width: 641px) 50vw, 100vw"
     width="1086" height="1448"
     alt=""
@@ -592,10 +616,10 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
           </div>
         </article><article class="hoa-ab-pillar hoa-ab-pillar--4" data-hoa-ab-pillar ><div class="hoa-ab-pillar__media" aria-hidden="true">
               <div class="hoa-ab-pillar__img" data-hoa-ab-parallax><img
-    src="assets/hoa-craft-ice.webp"
-    srcset="assets/hoa-craft-ice-sm.webp 700w, assets/hoa-craft-ice.webp 1200w"
+    src="assets/hoa-philo-innovation.webp"
+    srcset="assets/hoa-philo-innovation-sm.webp 700w, assets/hoa-philo-innovation.webp 1254w"
     sizes="(min-width: 1024px) 25vw, (min-width: 641px) 50vw, 100vw"
-    width="1200" height="1854"
+    width="1254" height="1254"
     alt=""
     loading="lazy" decoding="async"></div>
             </div><p class="hoa-ab-pillar__word" aria-hidden="true">Innovation</p>
