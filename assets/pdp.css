@@ -458,8 +458,10 @@ html:has(.pdp) body {
 
 .pdp-title {
   margin-top: 10px !important;
+  font-family: var(--font-name);
+  font-variation-settings: var(--font-name-axes);
   font-size: clamp(2.4rem, 3.6vw, 3.4rem);
-  font-weight: 400;
+  font-weight: var(--font-name-weight);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -1154,9 +1156,10 @@ html:has(.pdp) body {
 }
 
 .pdp-dock__title {
-  font-family: var(--font-serif);
+  font-family: var(--font-name);
+  font-variation-settings: var(--font-name-axes);
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: var(--font-name-weight);
   line-height: 1.1;
 }
 
@@ -3565,7 +3568,7 @@ html:has(.pdp) body {
   font-size: clamp(2.6rem, 3.7vw, 3.5rem);
   line-height: 0.98;
 }
-.pdp-console .pdp-lede { margin-top: 10px; font-size: 1.02rem; line-height: 1.45; max-width: 56ch; }
+.pdp-console .pdp-lede { margin-top: 10px; font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-size: 1.02rem; font-style: normal; font-weight: 500; line-height: 1.45; max-width: 56ch; color: #0B0B0B; }
 
 /* Level 1 · social proof: gold stars, a real link, best-seller as a quiet word rather than a badge */
 .pdp-console .pdp-rating { gap: 6px 14px; font-size: 0.86rem; }

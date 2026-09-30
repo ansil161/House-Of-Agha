@@ -757,9 +757,10 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-cf__num::after { content: ''; width: 28px; height: 1px; background: var(--hoa-brass); opacity: 0.6; }
 .hoa-cf__num span { margin: 0 6px; }
 .hoa-cf__name {
-  font-family: var(--hoa-serif);
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-name);
+  font-variation-settings: var(--font-name-axes);
+  font-style: normal;
+  font-weight: var(--font-name-weight);
   font-size: clamp(2.6rem, 4vw, 4rem);
   line-height: 1.05;
   letter-spacing: 0;
@@ -1653,7 +1654,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reel__info { min-width: 0; display: grid; gap: 3px; }
 .hoa-reel__name {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-size: 0.9rem; font-weight: 600; letter-spacing: -0.01em; color: var(--hoa-ink); text-decoration: none;
+  font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-size: 0.95rem; font-weight: var(--font-name-weight); letter-spacing: 0; color: var(--hoa-ink); text-decoration: none;
 }
 .hoa-reel__name:hover { text-decoration: underline; text-underline-offset: 3px; }
 .hoa-reel__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin: 0; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
@@ -1796,7 +1797,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-rvp__gallery:has(> :only-child) { grid-auto-columns: 100%; }
 
 .hoa-rvp__body { flex: 1; padding: 6px 22px 20px; }
-.hoa-rvp__name { margin: 0; font-family: var(--hoa-sans); font-size: 1.2rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.25; text-transform: none; }
+.hoa-rvp__name { margin: 0; font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-size: 1.2rem; font-weight: var(--font-name-weight); letter-spacing: 0; line-height: 1.25; text-transform: none; }
 .hoa-rvp__price { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 0; font-variant-numeric: tabular-nums; }
 .hoa-rvp__price b { font-size: 1.05rem; font-weight: 600; }
 .hoa-rvp__price s { font-size: 0.9rem; color: var(--hoa-mute); }

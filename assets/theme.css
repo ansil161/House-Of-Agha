@@ -3,7 +3,7 @@
    Editorial Architecture: White-First Surface + Black Contrast & Serif Rhythm
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..900,0..100,0..1&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* White-First Color Palette */
@@ -22,6 +22,11 @@
   /* Typography */
   --font-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Product names: heavy, low-contrast serif (no Didone hairlines). Low optical size keeps
+     strokes thick at every size; SOFT/WONK 0 keeps the letterforms sober. */
+  --font-name: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-name-axes: "opsz" 24, "SOFT" 0, "WONK" 0;
+  --font-name-weight: 600;
 
   /* Spacing Scale */
   --space-xs: 8px;

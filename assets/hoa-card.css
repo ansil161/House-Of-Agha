@@ -171,11 +171,12 @@
 .hoa-pc__chip + .hoa-pc__chip::before { content: '\2022'; margin: 0 1.4cqi; font-size: 0.8em; vertical-align: 0.1em; }
 .hoa-pc__name {
   margin: 1.1cqi 0 0;
-  font-family: var(--hoa-serif);
+  font-family: var(--font-name);
+  font-variation-settings: var(--font-name-axes);
   font-size: clamp(17px, 6.2cqi, 32px);
-  font-weight: 500;
+  font-weight: var(--font-name-weight);
   line-height: 1.12;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   text-transform: none;
   color: var(--hoa-ink);
   overflow-wrap: break-word;
