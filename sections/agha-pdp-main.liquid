@@ -148,57 +148,19 @@
             </div>
           {%- endif -%}
         </div>
+        {%- comment -%}
+          The product's next four photos under the main image, two per row. Each tile is a button:
+          a click swaps it with the main image (pdp.js initGalleryTiles), so no photo is ever shown twice
+          and the previous main photo is always one click away. Phones use the swipe strip (hidden there).
+        {%- endcomment -%}
         {%- if media_count > 1 -%}
-          <div class="pdp-thumbs" role="group" aria-label="Product images">
-            {%- for media in product.media -%}
-              <button type="button" class="pdp-thumb{% if forloop.first %} is-active{% endif %}" data-pdp-thumb="{{ forloop.index0 }}" aria-label="Show image {{ forloop.index }} of {{ media_count }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
-                {{ media.preview_image | image_url: width: 176 | image_tag: widths: '88, 132, 176', sizes: '88px', loading: 'lazy', alt: '' }}
+          <div class="pdp-tiles" role="group" aria-label="More product photos">
+            {%- for media in product.media offset: 1 limit: 4 -%}
+              <button type="button" class="pdp-tiles__btn" data-pdp-tile="{{ forloop.index }}" aria-label="Show this photo as the main image">
+                {{ media.preview_image | image_url: width: 900 | image_tag: widths: '450, 700, 900', sizes: '(min-width: 769px) 28vw, 1px', loading: 'lazy', alt: '' }}
               </button>
             {%- endfor -%}
           </div>
-        {%- endif -%}
-        {%- comment -%}
-          "More views": fills the column under the gallery while the buy box is taller. Uses the four
-          optional pictures below (lifestyle / detail shots) or, when none are set, the product's other media.
-        {%- endcomment -%}
-        {%- assign extra_ids = 'extra_image_1,extra_image_2,extra_image_3,extra_image_4' | split: ',' -%}
-        {%- capture more_html -%}
-          {%- for id in extra_ids -%}
-            {%- assign extra = section.settings[id] -%}
-            {%- if extra != blank -%}
-              <figure class="pdp-more__tile">{{ extra | image_url: width: 700 | image_tag: widths: '350, 525, 700', sizes: '(min-width: 1024px) 24vw, 46vw', loading: 'lazy', alt: product.title }}</figure>
-            {%- endif -%}
-          {%- endfor -%}
-        {%- endcapture -%}
-        {%- if more_html contains 'pdp-more__tile' -%}
-          <div class="pdp-more" aria-label="More views">{{ more_html }}</div>
-        {%- elsif media_count > 1 -%}
-          <div class="pdp-more" aria-label="More views">
-            {%- for media in product.media offset: 1 limit: 4 -%}
-              <figure class="pdp-more__tile">{{ media.preview_image | image_url: width: 700 | image_tag: widths: '350, 525, 700', sizes: '(min-width: 1024px) 24vw, 46vw', loading: 'lazy', alt: product.title }}</figure>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-        {%- comment -%} "Why we are better" proofs (blocks type `proof`): one row of four under the photos {%- endcomment -%}
-        {%- assign proof_blocks = section.blocks | where: 'type', 'proof' -%}
-        {%- if proof_blocks.size > 0 -%}
-          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-            {%- for block in proof_blocks -%}
-              <li class="pdp-proof" {{ block.shopify_attributes }}>
-                {%- assign proof_art = 'badge,bottle,hourglass,ifra' | split: ',' -%}
-                <span class="pdp-proof__icon">
-                  {%- if proof_art contains block.settings.icon -%}
-                    {%- assign proof_src = 'hoa-proof-' | append: block.settings.icon | append: '.svg' -%}
-                    <img class="pdp-proof__art" src="{{ proof_src | asset_url }}" alt="" width="40" height="40" loading="lazy" decoding="async">
-                  {%- else -%}
-                    {% render 'pdx-icon', name: block.settings.icon %}
-                  {%- endif -%}
-                </span>
-                <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
-                {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
-              </li>
-            {%- endfor -%}
-          </ul>
         {%- endif -%}
       </div>
 
@@ -691,6 +653,27 @@
             </details>
           {%- endif -%}
         </div>
+        {%- comment -%} "Why we are better" proofs (blocks type `proof`): a row of four closing the details column (the photo column beside it is pinned and fits one screen) {%- endcomment -%}
+        {%- assign proof_blocks = section.blocks | where: 'type', 'proof' -%}
+        {%- if proof_blocks.size > 0 -%}
+          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+            {%- for block in proof_blocks -%}
+              <li class="pdp-proof" {{ block.shopify_attributes }}>
+                {%- assign proof_art = 'badge,bottle,hourglass,ifra' | split: ',' -%}
+                <span class="pdp-proof__icon">
+                  {%- if proof_art contains block.settings.icon -%}
+                    {%- assign proof_src = 'hoa-proof-' | append: block.settings.icon | append: '.svg' -%}
+                    <img class="pdp-proof__art" src="{{ proof_src | asset_url }}" alt="" width="40" height="40" loading="lazy" decoding="async">
+                  {%- else -%}
+                    {% render 'pdx-icon', name: block.settings.icon %}
+                  {%- endif -%}
+                </span>
+                <b class="pdp-proof__title">{{ block.settings.title | escape | newline_to_br }}</b>
+                {%- if block.settings.text != blank -%}<small class="pdp-proof__text">{{ block.settings.text | escape | newline_to_br }}</small>{%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
       </div>
     </div>
   </div>

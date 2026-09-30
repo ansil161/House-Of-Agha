@@ -466,42 +466,82 @@
         onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1.1, ease: ease, stagger: 0.1, overwrite: true }); }
       });
 
-      /* 02b Composed in Hyderabad: the Charminar draws itself line by line as the card
-         scrolls in, and the Urdu city name surfaces behind it. */
-      var hyd = document.querySelector('[data-hoa-ab-hyd]');
-      if (hyd) {
-        var panel = hyd.querySelector('.hoa-ab-hyd__visual');
-        // Build from the ground up: each tier (data-o) draws its lines, then its arched
-        // openings fill in with ink, so the building rises storey by storey while scrolling.
-        var build = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: { trigger: panel, start: 'top 80%', end: 'bottom 55%', scrub: 0.7 }
-        });
-        var tiers = {};
-        hyd.querySelectorAll('[data-o]').forEach(function (el) {
-          var o = +el.getAttribute('data-o');
-          (tiers[o] = tiers[o] || { ln: [], fill: [] })[el.classList.contains('hoa-ab-hyd__fill') ? 'fill' : 'ln'].push(el);
-        });
-        Object.keys(tiers).map(Number).sort(function (a, b) { return a - b; }).forEach(function (o) {
-          var at = o * 0.62;
-          if (tiers[o].ln.length) build.fromTo(tiers[o].ln, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, stagger: 0.04 }, at);
-          if (tiers[o].fill.length) build.fromTo(tiers[o].fill, { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.03 }, at + 0.7);
-        });
-        var urdu = hyd.querySelector('[data-hoa-ab-hyd-urdu]');
-        if (urdu) {
-          gsap.fromTo(urdu, { opacity: 0, y: 50 }, {
-            opacity: 1, y: -30, ease: 'none',
-            scrollTrigger: { trigger: panel, start: 'top bottom', end: 'bottom top', scrub: true }
-          });
-        }
-      }
-
       /* 04 Closing card grows to full size */
       var cta = document.querySelector('[data-hoa-ab-cta]');
       if (cta) {
         gsap.fromTo(cta, { scale: 0.9, borderRadius: 48 }, {
           scale: 1, borderRadius: 24, ease: 'none',
           scrollTrigger: { trigger: cta, start: 'top bottom', end: 'top 35%', scrub: 0.8 }
+        });
+      }
+    });
+
+    /* 02b Composed in Hyderabad: the Charminar draws itself line by line (ground up: each
+       tier's lines, then its arched openings fill with ink), and the Urdu city name surfaces
+       behind it. The drawing is nearly a screen tall, so it is only wholly in view for a few
+       dozen pixels of scrolling; a plain scrub drew the ground tiers below the screen and the
+       finials after they had left the top. So:
+         · the build is scrubbed from the moment its ground enters the screen,
+         · the card holds still (pinned) while the drawing sits centred below the navbar,
+           and the rest of the building rises there; then the page moves on.
+       Wide screens pin the card (drawing + story); stacked phones pin just the drawing panel.
+       If the drawing is taller than the space below the navbar, nothing pins and it builds
+       while the panel crosses the screen. Its own matchMedia so a resize across 900px
+       rebuilds it cleanly; the whole page's triggers are reverted on section reload. */
+    mm.add({ wide: '(min-width: 900px)', motion: '(prefers-reduced-motion: no-preference)' }, function (ctx) {
+      var hyd = document.querySelector('[data-hoa-ab-hyd]');
+      if (!hyd || !ctx.conditions.motion) return;
+      var panel = hyd.querySelector('.hoa-ab-hyd__visual');
+      var hydCard = hyd.querySelector('.hoa-ab-hyd__card');
+      var art = hyd.querySelector('.hoa-ab-hyd__art') || panel;
+      var pinEl = ctx.conditions.wide && hydCard ? hydCard : panel;
+      var navH = function () { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76; };
+      var room = function () { return window.innerHeight - navH() - 16; };
+      // What gets centred below the navbar: the whole drawing panel (jaali borders and all) when it
+      // fits, otherwise the Charminar itself — the card's height comes from the story column and can
+      // exceed a laptop screen. The CSS caps the drawing to the screen height, so it always fits.
+      var focusMid = function () {
+        var f = panel.offsetHeight <= room() ? panel : art, r = f.getBoundingClientRect();
+        return r.top - pinEl.getBoundingClientRect().top + r.height / 2;
+      };
+      var canPin = art.getBoundingClientRect().height <= room();
+
+      var hold = canPin ? ScrollTrigger.create({
+        trigger: pinEl,
+        start: function () { return 'top ' + Math.round(navH() + (window.innerHeight - navH()) / 2 - focusMid()) + 'px'; },
+        end: function () { return '+=' + Math.round(window.innerHeight * 0.7); },   // with the lead-in, the build takes about one screen of scroll
+        pin: true,
+        invalidateOnRefresh: true,
+        refreshPriority: 2          // measured first: its pin spacing moves every trigger below it
+      }) : null;
+
+      var build = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: art,
+          start: 'bottom bottom',   // the ground line comes into view
+          end: hold ? function () { return hold.end; } : function () { return 'top top+=' + Math.round(navH()); },
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+          refreshPriority: 1
+        }
+      });
+      var tiers = {};
+      hyd.querySelectorAll('[data-o]').forEach(function (el) {
+        var o = +el.getAttribute('data-o');
+        (tiers[o] = tiers[o] || { ln: [], fill: [] })[el.classList.contains('hoa-ab-hyd__fill') ? 'fill' : 'ln'].push(el);
+      });
+      Object.keys(tiers).map(Number).sort(function (a, b) { return a - b; }).forEach(function (o) {
+        var at = o * 0.62;
+        if (tiers[o].ln.length) build.fromTo(tiers[o].ln, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, stagger: 0.04 }, at);
+        if (tiers[o].fill.length) build.fromTo(tiers[o].fill, { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.03 }, at + 0.7);
+      });
+
+      var urdu = hyd.querySelector('[data-hoa-ab-hyd-urdu]');
+      if (urdu) {
+        gsap.fromTo(urdu, { opacity: 0, y: 50 }, {
+          opacity: 1, y: -30, ease: 'none',
+          scrollTrigger: { trigger: panel, start: 'top bottom', end: 'bottom top', scrub: true, pinnedContainer: hold ? pinEl : undefined }
         });
       }
     });

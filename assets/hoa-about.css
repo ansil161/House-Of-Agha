@@ -239,7 +239,12 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 }
 .hoa-ab-hyd__visual::before { top: 12px; }
 .hoa-ab-hyd__visual::after { bottom: 12px; }
-.hoa-ab-hyd__art { position: relative; z-index: 1; display: block; width: min(74%, 400px); height: auto; overflow: visible; }
+.hoa-ab-hyd__art {
+  position: relative; z-index: 1; display: block; height: auto; overflow: visible;
+  /* also capped by the screen height (drawing is 1.425× as tall as wide), so the whole Charminar
+     always fits below the navbar while it builds (assets/hoa-about.js holds it there) */
+  width: min(74%, 400px, calc((100svh - var(--hoa-header-h, 76px) - 96px) / 1.425));
+}
 .hoa-ab-hyd__ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
 /* the arched openings: solid ink, like the voids of the real building */
 .hoa-ab-hyd__fill { fill: currentColor; stroke: none; }
@@ -318,7 +323,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 @media (max-width: 899px) {
   .hoa-ab-hyd__card { grid-template-columns: 1fr; }
   .hoa-ab-hyd__visual { min-height: 0; padding: 60px 20px 80px; }
-  .hoa-ab-hyd__art { width: min(76%, 320px); }
+  .hoa-ab-hyd__art { width: min(76%, 320px, calc((100svh - var(--hoa-header-h, 64px) - 96px) / 1.425)); }
 }
 @media (max-width: 640px) {
   .hoa-ab-hyd__notes { grid-template-columns: 1fr; }

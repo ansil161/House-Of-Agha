@@ -118,8 +118,10 @@
       current = index;
       slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
       thumbBtns.forEach((b, i) => {
-        b.classList.toggle('is-active', i === index);
-        b.setAttribute('aria-current', i === index ? 'true' : 'false');
+        // with more photos than tiles, the last tile (the "+N" one) stands for all the photos after it
+        const on = i === index || (i === thumbBtns.length - 1 && index > i);
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-current', on ? 'true' : 'false');
       });
       if (counter) counter.textContent = pad(index + 1);
       // Play only the videos that can be seen
@@ -264,6 +266,81 @@
     };
   }
 
+  /* ------------------------------------------------ Gallery tiles: swap */
+  // The 2 x 2 photos under the main image (.pdp-tiles). A tile holds one slide index (data-pdp-tile);
+  // clicking it makes that photo the main image and the tile takes the photo that was main, so each
+  // photo appears once. Anything else that changes the main photo (variant image, lightbox) goes
+  // through the same setActive, so the tiles always stay in step.
+  function initGalleryTiles(main, gallery) {
+    const tiles = $$('[data-pdp-tile]', main);
+    if (!tiles.length || !gallery) return;
+    const slideImg = (i) => $('img', gallery.slides[i]);
+    const show = (tile, i) => {
+      const from = slideImg(i);
+      const img = $('img', tile);
+      if (!from || !img) return;
+      img.removeAttribute('srcset');
+      img.src = from.currentSrc || from.src;
+      if (from.srcset) { img.srcset = from.srcset; img.sizes = '(min-width: 769px) 28vw, 1px'; }
+      tile.dataset.pdpTile = String(i);
+    };
+    const setActive = gallery.setActive;
+    gallery.setActive = (index, opts) => {
+      const prev = gallery.current;
+      setActive(index, opts);
+      if (index === prev) return;
+      const tile = tiles.find((t) => +t.dataset.pdpTile === index);
+      if (tile) show(tile, prev);                                  // the old main photo takes its place
+    };
+    tiles.forEach((tile) => listen(tile, 'click', () => {
+      const i = +tile.dataset.pdpTile;
+      if (!gallery.slides[i]) return;
+      gallery.setActive(i);
+    }));
+  }
+
+  /* ------------------------------------------- Two columns: held in view, 769px+ */
+  // The shorter of the two columns (gallery / information) follows the screen while the taller one
+  // scrolls: it holds under the header, or — when it is taller than the screen — scrolls until its end
+  // is in view and holds there. It is moved with a transform clamped to the product grid, so it
+  // releases exactly where the main product section ends and never covers the sections below.
+  // (CSS position: sticky was dropped here: Chrome snaps a sticky column that is taller than the
+  // screen back to its start at the release point instead of letting it slide out.)
+  function initColumnSticky(main) {
+    const grid = $('.pdp-hero__grid', main);
+    const cols = [$('.pdp-media', main), $('.pdp-info', main)].filter(Boolean);
+    if (!grid || cols.length < 2) return;
+    const wide = window.matchMedia('(min-width: 769px)');
+    let raf = 0;
+    const reset = () => cols.forEach((c) => { c.style.removeProperty('transform'); c.classList.remove('is-held'); });
+    const update = () => {
+      raf = 0;
+      if (!wide.matches) { reset(); return; }
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96;
+      const g = grid.getBoundingClientRect();
+      cols.forEach((col) => {
+        const h = col.offsetHeight;
+        const room = g.height - h;                                   // how far this column can travel
+        if (room <= 1) { col.style.removeProperty('transform'); col.classList.remove('is-held'); return; }
+        const hold = Math.min(header + 12, window.innerHeight - h - 16);   // where it rests on screen (matches the 28px in pdp.css)
+        const y = Math.max(0, Math.min(room, hold - g.top));
+        col.style.transform = y ? 'translate3d(0,' + y.toFixed(1) + 'px,0)' : '';
+        col.classList.toggle('is-held', y > 0);
+      });
+    };
+    const queue = () => { if (!raf) raf = requestAnimationFrame(update); };
+    listen(window, 'scroll', queue, { passive: true });
+    listen(window, 'resize', queue, { passive: true });
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(queue);
+      cols.forEach((c) => ro.observe(c));
+      ro.observe(grid);
+      cleanups.push(() => ro.disconnect());
+    }
+    cleanups.push(() => { if (raf) cancelAnimationFrame(raf); reset(); });
+    update();
+  }
+
   /* --------------------------------------------- Info column: hold in view */
   // The purchase column is sticky next to the moving images. If it is taller than the screen its
   // sticky offset goes negative, so it scrolls until its end is in view and only then holds.
@@ -298,8 +375,22 @@
     }
     const stage = $('[data-pdp-lightbox-stage]', dialog);
     const count = $('[data-pdp-lightbox-count]', dialog);
-    const images = gallery.slides.map((s) => $('img', s)).filter(Boolean);
-    if (!images.length) { openBtn.hidden = true; return; }
+    const slideImgs = gallery.slides.map((s) => $('img', s)).filter(Boolean);
+    if (!slideImgs.length) { openBtn.hidden = true; return; }
+    // Every photo on the page opens the viewer: the main slides, then any "More views" photo that
+    // is not already one of the slides (matched by file name, sizes differ).
+    const key = (img) => ((img.currentSrc || img.src || '').split('?')[0].split('/').pop() || '').replace(/(_\d+x\d*|-sm)(?=\.\w+$)/, '');
+    const tiles = $$('.pdp-more__tile', main);
+    const images = slideImgs.slice();
+    const tileIndex = tiles.map((tile) => {
+      const img = $('img', tile);
+      if (!img) return -1;
+      const k = key(img);
+      const found = images.findIndex((im) => key(im) === k);
+      if (found > -1) return found;
+      images.push(img);
+      return images.length - 1;
+    });
     let index = 0;
 
     const show = (i) => {
@@ -313,15 +404,41 @@
       if (count) count.textContent = pad(index + 1);
     };
 
-    listen(openBtn, 'click', () => {
-      const activeImg = $('img', gallery.slides[gallery.current]);
-      show(Math.max(0, images.indexOf(activeImg)));
+    const open = (i) => {
+      show(i);
       dialog.showModal();
       document.body.style.overflow = 'hidden';
+    };
+    listen(openBtn, 'click', () => {
+      const activeImg = $('img', gallery.slides[gallery.current]);
+      open(Math.max(0, images.indexOf(activeImg)));
+    });
+    // Main photo: a click opens the viewer on the slide showing
+    gallery.slides.forEach((slide) => {
+      const img = $('img', slide);
+      if (!img) return;
+      slide.classList.add('is-zoomable');
+      listen(slide, 'click', (e) => {
+        if (e.target.closest('button, a, video, model-viewer')) return;
+        open(Math.max(0, images.indexOf(img)));
+      });
+    });
+    // "More views" photos act as buttons, so keyboard users can open them too
+    tiles.forEach((tile, t) => {
+      if (tileIndex[t] < 0) return;
+      tile.classList.add('is-zoomable');
+      tile.setAttribute('role', 'button');
+      tile.setAttribute('tabindex', '0');
+      tile.setAttribute('aria-label', 'View image ' + (tileIndex[t] + 1) + ' full screen');
+      listen(tile, 'click', () => open(tileIndex[t]));
+      listen(tile, 'keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(tileIndex[t]); }
+      });
     });
     listen(dialog, 'close', () => {
       document.body.style.overflow = '';
-      gallery.setActive(gallery.slides.findIndex((s) => $('img', s) === images[index]), { scroll: true });
+      const slideIndex = gallery.slides.findIndex((s) => $('img', s) === images[index]);
+      if (slideIndex > -1) gallery.setActive(slideIndex, { scroll: true });
     });
     listen(dialog, 'click', (e) => {
       if (e.target.closest('[data-pdp-lightbox-close]') || e.target === stage) dialog.close();
@@ -1141,6 +1258,8 @@
       initDelivery(main);
       initWishlist(main, variantState);
       initInfoSticky(main);
+      initGalleryTiles(main, gallery);
+      initColumnSticky(main);
     }
     initAccordions(document);
     initRecommendations();

@@ -149,15 +149,9 @@
             </div>` : ''}
           </div>
           ${media.length > 1 ? `
-          <div class="pdp-thumbs" role="group" aria-label="Product images">
-            ${media.map((src, i) => `<button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${media.length}" aria-current="${i === 0 ? 'true' : 'false'}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+          <div class="pdp-tiles" role="group" aria-label="More product photos">
+            ${media.slice(1, 5).map((src, i) => `<button type="button" class="pdp-tiles__btn" data-pdp-tile="${i + 1}" aria-label="Show this photo as the main image"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
           </div>` : ''}
-          <div class="pdp-more" aria-label="More views">
-            ${media.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
-          </div>
-          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
-          </ul>
         </div>
 
         <!-- Purchase console: mirrors sections/agha-pdp-main.liquid -->
@@ -303,6 +297,9 @@
               <div class="pdp-accordion__body"><p>${shipThreshold ? 'Complimentary shipping on orders above ' + money(shipThreshold) + '. ' : ''}Every flacon is hand-wrapped in matte black hardboard with a 5 ml sample inside. Check your pincode above for an estimated delivery date.</p></div>
             </details>
           </div>
+          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
+          </ul>
         </div>
       </div>
     </div>
@@ -972,7 +969,6 @@
   const benefits = `
   <section class="hoa-bnf hoa-bnf--dark" data-hoa-bnf data-duration="42" data-hover="slow" aria-label="The house standard">
     <div class="hoa-bnf__viewport" data-hoa-bnf-viewport><ul class="hoa-bnf__track" data-hoa-bnf-track role="list">${bnfItems}</ul></div>
-    <p class="hoa-bnf__credit"><a href="https://icons8.com" target="_blank" rel="noopener">Icons by Icons8</a></p>
   </section>`;
 
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)

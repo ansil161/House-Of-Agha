@@ -392,13 +392,25 @@ html:has(.pdp) body {
     .pdp-slide[data-role='support']:hover::after { opacity: 0.04; }
   }
 
-  /* Purchase column stays in view while the wall scrolls (pdp.js sets --pdp-info-top so a column
-     taller than the screen scrolls until its end, then holds) */
+  /* Purchase column is pinned under the header from the first scroll while the image wall moves.
+     It is capped at the screen height; anything taller scrolls inside the column (then hands the
+     scroll back to the page at its end). pdp.js still sets --pdp-info-top but it is not used here. */
   .pdp-info {
     position: sticky;
-    top: var(--pdp-info-top, calc(var(--pdp-header-offset) + 12px));
+    top: calc(var(--pdp-header-offset) + 12px);
     align-self: start;
+    max-height: calc(100vh - var(--pdp-header-offset) - 24px);
+    max-height: calc(100dvh - var(--pdp-header-offset) - 24px);
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    padding-inline: 4px;
+    margin-inline: -4px;
+    padding-bottom: 96px; /* the last lines scroll clear of the floating add-to-bag bar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
   }
+  .pdp-info::-webkit-scrollbar { width: 4px; }
+  .pdp-info::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.18); border-radius: 4px; }
 
   .pdp-stage__badge {
     z-index: 5;
@@ -3132,6 +3144,9 @@ html:has(.pdp) body {
 .pdp-more__tile { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; background: var(--pdp-soft); border-radius: 3px; }
 .pdp-more__tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-editorial, ease); }
 @media (hover: hover) { .pdp-more__tile:hover img { transform: scale(1.03); } }
+/* photos that open the full-screen viewer (pdp.js initLightbox) */
+.pdp-slide.is-zoomable, .pdp-more__tile.is-zoomable { cursor: zoom-in; }
+.pdp-more__tile.is-zoomable:focus-visible { outline: 1px solid var(--pdp-ink); outline-offset: 3px; }
 @media (max-width: 768px) { .pdp-more { gap: 8px; margin-top: 10px; } }
 
 /* ==========================================================================
@@ -4246,25 +4261,25 @@ html:has(.pdp) body {
 .pdp-proof__icon .pdp-proof__art { display: block; width: 44px; height: 44px; object-fit: contain; }
 .pdp-proof__title { font-size: 0.72rem; font-weight: 800; line-height: 1.15; letter-spacing: 0.01em; text-transform: uppercase; color: var(--pdp-ink); }
 .pdp-proof__text { font-size: 0.68rem; line-height: 1.35; color: var(--pdp-ink-soft); }
-/* Placed under the four "More views" photos in the gallery column (wider than the buy column) */
-.pdp-media > .pdp-proofs {
+/* At the end of the information column (the gallery beside it is sticky and shows only the product) */
+.pdp-hero .pdp-proofs {
   margin: clamp(18px, 2vw, 28px) 0 0;
   padding: clamp(20px, 2vw, 28px) 0;
   border-top: 1px solid #EAEAEA;
   border-bottom: 1px solid #EAEAEA;
 }
-.pdp-media > .pdp-proofs .pdp-proof { gap: 7px; padding: 6px 12px; }
-.pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 40px; height: 40px; }
-.pdp-media > .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 50px; height: 50px; }
-.pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.8rem; }
-.pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.74rem; }
+.pdp-hero .pdp-proofs .pdp-proof { gap: 7px; padding: 6px 12px; }
+.pdp-hero .pdp-proofs .pdp-proof__icon .pdx-icon { width: 40px; height: 40px; }
+.pdp-hero .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 50px; height: 50px; }
+.pdp-hero .pdp-proofs .pdp-proof__title { font-size: 0.8rem; }
+.pdp-hero .pdp-proofs .pdp-proof__text { font-size: 0.74rem; }
 @media (max-width: 768px) {
-  .pdp-media > .pdp-proofs { margin: 16px 0 0; padding: 16px 0; }
-  .pdp-media > .pdp-proofs .pdp-proof { padding: 4px 3px; }
-  .pdp-media > .pdp-proofs .pdp-proof__icon .pdx-icon { width: 30px; height: 30px; }
-  .pdp-media > .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 36px; height: 36px; }
-  .pdp-media > .pdp-proofs .pdp-proof__title { font-size: 0.62rem; }
-  .pdp-media > .pdp-proofs .pdp-proof__text { font-size: 0.6rem; }
+  .pdp-hero .pdp-proofs { margin: 16px 0 0; padding: 16px 0; }
+  .pdp-hero .pdp-proofs .pdp-proof { padding: 4px 3px; }
+  .pdp-hero .pdp-proofs .pdp-proof__icon .pdx-icon { width: 30px; height: 30px; }
+  .pdp-hero .pdp-proofs .pdp-proof__icon .pdp-proof__art { width: 36px; height: 36px; }
+  .pdp-hero .pdp-proofs .pdp-proof__title { font-size: 0.62rem; }
+  .pdp-hero .pdp-proofs .pdp-proof__text { font-size: 0.6rem; }
 }
 @media (max-width: 768px) {
   .pdp-proof { padding: 4px 4px; }
@@ -5083,3 +5098,100 @@ html:has(.pdp) body {
 /* The truck is wide (about 16:9): give it the width so it reads at the same weight as the badge */
 .pdp-img-icon[style*="free-shipping"] { width: 34px; }
 .pdp-deal__icon .pdp-img-icon[style*="free-shipping"] { width: 24px; height: 16px; }
+
+/* ==========================================================================
+   MAIN PRODUCT SECTION — pinned photo column (2026-09-30), 769px+
+   Left, held in view: the main image tall, in the photos' own 4 : 5 shape, with the product's next four
+   photos two per row under it (clickable, pdp.js initGalleryTiles swaps a tile with the main image).
+   No counter. Right: the details column scrolls (≈55 / 45 split) and ends with "Why we are better".
+   pdp.js initColumnSticky holds the shorter column in view while the taller one scrolls (a transform
+   clamped to .pdp-hero__grid), so it releases exactly where the main product section ends — never
+   over the sections below. Phones (≤768px) keep the single-column mobile layout untouched.
+   ========================================================================== */
+@media (min-width: 769px) {
+  body .pdp-hero .pdp-hero__grid,
+  body .pdp-hero .pdp-hero__grid:has([data-pdp-thumbs]) {
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+    column-gap: clamp(32px, 4.4vw, 80px);
+    align-items: start;
+  }
+  /* Held in view by pdp.js (initColumnSticky, a clamped transform), not position: sticky */
+  body .pdp-hero .pdp-media,
+  body .pdp-hero .pdp-info {
+    position: relative;
+    top: auto;
+    align-self: start;
+  }
+  body .pdp-hero .pdp-media.is-held,
+  body .pdp-hero .pdp-info.is-held { will-change: transform; }
+  /* Main image is tall (4 : 5, like the photos). When the column is taller than the
+     screen, pdp.js lets it scroll until the photo row is in view and holds it there. */
+  body .pdp-hero .pdp-media { display: block; height: auto; max-height: none; }
+  body .pdp-hero .pdp-stage,
+  body .pdp-hero .pdp-stage__inner { position: relative; height: auto; }
+  body .pdp-hero .pdp-info {
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+    max-width: 560px;
+    padding-bottom: clamp(24px, 3vw, 48px);
+  }
+  body .pdp-hero .pdp-media .pdp-more,
+  body .pdp-hero .pdp-thumbs,
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-story__progress { display: none; }
+
+  /* Main image: large, the photograph itself (no card, border or shadow around the bottle) */
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track {
+    height: auto;
+    aspect-ratio: 4 / 5;             /* the product photos' own shape: the whole picture shows, nothing cropped off */
+    margin: 0;
+    border: 0;
+    border-radius: clamp(12px, 1.2vw, 18px);
+    box-shadow: none;
+  }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide img,
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+  }
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide,
+  body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-slide.is-active { transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  /* The next four photos under the main image, two per row (as in the reference) */
+  body .pdp-hero .pdp-tiles {
+    flex: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(8px, 0.9vw, 14px);
+    margin-top: clamp(8px, 0.9vw, 14px);
+  }
+  .pdp-tiles__btn {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1.18;
+    padding: 0;
+    border: 0;
+    border-radius: clamp(12px, 1.2vw, 18px);
+    overflow: hidden;
+    background: #F3F1ED;
+    cursor: pointer;
+  }
+  .pdp-tiles__btn img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  }
+  .pdp-tiles__btn:hover img { transform: scale(1.035); }
+  .pdp-tiles__btn:focus-visible { outline: 2px solid var(--pdp-ink); outline-offset: 3px; }
+}
+.pdp-tiles { display: none; }
+@media (min-width: 769px) { body .pdp-hero .pdp-tiles { display: grid; } }
+@media (min-width: 769px) and (prefers-reduced-motion: reduce) {
+  .pdp-tiles__btn img, .pdp-tiles__btn:hover img { transform: none; transition: none; }
+}

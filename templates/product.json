@@ -813,7 +813,7 @@
         "scheme": "dark",
         "duration": 42,
         "hover": "slow",
-        "show_credit": true
+        "show_credit": false
       }
     }
   },
