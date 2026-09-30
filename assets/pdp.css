@@ -4039,6 +4039,26 @@ html:has(.pdp) body {
 .pdp-console .pdp-offer.is-selected { background: #FBF3E3; border-color: var(--pdp-ink); box-shadow: inset 0 0 0 1px var(--pdp-ink); }
 .pdp-console .pdp-offer__flag { right: 14px; font-size: 0.6rem; }
 
+/* Desktop: Single · Duo · Trio on one line, one centred tile each
+   (photo, name, bottles + saving, price); the outline marks the choice. */
+@media (min-width: 769px) {
+  .pdp-console .pdp-offers__list { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row; gap: 10px; }
+  .pdp-console .pdp-offer {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    align-content: start;
+    gap: 8px;
+    padding: 16px 10px 14px;
+    text-align: center;
+  }
+  .pdp-console .pdp-offer__radio { display: none; }
+  .pdp-console .pdp-offer__img { width: 72px; height: 72px; }
+  .pdp-console .pdp-offer__body { justify-items: center; gap: 4px; }
+  .pdp-console .pdp-offer__meta { justify-content: center; gap: 4px 6px; }
+  .pdp-console .pdp-offer__price { justify-items: center; }
+  .pdp-console .pdp-offer__flag { top: -9px; right: 50%; transform: translateX(50%); white-space: nowrap; }
+}
+
 @media (max-width: 768px) {
   .pdp-banner-offer { gap: 8px; padding: 9px 10px 9px 12px; font-size: 0.78rem; }
   .pdp-banner-offer > span { flex-wrap: nowrap; gap: 8px; }
