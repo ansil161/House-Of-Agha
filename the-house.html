@@ -55,10 +55,10 @@
       "isBestSeller": false, "rating": 4.6, "reviewCount": 86, "inventory": 9 },
     { "handle": "maha", "name": "Maha", "family": "Floral", "wearer": "women", "gift": true, "asset": "maha",
       "image": "assets/hoa-product-maha-sm.webp", "imageMain": "assets/hoa-product-maha.webp", "imageMood": "assets/hoa-alt-maha.webp", "regularPrice": 2499, "salePrice": 1999,
-      "isBestSeller": false, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
+      "isBestSeller": false, "isNew": true, "rating": 4.7, "reviewCount": 57, "inventory": 12 },
     { "handle": "sea-smoke", "name": "Sea Smoke", "family": "Fresh", "wearer": "unisex", "gift": true, "asset": "sea-smoke",
       "image": "assets/hoa-product-sea-smoke-sm.webp", "imageMain": "assets/hoa-product-sea-smoke.webp", "imageMood": "assets/hoa-alt-sea-smoke.webp", "regularPrice": 1999, "salePrice": null,
-      "isBestSeller": false, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
+      "isBestSeller": false, "isNew": true, "rating": 4.5, "reviewCount": 23, "inventory": 15 },
     { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "Aromatic", "wearer": "men", "gift": false, "asset": "tobacco-enigma",
       "image": "assets/hoa-product-tobacco-enigma-sm.webp", "imageMain": "assets/hoa-product-tobacco-enigma.webp", "imageMood": "assets/hoa-alt-tobacco-enigma.webp", "regularPrice": 4900, "salePrice": null,
       "isBestSeller": true, "rating": 4.9, "reviewCount": 312, "inventory": 7 },
@@ -251,6 +251,30 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <p>House of Agha · Eau de Parfum</p>
   </div>
 </nav><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
   <div class="hoa-search__panel">
     <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>

@@ -59,7 +59,7 @@
       price: hasOffer ? sale : reg,
       discountPercentage: hasOffer ? Math.round((reg - sale) / reg * 100) : 0,
       savings: hasOffer ? reg - sale : 0,
-      isBestSeller: !!p.isBestSeller, rating: +p.rating || 0, reviewCount: +p.reviewCount || 0,
+      isBestSeller: !!p.isBestSeller, isNew: !!p.isNew, rating: +p.rating || 0, reviewCount: +p.reviewCount || 0,
       inventory: p.inventory == null ? null : +p.inventory
     };
   }
@@ -204,7 +204,7 @@
   function pcMarkup(o) {
     var sold = !!o.sold, offer = !!o.was && !sold;
     var rating = Number(o.rating) || 0, reviews = Number(o.reviews) || 0;
-    var tag = o.best ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : (o.badge ? '<p class="hoa-pc__tag">' + esc(o.badge) + '</p>' : '');
+    var tag = o.best ? '<p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>' : o.isNew ? '<p class="hoa-pc__tag hoa-pc__tag--new">New</p>' : (o.badge ? '<p class="hoa-pc__tag">' + esc(o.badge) + '</p>' : '');
     var priceInner = '<span class="hoa-pc__now">' + esc(o.now) + '</span>' + (offer ? '<s class="hoa-pc__was"><span class="hoa-pc__sr">Was </span>' + esc(o.was) + '</s><span class="hoa-pc__off">' + o.off + '% off</span>' : '');
     var action = '';
     if (o.action === 'quick') {
@@ -229,7 +229,7 @@
     return pcMarkup({
       handle: p.handle, url: p.url, name: p.name, image: p.imageMain || p.image, imageMood: p.imageMood,
       family: p.family, wearer: p.wearer, now: money(p.price), was: p.hasOffer ? money(p.regularPrice) : '', off: p.discountPercentage,
-      rating: p.rating, reviews: p.reviewCount, best: p.isBestSeller, sold: p.inventory === 0, action: 'quick', index: i
+      rating: p.rating, reviews: p.reviewCount, best: p.isBestSeller, isNew: p.isNew, sold: p.inventory === 0, action: 'quick', index: i
     });
   }
 

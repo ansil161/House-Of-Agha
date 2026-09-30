@@ -25,6 +25,7 @@
     sale_text, regular_text     optional display strings (Shopify passes | money output)
     rating (0-5), review_count  optional
     best_seller          true | false
+    is_new_flag          true | false (also true when the product is tagged "new"); shows the white NEW badge
     badge                optional badge text (New, Limited, Featured); with shopify_product it is read
                          from the product tags "new", "limited", "featured" when not passed
     kind                 product type line under the button (blank = Eau de Parfum)
@@ -92,10 +93,17 @@
     assign is_best = true
   endif
   assign badge_text = badge
+  assign is_new = false
+  if is_new_flag == true or is_new_flag == 'true'
+    assign is_new = true
+  endif
   if badge_text == blank and shopify_product != blank
     for t in shopify_product.tags
       assign tl = t | downcase | strip
-      if tl == 'new' or tl == 'limited' or tl == 'featured'
+      if tl == 'new'
+        assign is_new = true
+      endif
+      if tl == 'limited' or tl == 'featured'
         assign badge_text = tl | capitalize
         break
       endif
@@ -128,6 +136,8 @@
     </a>
     {%- if is_best -%}
       <p class="hoa-pc__tag hoa-pc__tag--best">Best seller</p>
+    {%- elsif is_new -%}
+      <p class="hoa-pc__tag hoa-pc__tag--new">New</p>
     {%- elsif badge_text != blank -%}
       <p class="hoa-pc__tag">{{ badge_text }}</p>
     {%- endif -%}

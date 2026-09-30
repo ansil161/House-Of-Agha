@@ -276,6 +276,7 @@
             rating: p.rating,
             review_count: p.reviewCount,
             best_seller: p.isBestSeller,
+            is_new_flag: p.isNew,
             product_id: p.handle
           -%}
           {%- if forloop.index == interlude_after -%}{{ interlude }}{%- endif -%}
