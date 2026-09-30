@@ -377,6 +377,7 @@
         "photo_1": {
           "type": "photo",
           "settings": {
+            "products": "maha",
             "asset": "hoa-pdp-gal-hero",
             "alt": "A woman in a red gown holds Maha",
             "w": 1856,
@@ -387,56 +388,342 @@
         "photo_2": {
           "type": "photo",
           "settings": {
-            "asset": "hoa-pdp-gal-2",
-            "alt": "A man on the shore holds Sea Smoke",
+            "products": "maha",
+            "asset": "hoa-pgal-maha-2",
+            "alt": "Maha held out in a sweep of red silk",
             "w": 1000,
-            "h": 1250
-          }
-        },
-        "photo_4": {
-          "type": "photo",
-          "settings": {
-            "asset": "hoa-pdp-gal-4",
-            "alt": "Maha bottle among red silk",
-            "w": 1000,
-            "h": 1250
+            "h": 1241
           }
         },
         "photo_3": {
           "type": "photo",
           "settings": {
+            "products": "maha",
+            "asset": "hoa-pgal-maha-3",
+            "alt": "A woman holds Maha close to her face",
+            "w": 1000,
+            "h": 1241
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "products": "maha",
+            "asset": "hoa-pgal-maha-4",
+            "alt": "Maha bottle among red silk",
+            "w": 1000,
+            "h": 1241
+          }
+        },
+        "photo_5": {
+          "type": "photo",
+          "settings": {
+            "products": "maha",
+            "asset": "hoa-pgal-maha-5",
+            "alt": "Maha resting in folds of red silk",
+            "w": 1000,
+            "h": 1241
+          }
+        },
+        "photo_6": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-hero",
+            "alt": "Agha Blue resting in snow and ice",
+            "w": 1856,
+            "h": 2304,
+            "focus": "50% 45%"
+          }
+        },
+        "photo_7": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-2",
+            "alt": "Agha Blue on a sea rock by the cliffs",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_8": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-3",
+            "alt": "Agha Blue held at the waist by the sea",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_9": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-4",
+            "alt": "Agha Blue on a rock above the sea",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_10": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-5",
+            "alt": "Agha Blue in the water of a sea cave",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_11": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-6",
+            "alt": "Agha Blue inside a block of ice",
+            "w": 1000,
+            "h": 1241
+          }
+        },
+        "photo_12": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-7",
+            "alt": "Agha Blue in snow among ice cubes",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_13": {
+          "type": "photo",
+          "settings": {
+            "products": "agha-blue",
+            "asset": "hoa-pgal-agha-blue-8",
+            "alt": "Fresh as ice, deep as blue",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_14": {
+          "type": "photo",
+          "settings": {
+            "products": "sea-smoke",
+            "asset": "hoa-pgal-sea-smoke-hero",
+            "alt": "Sea Smoke lying in the shallow waves",
+            "w": 1536,
+            "h": 1920,
+            "focus": "50% 50%"
+          }
+        },
+        "photo_15": {
+          "type": "photo",
+          "settings": {
+            "products": "sea-smoke",
+            "asset": "hoa-pgal-sea-smoke-2",
+            "alt": "Sea Smoke on the sand among lemons",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_16": {
+          "type": "photo",
+          "settings": {
+            "products": "sea-smoke",
+            "asset": "hoa-pgal-sea-smoke-3",
+            "alt": "A man on the shore holds Sea Smoke",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_17": {
+          "type": "photo",
+          "settings": {
+            "products": "sea-smoke",
+            "asset": "hoa-pgal-sea-smoke-4",
+            "alt": "Sea Smoke held in the surf",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_18": {
+          "type": "photo",
+          "settings": {
+            "products": "shamamah",
+            "asset": "hoa-pgal-shamamah-hero",
+            "alt": "Shamamah on old wood with moss, sandalwood and lavender",
+            "w": 1638,
+            "h": 2048,
+            "focus": "50% 22%"
+          }
+        },
+        "photo_19": {
+          "type": "photo",
+          "settings": {
+            "products": "shamamah",
+            "asset": "hoa-pgal-shamamah-2",
+            "alt": "Shamamah on green satin",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_20": {
+          "type": "photo",
+          "settings": {
+            "products": "shamamah",
+            "asset": "hoa-pgal-shamamah-3",
+            "alt": "Shamamah lying on green satin",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_21": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-fury",
+            "asset": "hoa-pgal-oud-fury-hero",
+            "alt": "Oud Fury by a palace window at dusk",
+            "w": 1792,
+            "h": 2400,
+            "focus": "50% 60%"
+          }
+        },
+        "photo_22": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-fury",
             "asset": "hoa-pdp-gal-3",
             "alt": "A man holds Oud Fury in warm low light",
             "w": 1000,
             "h": 1250
           }
         },
-        "photo_5": {
+        "photo_23": {
           "type": "photo",
           "settings": {
-            "asset": "hoa-pdp-gal-5",
-            "alt": "A woman holds Maha close to her face",
-            "w": 1000,
-            "h": 1250
+            "products": "oud-fury",
+            "asset": "hoa-alt-oud-fury",
+            "alt": "Oud Fury among pieces of agarwood",
+            "w": 1080,
+            "h": 1350
           }
         },
-        "photo_6": {
+        "photo_24": {
           "type": "photo",
           "settings": {
-            "asset": "hoa-pdp-gal-6",
-            "alt": "Agha Blue resting in snow and ice",
-            "w": 1000,
-            "h": 1250
+            "products": "oud-fury",
+            "asset": "hoa-oud-fury-smoke",
+            "alt": "Oud Fury in smoke and embers",
+            "w": 2000,
+            "h": 1125
+          }
+        },
+        "photo_25": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-fury",
+            "asset": "hoa-hero-oud-fury",
+            "alt": "Oud Fury on agarwood in amber light",
+            "w": 2000,
+            "h": 1125
+          }
+        },
+        "photo_26": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-of-dark-paradise",
+            "asset": "hoa-hero-dark-paradise",
+            "alt": "Oud of Dark Paradise on dark stone in a shaft of light",
+            "w": 2000,
+            "h": 1125,
+            "focus": "50% 50%"
+          }
+        },
+        "photo_27": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-of-dark-paradise",
+            "asset": "hoa-alt-dark-paradise",
+            "alt": "Oud of Dark Paradise in smoke on a rock",
+            "w": 1080,
+            "h": 1350
+          }
+        },
+        "photo_28": {
+          "type": "photo",
+          "settings": {
+            "products": "tobacco-enigma",
+            "asset": "hoa-tobacco-enigma-portrait",
+            "alt": "Tobacco Enigma among tobacco leaves",
+            "w": 1200,
+            "h": 1607,
+            "focus": "50% 45%"
+          }
+        },
+        "photo_29": {
+          "type": "photo",
+          "settings": {
+            "products": "tobacco-enigma",
+            "asset": "hoa-alt-tobacco-enigma",
+            "alt": "Tobacco Enigma on moss in a forest",
+            "w": 1080,
+            "h": 1350
+          }
+        },
+        "photo_30": {
+          "type": "photo",
+          "settings": {
+            "products": "tobacco-enigma",
+            "asset": "hoa-ingredients-tobacco",
+            "alt": "Tobacco Enigma with its ingredients",
+            "w": 969,
+            "h": 969
+          }
+        },
+        "photo_31": {
+          "type": "photo",
+          "settings": {
+            "products": "tobacco-enigma",
+            "asset": "hoa-shop-rec-tobacco-enigma",
+            "alt": "Tobacco Enigma on stone",
+            "w": 1086,
+            "h": 1448
           }
         }
       },
       "block_order": [
         "photo_1",
         "photo_2",
-        "photo_4",
         "photo_3",
+        "photo_4",
         "photo_5",
-        "photo_6"
+        "photo_6",
+        "photo_7",
+        "photo_8",
+        "photo_9",
+        "photo_10",
+        "photo_11",
+        "photo_12",
+        "photo_13",
+        "photo_14",
+        "photo_15",
+        "photo_16",
+        "photo_17",
+        "photo_18",
+        "photo_19",
+        "photo_20",
+        "photo_21",
+        "photo_22",
+        "photo_23",
+        "photo_24",
+        "photo_25",
+        "photo_26",
+        "photo_27",
+        "photo_28",
+        "photo_29",
+        "photo_30",
+        "photo_31"
       ],
       "settings": {
         "feature_first": true,

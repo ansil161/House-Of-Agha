@@ -651,3 +651,73 @@
   .hoa-shop-mbar .hoa-sort { padding: 0 8px 0 12px; }
   .hoa-shop-mbar .hoa-fview .hoa-fview__btn { width: 36px; }
 }
+
+/* ==========================================================================
+   "The house recommends" (sections/hoa-shop-catalog.liquid, sized by hoa-shop.js)
+   Fills the empty cells after the last card: campaign photo beside a dark panel
+   with one recommended fragrance. Two columns wide → photo | text; one column → stacked.
+   ========================================================================== */
+.hoa-shop-rec {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  border-radius: clamp(22px, 2.2vw, 30px);
+  background: #15120F;
+  color: #F6F1E7;
+}
+.hoa-shop-rec[hidden] { display: none !important; }
+.hoa-shop-grid[data-view='list'] .hoa-shop-rec { display: none; }
+
+.hoa-shop-rec__media { position: relative; display: block; min-height: 320px; overflow: hidden; background: #2A2620; }
+.hoa-shop-rec__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transition: transform 1.4s var(--hoa-ease); }
+.hoa-shop-rec:hover .hoa-shop-rec__media img { transform: scale(1.035); }
+
+.hoa-shop-rec__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(24px, 3vw, 48px);
+}
+.hoa-shop-rec__eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 0 6px;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #D8BD8A;
+}
+.hoa-shop-rec__eyebrow::before { content: ''; width: 18px; height: 1px; background: currentColor; }
+.hoa-shop-rec .hoa-shop-rec__name {
+  color: #F6F1E7;
+  margin: 0;
+  font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-weight: var(--font-name-weight);
+  font-size: clamp(1.7rem, 1.2rem + 1.2vw, 2.5rem); line-height: 1.02; letter-spacing: -0.015em;
+}
+.hoa-shop-rec__name a { color: inherit; text-decoration: none; }
+.hoa-shop-rec__meta { margin: 0; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(246, 241, 231, 0.55); }
+.hoa-shop-rec__rating { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 0; font-size: 0.84rem; color: rgba(246, 241, 231, 0.75); }
+.hoa-shop-rec__rating svg { width: 14px; height: 14px; fill: #E0B354; }
+.hoa-shop-rec__rating b { color: #F6F1E7; font-weight: 600; }
+.hoa-shop-rec__text { max-width: 34ch; margin: 4px 0 0; font-size: 0.94rem; line-height: 1.6; color: rgba(246, 241, 231, 0.78); }
+.hoa-shop-rec__price { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 0; font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hoa-shop-rec__price s { font-size: 0.86rem; font-weight: 400; color: rgba(246, 241, 231, 0.45); }
+.hoa-shop-rec__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 12px; }
+.hoa-shop-rec__actions form { margin: 0; }
+.hoa-shop-rec .hoa-btn { --hoa-btn-bg: #F6F1E7; --hoa-btn-fg: #15120F; }
+.hoa-shop-rec__more { display: inline-flex; gap: 6px; font-size: 0.86rem; font-weight: 500; color: #F6F1E7; text-decoration: none; }
+.hoa-shop-rec__more span { transition: transform 0.4s var(--hoa-ease); }
+.hoa-shop-rec__more:hover span { transform: translateX(3px); }
+.hoa-shop-rec a:focus-visible, .hoa-shop-rec button:focus-visible { outline: 1px solid #F6F1E7; outline-offset: 3px; }
+
+/* One column left: photo on top, text below */
+.hoa-shop-rec[data-span='1'] { grid-template-columns: minmax(0, 1fr); }
+.hoa-shop-rec[data-span='1'] .hoa-shop-rec__media { min-height: 0; aspect-ratio: 4 / 3; }
+.hoa-shop-rec[data-span='1'] .hoa-shop-rec__body { justify-content: flex-start; padding: 22px 22px 26px; }
+
+@media (max-width: 767px) {
+  .hoa-shop-rec { grid-template-columns: minmax(0, 1fr); }
+  .hoa-shop-rec__media { min-height: 0; aspect-ratio: 4 / 3; }
+  .hoa-shop-rec__body { padding: 20px 18px 24px; }
+}

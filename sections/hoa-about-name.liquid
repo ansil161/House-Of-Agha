@@ -32,10 +32,18 @@
         {%- endif -%}
       </div>
 
-      {%- comment -%} The wide photo is shown whole inside its landscape frame (no crop), centred on the card. {%- endcomment -%}
+      {%- comment -%} The wide photo fills the column width in its own shape; a tall photo is trimmed only slightly (3:4 frame). {%- endcomment -%}
+      {%- liquid
+        assign pw = s.photo_w | default: 2400
+        assign ph = s.photo_h | default: 1674
+        if s.photo_image != blank
+          assign pw = s.photo_image.width
+          assign ph = s.photo_image.height
+        endif
+      -%}
       <div class="hoa-ab-name__main">
         {%- if s.photo_asset != blank or s.photo_image != blank -%}
-          <figure class="hoa-ab-name__photo" data-hoa-ab-up>
+          <figure class="hoa-ab-name__photo{% if ph > pw %} hoa-ab-name__photo--tall{% endif %}" style="--ratio: {{ pw }} / {{ ph }}" data-hoa-ab-up>
             <div class="hoa-ab-name__photo-img">
               <div class="hoa-ab-name__img">
                 {%- render 'hoa-img', name: s.photo_asset, image: s.photo_image, w: s.photo_w, h: s.photo_h, alt: s.photo_alt, sizes: '(min-width: 900px) 52vw, 100vw' -%}

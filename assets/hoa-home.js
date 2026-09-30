@@ -687,12 +687,36 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* World of Agha video tiles: muted loop only while on screen          */
+  /* ------------------------------------------------------------------ */
+  function initTileVideos() {
+    var vids = Array.prototype.slice.call(document.querySelectorAll('[data-hoa-tile-video]'));
+    if (!vids.length || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // poster only
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var v = en.target;
+        if (en.isIntersecting) {
+          if (v.preload === 'none') v.preload = 'auto';
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+    vids.forEach(function (v) { io.observe(v); });
+    cleanups.push(function () { io.disconnect(); });
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Lifecycle                                                           */
   /* ------------------------------------------------------------------ */
   function init() {
     initLenis();
     initReveals();
     initCollection();
+    initTileVideos();
 
     if (hasGsap()) {
       gsap.registerPlugin(ScrollTrigger);

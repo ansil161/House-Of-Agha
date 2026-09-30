@@ -1,0 +1,134 @@
+{%- comment -%}
+  House of Agha · About · Palace gallery (after Philosophy, before the closing card)
+  An editorial wall of numbered plates from the palaces of Hyderabad plus one fact card.
+  Plates open from a pointed arch and colour photographs develop from monochrome as they
+  scroll in; any plate opens a full-screen viewer (assets/hoa-about-gallery.js).
+  Complete and static without JS or with reduced motion.
+{%- endcomment -%}
+{{ 'hoa-about-gallery.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hoa-about-gallery.js' | asset_url }}" defer></script>
+
+{%- assign s = section.settings -%}
+{%- assign plate_n = 0 -%}
+<section class="hoa-pal" id="palaces" data-hoa-pal aria-labelledby="hoa-pal-title-{{ section.id }}">
+  <div class="hoa-wrap">
+    <header class="hoa-pal__head">
+      <div class="hoa-pal__title">
+        {%- if s.chip != blank -%}<p class="hoa-ab-chip">{{ s.chip }}</p>{%- endif -%}
+        <h2 class="hoa-ab-h2" id="hoa-pal-title-{{ section.id }}">{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
+      </div>
+      <div class="hoa-pal__aside">
+        {%- if s.text != blank -%}<p class="hoa-ab-sub">{{ s.text }}</p>{%- endif -%}
+        <p class="hoa-pal__count" aria-hidden="true"><span>{{ section.blocks | where: 'type', 'plate' | size | prepend: '0' | slice: -2, 2 }}</span> plates</p>
+      </div>
+    </header>
+
+    <div class="hoa-pal__wall">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- if block.type == 'plate' -%}
+          {%- liquid
+            assign plate_n = plate_n | plus: 1
+            assign b_alt = b.alt | default: b.title
+            assign b_w = b.w | default: 1200
+            assign b_h = b.h | default: 1500
+            assign b_sw = b.sw | default: 700
+            if b_sw > b_w
+              assign b_sw = b_w
+            endif
+          -%}
+          <figure class="hoa-pal__item hoa-pal__item--{{ forloop.index }} hoa-pal-plate{% if b.mono %} is-mono{% endif %}" style="--ratio: {{ b_w }} / {{ b_h }};{% if b.focus != blank %} --pos: {{ b.focus }};{% endif %}" data-hoa-pal-plate {{ block.shopify_attributes }}>
+            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="{{ plate_n | minus: 1 }}" aria-label="View larger: {{ b.title | escape }}">
+              <span class="hoa-pal-plate__img">
+                {%- if b.image != blank -%}
+                  {{ b.image | image_url: width: 2000 | image_tag: widths: '500, 800, 1200, 1600, 2000', sizes: '(min-width: 900px) 60vw, 100vw', loading: 'lazy', alt: b_alt, data-hoa-pal-full: '' }}
+                {%- else -%}
+                  <img
+                    src="{{ b.asset | append: '.webp' | asset_url }}"
+                    srcset="{{ b.asset | append: '-sm.webp' | asset_url }} {{ b_sw }}w, {{ b.asset | append: '.webp' | asset_url }} {{ b_w }}w"
+                    sizes="(min-width: 900px) 60vw, 100vw"
+                    width="{{ b_w }}" height="{{ b_h }}"
+                    alt="{{ b_alt | escape }}" loading="lazy" decoding="async">
+                {%- endif -%}
+              </span>
+              <span class="hoa-pal-plate__view" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                View
+              </span>
+            </button>
+            <figcaption class="hoa-pal-plate__cap">
+              <span class="hoa-pal-plate__no">{{ plate_n | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="hoa-pal-plate__txt">
+                <b>{{ b.title }}</b>
+                {%- if b.place != blank -%}<small>{{ b.place }}</small>{%- endif -%}
+              </span>
+            </figcaption>
+          </figure>
+        {%- elsif block.type == 'fact' -%}
+          <aside class="hoa-pal__item hoa-pal__item--{{ forloop.index }} hoa-pal-fact" data-hoa-pal-plate {{ block.shopify_attributes }}>
+            <svg class="hoa-pal-fact__arch" viewBox="0 0 120 150" aria-hidden="true"><path d="M8 150V70C8 40 30 18 60 4c30 14 52 36 52 66v80" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+            <p class="hoa-pal-fact__num">{{ b.number }}</p>
+            <p class="hoa-pal-fact__text">{{ b.text }}</p>
+          </aside>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- comment -%} Full-screen viewer, filled from the plates by the script {%- endcomment -%}
+  <dialog class="hoa-pal-lb" data-hoa-pal-lb aria-label="Palace gallery">
+    <div class="hoa-pal-lb__stage" data-hoa-pal-stage>
+      <img class="hoa-pal-lb__img" data-hoa-pal-lb-img alt="">
+    </div>
+    <div class="hoa-pal-lb__bar">
+      <p class="hoa-pal-lb__cap"><span data-hoa-pal-lb-no></span> <b data-hoa-pal-lb-title></b> <small data-hoa-pal-lb-place></small></p>
+      <div class="hoa-pal-lb__nav">
+        <button type="button" class="hoa-pal-lb__btn" data-hoa-pal-prev aria-label="Previous photograph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="hoa-pal-lb__btn" data-hoa-pal-next aria-label="Next photograph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="hoa-pal-lb__btn hoa-pal-lb__btn--close" data-hoa-pal-close aria-label="Close"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+{% schema %}
+{
+  "name": "About: palace gallery",
+  "tag": "div",
+  "class": "hoa-ab-section",
+  "settings": [
+    { "type": "text", "id": "chip", "label": "Chip", "default": "The palaces of Hyderabad" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Rooms of crystal" },
+    { "type": "text", "id": "heading_muted", "label": "Heading, muted part", "default": "and carved teak." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Rooms finished by hand over years, chandeliers hung crystal by crystal. The palaces of the Nizams set the standard of patience we hold our own work to." }
+  ],
+  "blocks": [
+    {
+      "type": "plate",
+      "name": "Photograph",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset", "info": "Base name of a WebP pair in assets (name.webp + name-sm.webp)." },
+        { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1200 },
+        { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1500 },
+        { "type": "number", "id": "sw", "label": "Fallback small asset width", "default": 700 },
+        { "type": "text", "id": "focus", "label": "Crop focus (CSS object-position)", "info": "e.g. 50% 30%" },
+        { "type": "checkbox", "id": "mono", "label": "Black and white photograph", "default": false, "info": "Skips the colour develop effect." },
+        { "type": "text", "id": "title", "label": "Caption title" },
+        { "type": "text", "id": "place", "label": "Caption place" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    },
+    {
+      "type": "fact",
+      "name": "Fact card",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "101" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "guests at a single table in the dining hall of Falaknuma Palace." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "About: palace gallery" }]
+}
+{% endschema %}

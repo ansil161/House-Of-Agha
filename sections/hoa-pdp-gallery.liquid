@@ -4,32 +4,93 @@
   after the last photo it glides back to the first (no duplicated loop). Swipeable; keeps
   sliding under the mouse, holds only while touched or off screen; jumps instead of gliding with reduced motion.
   Styles: assets/pdp.css ("Campaign gallery"). Behaviour: assets/hoa-pgal.js.
-  With "First photo full width" on, the first block is shown alone as an edge-to-edge
+  With "First photo full width" on, the first photo is shown alone as an edge-to-edge
   banner above the row, and only the remaining photos slide.
-  Photos are blocks: pick a Shopify image, or name a theme asset (<name>.webp + <name>-sm.webp).
+
+  Photos belong to a product, so each product page shows only its own campaign:
+    1. the product's metafield custom.gallery (list of files), when filled, in that order;
+    2. otherwise the section's photo blocks whose "Show on products" lists this product's
+       handle (a block left blank there shows on every product).
+  A block photo is a Shopify image, or a theme asset (<name>.webp + <name>-sm.webp).
+  With no photos for the product the section renders nothing.
 {%- endcomment -%}
-{%- assign s = section.settings -%}
-{%- if section.blocks.size > 0 -%}
-  {%- assign feature = false -%}
-  {%- if s.feature_first and section.blocks.size > 1 -%}{%- assign feature = true -%}{%- endif -%}
+{%- liquid
+  assign s = section.settings
+  assign handle = product.handle | default: ''
+  assign mf = product.metafields.custom.gallery.value
+
+  comment
+    Blocks for this product, as a '|' list of block indexes (Liquid has no array push).
+  endcomment
+  assign picked = ''
+  for block in section.blocks
+    assign on = block.settings.products | downcase | remove: ' '
+    assign match = false
+    if on == blank
+      assign match = true
+    else
+      assign on_list = on | split: ','
+      if on_list contains handle
+        assign match = true
+      endif
+    endif
+    if match
+      assign picked = picked | append: forloop.index0 | append: '|'
+    endif
+  endfor
+  assign picked = picked | split: '|'
+
+  if mf != blank
+    assign total = mf.size
+  else
+    assign total = picked.size
+  endif
+  assign feature = false
+  if s.feature_first and total > 1
+    assign feature = true
+  endif
+-%}
+{%- if total > 0 -%}
   {%- capture items -%}
-    {%- for block in section.blocks -%}
-      {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
-      {%- assign b = block.settings -%}
-      <li class="hoa-pgal__item" {{ block.shopify_attributes }}>
-        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
-      </li>
-    {%- endfor -%}
+    {%- if mf != blank -%}
+      {%- for img in mf -%}
+        {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
+        {%- assign img_alt = img.alt | default: product.title -%}
+        <li class="hoa-pgal__item">
+          {%- render 'hoa-img', image: img, alt: img_alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in picked -%}
+        {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
+        {%- assign n = i | plus: 0 -%}
+        {%- assign block = section.blocks[n] -%}
+        {%- assign b = block.settings -%}
+        <li class="hoa-pgal__item" {{ block.shopify_attributes }}>
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
   {%- endcapture -%}
   <section class="hoa-pgal" data-hoa-pgal data-interval="{{ s.interval | default: 3 }}" aria-label="{{ s.label | default: 'Campaign photographs' | escape }}">
     {%- if s.heading != blank -%}
       <div class="hoa-pgal__head"><h2 class="hoa-pgal__title">{{ s.heading }}</h2></div>
     {%- endif -%}
     {%- if feature -%}
-      {%- assign fb = section.blocks.first.settings -%}
-      <figure class="hoa-pgal__hero" style="--pos: {{ fb.focus | default: 'center' }}" {{ section.blocks.first.shopify_attributes }}>
-        {%- render 'hoa-img', name: fb.asset, image: fb.image, w: fb.w, h: fb.h, alt: fb.alt, sizes: '100vw' -%}
-      </figure>
+      {%- if mf != blank -%}
+        {%- assign fimg = mf.first -%}
+        {%- assign fimg_alt = fimg.alt | default: product.title -%}
+        <figure class="hoa-pgal__hero">
+          {%- render 'hoa-img', image: fimg, alt: fimg_alt, sizes: '100vw' -%}
+        </figure>
+      {%- else -%}
+        {%- assign n = picked.first | plus: 0 -%}
+        {%- assign fblock = section.blocks[n] -%}
+        {%- assign fb = fblock.settings -%}
+        <figure class="hoa-pgal__hero" style="--pos: {{ fb.focus | default: 'center' }}" {{ fblock.shopify_attributes }}>
+          {%- render 'hoa-img', name: fb.asset, image: fb.image, w: fb.w, h: fb.h, alt: fb.alt, sizes: '100vw' -%}
+        </figure>
+      {%- endif -%}
     {%- endif -%}
     <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
       <ul class="hoa-pgal__list" role="list">{{ items }}</ul>
@@ -53,6 +114,7 @@
       "type": "photo",
       "name": "Photo",
       "settings": [
+        { "type": "text", "id": "products", "label": "Show on products", "info": "Product handles, comma separated (e.g. maha, agha-blue). Blank = every product. The product's first photo becomes the full-width banner." },
         { "type": "image_picker", "id": "image", "label": "Image (portrait 4:5 works best)" },
         { "type": "text", "id": "asset", "label": "Fallback theme asset" },
         { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1000 },
@@ -62,7 +124,7 @@
       ]
     }
   ],
-  "max_blocks": 12,
+  "max_blocks": 50,
   "presets": [{ "name": "PDP: campaign gallery" }]
 }
 {% endschema %}

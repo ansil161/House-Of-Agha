@@ -318,6 +318,79 @@
           -%}
         {%- endfor -%}
       {%- endif -%}
+
+      {%- comment -%}
+        "The house recommends": fills the empty cells after the last card (a campaign photo from the
+        brand Drive + one recommended fragrance). assets/hoa-shop.js sizes it to exactly the columns
+        left in the last row after filters / sorting (1 or 2), and hides it when the row is full.
+      {%- endcomment -%}
+      {%- if s.show_rec -%}
+        {%- liquid
+          assign rec_handle = s.rec_handle | default: 'tobacco-enigma'
+          assign rec_name = ''
+          if use_shopify
+            assign rp = all_products[rec_handle]
+            if rp != blank
+              assign rec_name = rp.title
+              assign rec_url = rp.url
+              assign rec_family = rp.metafields.custom.family.value | default: rp.type
+              assign rec_price = rp.price | money
+              assign rec_regular = ''
+              if rp.compare_at_price > rp.price
+                assign rec_regular = rp.compare_at_price | money
+              endif
+              assign rec_rating = rp.metafields.reviews.rating.value.rating
+              assign rec_count = rp.metafields.reviews.rating_count.value
+              assign rec_variant = rp.selected_or_first_available_variant.id
+            endif
+          else
+            for p in catalog.products
+              if p.handle == rec_handle
+                assign rec_name = p.name
+                assign rec_url = '/products/' | append: p.handle
+                assign rec_family = p.family
+                assign rec_sale = p.salePrice | default: p.regularPrice
+                capture rec_price
+                  render 'hoa-rupees', n: rec_sale
+                endcapture
+                assign rec_regular = ''
+                if p.salePrice and p.salePrice < p.regularPrice
+                  capture rec_regular
+                    render 'hoa-rupees', n: p.regularPrice
+                  endcapture
+                endif
+                assign rec_rating = p.rating
+                assign rec_count = p.reviewCount
+              endif
+            endfor
+          endif
+        -%}
+        {%- if rec_name != blank -%}
+          <aside class="hoa-shop-rec" data-hoa-shop-rec aria-label="{{ s.rec_eyebrow | escape }}">
+            <a class="hoa-shop-rec__media" href="{{ rec_url }}" tabindex="-1" aria-hidden="true">
+              {%- render 'hoa-img', name: s.rec_asset, image: s.rec_image, w: 1086, h: 1448, alt: '', sizes: '(min-width: 1000px) 30vw, 50vw' -%}
+            </a>
+            <div class="hoa-shop-rec__body">
+              <p class="hoa-shop-rec__eyebrow">{{ s.rec_eyebrow }}</p>
+              <h3 class="hoa-shop-rec__name"><a href="{{ rec_url }}">{{ rec_name }}</a></h3>
+              <p class="hoa-shop-rec__meta">{{ rec_family }}{% if rec_family != blank %} &middot; {% endif %}Eau de Parfum</p>
+              {%- if rec_rating != blank -%}
+                <p class="hoa-shop-rec__rating"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 4 4.4.5-3.3 3 .9 4.3L8 11.1l-3.9 2.2.9-4.3-3.3-3 4.4-.5z"/></svg><b>{{ rec_rating }}</b>{% if rec_count != blank %}<span>&middot; {{ rec_count }} reviews</span>{% endif %}</p>
+              {%- endif -%}
+              {%- if s.rec_text != blank -%}<p class="hoa-shop-rec__text">{{ s.rec_text }}</p>{%- endif -%}
+              <p class="hoa-shop-rec__price"><span>{{ rec_price }}</span>{% if rec_regular != blank %}<s>{{ rec_regular }}</s>{% endif %}</p>
+              <div class="hoa-shop-rec__actions">
+                {%- if use_shopify and rec_variant -%}
+                  <form action="{{ routes.cart_add_url }}" method="post"><input type="hidden" name="id" value="{{ rec_variant }}"><button type="submit" class="hoa-btn hoa-btn--small"><span>{{ s.rec_add_label }}</span>{% render 'hoa-btn-icon' %}</button></form>
+                {%- else -%}
+                  <button type="button" class="hoa-btn hoa-btn--small" data-hoa-quick-add="{{ rec_handle }}"><span>{{ s.rec_add_label }}</span>{% render 'hoa-btn-icon' %}</button>
+                {%- endif -%}
+                <a class="hoa-shop-rec__more" href="{{ rec_url }}">{{ s.rec_link_label }}<span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </div>
+          </aside>
+        {%- endif -%}
+      {%- endif -%}
     </div>
 
     <div class="hoa-shop-empty" data-hoa-empty hidden>
@@ -349,6 +422,16 @@
     { "type": "text", "id": "interlude_note", "label": "Caption note", "default": "By the water" },
     { "type": "text", "id": "interlude_link", "label": "Link label", "default": "View" },
     { "type": "url", "id": "interlude_url", "label": "Link" },
+    { "type": "header", "content": "Recommendation after the last product" },
+    { "type": "paragraph", "content": "Fills the empty space at the end of the grid. It only appears when the last row has room, and sizes itself to that space." },
+    { "type": "checkbox", "id": "show_rec", "label": "Show recommendation", "default": true },
+    { "type": "text", "id": "rec_handle", "label": "Product handle", "default": "tobacco-enigma" },
+    { "type": "image_picker", "id": "rec_image", "label": "Image" },
+    { "type": "text", "id": "rec_asset", "label": "Theme asset (when no image is picked)", "default": "hoa-shop-rec-tobacco-enigma" },
+    { "type": "text", "id": "rec_eyebrow", "label": "Label", "default": "The house recommends" },
+    { "type": "textarea", "id": "rec_text", "label": "Text", "default": "Our most reviewed fragrance. If you are choosing one bottle, start here." },
+    { "type": "text", "id": "rec_add_label", "label": "Button label", "default": "Add to bag" },
+    { "type": "text", "id": "rec_link_label", "label": "Link label", "default": "Discover" },
     { "type": "header", "content": "No results" },
     { "type": "text", "id": "empty_title", "label": "Title", "default": "Nothing matches both filters." },
     { "type": "text", "id": "empty_text", "label": "Text", "default": "Try another scent family, or see every fragrance." }

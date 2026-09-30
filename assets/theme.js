@@ -12,6 +12,8 @@ const AGHA_PRODUCTS = {
     family: "Woody",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-oud-fury.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-hero-oud-fury.webp', '/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-craft-embers.webp', '/assets/hoa-world-profile.webp'],
+    // PDP buy-column slider + thumbnails + 'more views' tiles (the brand's own Oud Fury photographs)
+    media: ['/assets/hoa-pdp-oud-fury-1.webp', '/assets/hoa-pdp-oud-fury-2.webp', '/assets/hoa-pdp-oud-fury-3.webp', '/assets/hoa-pdp-oud-fury-4.webp', '/assets/hoa-pdp-oud-fury-5.webp', '/assets/hoa-pdp-oud-fury-6.webp'],
     description: "Amber smoke, charred wood and a single shaft of evening light.",
     sizes: { 'Eau de Parfum': 4500 },
     compare: { 'Eau de Parfum': 5200 },

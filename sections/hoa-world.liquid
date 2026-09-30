@@ -2,7 +2,8 @@
   07 — THE WORLD OF AGHA
   Agha away from the counter: an editorial bento of campaign moments (each image
   drifts slightly inside its frame on scroll), followed by what people have said.
-  "tile" blocks: up to five images, in reading order.
+  "tile" blocks: up to five images, in reading order. A tile with a "video" plays it muted and looped
+  instead of the image, only while on screen (assets/hoa-home.js); reduced motion shows the poster.
   "story" blocks: the first is set large, the rest as a quiet list. Nothing renders
   when there are no story blocks.
 {% endcomment %}
@@ -28,8 +29,23 @@
       <div class="hoa-world__grid" id="reels">
         {%- for block in tiles limit: 5 -%}
           {%- assign b = block.settings -%}
-          <figure class="hoa-tile hoa-tile--{{ forloop.index }}" data-hoa-reveal data-hoa-parallax {{ block.shopify_attributes }}>
-            {%- if forloop.index == 1 or forloop.index == 5 -%}
+          <figure class="hoa-tile hoa-tile--{{ forloop.index }}{% if b.video != blank %} hoa-tile--video{% endif %}" data-hoa-reveal data-hoa-parallax {{ block.shopify_attributes }}>
+            {%- if b.video != blank -%}
+              {%- liquid
+                if b.video contains '://'
+                  assign tile_video = b.video
+                else
+                  assign tile_video = b.video | asset_url
+                endif
+                assign tile_poster = ''
+                if b.image != blank
+                  assign tile_poster = b.image | image_url: width: 1200
+                elsif b.video_poster != blank
+                  assign tile_poster = b.video_poster | append: '.webp' | asset_url
+                endif
+              -%}
+              <video class="hoa-tile__video" data-hoa-tile-video muted loop playsinline preload="none" disablepictureinpicture{% if tile_poster != blank %} poster="{{ tile_poster }}"{% endif %} src="{{ tile_video }}" aria-label="{{ b.alt | escape }}"{% if b.video_focus != blank %} style="object-position: {{ b.video_focus }}"{% endif %}></video>
+            {%- elsif forloop.index == 1 or forloop.index == 5 -%}
               {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 961px) 58vw, 100vw' -%}
             {%- else -%}
               {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 961px) 34vw, 50vw' -%}
@@ -84,6 +100,9 @@
         { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
         { "type": "number", "id": "w", "label": "Asset width", "default": 1200 },
         { "type": "number", "id": "h", "label": "Asset height", "default": 1600 },
+        { "type": "text", "id": "video", "label": "Video (optional)", "info": "A filename uploaded to /assets (e.g. hoa-world-agha-blue.mp4) or a full hosted URL. Plays muted and looped in place of the image." },
+        { "type": "text", "id": "video_poster", "label": "Video poster (theme asset name, .webp)", "info": "Still shown before the video loads. A picked image above is used first." },
+        { "type": "text", "id": "video_focus", "label": "Video crop focus", "info": "CSS object-position, e.g. 50% 50%." },
         { "type": "text", "id": "caption", "label": "Caption" },
         { "type": "text", "id": "alt", "label": "Alt text" }
       ]

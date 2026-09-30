@@ -65,6 +65,9 @@
   }));
   const current = variants.find((v) => v.title === '50 ML') || variants[0];
   const images = product.images;
+  // Buy-column slider, thumbnails, 'more views' tiles and lightbox: the product's own photo set when it has one
+  // (theme.js `media`), else the catalog images. images[0] stays the plain flacon used by the dock, story, offers.
+  const media = product.media || images;
   const reviews = product.reviews || [];
   // Rating, review count, best-seller and stock come from the shared mock catalog (assets/hoa-commerce.js), so this page
   // agrees with the shop cards. The review cards below are only sample write-ups.
@@ -126,31 +129,31 @@
 
       <div class="pdp-hero__grid">
         <!-- Product visual story: mirrors sections/agha-pdp-main.liquid -->
-        <div class="pdp-media pdp-story${images.length < 2 ? ' pdp-story--single' : ''}" data-pdp-story data-pdp-thumbs style="--pdp-n: ${images.length}">
+        <div class="pdp-media pdp-story${media.length < 2 ? ' pdp-story--single' : ''}" data-pdp-story data-pdp-thumbs style="--pdp-n: ${media.length}">
           <div class="pdp-stage" data-pdp-stage>
             <div class="pdp-stage__inner" data-pdp-stage-inner>
               <div class="pdp-stage__track" data-pdp-track>
-                ${images.map((src, i) => `
+                ${media.map((src, i) => `
                   <figure class="pdp-slide${i === 0 ? ' is-active' : ''}" data-pdp-slide="${i}">
-                    <img src="${src}" alt="${esc(niceTitle)} — image ${i + 1} of ${images.length}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+                    <img src="${src}" alt="${esc(niceTitle)} — image ${i + 1} of ${media.length}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
                     ${i === 0 ? `<div class="pdp-slide__tags" aria-hidden="true"><span class="pdp-chip pdp-chip--dot">${esc(product.family)}</span>${cat && cat.isBestSeller ? '<span class="pdp-chip pdp-chip--best">Best seller</span>' : ''}</div>` : ''}
                   </figure>`).join('')}
               </div>
             </div>
             <div class="pdp-stage__badge"><span class="pdp-chip pdp-chip--dot">${esc(product.family)}</span>${cat && cat.isBestSeller ? '<span class="pdp-chip pdp-chip--best">Best seller</span>' : ''}</div>
             <button type="button" class="pdp-expand" data-pdp-expand aria-label="View images full screen">${icon('expand')}</button>
-            ${images.length > 1 ? `
+            ${media.length > 1 ? `
             <div class="pdp-story__progress" aria-hidden="true">
-              <span><span data-pdp-count>01</span>&nbsp;/&nbsp;${pad(images.length)}</span>
+              <span><span data-pdp-count>01</span>&nbsp;/&nbsp;${pad(media.length)}</span>
               <span class="pdp-story__bar"><i data-pdp-bar></i></span>
             </div>` : ''}
           </div>
-          ${images.length > 1 ? `
+          ${media.length > 1 ? `
           <div class="pdp-thumbs" role="group" aria-label="Product images">
-            ${images.map((src, i) => `<button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${images.length}" aria-current="${i === 0 ? 'true' : 'false'}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+            ${media.map((src, i) => `<button type="button" class="pdp-thumb${i === 0 ? ' is-active' : ''}" data-pdp-thumb="${i}" aria-label="Show image ${i + 1} of ${media.length}" aria-current="${i === 0 ? 'true' : 'false'}"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
           </div>` : ''}
           <div class="pdp-more" aria-label="More views">
-            ${images.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
+            ${media.slice(1).concat(['/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-ingredients-tobacco.webp']).slice(0, 4).map((src) => `<figure class="pdp-more__tile"><img src="${src}" alt="${esc(niceTitle)}" loading="lazy"></figure>`).join('')}
           </div>
           <ul class="pdp-proofs" role="list" aria-label="Why we are better">
             ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
@@ -292,7 +295,7 @@
               </div>
             </details>` : ''}
             <details data-pdp-accordion>
-              <summary>How to wear<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
+              <summary>How to use<span class="pdp-accordion__icon" aria-hidden="true"></span></summary>
               <div class="pdp-accordion__body"><p>One to two sprays is enough. At 35% concentration an extrait is considerably denser than an eau de parfum — apply to pulse points or clothing rather than layering.</p></div>
             </details>
             <details data-pdp-accordion>
@@ -329,11 +332,11 @@
 
     <dialog class="pdp-lightbox" data-pdp-lightbox aria-label="${esc(niceTitle)} images">
       <div class="pdp-lightbox__bar">
-        <span><span data-pdp-lightbox-count>01</span> / ${pad(images.length)}</span>
+        <span><span data-pdp-lightbox-count>01</span> / ${pad(media.length)}</span>
         <button type="button" data-pdp-lightbox-close>Close ✕</button>
       </div>
       <div class="pdp-lightbox__stage" data-pdp-lightbox-stage></div>
-      ${images.length > 1 ? `
+      ${media.length > 1 ? `
       <div class="pdp-lightbox__nav">
         <button type="button" data-pdp-lightbox-step="-1">← Previous</button>
         <button type="button" data-pdp-lightbox-step="1">Next →</button>
@@ -900,17 +903,66 @@
     </div>
   </section>`;
 
-  // Campaign gallery: mirrors sections/hoa-pdp-gallery.liquid (blocks in templates/product.json)
-  const galShots = [[2, 'A man on the shore holds Sea Smoke'], [4, 'Maha bottle among red silk'],
-    [3, 'A man holds Oud Fury in warm low light'], [5, 'A woman holds Maha close to her face'], [6, 'Agha Blue resting in snow and ice']];
-  const galItems = galShots.map(([n, alt]) => `<li class="hoa-pgal__item"><img src="/assets/hoa-pdp-gal-${n}.webp" srcset="/assets/hoa-pdp-gal-${n}-sm.webp 600w, /assets/hoa-pdp-gal-${n}.webp 1000w" sizes="(min-width: 900px) 40vw, 84vw" width="1000" height="1250" alt="${esc(alt)}" loading="lazy" decoding="async"></li>`).join('');
-  const gallery = `
+  // Campaign gallery: mirrors sections/hoa-pdp-gallery.liquid with the photo blocks in templates/product.json
+  // (each block names its product; the first photo is the full-width banner). [asset, w, h, alt, banner focus]
+  const GALLERY = {
+    'maha': [
+      ["hoa-pdp-gal-hero", 1856, 2304, "A woman in a red gown holds Maha", "50% 20%"],
+      ["hoa-pgal-maha-2", 1000, 1241, "Maha held out in a sweep of red silk"],
+      ["hoa-pgal-maha-3", 1000, 1241, "A woman holds Maha close to her face"],
+      ["hoa-pgal-maha-4", 1000, 1241, "Maha bottle among red silk"],
+      ["hoa-pgal-maha-5", 1000, 1241, "Maha resting in folds of red silk"]
+    ],
+    'agha-blue': [
+      ["hoa-pgal-agha-blue-hero", 1856, 2304, "Agha Blue resting in snow and ice", "50% 45%"],
+      ["hoa-pgal-agha-blue-2", 1000, 1250, "Agha Blue on a sea rock by the cliffs"],
+      ["hoa-pgal-agha-blue-3", 1000, 1250, "Agha Blue held at the waist by the sea"],
+      ["hoa-pgal-agha-blue-4", 1000, 1250, "Agha Blue on a rock above the sea"],
+      ["hoa-pgal-agha-blue-5", 1000, 1250, "Agha Blue in the water of a sea cave"],
+      ["hoa-pgal-agha-blue-6", 1000, 1241, "Agha Blue inside a block of ice"],
+      ["hoa-pgal-agha-blue-7", 1000, 1250, "Agha Blue in snow among ice cubes"],
+      ["hoa-pgal-agha-blue-8", 1000, 1250, "Fresh as ice, deep as blue"]
+    ],
+    'sea-smoke': [
+      ["hoa-pgal-sea-smoke-hero", 1536, 1920, "Sea Smoke lying in the shallow waves", "50% 50%"],
+      ["hoa-pgal-sea-smoke-2", 1000, 1250, "Sea Smoke on the sand among lemons"],
+      ["hoa-pgal-sea-smoke-3", 1000, 1250, "A man on the shore holds Sea Smoke"],
+      ["hoa-pgal-sea-smoke-4", 1000, 1250, "Sea Smoke held in the surf"]
+    ],
+    'shamamah': [
+      ["hoa-pgal-shamamah-hero", 1638, 2048, "Shamamah on old wood with moss, sandalwood and lavender", "50% 22%"],
+      ["hoa-pgal-shamamah-2", 1000, 1250, "Shamamah on green satin"],
+      ["hoa-pgal-shamamah-3", 1000, 1250, "Shamamah lying on green satin"]
+    ],
+    'oud-fury': [
+      ["hoa-pgal-oud-fury-hero", 1792, 2400, "Oud Fury by a palace window at dusk", "50% 60%"],
+      ["hoa-pdp-gal-3", 1000, 1250, "A man holds Oud Fury in warm low light"],
+      ["hoa-alt-oud-fury", 1080, 1350, "Oud Fury among pieces of agarwood"],
+      ["hoa-oud-fury-smoke", 2000, 1125, "Oud Fury in smoke and embers"],
+      ["hoa-hero-oud-fury", 2000, 1125, "Oud Fury on agarwood in amber light"]
+    ],
+    'oud-of-dark-paradise': [
+      ["hoa-hero-dark-paradise", 2000, 1125, "Oud of Dark Paradise on dark stone in a shaft of light", "50% 50%"],
+      ["hoa-alt-dark-paradise", 1080, 1350, "Oud of Dark Paradise in smoke on a rock"]
+    ],
+    'tobacco-enigma': [
+      ["hoa-tobacco-enigma-portrait", 1200, 1607, "Tobacco Enigma among tobacco leaves", "50% 45%"],
+      ["hoa-alt-tobacco-enigma", 1080, 1350, "Tobacco Enigma on moss in a forest"],
+      ["hoa-ingredients-tobacco", 969, 969, "Tobacco Enigma with its ingredients"],
+      ["hoa-shop-rec-tobacco-enigma", 1086, 1448, "Tobacco Enigma on stone"]
+    ]
+  };
+  const galSet = GALLERY[handle] || [];
+  const galImg = ([name, w, h, alt], sizes) => `<img src="/assets/${name}.webp" srcset="/assets/${name}-sm.webp ${w > 1500 ? 1000 : 700}w, /assets/${name}.webp ${w}w" sizes="${sizes}" width="${w}" height="${h}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
+  const galFeature = galSet.length > 1;
+  const galItems = (galFeature ? galSet.slice(1) : galSet).map((g) => `<li class="hoa-pgal__item">${galImg(g, '(min-width: 900px) 40vw, 84vw')}</li>`).join('');
+  const gallery = galSet.length ? `
   <section class="hoa-pgal" data-hoa-pgal data-interval="3" aria-label="Campaign photographs">
-    <figure class="hoa-pgal__hero" style="--pos: 50% 20%"><img src="/assets/hoa-pdp-gal-hero.webp" srcset="/assets/hoa-pdp-gal-hero-sm.webp 1000w, /assets/hoa-pdp-gal-hero.webp 1856w" sizes="100vw" width="1856" height="2304" alt="A woman in a red gown holds Maha" loading="lazy" decoding="async"></figure>
+    ${galFeature ? `<figure class="hoa-pgal__hero" style="--pos: ${galSet[0][4] || 'center'}">${galImg(galSet[0], '100vw')}</figure>` : ''}
     <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
       <ul class="hoa-pgal__list" role="list">${galItems}</ul>
     </div>
-  </section>`;
+  </section>` : '';
 
   // Benefits marquee: mirrors sections/hoa-fragrance-benefits.liquid with the blocks in templates/product.json
   // (plant-based / vegan / cruelty free are switched off there until confirmed, so they are left out here too).

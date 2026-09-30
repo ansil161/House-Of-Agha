@@ -189,6 +189,94 @@
         "focus": "50% 50%",
         "alt": "Agha Blue Eau de Parfum on still water beneath a glowing blue planet and snow-capped mountains"
       }
+    },
+    "gallery": {
+      "type": "hoa-about-gallery",
+      "blocks": {
+        "p_salon": {
+          "type": "plate",
+          "settings": {
+            "asset": "hoa-pal-salon",
+            "w": 2000,
+            "h": 1577,
+            "sw": 1000,
+            "title": "Carved teak, crimson silk",
+            "place": "A palace salon, Hyderabad",
+            "alt": "A panelled palace salon with a crystal chandelier, carved teak pillars and crimson drapes",
+            "mono": false,
+            "focus": "50% 45%"
+          }
+        },
+        "p_portrait": {
+          "type": "plate",
+          "settings": {
+            "asset": "hoa-pal-portrait",
+            "w": 387,
+            "h": 540,
+            "sw": 387,
+            "title": "A court portrait",
+            "place": "The Asaf Jahi court",
+            "alt": "Black and white portrait of a Nizam-era nobleman in court dress seated on a carved chair",
+            "mono": true
+          }
+        },
+        "p_chow": {
+          "type": "plate",
+          "settings": {
+            "asset": "hoa-pal-chowmahalla",
+            "w": 1200,
+            "h": 1575,
+            "sw": 700,
+            "title": "The drawing room",
+            "place": "Chowmahalla Palace",
+            "alt": "Black and white photograph of the drawing room of Chowmahalla Palace with chandeliers and galleries",
+            "mono": true,
+            "focus": "50% 40%"
+          }
+        },
+        "p_gilded": {
+          "type": "plate",
+          "settings": {
+            "asset": "hoa-pal-gilded",
+            "w": 960,
+            "h": 1319,
+            "sw": 700,
+            "title": "Crystal and gilt",
+            "place": "A palace hall, Hyderabad",
+            "alt": "A gilded palace hall lit by rows of crystal chandeliers",
+            "mono": false
+          }
+        },
+        "f_table": {
+          "type": "fact",
+          "settings": {
+            "number": "101",
+            "text": "guests at a single table in the dining hall of Falaknuma Palace."
+          }
+        },
+        "p_dining": {
+          "type": "plate",
+          "settings": {
+            "asset": "hoa-pal-dining",
+            "w": 751,
+            "h": 428,
+            "sw": 700,
+            "title": "The long table",
+            "place": "Falaknuma Palace",
+            "alt": "The long dining table of Falaknuma Palace set with crystal and silver under chandeliers",
+            "mono": false
+          }
+        }
+      },
+      "block_order": [
+        "p_salon",
+        "p_portrait",
+        "p_chow",
+        "p_gilded",
+        "f_table",
+        "p_dining"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -197,6 +285,7 @@
     "hyderabad",
     "name",
     "philosophy",
+    "gallery",
     "closing"
   ]
 }
