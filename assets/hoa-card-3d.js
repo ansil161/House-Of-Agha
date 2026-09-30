@@ -6,7 +6,8 @@
    photo unrolled round the ring (assets/hoa-bottle-3d-NAME.webp; the back repeats the front).
    Seen straight on it matches the photo; as it turns, the label wraps round and the bottle keeps
    its full width. The CSS spin then turns this object instead of the flat image.
-   Built once per card on first hover / focus; textures preload as cards near the viewport.
+   Built once per card as it nears the viewport (hover-capable screens), so the very first hover
+   already turns; a card hovered before that is built on the spot and still plays the turn.
    Without JS (or before a texture has loaded) the flat cut-out turns instead.
    Ring data (bands: [top, height, radius] in px of the 760px-tall texture) comes from the
    same cut-outs; regenerate both together.
@@ -53,10 +54,17 @@
       });
       obj.innerHTML = html;
       obj.style.setProperty('--tex', 'url("' + url + '")');
+      // Scale it BEFORE it enters the page: set afterwards, the change was animated, so the first
+      // hover showed the bottle shrinking from full texture size instead of turning.
+      if (spin.clientHeight) obj.style.setProperty('--s', (spin.clientHeight / H).toFixed(4));
+      // Enter at rest (front, no transition). If the card is already hovered, dropping the class a
+      // frame later lets that same hover play the full turn.
+      obj.classList.add('is-arming');
       spin.appendChild(obj);
       spin.style.setProperty('--mask', 'url("' + (spin.querySelector('img').currentSrc || spin.querySelector('img').src) + '")');
-      size(spin);
       spin.classList.add('is-3d');
+      void obj.offsetWidth;
+      requestAnimationFrame(function () { requestAnimationFrame(function () { obj.classList.remove('is-arming'); }); });
     });
   }
   function size(spin) {
@@ -73,14 +81,15 @@
   document.addEventListener('pointerover', onEnter, { passive: true });
   document.addEventListener('focusin', onEnter);
 
-  // preload textures for cards coming into view (JS-painted cards arrive later, so re-scan on DOM changes)
+  var canHover = window.matchMedia('(hover: hover)');
+  // build (or on touch just preload) the 3D bottle for cards coming into view (JS-painted cards arrive later, so re-scan on DOM changes)
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
         io.unobserve(en.target);
-        var url = texFor(en.target);
-        if (url) preload(url);
+        if (canHover.matches) build(en.target);
+        else { var url = texFor(en.target); if (url) preload(url); }
       });
     }, { rootMargin: '300px 0px' });
     var seen = typeof WeakSet === 'function' ? new WeakSet() : null;
