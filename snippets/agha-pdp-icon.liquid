@@ -2,6 +2,11 @@
   Line icon set for the PDP (1.5px stroke). Usage: {% render 'agha-pdp-icon', icon: 'delivery' %}
   Kept in sync with the ICONS map in assets/pdp-preview.js.
 {% endcomment %}
+{%- comment -%} Filled image icons (the brand's own files), tinted to the text colour via a CSS mask: assets/pdp.css .pdp-img-icon {%- endcomment -%}
+{%- if icon == 'free-shipping' or icon == 'badge' -%}
+  {%- assign _file = 'hoa-icon-' | append: icon | append: '.png' -%}
+  <span class="pdp-img-icon" style="--pdp-icon: url('{{ _file | asset_url }}')" aria-hidden="true"></span>
+{%- else -%}
 {%- capture paths -%}
   {%- case icon -%}
     {%- when 'drop' -%}<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>
@@ -30,3 +35,4 @@
   {%- endcase -%}
 {%- endcapture -%}
 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">{{ paths }}</svg>
+{%- endif -%}

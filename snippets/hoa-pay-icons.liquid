@@ -1,0 +1,18 @@
+{%- comment -%}
+  Payment method icons (the brand's own set, assets/hoa-pay-*.png, 168 × 120 card images).
+  Used by the bag (snippets/cart-drawer.liquid) and the product page (sections/agha-pdp-main.liquid);
+  assets/pdp-preview.js builds the same list for the local preview.
+
+  Params
+    tag     'li' (inside a <ul>) or 'span' (default)
+    class   class on each item (default none)
+{%- endcomment -%}
+{%- liquid
+  assign _tag = tag | default: 'span'
+  assign methods = 'upi:UPI,gpay:Google Pay,visa:Visa,mastercard:Mastercard,rupay:RuPay,amex:American Express' | split: ','
+-%}
+{%- for m in methods -%}
+  {%- assign parts = m | split: ':' -%}
+  {%- assign file = 'hoa-pay-' | append: parts[0] | append: '.png' -%}
+  <{{ _tag }}{% if class != blank %} class="{{ class }}"{% endif %} title="{{ parts[1] }}"><img src="{{ file | asset_url }}" alt="{{ parts[1] }}" width="40" height="28" loading="lazy" decoding="async"></{{ _tag }}>
+{%- endfor -%}

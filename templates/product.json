@@ -31,7 +31,7 @@
         "shipping": {
           "type": "assurance",
           "settings": {
-            "icon": "delivery",
+            "icon": "free-shipping",
             "title": "Complimentary shipping",
             "text": "On orders above ₹5,000, wrapped in matte black hardboard."
           }

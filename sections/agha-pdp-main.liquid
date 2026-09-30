@@ -423,7 +423,7 @@
           {%- endif -%}
           {%- if ship_threshold > 0 -%}
             <li class="pdp-deal pdp-deal--auto" data-pdp-ship data-threshold="{{ ship_threshold }}">
-              <span class="pdp-deal__icon">{% render 'agha-pdp-icon', icon: 'delivery' %}</span>
+              <span class="pdp-deal__icon">{% render 'agha-pdp-icon', icon: 'free-shipping' %}</span>
               <span class="pdp-deal__body">
                 <span class="pdp-deal__label">Complimentary shipping</span>
                 <span class="pdp-deal__title" data-pdp-ship-text>{% if current_variant.price >= ship_threshold %}This order ships free{% else %}Free on orders above {{ ship_threshold | money_without_trailing_zeros }}{% endif %}</span>
@@ -529,17 +529,11 @@
             <div class="pdp-dynamic-checkout">{{ form | payment_button }}</div>
           {%- endif -%}
 
-          {%- comment -%} 9 · Payment badges: the store's own enabled payment methods (Shopify's icons), right under the buttons {%- endcomment -%}
+          {%- comment -%} 9 · Payment badges: the brand's own icon set (snippets/hoa-pay-icons.liquid), right under the buttons {%- endcomment -%}
           {%- if s.show_secure -%}
             <div class="pdp-paybadges">
               <span class="pdp-paybadges__label">{% render 'agha-pdp-icon', icon: 'secure' %}{{ s.secure_title }}</span>
-              {%- if shop.enabled_payment_types.size > 0 -%}
-                <ul class="pdp-paybadges__list" role="list" aria-label="Accepted payment methods">
-                  {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
-                </ul>
-              {%- elsif s.secure_text != blank -%}
-                <span class="pdp-paybadges__text">{{ s.secure_text }}</span>
-              {%- endif -%}
+              <ul class="pdp-paybadges__list" role="list" aria-label="Accepted payment methods">{%- render 'hoa-pay-icons', tag: 'li' -%}</ul>
             </div>
           {%- endif -%}
 
@@ -594,7 +588,7 @@
               {%- endfor -%}
               {%- if trust_title != blank and trust_text != blank -%}
                 <li class="pdp-trust__item">
-                  <span class="pdp-trust__icon">{% render 'agha-pdp-icon', icon: 'seal' %}</span>
+                  <span class="pdp-trust__icon">{% render 'agha-pdp-icon', icon: 'badge' %}</span>
                   <span><b>{{ trust_title }}</b><small>{{ trust_text }}</small></span>
                 </li>
               {%- endif -%}
@@ -842,6 +836,7 @@
           "label": "Icon",
           "default": "delivery",
           "options": [
+            { "value": "free-shipping", "label": "Free shipping (truck)" },
             { "value": "delivery", "label": "Delivery" },
             { "value": "sample", "label": "Sample vial" },
             { "value": "hourglass", "label": "Hourglass" },
@@ -849,7 +844,8 @@
             { "value": "drop", "label": "Drop" },
             { "value": "secure", "label": "Lock" },
             { "value": "return", "label": "Returns" },
-            { "value": "seal", "label": "Seal" }
+            { "value": "seal", "label": "Seal" },
+            { "value": "badge", "label": "Badge" }
           ]
         },
         { "type": "text", "id": "title", "label": "Title", "default": "Complimentary shipping" },
@@ -873,7 +869,7 @@
     { "type": "image_picker", "id": "offer_image_3", "label": "Multi-buy image: Trio", "info": "Optional. Without it, the option shows three of the product's bottles." },
     { "type": "text", "id": "sale_message", "label": "Sale message", "info": "Shown under the price, only while the selected variant has a compare-at price." },
     { "type": "header", "content": "Payment badges" },
-    { "type": "checkbox", "id": "show_secure", "label": "Show payment badges under the buttons", "default": true, "info": "Shopify's icons for the payment methods enabled on the store (Settings > Payments)." },
+    { "type": "checkbox", "id": "show_secure", "label": "Show payment badges under the buttons", "default": true, "info": "UPI, Google Pay, Visa, Mastercard, RuPay and Amex icons (snippets/hoa-pay-icons.liquid)." },
     { "type": "text", "id": "secure_title", "label": "Title", "default": "Secure checkout" },
     { "type": "text", "id": "secure_text", "label": "Text (when no payment icons)", "default": "Payments are processed securely by Shopify." },
     { "type": "header", "content": "Delivery" },

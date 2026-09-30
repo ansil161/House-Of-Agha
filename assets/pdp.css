@@ -4219,6 +4219,7 @@ html:has(.pdp) body {
 .pdp-paybadges__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .pdp-paybadges__list li { display: block; line-height: 0; }
 .pdp-paybadges__list svg { display: block; width: 38px; height: 24px; }
+.pdp-paybadges__list img { display: block; width: 40px; height: 28px; }
 .pdp-paybadges__text { font-size: 0.76rem; color: var(--pdp-muted); }
 
 /* Why we are better, inside Description: the same four proofs (icon, bold uppercase title, line of text) in one row */
@@ -5062,3 +5063,19 @@ html:has(.pdp) body {
   .hoa-pgal__list { gap: 10px; }
   .hoa-pgal__item { width: 78vw; border-radius: 14px; }
 }
+
+/* Image icons (assets/hoa-icon-*.png: the brand's free-shipping truck and badge), tinted to the
+   surrounding icon colour with a mask so they sit in the same gold / wine as the line icons. */
+.pdp-img-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask: var(--pdp-icon) center / contain no-repeat;
+  mask: var(--pdp-icon) center / contain no-repeat;
+}
+.pdp-trust__icon .pdp-img-icon { width: 22px; height: 22px; }
+.pdp-deal__icon .pdp-img-icon { width: 20px; height: 20px; }
+/* The truck is wide (about 16:9): give it the width so it reads at the same weight as the badge */
+.pdp-img-icon[style*="free-shipping"] { width: 34px; }
+.pdp-deal__icon .pdp-img-icon[style*="free-shipping"] { width: 24px; height: 16px; }
