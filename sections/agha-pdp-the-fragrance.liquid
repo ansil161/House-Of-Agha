@@ -31,6 +31,19 @@
   assign family = pdp.family
 
   comment
+    Studio product photos carry a tinted backdrop that reads as a card on the white page, so
+    the house bottles use their white-background cut-outs (they vanish under multiply).
+  endcomment
+  assign cutout_src = blank
+  if s.image == blank
+    assign cutout_key = product.handle | remove: 'oud-of-'
+    assign cutout_keys = 'oud-fury,agha-blue,dark-paradise,maha,sea-smoke,tobacco-enigma,shamamah' | split: ','
+    if cutout_keys contains cutout_key
+      assign cutout_src = 'hoa-cutout-' | append: cutout_key | append: '.webp' | asset_url
+    endif
+  endif
+
+  comment
     Left column — the three acts, in order, each with a fixed icon.
   endcomment
   assign left_blocks = ''
@@ -151,7 +164,9 @@
         <figure class="pdp-tf__visual" data-pdp-tf-visual>
           <span class="pdp-tf__float">
             <span class="pdp-tf__frame">
-              {%- if image -%}
+              {%- if cutout_src != blank -%}
+                <img src="{{ cutout_src }}" alt="{{ product.title | escape }}" width="1200" height="1500" loading="lazy">
+              {%- elsif image -%}
                 {%- assign image_alt = image.alt | default: product.title -%}
                 {{ image | image_url: width: 1400 | image_tag: widths: '600, 900, 1200, 1400', sizes: '(min-width: 1101px) 34vw, (min-width: 769px) 46vw, 82vw', loading: 'lazy', alt: image_alt }}
               {%- endif -%}
