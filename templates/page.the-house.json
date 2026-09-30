@@ -88,7 +88,14 @@
         "use_3",
         "use_4"
       ],
-      "settings": {}
+      "settings": {
+        "photo_asset": "hoa-hyd-tomb-detail",
+        "photo_w": 1400,
+        "photo_h": 2100,
+        "photo_focus": "50% 40%",
+        "photo_alt": "Carved parapet, jaali screens and pointed arches of a Qutb Shahi tomb in Hyderabad",
+        "photo_caption": "Stone jaali and arches at the Qutb Shahi Tombs, Hyderabad"
+      }
     },
     "philosophy": {
       "type": "hoa-about-philosophy",
@@ -155,8 +162,8 @@
             "title": "We commit to craftsmanship",
             "lines": "A meticulous approach to every detail.\nOnly the finest ingredients.\nA passion for innovation in scent creation.",
             "asset": "hoa-philo-craft",
-            "w": 1312,
-            "h": 1199
+            "w": 1672,
+            "h": 941
           }
         }
       },
@@ -176,7 +183,12 @@
         "heading": "Rediscover the power",
         "heading_muted": "of fragrance.",
         "text": "House of Agha, where every scent is a masterpiece.",
-        "cta_label": "Shop the collection"
+        "cta_label": "Shop the collection",
+        "asset": "hoa-closing-oud-fury",
+        "w": 1536,
+        "h": 2752,
+        "focus": "50% 36%",
+        "alt": "A man in a white shirt holds a bottle of Oud Fury in warm, low light"
       }
     }
   },

@@ -14,9 +14,9 @@
           <a class="hoa-btn hoa-btn--light" href="{{ s.cta_url | default: routes.all_products_collection_url }}"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
         {%- endif -%}
       </div>
-      <figure class="hoa-ab-cta__media">
+      <figure class="hoa-ab-cta__media"{% if s.focus != blank %} style="--pos: {{ s.focus }}"{% endif %}>
         <div class="hoa-ab-cta__img" data-hoa-ab-parallax>
-          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2000, h: 1125, alt: s.alt, sizes: '(min-width: 900px) 50vw, 100vw' -%}
+          {%- render 'hoa-img', name: s.asset, image: s.image, w: s.w, h: s.h, alt: s.alt, sizes: '(min-width: 900px) 50vw, 100vw' -%}
         </div>
       </figure>
     </div>
@@ -36,6 +36,9 @@
     { "type": "url", "id": "cta_url", "label": "Button link" },
     { "type": "image_picker", "id": "image", "label": "Image (landscape)" },
     { "type": "text", "id": "asset", "label": "Fallback theme asset", "default": "hoa-world-profile" },
+    { "type": "number", "id": "w", "label": "Fallback asset width", "default": 2000 },
+    { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1125 },
+    { "type": "text", "id": "focus", "label": "Crop focus (CSS object-position)", "info": "e.g. 50% 38%. Keeps the subject in frame when the photo is cropped." },
     { "type": "text", "id": "alt", "label": "Alt text", "default": "A man holds Oud Fury against an amber backdrop" }
   ],
   "presets": [{ "name": "About: closing" }]
