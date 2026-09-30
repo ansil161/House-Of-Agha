@@ -1,0 +1,68 @@
+{%- comment -%}
+  House of Agha · PDP campaign gallery
+  One line of wide campaign photos. Every few seconds it slides one photo to the left;
+  after the last photo it glides back to the first (no duplicated loop). Swipeable; keeps
+  sliding under the mouse, holds only while touched or off screen; jumps instead of gliding with reduced motion.
+  Styles: assets/pdp.css ("Campaign gallery"). Behaviour: assets/hoa-pgal.js.
+  With "First photo full width" on, the first block is shown alone as an edge-to-edge
+  banner above the row, and only the remaining photos slide.
+  Photos are blocks: pick a Shopify image, or name a theme asset (<name>.webp + <name>-sm.webp).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- if section.blocks.size > 0 -%}
+  {%- assign feature = false -%}
+  {%- if s.feature_first and section.blocks.size > 1 -%}{%- assign feature = true -%}{%- endif -%}
+  {%- capture items -%}
+    {%- for block in section.blocks -%}
+      {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
+      {%- assign b = block.settings -%}
+      <li class="hoa-pgal__item" {{ block.shopify_attributes }}>
+        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
+      </li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  <section class="hoa-pgal" data-hoa-pgal data-interval="{{ s.interval | default: 3 }}" aria-label="{{ s.label | default: 'Campaign photographs' | escape }}">
+    {%- if s.heading != blank -%}
+      <div class="hoa-pgal__head"><h2 class="hoa-pgal__title">{{ s.heading }}</h2></div>
+    {%- endif -%}
+    {%- if feature -%}
+      {%- assign fb = section.blocks.first.settings -%}
+      <figure class="hoa-pgal__hero" style="--pos: {{ fb.focus | default: 'center' }}" {{ section.blocks.first.shopify_attributes }}>
+        {%- render 'hoa-img', name: fb.asset, image: fb.image, w: fb.w, h: fb.h, alt: fb.alt, sizes: '100vw' -%}
+      </figure>
+    {%- endif -%}
+    <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
+      <ul class="hoa-pgal__list" role="list">{{ items }}</ul>
+    </div>
+  </section>
+  <script src="{{ 'hoa-pgal.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PDP: campaign gallery",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Optional. Leave empty for a photo-only strip." },
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "Campaign photographs" },
+    { "type": "checkbox", "id": "feature_first", "label": "First photo full width", "default": true, "info": "Shows the first photo as an edge-to-edge banner above the sliding row." },
+    { "type": "range", "id": "interval", "label": "Seconds per slide", "min": 2, "max": 10, "step": 1, "unit": "s", "default": 3 }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (portrait 4:5 works best)" },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset" },
+        { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1000 },
+        { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1250 },
+        { "type": "text", "id": "focus", "label": "Crop focus (full-width banner only)", "info": "CSS object-position, e.g. 50% 30%." },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [{ "name": "PDP: campaign gallery" }]
+}
+{% endschema %}

@@ -370,6 +370,78 @@
         "heading_serif": "in motion.",
         "only_current_product": true
       }
+    },
+    "gallery": {
+      "type": "hoa-pdp-gallery",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-hero",
+            "alt": "A woman in a red gown holds Maha",
+            "w": 1856,
+            "h": 2304,
+            "focus": "50% 20%"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-2",
+            "alt": "A man on the shore holds Sea Smoke",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-4",
+            "alt": "Maha bottle among red silk",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-3",
+            "alt": "A man holds Oud Fury in warm low light",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_5": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-5",
+            "alt": "A woman holds Maha close to her face",
+            "w": 1000,
+            "h": 1250
+          }
+        },
+        "photo_6": {
+          "type": "photo",
+          "settings": {
+            "asset": "hoa-pdp-gal-6",
+            "alt": "Agha Blue resting in snow and ice",
+            "w": 1000,
+            "h": 1250
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_4",
+        "photo_3",
+        "photo_5",
+        "photo_6"
+      ],
+      "settings": {
+        "feature_first": true,
+        "interval": 3
+      }
     }
   },
   "order": [
@@ -383,6 +455,7 @@
     "fragrance_notes",
     "review_summary",
     "reviews",
+    "gallery",
     "faq",
     "reels",
     "pair",

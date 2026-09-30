@@ -5029,3 +5029,36 @@ html:has(.pdp) body {
   body .pdp-hero .pdp-buy { grid-template-columns: auto minmax(0, 1fr); }
   body .pdp-hero .pdp-buy .pdp-icon-btn { display: none; }
 }
+
+/* ==========================================================================
+   Campaign gallery (sections/hoa-pdp-gallery.liquid)
+   One line of wide photos on a snap track. assets/hoa-pgal.js slides one photo left
+   every few seconds and glides back to the first after the last. Swipeable by hand.
+   ========================================================================== */
+.hoa-pgal { padding: clamp(28px, 4vw, 56px) 0; overflow: hidden; background: #FFFFFF; }
+.hoa-pgal__head { max-width: 1400px; margin: 0 auto 24px; padding: 0 clamp(16px, 4vw, 40px); }
+.hoa-pgal__title { margin: 0; font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-weight: var(--font-name-weight); font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.1; color: #0B0B0B; }
+/* First photo as an edge-to-edge banner (nearly a full screen tall) above the sliding row */
+.hoa-pgal__hero { position: relative; margin: 0 0 14px; height: clamp(460px, 92svh, 1000px); overflow: hidden; background: #2a0b0b; }
+.hoa-pgal__hero img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); }
+@media (max-width: 768px) {
+  .hoa-pgal__hero { height: auto; aspect-ratio: 4 / 5; margin-bottom: 10px; }
+}
+.hoa-pgal__viewport {
+  --pgal-gutter: clamp(16px, 4vw, 40px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--pgal-gutter);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  outline: none;
+}
+.hoa-pgal__viewport::-webkit-scrollbar { display: none; }
+.hoa-pgal__list { display: flex; gap: 14px; width: max-content; margin: 0; padding: 0 var(--pgal-gutter); list-style: none; }
+.hoa-pgal__item { flex: none; width: clamp(300px, 34vw, 500px); aspect-ratio: 1 / 1; overflow: hidden; border-radius: 18px; background: #EFEAE3; scroll-snap-align: start; }
+.hoa-pgal__item img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; transition: transform 0.9s var(--ease-editorial, ease); }
+@media (hover: hover) { .hoa-pgal__item:hover img { transform: scale(1.03); } }
+@media (max-width: 768px) {
+  .hoa-pgal__list { gap: 10px; }
+  .hoa-pgal__item { width: 78vw; border-radius: 14px; }
+}

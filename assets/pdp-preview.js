@@ -901,13 +901,25 @@
     </div>
   </section>`;
 
+  // Campaign gallery: mirrors sections/hoa-pdp-gallery.liquid (blocks in templates/product.json)
+  const galShots = [[2, 'A man on the shore holds Sea Smoke'], [4, 'Maha bottle among red silk'],
+    [3, 'A man holds Oud Fury in warm low light'], [5, 'A woman holds Maha close to her face'], [6, 'Agha Blue resting in snow and ice']];
+  const galItems = galShots.map(([n, alt]) => `<li class="hoa-pgal__item"><img src="/assets/hoa-pdp-gal-${n}.webp" srcset="/assets/hoa-pdp-gal-${n}-sm.webp 600w, /assets/hoa-pdp-gal-${n}.webp 1000w" sizes="(min-width: 900px) 40vw, 84vw" width="1000" height="1250" alt="${esc(alt)}" loading="lazy" decoding="async"></li>`).join('');
+  const gallery = `
+  <section class="hoa-pgal" data-hoa-pgal data-interval="3" aria-label="Campaign photographs">
+    <figure class="hoa-pgal__hero" style="--pos: 50% 20%"><img src="/assets/hoa-pdp-gal-hero.webp" srcset="/assets/hoa-pdp-gal-hero-sm.webp 1000w, /assets/hoa-pdp-gal-hero.webp 1856w" sizes="100vw" width="1856" height="2304" alt="A woman in a red gown holds Maha" loading="lazy" decoding="async"></figure>
+    <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
+      <ul class="hoa-pgal__list" role="list">${galItems}</ul>
+    </div>
+  </section>`;
+
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)
   const pair = '<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="' + handle + '" hidden></section>';
 
   // Attention flow, mirroring templates/product.json:
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft, reviews) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + theFragrance + collage + story + fragranceNotes + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
+  root.innerHTML = hero + theFragrance + collage + story + fragranceNotes + reviewSummary + reviewsSection + gallery + faq + reels + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');
@@ -915,6 +927,8 @@
   });
   window.HOA?.initPair?.();
   window.AghaPDP?.init();
+  if (window.HOA_PGAL) window.HOA_PGAL.init();
+  else { const g = document.createElement('script'); g.src = '/assets/hoa-pgal.js'; document.body.appendChild(g); }
   if (reels) {
     const sc = document.createElement('script');
     sc.src = '/assets/hoa-reels.js';
