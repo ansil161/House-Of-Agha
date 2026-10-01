@@ -150,7 +150,7 @@
   position: sticky;
   top: var(--hoa-header-h);
   z-index: 5;
-  background: rgba(246, 243, 238, 0.92);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: saturate(140%) blur(14px);
   -webkit-backdrop-filter: saturate(140%) blur(14px);
   border-top: 1px solid var(--hoa-line);
@@ -252,7 +252,7 @@
 .hoa-shop-bar {
   top: calc(var(--hoa-header-h) + 8px);
   margin: 12px var(--hoa-gutter);
-  background: rgba(239, 235, 228, 0.88);
+  background: rgba(255, 255, 255, 0.88);
   border: 1px solid var(--hoa-line);
   border-radius: 999px;
   box-shadow: 0 10px 30px -14px rgba(20, 18, 16, 0.22);
@@ -539,7 +539,7 @@
   .hoa-shop-bar {
     position: sticky; top: var(--hoa-header-h); z-index: 20;
     margin: 0 0 4px; border: 0; border-bottom: 1px solid var(--hoa-line); border-radius: 0;
-    background: rgba(246, 243, 238, 0.97); box-shadow: none;
+    background: rgba(255, 255, 255, 0.97); box-shadow: none;
     -webkit-backdrop-filter: none; backdrop-filter: none; /* a filter here would trap the fixed sheet inside the bar */
   }
   .hoa-shop-cat.is-sheet-open .hoa-shop-bar { z-index: 1001; }

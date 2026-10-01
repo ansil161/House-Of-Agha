@@ -86,7 +86,7 @@
 
 .hoa-coupon__close {
   position: absolute; top: 14px; right: 14px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
-  border: 1px solid var(--hoa-line); border-radius: 50%; background: rgba(246, 243, 238, 0.9); color: var(--hoa-ink);
+  border: 1px solid var(--hoa-line); border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--hoa-ink);
   transition: background-color 0.4s var(--hoa-ease), color 0.4s var(--hoa-ease), transform 0.5s var(--hoa-ease);
 }
 .hoa-coupon__close:hover { background: var(--hoa-ink); color: var(--hoa-paper); transform: rotate(90deg); }

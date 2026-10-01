@@ -6,7 +6,7 @@
    ========================================================================== */
 
 :root {
-  --hoa-paper: #F6F3EE;
+  --hoa-paper: #FFFFFF;  /* pure white page background (was warm white #F6F3EE) */
   --hoa-paper-2: #EFEBE4;
   --hoa-stone: #E4DED5;
   --hoa-ink: #141210;
@@ -162,14 +162,14 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-header.header {
   padding: 0;
   height: var(--hoa-header-h);
-  background: rgba(246, 243, 238, 0.86);
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: saturate(140%) blur(16px);
   -webkit-backdrop-filter: saturate(140%) blur(16px);
   border-bottom: 1px solid var(--hoa-line);
   color: var(--hoa-ink);
   transition: background-color 0.6s var(--hoa-ease), color 0.6s var(--hoa-ease), border-color 0.6s var(--hoa-ease), transform 0.6s var(--hoa-ease);
 }
-.hoa-header.header.scrolled { padding: 0; background: rgba(246, 243, 238, 0.92); }
+.hoa-header.header.scrolled { padding: 0; background: rgba(255, 255, 255, 0.92); }
 .hoa-header__inner {
   height: 100%;
   display: grid;
@@ -968,11 +968,11 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 1.05;
-  color: rgba(20, 18, 16, 0.26);
-  transition: color 0.5s var(--hoa-ease);
+  color: #000000;
+  text-decoration: none;
 }
-.hoa-tab:hover { color: rgba(20, 18, 16, 0.6); }
-.hoa-tab[aria-selected='true'] { color: var(--hoa-ink); }
+/* All tabs are solid black, no underline */
+.hoa-tab[aria-selected='true'] { color: #000000; }
 .hoa-tab sup { font-size: 0.34em; letter-spacing: 0; vertical-align: super; margin-left: 2px; }
 
 .hoa-collection__grid {
@@ -1049,7 +1049,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   position: absolute; left: 14px; bottom: 12px; z-index: 1;
   padding: 5px 11px;
   border-radius: 999px;
-  background: rgba(246, 243, 238, 0.86);
+  background: rgba(255, 255, 255, 0.86);
   font-family: var(--hoa-serif);
   font-style: italic;
   font-size: 0.86rem;
