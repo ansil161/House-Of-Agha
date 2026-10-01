@@ -299,42 +299,51 @@
     }));
   }
 
-  /* ------------------------------------------- Two columns: held in view, 769px+ */
-  // The shorter of the two columns (gallery / information) follows the screen while the taller one
-  // scrolls: it holds under the header, or — when it is taller than the screen — scrolls until its end
-  // is in view and holds there. It is moved with a transform clamped to the product grid, so it
-  // releases exactly where the main product section ends and never covers the sections below.
-  // (CSS position: sticky was dropped here: Chrome snaps a sticky column that is taller than the
-  // screen back to its start at the release point instead of letting it slide out.)
+  /* ------------------------------------ Two columns: scroll in turn, 769px+ */
+  // One side holds while the other scrolls, then they swap (user request):
+  //   1. the details (right) stay fixed under the header while the photos (left) scroll;
+  //   2. once the photos reach their end they hold there, and the rest of the details scrolls by;
+  //   3. when both are done the section ends and the page carries on.
+  // Done with transforms clamped to .pdp-hero__grid, whose height is set to the total distance, so it
+  // never covers the sections below. (position: sticky can't express the hand-over, and Chrome snaps
+  // tall sticky boxes back at the release point.)
   function initColumnSticky(main) {
     const grid = $('.pdp-hero__grid', main);
-    const cols = [$('.pdp-media', main), $('.pdp-info', main)].filter(Boolean);
-    if (!grid || cols.length < 2) return;
+    const photos = $('.pdp-media', main);
+    const details = $('.pdp-info', main);
+    if (!grid || !photos || !details) return;
     const wide = window.matchMedia('(min-width: 769px)');
     let raf = 0;
-    const reset = () => cols.forEach((c) => { c.style.removeProperty('transform'); c.classList.remove('is-held'); });
+    const reset = () => {
+      [photos, details].forEach((c) => { c.style.removeProperty('transform'); c.classList.remove('is-held'); });
+      grid.style.removeProperty('min-height');
+    };
+    const move = (el, y) => {
+      el.style.transform = y > 0.5 ? 'translate3d(0,' + y.toFixed(1) + 'px,0)' : '';
+      el.classList.toggle('is-held', y > 0.5);
+    };
     const update = () => {
       raf = 0;
       if (!wide.matches) { reset(); return; }
       const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96;
-      const g = grid.getBoundingClientRect();
-      cols.forEach((col) => {
-        const h = col.offsetHeight;
-        const room = g.height - h;                                   // how far this column can travel
-        if (room <= 1) { col.style.removeProperty('transform'); col.classList.remove('is-held'); return; }
-        const hold = Math.min(header + 12, window.innerHeight - h - 16);   // where it rests on screen (matches the 28px in pdp.css)
-        const y = Math.max(0, Math.min(room, hold - g.top));
-        col.style.transform = y ? 'translate3d(0,' + y.toFixed(1) + 'px,0)' : '';
-        col.classList.toggle('is-held', y > 0);
-      });
+      const pin = header + 12;                                     // where a held column rests
+      const view = Math.max(200, window.innerHeight - pin - 16);   // screen space below the header
+      const P = photos.offsetHeight;
+      const D = details.offsetHeight;
+      const a = Math.max(0, P - view);                             // phase 1: photos scroll this far
+      const b = Math.max(0, D - view);                             // phase 2: details scroll this far
+      const total = a + Math.max(D, view);
+      grid.style.minHeight = Math.max(P, total) + 'px';
+      const s = pin - grid.getBoundingClientRect().top;            // scroll progress through the section
+      move(details, Math.max(0, Math.min(a, s)));                  // held during phase 1, then scrolls
+      move(photos, Math.max(0, Math.min(b, s - a)));               // scrolls in phase 1, held in phase 2
     };
     const queue = () => { if (!raf) raf = requestAnimationFrame(update); };
     listen(window, 'scroll', queue, { passive: true });
     listen(window, 'resize', queue, { passive: true });
     if ('ResizeObserver' in window) {
       const ro = new ResizeObserver(queue);
-      cols.forEach((c) => ro.observe(c));
-      ro.observe(grid);
+      [photos, details].forEach((c) => ro.observe(c));
       cleanups.push(() => ro.disconnect());
     }
     cleanups.push(() => { if (raf) cancelAnimationFrame(raf); reset(); });

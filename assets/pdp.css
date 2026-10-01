@@ -5100,7 +5100,7 @@ html:has(.pdp) body {
 .pdp-deal__icon .pdp-img-icon[style*="free-shipping"] { width: 24px; height: 16px; }
 
 /* ==========================================================================
-   MAIN PRODUCT SECTION — pinned photo column (2026-09-30), 769px+
+   MAIN PRODUCT SECTION — columns scroll in turn (2026-09-30), 769px+
    Left, held in view: the main image tall, in the photos' own 4 : 5 shape, with the product's next four
    photos two per row under it (clickable, pdp.js initGalleryTiles swaps a tile with the main image).
    No counter. Right: the details column scrolls (≈55 / 45 split) and ends with "Why we are better".
@@ -5129,6 +5129,8 @@ html:has(.pdp) body {
   body .pdp-hero .pdp-media { display: block; height: auto; max-height: none; }
   body .pdp-hero .pdp-stage,
   body .pdp-hero .pdp-stage__inner { position: relative; height: auto; }
+  /* No inner scroll: pdp.js holds the details while the photos scroll, then the photos while the rest
+     of the details scrolls (initColumnSticky). */
   body .pdp-hero .pdp-info {
     max-height: none;
     overflow: visible;
@@ -5189,6 +5191,11 @@ html:has(.pdp) body {
   }
   .pdp-tiles__btn:hover img { transform: scale(1.035); }
   .pdp-tiles__btn:focus-visible { outline: 2px solid var(--pdp-ink); outline-offset: 3px; }
+}
+/* "Why we are better" sits in the photo column, under the main image and the four tiles */
+@media (min-width: 769px) {
+  body .pdp-hero .pdp-media > .pdp-proofs { margin: clamp(14px, 1.4vw, 20px) 0 0; padding: clamp(16px, 1.6vw, 22px) 0; }
+  body .pdp-hero .pdp-media > .pdp-tiles + .pdp-proofs { margin-top: clamp(18px, 1.8vw, 26px); }
 }
 .pdp-tiles { display: none; }
 @media (min-width: 769px) { body .pdp-hero .pdp-tiles { display: grid; } }

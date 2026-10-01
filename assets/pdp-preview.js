@@ -152,6 +152,9 @@
           <div class="pdp-tiles" role="group" aria-label="More product photos">
             ${media.slice(1, 5).map((src, i) => `<button type="button" class="pdp-tiles__btn" data-pdp-tile="${i + 1}" aria-label="Show this photo as the main image"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
           </div>` : ''}
+          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
+            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
+          </ul>
         </div>
 
         <!-- Purchase console: mirrors sections/agha-pdp-main.liquid -->
@@ -297,9 +300,6 @@
               <div class="pdp-accordion__body"><p>${shipThreshold ? 'Complimentary shipping on orders above ' + money(shipThreshold) + '. ' : ''}Every flacon is hand-wrapped in matte black hardboard with a 5 ml sample inside. Check your pincode above for an estimated delivery date.</p></div>
             </details>
           </div>
-          <ul class="pdp-proofs" role="list" aria-label="Why we are better">
-            ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
-          </ul>
         </div>
       </div>
     </div>
