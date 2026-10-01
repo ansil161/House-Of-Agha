@@ -244,8 +244,8 @@ html.hoa-search-open, html.hoa-search-open body { overflow: hidden; }
   .hoa-footer__invite { padding-bottom: 40px; }
   .hoa-footer__main { display: block; padding-block: 36px 28px; }
   .hoa-footer__brand { margin-bottom: 24px; }
-  .hoa-footer__col { border-top: 1px solid rgba(246, 241, 231, 0.12); }
-  .hoa-footer__col:last-of-type { border-bottom: 1px solid rgba(246, 241, 231, 0.12); }
+  .hoa-footer__col { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+  .hoa-footer__col:last-of-type { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
   .hoa-footer__title { margin: 0; }
   .hoa-footer__toggle {
     display: flex; align-items: center; justify-content: space-between;
