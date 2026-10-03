@@ -1,0 +1,28 @@
+{%- comment -%}
+  HOUSE OF AGHA — THE SCENT CONCIERGE · "Scent Discovery Field" · content (motion: assets/hoa-scent-concierge.js)
+  Embedded as JSON by sections/hoa-scent-concierge.liquid. Keep it valid JSON.
+
+  families   the four families the House uses, one per side of the bottle ("zone": left / top / right /
+             bottom). "line" = the phrase written in when the family is discovered; "tint" = the warmth
+             the scene takes on; "bottle" = the family's lead fragrance, shown while it is active and
+             revealed as "Your scent" when it is the family the visitor lingered on longest.
+  products   the seven fragrances; image = the white-background cut-out (it melts into the page);
+             line = the fragrance's campaign line, shown under its name on reveal.
+{%- endcomment -%}
+{
+  "families": [
+    { "id": "fresh", "label": "Fresh", "zone": "left", "line": "Clear. Cool. Unhurried.", "tint": "#EEF1EF", "bottle": "agha-blue" },
+    { "id": "floral", "label": "Floral", "zone": "top", "line": "Soft. Radiant. Quietly bright.", "tint": "#F5EEEA", "bottle": "maha" },
+    { "id": "woody", "label": "Woody", "zone": "right", "line": "Grounded. Warm. Quietly magnetic.", "tint": "#F2EBE2", "bottle": "oud-fury" },
+    { "id": "aromatic", "label": "Aromatic", "zone": "bottom", "line": "Smoky. Green. Assured.", "tint": "#EEEDE6", "bottle": "tobacco-enigma" }
+  ],
+  "products": [
+    { "handle": "oud-fury", "name": "Oud Fury", "family": "woody", "line": "Amber smoke, charred wood and a single shaft of evening light.", "image": "{{ 'hoa-cutout-oud-fury-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/oud-fury" },
+    { "handle": "agha-blue", "name": "Agha Blue", "family": "fresh", "line": "Ice caves, cold stone and the deep blue of a winter night.", "image": "{{ 'hoa-cutout-agha-blue-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/agha-blue" },
+    { "handle": "oud-of-dark-paradise", "name": "Oud of Dark Paradise", "family": "woody", "line": "Black sand, rising smoke and a room lit only by embers.", "image": "{{ 'hoa-cutout-dark-paradise-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/oud-of-dark-paradise" },
+    { "handle": "maha", "name": "Maha", "family": "floral", "line": "Blossom, warm sand and late sun through an open window.", "image": "{{ 'hoa-cutout-maha-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/maha" },
+    { "handle": "sea-smoke", "name": "Sea Smoke", "family": "fresh", "line": "Clear water, pale stone and salt carried in on the wind.", "image": "{{ 'hoa-cutout-sea-smoke-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/sea-smoke" },
+    { "handle": "tobacco-enigma", "name": "Tobacco Enigma", "family": "aromatic", "line": "Tobacco leaf, moss and a forest floor after rain.", "image": "{{ 'hoa-cutout-tobacco-enigma-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/tobacco-enigma" },
+    { "handle": "shamamah", "name": "Shamamah", "family": "floral", "line": "Jasmine, gilded columns and the hush of a palace garden.", "image": "{{ 'hoa-cutout-shamamah-sm.webp' | asset_url }}", "url": "{{ routes.root_url }}products/shamamah" }
+  ]
+}

@@ -1,0 +1,103 @@
+{%- comment -%}
+  HOUSE OF AGHA — THE SCENT CONCIERGE · "Scent Discovery Field"
+  The bottle is an instrument. A headline says what the section is, one line says what to do, and a
+  small cue ("Move to explore ↗" / "Drag around the bottle") points at the bottle. Around it: a faint
+  field, a few slow motes, a hairline ring that draws itself where the visitor has explored, and four
+  family words on the ring (Fresh left, Floral top, Woody right, Aromatic bottom), invisible until
+  approached. Reaching a word discovers it: the scene warms, the bottle changes, the family and its
+  phrase are written in, and a counter (01 / 04) tracks the journey. With all four found, the field
+  simplifies and reveals "Your scent" (the family lingered on longest) with one link.
+
+  Content: snippets/hoa-scent-concierge-data.liquid · Motion: assets/hoa-scent-concierge.js
+  Styles:  assets/hoa-scent-concierge.css
+  No JS: the four family words are visible links to the shop filtered by family.
+  Reduced motion: no tilt, trail, motes or pointer dot; words stay visible; changes are instant.
+{%- endcomment -%}
+{%- capture st_json -%}{% render 'hoa-scent-concierge-data' %}{%- endcapture -%}
+{%- assign st = st_json | parse_json -%}
+{%- assign first_family = st.families | where: 'id', 'woody' | first -%}
+{%- assign first_bottle = st.products | where: 'handle', first_family.bottle | first -%}
+
+{{ 'hoa-scent-concierge.css' | asset_url | stylesheet_tag }}
+
+<section class="hoa-st" id="scent-concierge" data-hoa-st aria-labelledby="hoa-st-title">
+  <div class="hoa-st__tints" aria-hidden="true">
+    {%- for f in st.families -%}<i data-st-tint="{{ f.id }}" style="background-color: {{ f.tint }}"></i>{%- endfor -%}
+    <i class="hoa-st__tint-on" data-st-tint-on></i>
+  </div>
+
+  <div class="hoa-st__stage" data-st-stage>
+    <header class="hoa-st__head">
+      <p class="hoa-eyebrow hoa-st__eyebrow" data-st-intro>{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="hoa-st__title" id="hoa-st-title" data-st-intro>{{ section.settings.title }}</h2>
+      <p class="hoa-st__explain" data-st-intro>{{ section.settings.explain | escape }}</p>
+    </header>
+
+    <div class="hoa-st__field" data-st-field>
+      <svg class="hoa-st__trace" data-st-trace aria-hidden="true" focusable="false">
+        <path class="hoa-st__vapor" data-st-vapor d=""/>
+        <path class="hoa-st__line" data-st-line d=""/>
+      </svg>
+      <span class="hoa-st__dot" data-st-dot aria-hidden="true"><i class="hoa-st__dot-ring"></i><i class="hoa-st__dot-core"></i></span>
+
+      {%- comment -%} Left: what was discovered, and how far the journey has gone {%- endcomment -%}
+      <div class="hoa-st__scent" data-st-scent-col>
+        <p class="hoa-st__count" data-st-count aria-live="polite" hidden>
+          <span class="hoa-st__count-win"><span data-st-count-n>01</span></span><span class="hoa-st__count-of"> / 0{{ st.families.size }}</span>
+        </p>
+        <div class="hoa-st__reveal" data-st-scent aria-live="polite"></div>
+      </div>
+
+      <div class="hoa-st__object" data-st-object>
+        <div class="hoa-st__glow" data-st-glow aria-hidden="true"></div>
+        <div class="hoa-st__motes" data-st-motes aria-hidden="true"></div>
+        <svg class="hoa-st__ring" viewBox="0 0 700 875" aria-hidden="true" focusable="false" data-st-ring>
+          <circle class="hoa-st__ring-base" cx="350" cy="455" r="330"/>
+          <g class="hoa-st__ring-segs" data-st-segs></g>
+        </svg>
+
+        {%- comment -%} lift = scroll intro · bottle = pointer response · bottle-in = discoveries {%- endcomment -%}
+        <div class="hoa-st__lift" data-st-lift>
+          <div class="hoa-st__bottle" data-st-bottle>
+            <div class="hoa-st__bottle-in" data-st-bottle-in>
+              <img class="hoa-st__img is-on" data-st-img src="{{ first_bottle.image }}" alt="{{ first_bottle.name }} Eau de Parfum" width="700" height="875" loading="lazy" decoding="async">
+              <img class="hoa-st__img" data-st-img src="{{ first_bottle.image }}" alt="" width="700" height="875" loading="lazy" decoding="async">
+              <span class="hoa-st__sheen" data-st-sheen aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+
+        {%- for f in st.families -%}
+          <a class="hoa-st__word hoa-st__word--{{ f.zone }}" data-st-word data-st-id="{{ f.id }}" href="{{ routes.all_products_collection_url }}?family={{ f.id }}"><span>{{ f.label }}</span></a>
+        {%- endfor -%}
+
+        {%- comment -%} The cue: a small instruction, not a button. Its text changes as the visitor approaches. {%- endcomment -%}
+        <p class="hoa-st__cue" data-st-cue aria-hidden="true">
+          <span class="hoa-st__cue-win"><span class="hoa-st__cue-text" data-st-cue-text>Move to explore</span></span>
+          <svg class="hoa-st__cue-arrow" data-st-cue-arrow viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M6 4h6v6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="hoa-st__cue-drag" data-st-cue-drag><i></i></span>
+        </p>
+      </div>
+
+      {%- comment -%} Right: the final identity and the only link {%- endcomment -%}
+      <div class="hoa-st__reveal hoa-st__reveal--final" data-st-final aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script type="application/json" data-st-data>{{ st_json }}</script>
+</section>
+
+<script src="{{ 'hoa-scent-concierge.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "HOA Scent Concierge",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Agha Scent Concierge" },
+    { "type": "text", "id": "title", "label": "Headline", "info": "Wrap words in <em> to set them in the serif italic.", "default": "Find the scent that <em>feels like you.</em>" },
+    { "type": "text", "id": "explain", "label": "Explanation", "default": "Explore the notes. Discover your fragrance." }
+  ],
+  "presets": [{ "name": "HOA Scent Concierge" }]
+}
+{% endschema %}

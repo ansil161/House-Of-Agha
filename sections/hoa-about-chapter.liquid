@@ -11,12 +11,10 @@
     {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
       <figure class="hoa-ab-chapter__portrait" data-hoa-ab-up>
         <div class="hoa-ab-chapter__arch">
-          <div class="hoa-ab-chapter__img" data-hoa-ab-parallax>
+          <div class="hoa-ab-chapter__img">
             {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 36vw, 90vw' -%}
           </div>
-          <svg class="hoa-ab-chapter__frame" viewBox="0 0 100 125" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M5 125V30C5 18 29 11.5 50 6c21 5.5 45 12 45 24v95"/></svg>
         </div>
-        {%- if s.portrait_caption != blank -%}<figcaption>{{ s.portrait_caption }}</figcaption>{%- endif -%}
       </figure>
     {%- endif -%}
     <div class="hoa-ab-chapter__body">

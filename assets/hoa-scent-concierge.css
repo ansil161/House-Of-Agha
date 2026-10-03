@@ -1,0 +1,221 @@
+/* ==========================================================================
+   HOUSE OF AGHA — THE SCENT CONCIERGE · "Scent Discovery Field"
+   sections/hoa-scent-concierge.liquid · motion: assets/hoa-scent-concierge.js
+   Homepage tokens (--hoa-*). .is-live is set by the script; without it the words are plain links.
+   Motion values follow the motion-design tokens: feedback 120ms ease-out-quad, cue / counter
+   180–300ms ease-out-quart, discoveries 700–1200ms ease-out-expo; transform + opacity only.
+   ========================================================================== */
+
+.hoa-st {
+  --st-ink: var(--hoa-ink, #141210);
+  --st-mute: var(--hoa-mute, #857D72);
+  --st-gold: var(--hoa-brass, #B08D57);
+  --st-quad: cubic-bezier(.25, .46, .45, .94);
+  --st-quart: cubic-bezier(.165, .84, .44, 1);
+  --st-expo: cubic-bezier(.19, 1, .22, 1);
+  --st-obj-h: clamp(380px, 60svh, 660px);   /* the bottle's box; ring and words are placed on it */
+  position: relative;
+  padding: clamp(104px, 12vw, 176px) 0;
+  background: var(--hoa-paper, #FFFFFF);
+  color: var(--st-ink);
+  overflow: hidden;
+  isolation: isolate;                        /* the blend root for the bottle's white cut-out */
+}
+
+/* Atmosphere: a wash per family (rises as the pointer nears that side) and one for the active family */
+.hoa-st__tints { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.hoa-st__tints i { position: absolute; inset: 0; opacity: 0; }
+.hoa-st__tints i::after { content: ''; position: absolute; inset: 0; background: radial-gradient(55% 50% at 50% 60%, rgba(255, 255, 255, 0.6), transparent 72%); }
+
+.hoa-st__stage { position: relative; }
+
+/* ---------- Where am I · what is this · what to do ---------- */
+.hoa-st__head { position: relative; text-align: center; padding-inline: var(--hoa-gutter, 24px); }
+.hoa-st__eyebrow { margin: 0 0 clamp(22px, 2.6vw, 32px); }
+.hoa-st__title {
+  margin: 0 auto;
+  font-family: var(--hoa-sans); font-weight: 300;
+  font-size: clamp(2.3rem, 4.6vw, 4.6rem); line-height: 1; letter-spacing: -0.045em;
+  text-transform: none;
+}
+.hoa-st__title em { display: block; font-family: var(--hoa-serif); font-style: italic; font-weight: 400; letter-spacing: -0.02em; }
+.hoa-st__explain { margin: clamp(16px, 1.8vw, 22px) auto 0; font-size: clamp(0.95rem, 1.1vw, 1.05rem); line-height: 1.6; color: var(--st-mute); }
+
+/* ---------- The field ---------- */
+.hoa-st__field {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--st-obj-h) * 0.8) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(72px, 8vw, 150px);
+  margin-top: clamp(28px, 4vw, 56px);
+  padding-inline: var(--hoa-gutter, 24px);
+}
+.hoa-st__trace { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.hoa-st__line { fill: none; stroke: rgba(20, 18, 16, 0.3); stroke-width: 0.75; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.hoa-st__vapor { fill: none; stroke: rgba(176, 141, 87, 0.08); stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+
+/* Pointer dot: · normal → ○ in the field → ◉ while a word is being discovered (sizes via transform) */
+.hoa-st__dot { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; z-index: 4; }
+.hoa-st__dot i { position: absolute; left: -11px; top: -11px; width: 22px; height: 22px; border-radius: 50%; }
+.hoa-st__dot-ring { border: 1px solid var(--st-ink); transform: scale(0.25); opacity: 0; transition: transform 120ms var(--st-quad), opacity 120ms var(--st-quad); }
+.hoa-st__dot-core { background: var(--st-ink); transform: scale(0.24); transition: transform 120ms var(--st-quad); }
+.hoa-st__dot.is-field .hoa-st__dot-ring { transform: scale(1); opacity: 0.55; }
+.hoa-st__dot.is-field .hoa-st__dot-core { transform: scale(0.14); }
+
+/* No z-index on the object box: it would become a stacking context and stop the bottle's blend */
+.hoa-st__object { position: relative; grid-column: 2; grid-row: 1; width: 100%; aspect-ratio: 700 / 875; }
+
+/* The interaction field: faint radial light + slow motes; more present as the pointer approaches */
+.hoa-st__glow {
+  position: absolute; left: 50%; top: 52%; width: 118%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(176, 141, 87, 0.13), rgba(176, 141, 87, 0.04) 55%, transparent);
+  opacity: 0.45;
+}
+.hoa-st__motes { position: absolute; inset: 0; pointer-events: none; }
+.hoa-st__motes i { position: absolute; left: 50%; top: 52%; width: 2px; height: 2px; margin: -1px; border-radius: 50%; background: var(--st-gold); opacity: 0; }
+
+.hoa-st__ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.hoa-st__ring-base { fill: none; stroke: rgba(20, 18, 16, 0.14); stroke-width: 1; stroke-dasharray: 1 7; vector-effect: non-scaling-stroke; opacity: 0.6; }
+.hoa-st__ring-segs path { fill: none; stroke: var(--st-ink); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0; }
+
+/* The bottle: no card, no cast shadow; multiply on the outermost bottle layer melts the white cut-out */
+.hoa-st__lift { position: absolute; inset: 0; mix-blend-mode: multiply; }
+.hoa-st__bottle, .hoa-st__bottle-in { position: absolute; inset: 0; transform-origin: 50% 60%; }
+.hoa-st__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 0.9s var(--st-expo); }
+.hoa-st__img.is-on { opacity: 1; }
+.hoa-st__sheen {
+  position: absolute; left: 33%; top: 16%; width: 34%; height: 72%;
+  overflow: hidden; mix-blend-mode: screen; opacity: 0.22; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+}
+.hoa-st__sheen::before {
+  content: ''; position: absolute; left: 50%; top: 30%; width: 70%; height: 90%; margin: -45% 0 0 -35%;
+  background: radial-gradient(closest-side, rgba(255, 246, 232, 0.9), transparent);
+  transform: translate3d(var(--sx, 0px), var(--sy, 0px), 0);
+}
+
+/* ---------- Words on the ring: editorial labels, never buttons ---------- */
+.hoa-st__word {
+  position: absolute; z-index: 3;
+  display: block; padding: 14px 12px;
+  color: var(--st-ink); text-decoration: none; cursor: default;
+  font: 500 0.7rem/1 var(--hoa-sans); letter-spacing: 0.3em; text-transform: uppercase; white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.hoa-st__word span { display: block; transform-origin: 50% 50%; }
+.hoa-st__word:focus-visible { outline: 1px solid var(--st-ink); outline-offset: 2px; }
+/* the ring: centre (50%, 52%), radius 47% across / 37.7% down of the box */
+.hoa-st__word--left   { right: 97%; top: 52%; transform: translateY(-50%); text-align: right; }
+.hoa-st__word--right  { left: 97%;  top: 52%; transform: translateY(-50%); }
+.hoa-st__word--top    { left: 50%;  top: 8.5%; transform: translate(-50%, -50%); }
+.hoa-st__word--bottom { left: 50%;  top: 95%; transform: translate(-50%, -50%); }
+.hoa-st.is-live .hoa-st__word { opacity: 0; }
+.hoa-st:not(.is-live) .hoa-st__word { opacity: 0.6; cursor: pointer; }
+.hoa-st__word.is-found::after {
+  content: ''; position: absolute; left: 50%; bottom: 4px; width: 3px; height: 3px; margin-left: -1.5px;
+  border-radius: 50%; background: var(--st-gold);
+}
+.hoa-st__word--left.is-found::after { left: auto; right: calc(12px + 0.15em); }
+.hoa-st__word--right.is-found::after { left: 12px; margin-left: 0; }
+
+/* ---------- The cue: a tiny instruction with an arrow that leans toward the bottle ---------- */
+.hoa-st__cue {
+  position: absolute; right: 92%; top: 86%; z-index: 3; margin: 0;
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; pointer-events: none;
+  font-size: 0.64rem; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: var(--st-ink);
+}
+.hoa-st:not(.is-live) .hoa-st__cue { display: none; }
+.hoa-st__cue-win { display: block; overflow: hidden; }
+.hoa-st__cue-text { display: block; }
+.hoa-st__cue-arrow { width: 14px; height: 14px; flex: none; }
+/* touch devices (set by the script): a drag hint replaces the arrow */
+.hoa-st.is-touch .hoa-st__cue-arrow { display: none; }
+.hoa-st.is-touch .hoa-st__cue-drag { display: block; }
+.hoa-st__cue-drag { display: none; position: relative; width: 26px; height: 10px; flex: none; }
+.hoa-st__cue-drag::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(20, 18, 16, 0.25); }
+.hoa-st__cue-drag i { position: absolute; left: 0; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%; border: 1px solid var(--st-ink); background: var(--hoa-paper, #fff); }
+
+/* ---------- Discovered scent (left) and final identity (right) ---------- */
+.hoa-st__scent { grid-column: 1; grid-row: 1; justify-self: end; text-align: right; min-width: 0; }
+.hoa-st__reveal--final { grid-column: 3; grid-row: 1; justify-self: start; min-width: 0; }
+
+.hoa-st__count { margin: 0 0 18px; display: inline-flex; align-items: baseline; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; color: var(--st-mute); font-variant-numeric: tabular-nums; }
+.hoa-st__count[hidden] { display: none; }
+.hoa-st__count-win { display: inline-block; overflow: hidden; vertical-align: bottom; color: var(--st-ink); }
+.hoa-st__count-win span { display: inline-block; }
+
+.hoa-st__fam {
+  margin: 0;
+  font-family: var(--hoa-serif); font-style: italic; font-weight: 400;
+  font-size: clamp(2.8rem, 5vw, 5rem); line-height: 0.95; letter-spacing: -0.02em;
+}
+.hoa-st__fam .ch { display: inline-block; }
+.hoa-st__phrase { margin: 18px 0 0; font-size: 0.82rem; line-height: 1.9; letter-spacing: 0.02em; color: var(--hoa-ink-2, #3B3631); }
+.hoa-st__phrase span { display: block; }
+
+.hoa-st__kicker { margin: 0 0 14px; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.26em; text-transform: uppercase; color: var(--st-mute); }
+.hoa-st__name {
+  margin: 0;
+  font-family: var(--font-name, 'Fraunces', Georgia, serif);
+  font-variation-settings: var(--font-name-axes, normal);
+  font-weight: var(--font-name-weight, 600);
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem); line-height: 1; letter-spacing: -0.02em;
+}
+.hoa-st__traits { margin: 14px 0 0; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: var(--st-gold); }
+.hoa-st__desc { margin: 14px 0 0; max-width: 30ch; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2, #3B3631); }
+
+/* The only link: words + an arrow in a hairline circle; no filled button */
+.hoa-st__cta {
+  display: inline-flex; align-items: center; gap: 14px; margin-top: 26px; padding: 4px 0;
+  color: var(--st-ink); text-decoration: none;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase;
+}
+.hoa-st__cta-icon { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(20, 18, 16, 0.22); transition: transform 300ms var(--st-quart), border-color 300ms var(--st-quart); }
+.hoa-st__cta svg { width: 14px; height: 14px; transition: transform 300ms var(--st-quart); }
+.hoa-st__cta:hover .hoa-st__cta-icon, .hoa-st__cta:focus-visible .hoa-st__cta-icon { border-color: var(--st-ink); transform: scale(1.05); }
+.hoa-st__cta:hover svg, .hoa-st__cta:focus-visible svg { transform: translateX(5px); }
+.hoa-st__cta:active .hoa-st__cta-icon { transform: scale(0.98); }
+.hoa-st__cta:focus-visible { outline: 1px solid var(--st-ink); outline-offset: 4px; }
+.hoa-st__again {
+  display: block; margin-top: 14px; padding: 4px 0; border: 0; background: none; cursor: pointer;
+  font: 500 0.72rem var(--hoa-sans); color: var(--st-mute);
+  text-decoration: underline; text-decoration-color: rgba(20, 18, 16, 0.18); text-underline-offset: 5px;
+}
+.hoa-st__again:hover { color: var(--st-ink); }
+
+/* Pinned (desktop): the stage fills one screen under the header */
+.hoa-st.is-pinned { padding: 0; --st-obj-h: clamp(340px, calc(100svh - var(--hoa-header-h, 76px) - 300px), 620px); }
+.hoa-st.is-pinned .hoa-st__stage {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: calc(var(--hoa-header-h, 76px) + 12px) 0 28px;
+}
+
+/* ---------- Tablet: stacked, bottle centred ---------- */
+@media (max-width: 1023px) {
+  .hoa-st { --st-obj-h: clamp(360px, 54svh, 540px); }
+  .hoa-st__field { grid-template-columns: minmax(0, 1fr); justify-items: center; row-gap: 40px; }
+  .hoa-st__object { grid-column: 1; grid-row: 1; width: calc(var(--st-obj-h) * 0.8); }
+  .hoa-st__scent, .hoa-st__reveal--final { grid-column: 1; grid-row: auto; justify-self: center; text-align: center; }
+  .hoa-st__desc { margin-inline: auto; }
+  .hoa-st__cue { right: auto; left: 50%; top: 103%; transform: translateX(-50%); }
+}
+
+/* ---------- Phones: drag around the bottle ---------- */
+@media (max-width: 767px) {
+  .hoa-st { padding: 84px 0 76px; --st-obj-h: min(56svh, 104vw); }
+  .hoa-st__title { font-size: clamp(2.1rem, 9.4vw, 2.8rem); }
+  .hoa-st__object { touch-action: none; }      /* a drag on the bottle explores it instead of scrolling */
+  .hoa-st__word { font-size: 0.6rem; padding: 12px 8px; letter-spacing: 0.24em; }
+  .hoa-st__word--left { right: 74%; }      /* inside the screen edge: just outside the glass, over the ring */
+  .hoa-st__word--right { left: 74%; }
+  .hoa-st__fam { font-size: clamp(2.5rem, 12vw, 3.3rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-st__img, .hoa-st__cta svg, .hoa-st__cta-icon, .hoa-st__dot i { transition: none; }
+  .hoa-st.is-live .hoa-st__word { opacity: 0.5; }
+}
