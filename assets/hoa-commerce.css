@@ -137,6 +137,144 @@
 @media (max-width: 1023px) { .hoa-bundles__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hoa-bundle--sig { grid-column: 1 / -1; } }
 @media (max-width: 639px) { .hoa-bundles__grid { grid-template-columns: 1fr; } .hoa-bundle--sig { grid-column: auto; } .hoa-bundle__media { aspect-ratio: 16 / 10; } }
 
+/* ==========================================================================
+   Sets & pairs (sections/hoa-shop-bundles.liquid), premium bento, 2026-10-03
+   Rounded and modern (client asked): a soft beige panel
+   holding a tall Discovery card | white Duo card over a black Signature card.
+   ========================================================================== */
+.hoa-bundles {
+  --agha-beige: #EEE5DA; --agha-white: #FFFFFF; --agha-black: #111111;
+  --agha-ink-2: #3A3632; --agha-muted: #6F6A63; --agha-line: rgba(17, 17, 17, 0.12);
+  --bx-r: clamp(24px, 2.6vw, 36px); --bx-r-in: clamp(16px, 1.6vw, 22px); background: var(--agha-white); padding: clamp(40px, 6vw, 96px) 0; }
+.hoa-bundles > .hoa-wrap {
+  padding: clamp(28px, 4.4vw, 72px);
+  border-radius: var(--bx-r);
+  background: var(--agha-beige);
+}
+
+.hoa-bundles__head {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: end;
+  gap: 20px clamp(24px, 5vw, 80px); max-width: none; margin-bottom: clamp(28px, 3.6vw, 52px);
+}
+.hoa-bundles__head > .hoa-eyebrow { grid-column: 1; margin: 0; }
+.hoa-bundles__title { grid-column: 1; margin: 0; font-size: clamp(2.2rem, 1.4rem + 2.6vw, 4rem); line-height: 0.98; letter-spacing: -0.02em; color: var(--agha-black); }
+.hoa-bundles__aside { grid-column: 2; grid-row: 1 / span 2; align-self: end; display: grid; gap: 16px; }
+.hoa-bundles__text { max-width: 44ch; color: var(--agha-ink-2); }
+.hoa-bundles__tiers { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.hoa-bundles__tiers li {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 6px;
+  border-radius: 999px; background: var(--agha-white);
+  font-size: 0.8rem; color: var(--agha-ink-2);
+}
+.hoa-bundles__tiers b {
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--agha-black); color: var(--agha-white); font-size: 0.78rem; font-weight: 600;
+}
+.hoa-bundles__tiers span { padding: 5px 10px; border-radius: 999px; background: var(--agha-beige); color: var(--agha-black); font-weight: 600; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Bento: Discovery tall on the left, Duo + Signature stacked on the right */
+.hoa-bundles__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(12px, 1.4vw, 20px); }
+.hoa-bundle {
+  position: relative; border: 0; border-radius: var(--bx-r-in); background: var(--agha-white);
+  box-shadow: 0 1px 0 rgba(17, 17, 17, 0.04), 0 18px 40px -28px rgba(17, 17, 17, 0.35);
+  transition: transform 0.6s var(--hoa-ease, ease), box-shadow 0.6s var(--hoa-ease, ease);
+}
+@media (hover: hover) {
+  .hoa-bundle:hover { transform: translateY(-4px); box-shadow: 0 1px 0 rgba(17, 17, 17, 0.04), 0 30px 60px -30px rgba(17, 17, 17, 0.45); }
+}
+.hoa-bundle:focus-within { border-color: transparent; }
+.hoa-bundle__body { gap: 12px; padding: clamp(22px, 2.4vw, 34px); }
+
+/* eyebrow as a small pill */
+.hoa-bundle__eyebrow {
+  align-self: flex-start; padding: 6px 11px; border-radius: 999px;
+  background: var(--agha-beige); color: var(--agha-black); font-size: 0.62rem; letter-spacing: 0.16em;
+}
+.hoa-bundle .hoa-bundle__title {
+  font-family: var(--font-name); font-variation-settings: var(--font-name-axes); font-weight: var(--font-name-weight);
+  font-size: clamp(1.5rem, 1.1rem + 0.9vw, 2.1rem); line-height: 1.02; letter-spacing: -0.015em;
+}
+.hoa-bundle__text { color: var(--agha-muted); font-size: 0.92rem; }
+.hoa-bundle__names { color: var(--agha-ink-2); }
+.hoa-bundle__price { font-size: 1.35rem; padding-top: 10px; }
+.hoa-bundle__save { padding: 4px 10px; border-radius: 999px; background: var(--agha-beige); font-size: 0.64rem; }
+.hoa-bundles .hoa-cprice__off { padding: 4px 10px; border-radius: 999px; background: var(--agha-beige); color: var(--agha-black); font-size: 0.5em; align-self: center; }
+
+/* CTA: rounded pill, black to outline on hover */
+.hoa-bundles .hoa-bundle__cta { min-height: 52px; border-radius: 999px; background: var(--agha-black); border-color: var(--agha-black); color: var(--agha-white); }
+.hoa-bundles .hoa-bundle__cta:hover:not(:disabled) { background: transparent; color: var(--agha-black); }
+.hoa-bundles .hoa-bundle__cta:disabled { background: var(--agha-beige); border-color: var(--agha-beige); color: var(--agha-muted); }
+.hoa-bundles .hoa-bundle__cta.is-added { background: var(--agha-black); color: var(--agha-white); }
+.hoa-bundles .hoa-bundle__cta:focus-visible { outline: 1px solid var(--agha-black); outline-offset: 3px; }
+
+/* Discovery: the tall feature card, photo inset with its own rounded corners */
+.hoa-bundle--set { grid-row: span 2; padding: 10px; }
+.hoa-bundle--set .hoa-bundle__media { flex: 1 1 auto; min-height: 280px; aspect-ratio: auto; border-radius: calc(var(--bx-r-in) - 6px); }
+.hoa-bundle--set .hoa-bundle__body { flex: 0 0 auto; padding: clamp(18px, 2vw, 28px) clamp(14px, 1.6vw, 24px) clamp(14px, 1.6vw, 22px); }
+.hoa-bundle--set .hoa-bundle__title { font-size: clamp(1.8rem, 1.2rem + 1.4vw, 2.6rem); }
+
+/* Duo: fragrance chips with a tiny bottle */
+.hoa-duo { gap: 8px; margin-top: 4px; }
+.hoa-bundles .hoa-duo__opt {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px;
+  border-radius: 999px; border-color: var(--agha-line); background: var(--agha-white);
+}
+.hoa-duo__img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background: var(--agha-beige); }
+.hoa-bundles .hoa-duo__opt:hover { border-color: var(--agha-black); }
+.hoa-bundles .hoa-duo__opt[aria-pressed='true'] { background: var(--agha-black); border-color: var(--agha-black); color: var(--agha-white); }
+.hoa-bundle--duo .hoa-bundle__price { min-height: 0; }
+
+/* Signature: black card, larger rounded bottle stack beside the copy */
+.hoa-bundle--sig { background: var(--agha-black); color: var(--agha-white); }
+.hoa-bundle--sig .hoa-bundle__body { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; align-items: start; }
+.hoa-bundle--sig .hoa-bundle__body > * { grid-column: 1; }
+.hoa-bundle--sig .hoa-bundle__eyebrow { justify-self: start; }
+.hoa-bundle--sig .hoa-bundle__stack { grid-column: 2; grid-row: 1 / span 4; align-self: center; }
+.hoa-bundle--sig .hoa-bundle__price, .hoa-bundle--sig .hoa-bundle__cta { grid-column: 1 / -1; }
+.hoa-bundle--sig .hoa-bundle__eyebrow { background: rgba(255, 255, 255, 0.12); color: var(--agha-white); }
+.hoa-bundle--sig .hoa-bundle__title, .hoa-bundle--sig .hoa-cprice__now, .hoa-bundle--sig .hoa-bundle__save { color: var(--agha-white); }
+.hoa-bundle--sig .hoa-bundle__text, .hoa-bundle--sig .hoa-cprice__was { color: rgba(255, 255, 255, 0.6); }
+.hoa-bundle--sig .hoa-bundle__names { color: rgba(255, 255, 255, 0.8); }
+.hoa-bundle--sig .hoa-bundle__save { background: rgba(255, 255, 255, 0.12); }
+.hoa-bundle--sig .hoa-bundle__thumb { width: 72px; height: 96px; border-radius: 14px; border: 3px solid var(--agha-black); background: #2A2724; }
+.hoa-bundle--sig .hoa-bundle__thumb + .hoa-bundle__thumb { margin-left: -18px; }
+.hoa-bundles .hoa-bundle--sig .hoa-bundle__cta { background: var(--agha-white); border-color: var(--agha-white); color: var(--agha-black); }
+.hoa-bundles .hoa-bundle--sig .hoa-bundle__cta:hover:not(:disabled) { background: transparent; color: var(--agha-white); }
+.hoa-bundles .hoa-bundle--sig .hoa-bundle__cta:focus-visible { outline-color: var(--agha-white); }
+
+/* Black panel (user pick 2026-10-03): light header, white cards, charcoal Signature card */
+.hoa-bundles > .hoa-wrap { background: var(--agha-black); color: var(--agha-white); }
+.hoa-bundles__head .hoa-eyebrow { color: rgba(255, 255, 255, 0.6); }
+.hoa-bundles__head .hoa-eyebrow::before { background: currentColor; }
+.hoa-bundles .hoa-bundles__title { color: var(--agha-white); }
+.hoa-bundles .hoa-bundles__text { color: rgba(255, 255, 255, 0.7); }
+.hoa-bundles__tiers li { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.8); }
+.hoa-bundles__tiers b { background: var(--agha-white); color: var(--agha-black); }
+.hoa-bundles__tiers span { background: var(--agha-beige); }
+.hoa-bundle { box-shadow: none; }
+@media (hover: hover) { .hoa-bundle:hover { box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9); } }
+.hoa-bundle--sig { background: #1E1B18; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.hoa-bundle--sig .hoa-bundle__thumb { border-color: #1E1B18; }
+
+@media (max-width: 1023px) {
+  .hoa-bundles__head { grid-template-columns: minmax(0, 1fr); }
+  .hoa-bundles__aside { grid-column: 1; grid-row: auto; }
+  .hoa-bundle--sig { grid-column: auto; }
+}
+@media (max-width: 767px) {
+  .hoa-bundles { padding: 24px 0 40px; }
+  .hoa-bundles > .hoa-wrap { width: auto; margin-inline: 12px; padding: 28px 16px 16px; border-radius: 24px; }
+  .hoa-bundles__grid { grid-template-columns: minmax(0, 1fr); }
+  .hoa-bundle--set { grid-row: auto; }
+  .hoa-bundle--set .hoa-bundle__media { flex: none; min-height: 0; aspect-ratio: 4 / 3; }
+  .hoa-bundle--sig .hoa-bundle__body { grid-template-columns: minmax(0, 1fr); }
+  .hoa-bundle--sig .hoa-bundle__stack { grid-column: 1; grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-bundle { transition: none; }
+  .hoa-bundle:hover { transform: none; }
+}
+
 /* ---------------------------------------------------------------- bag */
 .cart-count.is-bump { animation: hoa-bump 0.5s var(--hoa-ease, ease); }
 @keyframes hoa-bump { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }

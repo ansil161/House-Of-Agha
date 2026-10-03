@@ -6,13 +6,22 @@
   Bundle prices come from the same quantity tiers the bag applies; nothing is added without a click.
   Shopify later: bundle products / an app supply the price and members; this section only needs those.
 {% endcomment %}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- assign catalog = catalog_json | parse_json -%}
 {%- assign s = section.settings -%}
 <section class="hoa-bundles" id="bundles" data-hoa-bundles aria-labelledby="bundles-{{ section.id }}-title">
   <div class="hoa-wrap">
     <header class="hoa-bundles__head" data-hoa-reveal>
       <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
       <h2 class="hoa-bundles__title" id="bundles-{{ section.id }}-title">{{ s.heading }}</h2>
-      {%- if s.text != blank -%}<p class="hoa-bundles__text">{{ s.text }}</p>{%- endif -%}
+      <div class="hoa-bundles__aside">
+        {%- if s.text != blank -%}<p class="hoa-bundles__text">{{ s.text }}</p>{%- endif -%}
+        <ul class="hoa-bundles__tiers" aria-label="Bundle savings">
+          {%- for t in catalog.settings.quantityTiers -%}
+            <li><b>{{ t.qty }}</b> fragrances <span>{{ t.percent }}% off</span></li>
+          {%- endfor -%}
+        </ul>
+      </div>
     </header>
     <div class="hoa-bundles__grid" data-hoa-bundles-grid></div>
     <noscript><p class="hoa-bundles__text">Bundles need JavaScript to show their prices.</p></noscript>

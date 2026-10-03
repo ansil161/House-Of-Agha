@@ -550,7 +550,7 @@
     if (duo) {
       out += '<article class="hoa-bundle hoa-bundle--duo"><div class="hoa-bundle__body"><p class="hoa-bundle__eyebrow">Choose any ' + duo.pick + '</p><h3 class="hoa-bundle__title">' + esc(duo.name) + '</h3><p class="hoa-bundle__text">' + esc(duo.tagline) + '</p>' +
         '<div class="hoa-duo" role="group" aria-label="Choose ' + duo.pick + ' fragrances">' + fragrances().map(function (p) {
-          return '<button type="button" class="hoa-duo__opt" data-duo-pick="' + esc(p.handle) + '" aria-pressed="false">' + esc(p.name) + '</button>';
+          return '<button type="button" class="hoa-duo__opt" data-duo-pick="' + esc(p.handle) + '" aria-pressed="false"><img class="hoa-duo__img" src="' + esc(p.image) + '" alt="" width="40" height="50" loading="lazy" decoding="async"><span>' + esc(p.name) + '</span></button>';
         }).join('') + '</div>' +
         '<div class="hoa-bundle__price" data-duo-price aria-live="polite"></div>' +
         '<button type="button" class="hoa-bundle__cta" data-duo-add disabled><span>Add bundle</span></button></div></article>';

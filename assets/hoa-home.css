@@ -1980,79 +1980,98 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 
 /* ==========================================================================
    FOOTER — snippets/footer.liquid
-   Quiet and simple, black. Brand + small newsletter field, three link columns,
-   one legal line. Hairline dividers, square edges, no pills, gradients or watermark.
-   Overrides the older .footer rules in theme.css.
+   Editorial split on black. Hairlines only. Left: serif statement and
+   a nested pill newsletter field (button-in-button). Right: three link columns.
+   Bottom: logo, legal line, Instagram. Overrides the older .footer rules in theme.css.
    ========================================================================== */
 .hoa-footer {
+  /* Shared tokens re-pointed for the black footer (hoa-mobile.css draws the fold icon with --hoa-ivory) */
   --hoa-night: #000000; --hoa-ivory: #FFFFFF; --hoa-brass: #FFFFFF;
-  --ft-line: rgba(255, 255, 255, 0.12);
+  --ft-ink: #FFFFFF;
   --ft-mute: rgba(255, 255, 255, 0.55);
+  --ft-line: rgba(255, 255, 255, 0.12);
+  --ft-ease: cubic-bezier(0.32, 0.72, 0, 1);
   position: relative;
-  padding: clamp(64px, 7vw, 104px) 0 28px;
-  background: var(--hoa-night); color: var(--hoa-ivory);
+  padding: 0;
+  background: #000000; color: var(--ft-ink);
   border-top: 0; font-family: var(--hoa-sans);
 }
-.hoa-footer a { color: inherit; text-decoration: none; transition: color 0.25s var(--hoa-ease); }
-.hoa-footer a:focus-visible, .hoa-footer button:focus-visible, .hoa-footer input:focus-visible { outline: 1px solid #FFFFFF; outline-offset: 3px; }
+.hoa-footer a { color: inherit; text-decoration: none; }
+.hoa-footer a:focus-visible, .hoa-footer button:focus-visible { outline: 1px solid var(--ft-ink); outline-offset: 3px; }
 .hoa-footer__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
-/* Top: brand left, newsletter right */
-.hoa-footer__top {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-  gap: 40px 64px; align-items: end;
-  padding-bottom: clamp(48px, 5vw, 72px);
-  border-bottom: 1px solid var(--ft-line);
+/* Split: statement + letter | links */
+.hoa-footer__split {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 56px clamp(48px, 8vw, 140px); align-items: end;
+  padding-block: clamp(88px, 10vw, 152px) clamp(64px, 7vw, 104px);
 }
-.hoa-footer__logo { display: inline-block; margin: 0 0 18px; }
-.hoa-footer__logo img { display: block; height: 52px; width: auto; filter: invert(1); }
-.hoa-footer__about { max-width: 36ch; margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--ft-mute); }
+.hoa-footer__eyebrow {
+  display: inline-block; margin: 0 0 22px; padding: 6px 12px;
+  border-radius: 999px; box-shadow: inset 0 0 0 1px var(--ft-line);
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ft-ink);
+}
+.hoa-footer__display {
+  margin: 0 0 clamp(28px, 3vw, 40px);
+  font-family: var(--font-name, var(--hoa-serif)); font-weight: 400;
+  font-size: clamp(1.9rem, 3.2vw, 3rem); line-height: 1.08; letter-spacing: -0.025em; text-transform: none; color: var(--ft-ink);
+}
+.hoa-footer__display span { color: var(--ft-mute); }
 
-.hoa-footer__label,
-.hoa-footer__title {
-  margin: 0 0 14px; font-family: var(--hoa-sans);
-  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ft-mute);
+/* Newsletter: outer tray + inner field, black pill button with a nested icon */
+.hoa-footer__form {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  max-width: 520px; padding: 6px;
+  border-radius: 999px; background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1px var(--ft-line);
+  transition: box-shadow 0.5s var(--ft-ease), background-color 0.5s var(--ft-ease);
 }
-.hoa-footer__lede { margin: 0 0 18px; font-size: 0.9rem; line-height: 1.6; color: #FFFFFF; }
-.hoa-footer__form { display: flex; flex-wrap: wrap; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.35); transition: border-color 0.25s var(--hoa-ease); }
-.hoa-footer__form:focus-within { border-bottom-color: #FFFFFF; }
-.hoa-footer__field { flex: 1 1 180px; min-width: 0; display: block; }
-.hoa-footer__field input { width: 100%; padding: 14px 0; border: 0; border-radius: 0; background: transparent; color: #FFFFFF; font: 400 0.95rem var(--hoa-sans); }
-.hoa-footer__field input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.hoa-footer__form:focus-within { background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4); }
+.hoa-footer__field { flex: 1 1 0; min-width: 0; display: block; }
+.hoa-footer__field input { width: 100%; height: 52px; padding: 0 20px; border: 0; border-radius: 999px; background: transparent; color: var(--ft-ink); font: 400 0.95rem var(--hoa-sans); }
+.hoa-footer__field input::placeholder { color: rgba(255, 255, 255, 0.42); }
 .hoa-footer__field input:focus-visible { outline: 0; }
 .hoa-footer__submit {
-  display: inline-flex; align-items: center; gap: 10px; padding: 14px 0 14px 16px;
-  border: 0; border-radius: 0; background: transparent; color: #FFFFFF; cursor: pointer;
-  font: 600 0.7rem var(--hoa-sans); letter-spacing: 0.16em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 14px; height: 52px; padding: 0 6px 0 22px;
+  border: 0; border-radius: 999px; background: #FFFFFF; color: #000000; cursor: pointer;
+  font: 600 0.7rem var(--hoa-sans); letter-spacing: 0.14em; text-transform: uppercase;
+  transition: transform 0.4s var(--ft-ease), background-color 0.4s var(--ft-ease);
 }
-.hoa-footer__submit svg { width: 14px; height: 14px; transition: transform 0.3s var(--hoa-ease); }
-.hoa-footer__submit:hover svg { transform: translateX(3px); }
-.hoa-footer__note { flex-basis: 100%; margin: 0 0 12px; font-size: 0.82rem; color: #FFFFFF; }
+.hoa-footer__submit-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 0, 0, 0.08); transition: transform 0.5s var(--ft-ease); }
+.hoa-footer__submit-icon svg { width: 14px; height: 14px; }
+.hoa-footer__submit:hover { background: #E8E8E8; }
+.hoa-footer__submit:hover .hoa-footer__submit-icon { transform: translate(2px, -1px) scale(1.05); }
+.hoa-footer__submit:active { transform: scale(0.98); }
+.hoa-footer__note { flex-basis: 100%; margin: 4px 20px 6px; font-size: 0.82rem; color: var(--ft-ink); }
 .hoa-footer__note--error { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Link columns */
-.hoa-footer__main {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px clamp(32px, 4vw, 64px);
-  padding-block: clamp(40px, 5vw, 64px);
+.hoa-footer__main { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px clamp(24px, 3vw, 48px); }
+.hoa-footer__title { margin: 0 0 20px; font-family: var(--hoa-sans); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ft-mute); }
+.hoa-footer .footer-links { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.hoa-footer .footer-links a {
+  font-size: 0.95rem; color: var(--ft-ink);
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  padding-bottom: 2px; transition: background-size 0.5s var(--ft-ease);
 }
-.hoa-footer .footer-links { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.hoa-footer .footer-links a { font-size: 0.92rem; color: rgba(255, 255, 255, 0.82); }
-.hoa-footer .footer-links a:hover { color: #FFFFFF; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.hoa-footer .footer-links a:hover { background-size: 100% 1px; transform: none; }
 
-/* Legal line */
+/* Bottom: logo · legal · Instagram */
 .hoa-footer__bottom {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 32px;
-  margin: 0; padding-top: 22px; border-top: 1px solid var(--ft-line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 32px;
+  margin: 0; padding: 24px 0 28px; border-top: 1px solid var(--ft-line);
   font-size: 0.78rem; letter-spacing: 0; color: var(--ft-mute);
 }
 .hoa-footer__bottom p { margin: 0; text-transform: none; letter-spacing: 0; }
-.hoa-footer__bottom a:hover { color: #FFFFFF; }
+.hoa-footer__logo { display: inline-block; margin: 0; }
+.hoa-footer__logo img { display: block; height: 34px; width: auto; filter: invert(1); }
+.hoa-footer__social { color: var(--ft-ink) !important; transition: opacity 0.3s var(--ft-ease); }
+.hoa-footer__social:hover { opacity: 0.6; }
 
 @media (max-width: 900px) {
-  .hoa-footer__top { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .hoa-footer__split { grid-template-columns: minmax(0, 1fr); align-items: start; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hoa-footer a, .hoa-footer__form, .hoa-footer__submit svg { transition: none; }
+  .hoa-footer *, .hoa-footer .footer-links a { transition: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hoa-footer .footer-links a, .hoa-footer__submit, .hoa-footer__submit svg { transition: none; }
