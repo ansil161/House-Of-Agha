@@ -1757,6 +1757,54 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
       <input id="hoa-search-q" type="search" name="q" placeholder="Oud, rose, fresh…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
       <input type="hidden" name="type" value="product">
       <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
@@ -2003,7 +2051,7 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
     width="1400" height="2100"
     alt="Carved parapet, jaali screens and pointed arches of a Qutb Shahi tomb in Hyderabad"
     loading="lazy" decoding="async"></div>
-            </div><figcaption>Stone jaali and arches at the Qutb Shahi Tombs, Hyderabad</figcaption></figure><dl class="hoa-ab-name__uses"><div class="hoa-ab-name__use" data-hoa-ab-up >
+            </div></figure><dl class="hoa-ab-name__uses"><div class="hoa-ab-name__use" data-hoa-ab-up >
                 <span class="hoa-ab-name__icon" aria-hidden="true">
                   <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M22.5 4.5 27.5 9.5 12 25l-6.5 1.5L7 20z"/><path d="M19.5 7.5l5 5M7 20l5 5"/><path d="M4 28h9"/></svg>
                 </span>
@@ -2118,130 +2166,6 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
           </div>
         </article></div>
   </div>
-</section>
-
-
-</div>
-
-    <!-- gallery · sections/hoa-about-gallery.liquid -->
-    <div id="shopify-section-gallery" class="shopify-section hoa-ab-section"><link rel="stylesheet" href="assets/hoa-about-gallery.css">
-<script src="assets/hoa-about-gallery.js" defer></script><section class="hoa-pal" id="palaces" data-hoa-pal aria-labelledby="hoa-pal-title-gallery">
-  <div class="hoa-wrap">
-    <header class="hoa-pal__head">
-      <div class="hoa-pal__title"><p class="hoa-ab-chip">The palaces of Hyderabad</p><h2 class="hoa-ab-h2" id="hoa-pal-title-gallery">Rooms of crystal <span class="hoa-ab-muted">and carved teak.</span></h2>
-      </div>
-      <div class="hoa-pal__aside"><p class="hoa-ab-sub">Rooms finished by hand over years, chandeliers hung crystal by crystal. The palaces of the Nizams set the standard of patience we hold our own work to.</p><p class="hoa-pal__count" aria-hidden="true"><span>05</span> plates</p>
-      </div>
-    </header>
-
-    <div class="hoa-pal__wall"><figure class="hoa-pal__item hoa-pal__item--1 hoa-pal-plate" style="--ratio: 2000 / 1577; --pos: 50% 45%;" data-hoa-pal-plate >
-            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="0" aria-label="View larger: Carved teak, crimson silk">
-              <span class="hoa-pal-plate__img"><img
-                    src="assets/hoa-pal-salon.webp"
-                    srcset="assets/hoa-pal-salon-sm.webp 1000w, assets/hoa-pal-salon.webp 2000w"
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    width="2000" height="1577"
-                    alt="A panelled palace salon with a crystal chandelier, carved teak pillars and crimson drapes" loading="lazy" decoding="async"></span>
-              <span class="hoa-pal-plate__view" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                View
-              </span>
-            </button>
-            <figcaption class="hoa-pal-plate__cap">
-              <span class="hoa-pal-plate__no">01</span>
-              <span class="hoa-pal-plate__txt">
-                <b>Carved teak, crimson silk</b><small>A palace salon, Hyderabad</small></span>
-            </figcaption>
-          </figure><figure class="hoa-pal__item hoa-pal__item--2 hoa-pal-plate is-mono" style="--ratio: 387 / 540;" data-hoa-pal-plate >
-            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="1" aria-label="View larger: A court portrait">
-              <span class="hoa-pal-plate__img"><img
-                    src="assets/hoa-pal-portrait.webp"
-                    srcset="assets/hoa-pal-portrait-sm.webp 387w, assets/hoa-pal-portrait.webp 387w"
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    width="387" height="540"
-                    alt="Black and white portrait of a Nizam-era nobleman in court dress seated on a carved chair" loading="lazy" decoding="async"></span>
-              <span class="hoa-pal-plate__view" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                View
-              </span>
-            </button>
-            <figcaption class="hoa-pal-plate__cap">
-              <span class="hoa-pal-plate__no">02</span>
-              <span class="hoa-pal-plate__txt">
-                <b>A court portrait</b><small>The Asaf Jahi court</small></span>
-            </figcaption>
-          </figure><figure class="hoa-pal__item hoa-pal__item--3 hoa-pal-plate is-mono" style="--ratio: 1200 / 1575; --pos: 50% 40%;" data-hoa-pal-plate >
-            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="2" aria-label="View larger: The drawing room">
-              <span class="hoa-pal-plate__img"><img
-                    src="assets/hoa-pal-chowmahalla.webp"
-                    srcset="assets/hoa-pal-chowmahalla-sm.webp 700w, assets/hoa-pal-chowmahalla.webp 1200w"
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    width="1200" height="1575"
-                    alt="Black and white photograph of the drawing room of Chowmahalla Palace with chandeliers and galleries" loading="lazy" decoding="async"></span>
-              <span class="hoa-pal-plate__view" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                View
-              </span>
-            </button>
-            <figcaption class="hoa-pal-plate__cap">
-              <span class="hoa-pal-plate__no">03</span>
-              <span class="hoa-pal-plate__txt">
-                <b>The drawing room</b><small>Chowmahalla Palace</small></span>
-            </figcaption>
-          </figure><figure class="hoa-pal__item hoa-pal__item--4 hoa-pal-plate" style="--ratio: 960 / 1319;" data-hoa-pal-plate >
-            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="3" aria-label="View larger: Crystal and gilt">
-              <span class="hoa-pal-plate__img"><img
-                    src="assets/hoa-pal-gilded.webp"
-                    srcset="assets/hoa-pal-gilded-sm.webp 700w, assets/hoa-pal-gilded.webp 960w"
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    width="960" height="1319"
-                    alt="A gilded palace hall lit by rows of crystal chandeliers" loading="lazy" decoding="async"></span>
-              <span class="hoa-pal-plate__view" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                View
-              </span>
-            </button>
-            <figcaption class="hoa-pal-plate__cap">
-              <span class="hoa-pal-plate__no">04</span>
-              <span class="hoa-pal-plate__txt">
-                <b>Crystal and gilt</b><small>A palace hall, Hyderabad</small></span>
-            </figcaption>
-          </figure><aside class="hoa-pal__item hoa-pal__item--5 hoa-pal-fact" data-hoa-pal-plate >
-            <svg class="hoa-pal-fact__arch" viewBox="0 0 120 150" aria-hidden="true"><path d="M8 150V70C8 40 30 18 60 4c30 14 52 36 52 66v80" fill="none" stroke="currentColor" stroke-width="1"/></svg>
-            <p class="hoa-pal-fact__num">101</p>
-            <p class="hoa-pal-fact__text">guests at a single table in the dining hall of Falaknuma Palace.</p>
-          </aside><figure class="hoa-pal__item hoa-pal__item--6 hoa-pal-plate" style="--ratio: 751 / 428;" data-hoa-pal-plate >
-            <button class="hoa-pal-plate__frame" type="button" data-hoa-pal-open="4" aria-label="View larger: The long table">
-              <span class="hoa-pal-plate__img"><img
-                    src="assets/hoa-pal-dining.webp"
-                    srcset="assets/hoa-pal-dining-sm.webp 700w, assets/hoa-pal-dining.webp 751w"
-                    sizes="(min-width: 900px) 60vw, 100vw"
-                    width="751" height="428"
-                    alt="The long dining table of Falaknuma Palace set with crystal and silver under chandeliers" loading="lazy" decoding="async"></span>
-              <span class="hoa-pal-plate__view" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5L9 7M2.5 13.5L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                View
-              </span>
-            </button>
-            <figcaption class="hoa-pal-plate__cap">
-              <span class="hoa-pal-plate__no">05</span>
-              <span class="hoa-pal-plate__txt">
-                <b>The long table</b><small>Falaknuma Palace</small></span>
-            </figcaption>
-          </figure></div>
-  </div><dialog class="hoa-pal-lb" data-hoa-pal-lb aria-label="Palace gallery">
-    <div class="hoa-pal-lb__stage" data-hoa-pal-stage>
-      <img class="hoa-pal-lb__img" data-hoa-pal-lb-img alt="">
-    </div>
-    <div class="hoa-pal-lb__bar">
-      <p class="hoa-pal-lb__cap"><span data-hoa-pal-lb-no></span> <b data-hoa-pal-lb-title></b> <small data-hoa-pal-lb-place></small></p>
-      <div class="hoa-pal-lb__nav">
-        <button type="button" class="hoa-pal-lb__btn" data-hoa-pal-prev aria-label="Previous photograph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button type="button" class="hoa-pal-lb__btn" data-hoa-pal-next aria-label="Next photograph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button type="button" class="hoa-pal-lb__btn hoa-pal-lb__btn--close" data-hoa-pal-close aria-label="Close"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-      </div>
-    </div>
-  </dialog>
 </section>
 
 
