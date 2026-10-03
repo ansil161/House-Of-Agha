@@ -1,0 +1,462 @@
+/* ==========================================================================
+   House of Agha · visual refinement layer (2026-10-03)
+   Client brief: bring the new site back to the previous Agha visual language
+   (aghaperfumes.com): beige, white and black only, square edges, quiet type-led UI.
+
+   This file only re-skins. It changes no layout, content, markup or behaviour,
+   and it never filters photography: product and campaign images keep their colour.
+   It loads last on every template (layout/theme.liquid), so it re-points the colour
+   tokens each stylesheet already uses, then flattens the few hard-coded accents.
+
+   Palette (sampled from aghaperfumes.com):
+     beige   #EEE5DA  announcement bar, header, card wells, quiet bands
+     beige-2 #E2D6C6  hairlines and pressed states on beige
+     white   #FFFFFF  page
+     black   #111111  type, primary buttons, the one dark room
+     muted   #6F6A63  secondary text
+   ========================================================================== */
+
+:root {
+  --agha-beige: #EEE5DA;
+  --agha-beige-2: #E2D6C6;
+  --agha-beige-soft: #F6F1EA;
+  --agha-white: #FFFFFF;
+  --agha-black: #111111;
+  --agha-ink-2: #3A3632;
+  --agha-muted: #6F6A63;
+  --agha-line: rgba(17, 17, 17, 0.12);
+
+  /* Homepage / shared design system (hoa-home.css) */
+  --hoa-paper: #FFFFFF;
+  --hoa-paper-2: var(--agha-beige);
+  --hoa-stone: var(--agha-beige-2);
+  --hoa-ink: var(--agha-black);
+  --hoa-ink-2: var(--agha-ink-2);
+  --hoa-mute: var(--agha-muted);
+  --hoa-line: var(--agha-line);
+  --hoa-night: var(--agha-black);
+  --hoa-ivory: #FFFFFF;
+  --hoa-brass: var(--agha-black);   /* the gold accent becomes ink */
+  --hoa-radius: 0px;
+
+  /* Legacy theme.css tokens */
+  --color-accent-gold: var(--agha-black);
+  --color-bg-secondary: var(--agha-beige-soft);
+
+  /* Product page (pdp.css) */
+  --pdp-radius-sm: 0px;
+  --pdp-radius: 0px;
+  --pdp-radius-lg: 0px;
+  --pdp-soft: var(--agha-beige-soft);
+  --pdp-soft-2: var(--agha-beige);
+  --pdp-line: #E8E1D7;
+  --pdp-ink: var(--agha-black);
+  --pdp-muted: var(--agha-muted);
+  --pdp-sand: var(--agha-beige);
+  --pdp-clay: var(--agha-beige-2);
+  --pdp-umber: var(--agha-black);
+  --pdp-success: var(--agha-black);
+  --pdp-shadow: none;
+  --pdp-shadow-lg: 0 18px 40px -24px rgba(17, 17, 17, 0.28);
+}
+
+/* ---------- Section-scoped tokens ---------- */
+.hoa-pc { --pc-gold: var(--agha-black); --pc-gold-deep: var(--agha-black); --pc-well: var(--agha-beige); }
+.pdp-console { --pc-gold: var(--agha-black); --pc-gold-line: var(--agha-beige-2); --pc-ivory: var(--agha-beige-soft); --pc-ivory-2: var(--agha-beige); }
+.pdp-offer { --pdp-gold: var(--agha-black); --pdp-gold-soft: var(--agha-beige-soft); }
+.pdp-hero {
+  --cv-paper: #FFFFFF;
+  --cv-wine: var(--agha-black);
+  --cv-wine-soft: var(--agha-beige-soft);
+  --cv-peach: var(--agha-beige-soft);
+  --cv-peach-2: var(--agha-beige);
+  --cv-peach-line: var(--agha-beige-2);
+  --cv-peach-ink: var(--agha-black);
+  --cv-save: var(--agha-black);
+  --cv-star: var(--agha-black);
+  --cv-gold: var(--agha-black);
+  --cv-gold-line: var(--agha-beige-2);
+  --cv-ticket-line: var(--agha-beige-2);
+  --cv-offer: var(--agha-beige-soft);
+}
+body .pdp-hero { --m-accent: var(--agha-black); }
+.pdx { --pdx-star: var(--agha-black); --pdx-bar: var(--agha-beige); }
+.hoa-st { --st-gold: var(--agha-black); }
+.hoa-co-page { --co-brass: var(--agha-black); --co-brass-2: var(--agha-beige-2); --co-ok: var(--agha-black); --co-ivory: #FFFFFF; }
+.hoa-about { --ab-r: 0px; --ab-r-in: 0px; }
+.hoa-ab-worlds { --w-brass: #FFFFFF; }
+
+/* ==========================================================================
+   1. Shared type and controls
+   ========================================================================== */
+
+/* Eyebrows: plain small caps, no gold dot */
+.hoa-eyebrow::before,
+.hoa-footer__eyebrow::before { display: none; }
+.hoa-eyebrow { letter-spacing: 0.22em; }
+
+/* Buttons: the previous site's square black button, with the arrow kept as a quiet glyph */
+.hoa-btn {
+  gap: 12px;
+  padding: 15px 26px;
+  border-radius: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hoa-btn__icon { width: auto; height: auto; border-radius: 0; background: transparent; color: currentColor; }
+.hoa-btn__icon svg { width: 13px; height: 13px; }
+.hoa-btn--small { padding: 12px 20px; font-size: 0.68rem; }
+.hoa-btn--small .hoa-btn__icon { width: auto; height: auto; }
+.hoa-btn:hover { --hoa-btn-bg: #2A2725; }
+.hoa-btn--light:hover { --hoa-btn-bg: var(--agha-beige); }
+/* Over photographs: an outline, no frosted glass */
+.hoa-btn--glass {
+  --hoa-btn-bg: transparent;
+  --hoa-btn-fg: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.hoa-btn--glass .hoa-btn__icon { background: transparent; color: #FFFFFF; }
+.hoa-btn--glass:hover { --hoa-btn-bg: #FFFFFF; --hoa-btn-fg: var(--agha-black); }
+.hoa-btn--glass:hover .hoa-btn__icon { color: var(--agha-black); }
+
+/* Header: the count bubble is a small square */
+.hoa-header .cart-count { border-radius: 0; }
+
+/* Announcement strip (Shop, PDP): the old site's beige bar with dark type */
+.hoa-strip { background: var(--agha-beige); color: var(--agha-black); border-bottom: 0; }
+.hoa-strip__caret { background: var(--agha-black); }
+.hoa-strip * { color: inherit; }
+
+/* Stars everywhere: ink on a beige track, not amber or gold */
+.hoa-cstars { background: linear-gradient(90deg, var(--agha-black) var(--fill, 0%), var(--agha-beige-2) var(--fill, 0%)); -webkit-background-clip: text; background-clip: text; }
+.hoa-pc__stars { background: linear-gradient(90deg, var(--agha-black) var(--fill), var(--agha-beige-2) var(--fill)); -webkit-background-clip: text; background-clip: text; }
+.hoa-shop-rec__rating svg { fill: currentColor; }
+.pdx-stars { color: var(--agha-beige-2); }
+
+/* ==========================================================================
+   2. Product card (.hoa-pc): image, name, type, price, one quiet CTA
+   ========================================================================== */
+.hoa-pc {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.hoa-pc:hover { box-shadow: none; translate: none; }
+.hoa-pc__visual { border-radius: 0; }
+.hoa-pc__info { padding: 14px 2px 6px; }
+.hoa-pc__chip { color: var(--agha-muted); }
+
+/* Badges: small square labels, no metallic gold */
+.hoa-pc__tag,
+.hoa-pc__tag--best,
+.hoa-pc__tag--new {
+  height: auto;
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 0;
+  background: #FFFFFF;
+  color: var(--agha-black);
+  text-shadow: none;
+  box-shadow: none;
+  font-weight: 600;
+  font-size: clamp(9px, 2.5cqi, 11px);
+  letter-spacing: 0.14em;
+}
+.hoa-pc__tag--best::before { content: none; }
+
+/* Wishlist: a plain heart on a white square */
+.hoa-pc__like { border-radius: 0; box-shadow: none; background: #FFFFFF; }
+.hoa-pc__like[aria-pressed='true'] { box-shadow: none; }
+
+/* Price: a flat white label, no gold border or shadow */
+.hoa-pc__bar {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: max(30px, 8.6cqi);
+  padding: 0 3.4cqi;
+}
+.hoa-pc__bar .hoa-pc__now { font-weight: 600; }
+.hoa-pc__bar .hoa-pc__off,
+.hoa-pc__price .hoa-pc__off { color: var(--agha-muted); font-weight: 500; }
+.hoa-pc__bar .hoa-pc__was { color: var(--agha-muted); }
+
+/* Add to cart: square black, no lift */
+.hoa-pc__cta,
+.hoa-pc__cta:hover,
+.hoa-pc__cta:disabled,
+.hoa-pc__cta--ghost { border-radius: 0; box-shadow: none; translate: none; }
+.hoa-pc__cta { background: var(--agha-black); font-weight: 500; letter-spacing: 0.12em; }
+.hoa-pc__cta:hover { background: #2A2725; }
+.hoa-pc__cta.is-added { background: #FFFFFF; box-shadow: inset 0 0 0 1px var(--agha-black); }
+
+/* Shop list view keeps its row layout, just flat */
+.hoa-shop-grid[data-view='list'] .hoa-pc,
+.hoa-shop-grid[data-view='list'] .hoa-pc:hover { box-shadow: none; border-bottom: 1px solid var(--agha-line); border-radius: 0; }
+.hoa-shop-grid[data-view='list'] .hoa-pc__visual { border-radius: 0; }
+
+/* ==========================================================================
+   3. Homepage sections
+   ========================================================================== */
+
+/* Hero: no change to the photograph; the CTA is an outline (see .hoa-btn--glass) */
+
+/* Signature carousel bridge: no gold beam */
+.hoa-bridge__beam { background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.12), transparent); }
+
+/* The House: a warm beige band, the giant watermark word removed */
+.hoa-manifesto { background: var(--agha-beige); }
+.hoa-manifesto__mark { display: none; }
+
+/* Discover: the family labels are plain white tabs, no frosted glass pill */
+.hoa-family__pill {
+  border-radius: 0;
+  border: 0;
+  background: #FFFFFF;
+  color: var(--agha-black);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  letter-spacing: 0.04em;
+}
+
+/* Art of Perfumery: the one dark room, now true black; floating photos sit straight, no drop shadow */
+.hoa-craft { background: var(--agha-black); }
+.hoa-craft__float { box-shadow: none; border-radius: 0; rotate: none !important; }
+.hoa-craft__materials li { border-radius: 0; }
+
+/* Collection: tiles and their captions */
+.hoa-tile, .hoa-card__media, .hoa-frame, .hoa-family { border-radius: 0; }
+.hoa-tile figcaption { border-radius: 0; backdrop-filter: none; -webkit-backdrop-filter: none; background: #FFFFFF; color: var(--agha-black); }
+
+/* Testimonials: a beige band; the notes are flat white paper with a hairline, no shadow */
+.hoa-voices, .hoa-testimonials { background: var(--agha-beige); }
+.hoa-voice__card {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--agha-beige-2);
+  background: #FFFFFF;
+}
+
+/* Product film + reels: square frames, no lift shadow, plain labels */
+.hoa-film__stage { border-radius: 0; }
+.hoa-film__tag,
+.hoa-reel__badge,
+.hoa-reel__tap-hint { border-radius: 0; }
+.hoa-reel__frame, .hoa-reel__frame:hover { border-radius: 0; box-shadow: none; }
+.hoa-reel__shop, .hoa-reel__thumb, .hoa-reel__view, .hoa-reel__add { border-radius: 0; }
+.hoa-reel__add.is-added, .hoa-rvp__add.is-added { background: var(--agha-black); border-color: var(--agha-black); }
+.hoa-reelview__stage, .hoa-reelview__card, .hoa-rvp__shot,
+.hoa-rvp__info, .hoa-rvp__add, .hoa-rvp__bag { border-radius: 0; }
+.hoa-rvp__bag .hoa-rvp__count { background: var(--agha-black); border-radius: 0; box-shadow: none; }
+
+/* ==========================================================================
+   4. Newsletter + footer: black, quiet, no wordmark watermark
+   ========================================================================== */
+.hoa-footer::before { display: none; }
+.hoa-footer__mark { display: none; }
+.hoa-footer__eyebrow, .hoa-footer__title { color: rgba(255, 255, 255, 0.55); }
+.hoa-footer__display em { font-style: italic; }
+
+/* Newsletter: one underlined field and a text button, as on the previous site */
+.hoa-footer__form,
+.hoa-footer__form:focus-within {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0;
+  background: transparent;
+}
+.hoa-footer__form:focus-within { border-bottom-color: #FFFFFF; }
+.hoa-footer__field input { padding: 16px 0; }
+.hoa-footer__submit,
+.hoa-footer__submit:hover {
+  padding: 16px 0 16px 20px;
+  border-radius: 0;
+  background: transparent;
+  color: #FFFFFF;
+}
+.hoa-footer__note { margin: 10px 0 0; }
+.hoa-footer__fine { margin: 14px 0 0; }
+.hoa-footer__social a { border-radius: 0; }
+
+/* ==========================================================================
+   5. Shop
+   ========================================================================== */
+.hoa-shop-bar,
+.hoa-shop-bar .hoa-shop-bar__inner {
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.hoa-shop-bar { background: #FFFFFF; border: 0; border-bottom: 1px solid var(--agha-line); }
+.hoa-ftab, .hoa-ftag, .hoa-fview, .hoa-sort,
+.hoa-price__btn, .hoa-price__apply, .hoa-price__custom input,
+.hoa-shop-bar .hoa-ftab, .hoa-shop-bar .hoa-ftag,
+.hoa-shop-mbar__filter, .hoa-shop-mbar__count,
+.hoa-shop-sheet__reset, .hoa-shop-sheet__show { border-radius: 0; }
+.hoa-price__panel, .hoa-shop-bar .hoa-price__panel { border-radius: 0; box-shadow: 0 18px 40px -24px rgba(17, 17, 17, 0.28); }
+.hoa-ftag--gift:hover { background: var(--agha-beige); }
+.hoa-shop-interlude__media, .hoa-shop-rec, .hoa-review, .hoa-shop-reviews__summary { border-radius: 0; }
+.hoa-shop-rec__eyebrow { color: rgba(255, 255, 255, 0.7); }
+.hoa-shop-reviews__summary { background: var(--agha-beige); }
+
+
+/* ==========================================================================
+   6. Bag, bundles, commerce widgets
+   ========================================================================== */
+.hoa-cprice__off, .pdp-chip--best, .pdp-savings, .hoa-bundle__eyebrow, .hoa-bundle__save,
+.bag-offer__eyebrow, .cart-summary__row--save dt, .cart-summary__row--save dd,
+.cart-summary__row--saved, .cart-summary__row--saved dd,
+.cart-line__save, .bag-paybar__save, .bag-prepaid, .bag-prepaid svg { color: var(--agha-black); }
+.bag-badge svg { stroke: var(--agha-black); }
+.hoa-bundle__cta.is-added, .bag-cross__add.is-added, .bag-coupon__tick { background: var(--agha-black); border-color: var(--agha-black); }
+.bag-ship__fill, .bag-ship.is-free .bag-ship__fill { background: var(--agha-black); }
+.bag-coupon__input:focus-visible { outline-color: var(--agha-black); }
+.bag-coupon__applied { border-color: var(--agha-beige-2); background: var(--agha-beige-soft); }
+.cart-summary__row--saved { background: var(--agha-beige-soft); }
+.bag-deals__pill { border-color: var(--agha-beige-2); background: var(--agha-beige-soft); color: var(--agha-black); }
+.hoa-bundle__cta, .hoa-pair__act .hoa-bundle__cta, .hoa-duo__opt,
+.bag-ship, .bag-offer, .bag-cross, .bag-offer__cta, .bag-cross__add, .bag-empty__cta,
+.bag-coupon__input, .bag-coupon__apply, .bag-coupon__applied, .cart-summary__row--saved,
+.bag-deals__pill, .bag-deal, .bag-deal__add { border-radius: 0; }
+.bag-offer__row img, .bag-cross__row img, .bag-deal img { border-radius: 0; }
+.wl-line__stock[data-state='in'] { color: var(--agha-black); }
+
+/* Coupon popup: beige scratch card instead of polished gold */
+.hoa-coupon__scratch { border-color: var(--agha-beige-2); }
+.hoa-coupon__hint { color: var(--agha-ink-2); }
+
+/* Search (phone layer) */
+.hoa-search__hit img { background: var(--agha-beige); }
+
+/* ==========================================================================
+   7. Product page: the product is the hero; the buy column is ink on white and beige
+   ========================================================================== */
+.pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track { background: var(--agha-beige); }
+.pdp-hero .pdp-thumb { background: var(--agha-beige); }
+
+/* First-order banner: a quiet beige band, ink type */
+.pdp-banner-offer,
+.pdp-banner-offer:hover { background: var(--agha-beige); color: var(--agha-black); }
+.pdp-banner-offer svg { color: var(--agha-black); }
+.pdp-banner-offer__code { border-color: rgba(17, 17, 17, 0.4); color: var(--agha-black); }
+
+/* Fact pills, family line, saving */
+.pdp-console .pdp-value,
+.pdp-console .pdp-value:first-child { background: var(--agha-beige); color: var(--agha-black); }
+.pdp-console .pdp-value__icon { color: var(--agha-black); }
+.pdp-console__family { color: var(--agha-muted); }
+.pdp-console .pdp-rating .pdp-stars__fill { color: var(--agha-black); }
+.pdp-console .pdp-savings { background: transparent; color: var(--agha-black); border: 1px solid var(--agha-black); border-radius: 0; }
+.pdp-console .pdp-price__save { color: var(--agha-black); }
+
+/* Offer tickets: beige paper, no peach, green or gold */
+.pdp-console .pdp-deals { box-shadow: none; }
+.pdp-console .pdp-deal,
+.pdp-console .pdp-deal--lead,
+.pdp-console .pdp-deal:not(.pdp-deal--lead),
+.pdp-console .pdp-deal.pdp-deal--auto:not(.pdp-deal--lead) { background: var(--agha-beige-soft); border-color: var(--agha-beige-2); }
+.pdp-console .pdp-deal--auto::before,
+.pdp-console .pdp-deal--auto::after { border-color: var(--agha-beige-2); }
+.pdp-console .pdp-deal__code,
+.pdp-console .pdp-deal__auto,
+.pdp-console .pdp-deal--auto .pdp-deal__auto { border-top-color: var(--agha-beige-2); }
+.pdp-console .pdp-deal__code.is-applied { border-color: var(--agha-beige-2); }
+.pdp-console .pdp-deal__code-text { color: var(--agha-black); }
+.pdp-console .pdp-deal__code:hover { box-shadow: none; }
+.pdp-console .pdp-offer__save { background: var(--agha-beige); color: var(--agha-black); }
+.pdp-console .pdp-emi, .pdp-console .pdp-emi small { color: var(--agha-ink-2); }
+.pdp-console .pdp-add.is-added { box-shadow: none; }
+
+/* Stock and status lines: ink, not green/orange */
+.pdp-stock::before { box-shadow: none; }
+.pdp-stock[data-state='low'] { color: var(--agha-black); }
+.pdp-stock[data-state='low']::before { box-shadow: none; }
+
+/* Notes illustration accents */
+.pdp-tf__rings, .pdp-tf__wave { color: var(--agha-beige-2); }
+.pdp-tf__glyph { color: var(--agha-muted); }
+
+/* Gallery fallback colour behind photos */
+.hoa-pgal__hero { background: var(--agha-black); }
+
+/* ==========================================================================
+   8. About + checkout accents
+   ========================================================================== */
+.hoa-ab-name__card::before { background: var(--agha-black); }
+.hoa-ab-name__script, .hoa-ab-name__icon { color: var(--agha-black); }
+.hoa-ab-cta__media { background: var(--agha-black); }
+
+.hoa-co-eyebrow, .hoa-co-card__n, .hoa-co-ship__ico, .hoa-co-method__tag, .hoa-co-status {
+  background: var(--agha-beige); color: var(--agha-black); box-shadow: none;
+}
+.hoa-co-input:focus, .hoa-co-check input:focus-visible + .hoa-co-check__box, .hoa-co-coupon__form:focus-within { box-shadow: 0 0 0 1px var(--agha-black); }
+.hoa-co-sum__core { background: none; }
+.hoa-co-coupon__on { background: rgba(255, 255, 255, 0.08); box-shadow: none; }
+.hoa-co-coupon__on b, .hoa-co-row.is-save dt, .hoa-co-row.is-save dd,
+.hoa-co-row.is-saved dt, .hoa-co-row.is-saved dd, .hoa-co-rec__meta em { color: #FFFFFF; }
+.hoa-co-row.is-saved { background: rgba(255, 255, 255, 0.08); }
+.hoa-co-rec__add.is-added { background: var(--agha-beige); color: var(--agha-black); }
+
+/* ==========================================================================
+   9. Square edges on the product page (pdp.css hard-codes its pills and radii)
+   ========================================================================== */
+:root { --pdp-pill: 0px; }
+.pdp-chip, .pdp-btn, .pdp-price__save, .pdp-tile, .pdp-qty,
+.pdp-dynamic-checkout .shopify-payment-button__button,
+.pdp-secure, .pdp-benefits, .pdp-delivery, .pdp-feature,
+.pdp-collage__bottle, .pdp-collage__caption, .pdp-tile-note, .pdp-story__media,
+.pdp-reviews__summary, .pdp-review, .pdp-reviews__empty, .pdp-faq .pdp-accordion details,
+.pdp-banner, .pdp-lightbox__stage img, .pdp-fnotes__image, .pdp-specs, .pdp-panel, .pdp-when,
+.pdp-reviews__tools select, .pdp-review__photo, .pdp-demo-tag, .pdp-rform,
+.pdp-rfield input, .pdp-rfield textarea, .pdp-rform__status, .pdp-console__badge,
+.pdp-console .pdp-deals, .pdp-console .pdp-value, .pdp-console .pdp-value:first-child,
+.pdp-console .pdp-deal, .pdp-console .pdp-deal--lead, .pdp-console .pdp-deal:not(.pdp-deal--lead),
+.pdp-console .pdp-deal__code-act, .pdp-console .pdp-deal--lead .pdp-deal__code-act,
+.pdp-console .pdp-offer, .pdp-console .pdp-emi, .pdp-fill__eyebrow, .pdp-fill__when, .pdp-fill__step,
+body .pdp-hero .pdp-deals .pdp-deal, body .pdp-hero .pdp-deals .pdp-deal--lead, body .pdp-hero .pdp-deals .pdp-deal--auto,
+body .pdp-hero .pdp-deals .pdp-deal__code, body .pdp-hero .pdp-deals .pdp-deal__code.is-applied,
+body .pdp-hero .pdp-offer, .pdp-dock, body .pdp-hero .pdp-dock,
+body .pdp-hero .pdp-dock .pdp-add, body .pdp-hero .pdp-dock__buy, .pdp-add, .pdp-dock__buy,
+.hoa-pgal__item, body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track, .pdp-tiles__btn { border-radius: 0; }
+.pdp-dock, body .pdp-hero .pdp-dock { box-shadow: 0 -1px 0 var(--agha-line); }
+.pdp-console .pdp-deals { border-radius: 0; }
+
+/* "Why us" proof icons are coloured clip-art (green, blue, pink): render them in ink.
+   They are UI icons, not photography, so this is the one place a filter is used. */
+.pdp-proof__art { filter: grayscale(1) contrast(1.25) brightness(0.45); }
+
+/* Shop offer ticker sits on a dark band: one white tone, the icon a white square */
+.hoa-offer-slide,
+.hoa-offer-slide:nth-child(4n+2),
+.hoa-offer-slide:nth-child(4n+3),
+.hoa-offer-slide:nth-child(4n+4) { --tone: #FFFFFF; }
+.hoa-offer-slide__ico { border-radius: 0; }
+
+/* PDP editorial headings ("Why we are better", "Customer reviews"): the site's restrained
+   sentence-case section heading instead of heavy uppercase */
+.pdx-heading {
+  font-family: var(--hoa-sans);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  letter-spacing: -0.035em;
+  text-transform: none;
+}
+
+/* ==========================================================================
+   10. About page: square cards and photos, no drop shadows (the arch photo keeps its arch)
+   ========================================================================== */
+.hoa-ab-chip, .hoa-ab-tile, .hoa-ab-tile__img--half, .hoa-ab-card, .hoa-ab-card__media,
+.hoa-ab-hyd__card, .hoa-ab-hyd__visual, .hoa-ab-hyd__note, .hoa-ab-cta, .hoa-ab-cta::before,
+.hoa-ab-cta__media, .hoa-ab-world__cta, .hoa-ab-name__card, .hoa-ab-name__photo-img,
+.hoa-ab-name__use, .hoa-ab-name__side, .hoa-ab-pillar { border-radius: 0; }
+.hoa-ab-hyd__card, .hoa-ab-hyd__visual, .hoa-ab-name__card, .hoa-ab-world__cta { box-shadow: none; }
+.hoa-ab-hyd__card, .hoa-ab-name__card { border: 1px solid var(--agha-line); }

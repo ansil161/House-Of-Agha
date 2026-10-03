@@ -53,7 +53,6 @@
     var grid = sec.querySelector('[data-hoa-shop-grid]');
     var items = Array.prototype.slice.call(grid.querySelectorAll('[data-hoa-item]'));
     var interlude = grid.querySelector('[data-hoa-interlude]');
-    var rec = grid.querySelector('[data-hoa-shop-rec]');
     var tabs = sec.querySelectorAll('[data-hoa-for]');
     var tags = sec.querySelectorAll('[data-hoa-family]');
     var gift = sec.querySelector('[data-hoa-gift]');
@@ -140,7 +139,6 @@
         grid.appendChild(it);
         if (interlude && i + 1 === interludeAfter) grid.appendChild(interlude);
       });
-      if (rec) grid.appendChild(rec);
 
       var bounds = priceBounds(state.price);
       var filtered = state.wearer !== 'all' || !!state.family || state.gift || !!bounds;
@@ -173,34 +171,7 @@
       });
       if (clear) clear.hidden = !filtered;
       if (empty) empty.hidden = visible > 0;
-      fitRec();
     }
-
-    // "The house recommends" fills exactly the empty cells after the last card: measure where the
-    // last visible tile ends in its row and give the recommendation the columns that are left.
-    // Row full (or list view, or no results) → hidden.
-    function fitRec() {
-      if (!rec) return;
-      rec.hidden = true;
-      if (state.view !== 'grid') return;
-      var tiles = Array.prototype.filter.call(grid.children, function (el) { return el !== rec && !el.hidden && el.offsetParent !== null; });
-      var last = tiles[tiles.length - 1];
-      if (!last) return;
-      var cs = getComputedStyle(grid);
-      var cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length;
-      var gap = parseFloat(cs.columnGap) || 0;
-      var g = grid.getBoundingClientRect(), r = last.getBoundingClientRect();
-      var step = (g.width + gap) / cols;
-      var end = Math.round((r.right - g.left + gap) / step);   // columns used in the last row
-      var left = cols - end;
-      if (left < 1) return;
-      rec.style.gridColumn = 'span ' + left;
-      rec.dataset.span = left;
-      rec.hidden = false;
-    }
-    var fitT = null;
-    var onFitResize = function () { clearTimeout(fitT); fitT = setTimeout(fitRec, 150); };
-    window.addEventListener('resize', onFitResize, { passive: true });
 
     function set(patch, animate) {
       Object.keys(patch).forEach(function (k) { state[k] = patch[k]; });
@@ -269,7 +240,6 @@
     initSheet(sec);
 
     cleanups.push(function () {
-      window.removeEventListener('resize', onFitResize);
       tabs.forEach(function (b) { b.removeEventListener('click', onTab); });
       tags.forEach(function (c) { c.removeEventListener('click', onTag); });
       if (gift) gift.removeEventListener('click', onGift);

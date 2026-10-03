@@ -350,7 +350,10 @@
   .hoa-shop-bar__group::-webkit-scrollbar { display: none; }
   .hoa-shop-bar__end { order: 3; flex-basis: 100%; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--hoa-line); }
 
-  .hoa-shop-grid { gap: 12px 8px; }
+  /* Phones: one product per row, full content width (no 2-up grid) */
+  .hoa-shop-grid { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 7vw, 40px); }
+  /* span 2 would conjure an implicit second column; keep wide tiles in the single track */
+  .hoa-shop-interlude, .hoa-shop-grid > .hoa-shop-rec { grid-column: 1 / -1; }
   .hoa-shop-interlude { gap: 12px; }
   .hoa-shop-interlude__media { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
 
@@ -653,9 +656,9 @@
 }
 
 /* ==========================================================================
-   "The house recommends" (sections/hoa-shop-catalog.liquid, sized by hoa-shop.js)
-   Fills the empty cells after the last card: campaign photo beside a dark panel
-   with one recommended fragrance. Two columns wide → photo | text; one column → stacked.
+   "The house recommends" (sections/hoa-shop-catalog.liquid)
+   Dark photo | panel composition. Now used only for the full-width Royal Gift Set
+   feature after the grid (.hoa-shop-rec--gift). Desktop → photo | text; phones → stacked.
    ========================================================================== */
 .hoa-shop-rec {
   grid-column: span 2;
@@ -716,8 +719,27 @@
 .hoa-shop-rec[data-span='1'] .hoa-shop-rec__media { min-height: 0; aspect-ratio: 4 / 3; }
 .hoa-shop-rec[data-span='1'] .hoa-shop-rec__body { justify-content: flex-start; padding: 22px 22px 26px; }
 
+/* Its own full-width row after the grid (no longer a grid cell) */
+.hoa-shop-rec--row { margin-top: clamp(20px, 2.4vw, 32px); }
+.hoa-shop-rec--row .hoa-shop-rec__media { min-height: clamp(320px, 30vw, 460px); }
+
+/* The Royal Gift Set feature: the full-width row with a larger photo and room to breathe */
+.hoa-shop-rec--gift { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); margin-top: clamp(48px, 6vw, 96px); }
+.hoa-shop-rec--gift .hoa-shop-rec__media { min-height: clamp(460px, 44vw, 720px); }
+.hoa-shop-rec--gift .hoa-shop-rec__media img { object-position: 50% 50%; }
+.hoa-shop-rec--gift .hoa-shop-rec__body { gap: 12px; padding: clamp(32px, 5vw, 88px); }
+.hoa-shop-rec--gift .hoa-shop-rec__eyebrow { margin-bottom: 10px; }
+.hoa-shop-rec--gift .hoa-shop-rec__name { font-size: clamp(2.2rem, 1.3rem + 2.4vw, 4rem); line-height: 0.98; letter-spacing: -0.02em; }
+.hoa-shop-rec--gift .hoa-shop-rec__text { max-width: 38ch; font-size: 1rem; }
+.hoa-shop-rec--gift .hoa-shop-rec__price { margin-top: 14px; font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem); }
+.hoa-shop-rec--gift .hoa-shop-rec__price s { font-size: 1rem; }
+.hoa-shop-rec--gift .hoa-shop-rec__actions { margin-top: 18px; gap: 14px 26px; }
+
 @media (max-width: 767px) {
   .hoa-shop-rec { grid-template-columns: minmax(0, 1fr); }
   .hoa-shop-rec__media { min-height: 0; aspect-ratio: 4 / 3; }
   .hoa-shop-rec__body { padding: 20px 18px 24px; }
+  .hoa-shop-rec--gift { grid-template-columns: minmax(0, 1fr); margin-top: 48px; }
+  .hoa-shop-rec--gift .hoa-shop-rec__media { min-height: 0; aspect-ratio: 4 / 5; }
+  .hoa-shop-rec--gift .hoa-shop-rec__body { padding: 28px 20px 32px; }
 }
