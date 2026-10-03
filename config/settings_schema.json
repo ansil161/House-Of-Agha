@@ -26,9 +26,9 @@
   {
     "name": "Preloader",
     "settings": [
-      { "type": "checkbox", "id": "preloader_enable", "label": "Show the preloader", "default": true, "info": "Perfume bottle that sprays, then the mist clears to reveal the page. Once per browsing session, never in the theme editor." },
-      { "type": "text", "id": "preloader_brand", "label": "Brand name", "default": "House of Agha" },
-      { "type": "color", "id": "preloader_accent", "label": "Accent colour", "default": "#c9a25f" },
+      { "type": "checkbox", "id": "preloader_enable", "label": "Show the preloader", "default": true, "info": "The Drop: a single drop of fragrance falls, its ripple reveals the logo and opens into the page. Once per browsing session, never in the theme editor." },
+      { "type": "text", "id": "preloader_tagline", "label": "Tagline", "default": "The Art of Scent", "info": "Shown under the logo. Leave empty to hide it." },
+      { "type": "color", "id": "preloader_accent", "label": "Drop and ripple colour", "default": "#141210" },
       { "type": "color", "id": "preloader_bg", "label": "Background colour", "default": "#ffffff" }
     ]
   },

@@ -118,86 +118,105 @@
 <body class="hoa-shop-page">
   <!-- Preloader · snippets/preloader.liquid (rendered by the preview build) -->
 <style>
-html.pl-on{overflow:hidden}html.pl-skip .pl{display:none}
-.pl{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;align-content:center;gap:18px;background:var(--pl-bg)}
-.pl svg{width:min(34vw,170px);height:auto;overflow:visible}
-.pl canvas{position:absolute;inset:0;width:100%;height:100%;filter:blur(3px);pointer-events:none}
-.pl .st{fill:none;stroke:var(--pl-a);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .95s cubic-bezier(.65,0,.35,1)}
-.pl-draw .st{stroke-dashoffset:0}
-.pl .cv{fill:var(--pl-bg)}
-#pl-liq{fill:rgba(201,162,95,.1);opacity:0;transition:opacity .5s}
-.pl-fill #pl-liq{opacity:1}
-#pl-cap,#pl-pump{transform-box:fill-box;transform-origin:50% 100%}
-#pl-cap{transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .55s}
-.pl-open #pl-cap{transform:translateY(-34px) rotate(-10deg);opacity:0}
-#pl-pump{transition:transform .13s ease-in-out}
-.pl-press #pl-pump{transform:translateY(6px)}
-.pl-b{margin:0;color:var(--pl-a);font:500 11px/1 sans-serif;letter-spacing:.42em;text-transform:uppercase;opacity:0;transition:opacity .8s .6s}
-.pl-draw .pl-b{opacity:.85}
+html.pl-on{overflow:hidden;scrollbar-gutter:stable}html.pl-skip .pl{display:none}
+.pl{--pl-ink:#141210;--pl-bg:#ffffff;--pl-rip:min(68vw,340px);position:fixed;inset:0;z-index:2147483000;color:var(--pl-ink);overflow:hidden;contain:strict}
+.pl-veil{position:absolute;inset:0;background:var(--pl-bg)}
+.pl-stage,.pl-brand{position:absolute;left:50%;top:50%}
+.pl-stage{width:0;height:0}
+.pl-stage>*{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity}
+.pl-drop{width:9px;height:12px;margin:-12px 0 0 -4.5px;transform-origin:50% 100%}
+.pl-drop i{position:absolute;left:0;bottom:0;width:9px;height:9px;border-radius:0 50% 50% 50%;transform:rotate(45deg) skew(3deg,3deg);background:var(--pl-ink);
+  background:radial-gradient(circle at 36% 40%,rgba(255,255,255,.42) 0 .9px,transparent 2.2px),radial-gradient(circle at 60% 62%,var(--pl-ink),color-mix(in srgb,var(--pl-ink) 78%,transparent));
+  box-shadow:0 1px 2px color-mix(in srgb,var(--pl-ink) 18%,transparent)}
+.pl-impact{width:60px;height:10px;margin:-5px 0 0 -30px;border-radius:50%;background:radial-gradient(closest-side,var(--pl-ink),transparent)}
+.pl-rip{width:var(--pl-rip);height:var(--pl-rip);margin:calc(var(--pl-rip)/-2) 0 0 calc(var(--pl-rip)/-2);border:1px solid currentColor;border-radius:50%}
+.pl-ring{width:0;height:0;border:1px solid currentColor;border-radius:50%;transform:translate(-50%,-50%);will-change:width,height,opacity}
+.pl-brand{display:flex;flex-direction:column;align-items:center;gap:14px;transform:translate(-50%,-50%);text-align:center}
+.pl-brand>*{opacity:0}
+.pl-logo{display:block;width:clamp(124px,24vw,188px);height:auto}
+.pl-tag{margin:0 -.34em 0 0;font:500 10px/1 var(--hoa-sans,sans-serif);letter-spacing:.34em;text-transform:uppercase;white-space:nowrap;color:var(--pl-ink)}
+.pl-still .pl-brand>*{opacity:1}.pl-still .pl-tag{opacity:.6}
+@media (max-width:599px){.pl{--pl-rip:min(74vw,280px)}.pl-rip--3{display:none}.pl-tag{font-size:9px}}
 </style>
-<script>try{document.documentElement.classList.add(sessionStorage.getItem('pl_seen')?'pl-skip':'pl-on')}catch(e){document.documentElement.classList.add('pl-on')}</script>
-<div class="pl" id="pl" aria-hidden="true" style="--pl-a:#c9a25f;--pl-bg:#ffffff">
-  <canvas></canvas>
-  <!-- BOTTLE SVG: swap for the real bottle. Keep: class="st" + pathLength="1" on every visible stroke,
-       #pl-liq (liquid), #pl-pump (moves when pressed), #tip (nozzle point, invisible),
-       #pl-cap (lifted off; class="cv" fills it so it hides the pump). -->
-  <svg viewBox="0 0 200 300" focusable="false">
-    <rect id="pl-liq" x="48" y="150" width="104" height="122" rx="8"/>
-    <rect class="st" pathLength="1" x="40" y="112" width="120" height="168" rx="14"/>
-    <rect class="st" pathLength="1" x="62" y="170" width="76" height="54" rx="2"/>
-    <path class="st" pathLength="1" d="M84 112V94"/>
-    <path class="st" pathLength="1" d="M116 112V94"/>
-    <rect class="st" pathLength="1" x="78" y="84" width="44" height="12" rx="2"/>
-    <g id="pl-pump">
-      <path class="st" pathLength="1" d="M100 84V66"/>
-      <rect class="st" pathLength="1" x="86" y="52" width="28" height="14" rx="3"/>
-      <path class="st" pathLength="1" d="M86 58H76"/>
-      <rect id="tip" x="73" y="57" width="2" height="2" fill="none"/>
-    </g>
-    <g id="pl-cap">
-      <rect class="st cv" pathLength="1" x="74" y="34" width="52" height="62" rx="4"/>
-      <path class="st" pathLength="1" d="M74 48H126"/>
-    </g>
-  </svg>
-  <!-- /BOTTLE SVG -->
-  <p class="pl-b">House of Agha</p>
+<script>try{document.documentElement.classList.add(sessionStorage.getItem('agha-preloader-seen')?'pl-skip':'pl-on')}catch(e){document.documentElement.classList.add('pl-on')}</script>
+<div class="pl" id="pl" aria-hidden="true">
+  <div class="pl-veil"></div>
+  <div class="pl-stage">
+    <div class="pl-impact"></div>
+    <div class="pl-rip pl-rip--1"></div>
+    <div class="pl-rip pl-rip--2"></div>
+    <div class="pl-rip pl-rip--3"></div>
+    <div class="pl-ring"></div>
+    <div class="pl-drop"><i></i></div>
+  </div>
+  <div class="pl-brand">
+    <img class="pl-logo" src="assets/agha-logo.avif" alt="" width="500" height="156" decoding="async" fetchpriority="high"><p class="pl-tag">The Art of Scent</p></div>
 </div>
 <script>
 (function(){
 var d=document,h=d.documentElement,o=d.getElementById('pl');if(!o)return;
 if(h.classList.contains('pl-skip')){o.remove();return}
-try{sessionStorage.setItem('pl_seen','1')}catch(e){}
-var loaded=d.readyState=='complete',shown=1,out=0,raf=0,P=[],W,H;
-addEventListener('load',function(){loaded=true});
-function end(){o.remove();h.classList.remove('pl-on');shown=0}
-if(matchMedia('(prefers-reduced-motion: reduce)').matches){o.style.transition='opacity .2s';requestAnimationFrame(function(){o.style.opacity=0});setTimeout(end,220);return}
-var cv=o.querySelector('canvas'),cx=cv.getContext('2d'),tip=d.getElementById('tip'),r=Math.min(devicePixelRatio||1,2);
-function size(){W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;cx.setTransform(r,0,0,r,0,0)}
-size();addEventListener('resize',size);
-function nz(){var b=tip.getBoundingClientRect();return[b.left+b.width/2,b.top+b.height/2]}
-function wait(ms){return new Promise(function(f){setTimeout(f,ms)})}
-function tick(){raf=0;cx.clearRect(0,0,W,H);cx.fillStyle='#d6b98a';
-for(var i=P.length;i--;){var q=P[i];q.x+=q.vx;q.y+=q.vy;q.vx*=.955;q.vy=q.vy*.955-.03;q.r+=.55;
-if(++q.l>q.L){P.splice(i,1);continue}cx.globalAlpha=.45*(1-q.l/q.L);cx.beginPath();cx.arc(q.x,q.y,q.r,0,6.2832);cx.fill()}
-if(P.length&&shown)raf=requestAnimationFrame(tick)}
-function emit(n,pw){var p=nz();for(var i=0;i<n;i++){var a=Math.PI+.12+(Math.random()*2-1)*.35,s=(2+Math.random()*6)*pw;
-P.push({x:p[0],y:p[1],vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:3+Math.random()*6,l:0,L:70+Math.random()*50})}
-if(!raf)raf=requestAnimationFrame(tick)}
-function spray(n,pw){o.classList.add('pl-press');return wait(130).then(function(){emit(n,pw);o.classList.remove('pl-press');return wait(130)})}
-function reveal(){if(out)return;out=1;o.style.pointerEvents='none';
-var p=nz(),M=Math.hypot(W,H),t0=performance.now();
-(function f(now){var t=Math.min(1,(now-t0)/1500),e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,R=e*M,
-m='radial-gradient(circle at '+p[0]+'px '+p[1]+'px,transparent '+R+'px,#000 '+(R+160)+'px)';
-o.style.webkitMaskImage=o.style.maskImage=m;t<1?requestAnimationFrame(f):end()})(t0)}
-setTimeout(reveal,8000);
-var st=o.querySelectorAll('.st');
-for(var i=0;i<st.length;i++)st[i].style.transitionDelay=i*80+'ms';
-requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('pl-draw')})});
-wait(950+80*(st.length-1)).then(function(){o.classList.add('pl-fill');return wait(350)})
-.then(function(){o.classList.add('pl-open');return wait(600)})
-.then(function loop(k){k=k||0;if(out)return;
-if(k<3||!loaded)return spray(40,1).then(function(){return wait(420)}).then(function(){return loop(k+1)});
-return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
+try{sessionStorage.setItem('agha-preloader-seen','1')}catch(e){}
+var loaded=d.readyState=='complete',started=0,revealed=0,ended=0,tl,cap,onLoad;
+function reveal(){if(revealed)return;revealed=1;window.hoaPreloaderRevealed=true;o.style.pointerEvents='none';
+  try{d.dispatchEvent(new CustomEvent('pl:reveal'))}catch(e){}}
+function end(){if(ended)return;ended=1;reveal();clearTimeout(cap);removeEventListener('load',onLoad);
+  if(tl)tl.kill();o.remove();h.classList.remove('pl-on');
+  if(window.ScrollTrigger)requestAnimationFrame(function(){ScrollTrigger.refresh()})}
+/* No GSAP or reduced motion: wordmark, a short hold, a short fade. */
+function still(){if(started)return;started=1;o.classList.add('pl-still');
+  setTimeout(function(){reveal();o.style.transition='opacity .3s ease';o.style.opacity=0;setTimeout(end,320)},
+    matchMedia('(prefers-reduced-motion: reduce)').matches?350:600)}
+function run(){
+  var g=window.gsap;
+  if(started)return;
+  if(!g||matchMedia('(prefers-reduced-motion: reduce)').matches)return still();
+  started=1;
+  var q=function(s){return o.querySelector(s)},
+      drop=q('.pl-drop'),impact=q('.pl-impact'),ring=q('.pl-ring'),veil=q('.pl-veil'),
+      rips=[q('.pl-rip--1'),q('.pl-rip--2'),q('.pl-rip--3')],logo=q('.pl-logo'),tag=q('.pl-tag'),
+      small=innerWidth<600,travel=Math.round(Math.min(small?84:124,innerHeight*.16)),
+      peaks=[.24,.14,.07],R={r:0};
+  onLoad=function(){loaded=true;if(tl.paused())tl.play()};
+  addEventListener('load',onLoad);
+  /* Never hold anyone longer than this, whatever is still loading. */
+  cap=setTimeout(onLoad,6000);
+  g.set(drop,{y:-travel,scale:.6,opacity:0});
+  g.set(impact,{scaleX:0,opacity:0});
+  g.set(rips,{scale:.05,opacity:0});
+  g.set(ring,{opacity:0});
+  g.set(logo,{opacity:0,y:10,scale:1.035});
+  if(tag)g.set(tag,{opacity:0,y:6,letterSpacing:'0.5em'});
+  tl=g.timeline({onComplete:end});
+  tl.to(drop,{opacity:1,scale:1,duration:.3,ease:'power2.out'},.2)
+    .to(drop,{y:0,scaleY:1.16,scaleX:.9,duration:.7,ease:'power3.in'},.45)
+    /* impact: the drop flattens into the surface and is gone, the ripple carries on */
+    .to(drop,{scaleY:.5,scaleX:1.32,duration:.1,ease:'power2.in'},1.15)
+    .to(drop,{scaleY:.14,scaleX:1.9,opacity:0,duration:.22,ease:'power2.out'},1.25)
+    .to(impact,{scaleX:1,opacity:.15,duration:.12,ease:'power2.out'},1.15)
+    .to(impact,{scaleX:.5,opacity:0,duration:.45,ease:'sine.out'},1.27);
+  rips.forEach(function(el,i){var t=1.2+i*.08;
+    tl.to(el,{scale:1,duration:.95,ease:'power2.out'},t)
+      .to(el,{opacity:peaks[i],duration:.14,ease:'sine.out'},t)
+      .to(el,{opacity:0,duration:.72,ease:'sine.in'},t+.16)});
+  /* the wordmark arrives once the first ripple is about a quarter open */
+  tl.to(logo,{opacity:1,y:0,scale:1,duration:.8,ease:'power3.out'},1.45);
+  if(tag)tl.to(tag,{opacity:.6,y:0,letterSpacing:'0.34em',duration:.6,ease:'power2.out'},1.8);
+  /* hold on the wordmark only while the page is genuinely still loading */
+  tl.addPause(2.2,function(){if(loaded)tl.play()})
+    .call(reveal,null,2.2)
+    /* the last ripple: a ring whose inside is the page, opened to the farthest corner */
+    .set(ring,{opacity:.22},2.2)
+    .to(R,{r:function(){return Math.hypot(innerWidth,innerHeight)/2+4},duration:.78,ease:'power3.inOut',onUpdate:function(){
+      var r=R.r,m='radial-gradient(circle at 50% 50%,transparent '+r+'px,#000 '+(r+1.5)+'px)';
+      veil.style.webkitMaskImage=veil.style.maskImage=m;ring.style.width=ring.style.height=2*r+'px'}},2.2)
+    .to(ring,{opacity:0,duration:.5,ease:'sine.in'},2.48)
+    /* the wordmark steps back as the page opens behind it */
+    .to(logo.parentNode,{opacity:0,duration:.32,ease:'power1.in'},2.22);
+}
+if(d.readyState=='loading')d.addEventListener('DOMContentLoaded',run);else run();
+/* If the deferred scripts stall, never leave the page covered. */
+setTimeout(still,4000);
 })();
 </script>
   <!-- /Preloader -->
@@ -277,6 +296,102 @@ return spray(150,1.7).then(function(){return wait(250)}).then(reveal)});
   </p>
 </div></div>
   <!-- /Message strip --><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
+  <div class="hoa-search__panel">
+    <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <label class="hoa-search__sr" for="hoa-search-q">Search</label>
+      <input id="hoa-search-q" type="search" name="q" placeholder="Oud, woody, for her…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-hoa-search-input>
+      <input type="hidden" name="type" value="product">
+      <button type="button" class="hoa-search__close" data-hoa-search-close>Cancel</button>
+    </form>
+    <div class="hoa-search__body">
+      <div class="hoa-search__suggest" data-hoa-search-suggest>
+        <p class="hoa-search__label">Popular</p>
+        <ul class="hoa-search__chips" role="list">
+          <li><button type="button" data-hoa-search-term="Oud">Oud</button></li>
+          <li><button type="button" data-hoa-search-term="Woody">Woody</button></li>
+          <li><button type="button" data-hoa-search-term="Fresh">Fresh</button></li>
+          <li><button type="button" data-hoa-search-term="Floral">Floral</button></li>
+          <li><button type="button" data-hoa-search-term="For her">For her</button></li>
+        </ul>
+      </div>
+      <p class="hoa-search__status" aria-live="polite" data-hoa-search-status></p>
+      <ul class="hoa-search__results" role="list" data-hoa-search-results></ul>
+    </div>
+  </div>
+</div><div class="hoa-search" id="hoa-search" role="dialog" aria-modal="true" aria-label="Search" hidden data-lenis-prevent>
   <div class="hoa-search__panel">
     <form class="hoa-search__form" action="/search" method="get" role="search" data-hoa-search-form>
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M15.2 15.2 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>

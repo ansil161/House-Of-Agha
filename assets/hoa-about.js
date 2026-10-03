@@ -54,9 +54,13 @@
       lenis.scrollTo(target, { duration: 1.4 });
     });
     // Pause while the theme locks the page (cart drawer, mobile menu).
-    new MutationObserver(function () {
-      if (document.body.style.overflow === 'hidden') lenis.stop(); else lenis.start();
-    }).observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    var sync = function () {
+      var locked = document.body.style.overflow === 'hidden' || document.documentElement.classList.contains('pl-on');
+      if (locked) lenis.stop(); else lenis.start();
+    };
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    sync(); // the preloader may still be up when Lenis starts
   }
 
   /* ---------------- 03 The seven worlds ----------------
@@ -253,15 +257,16 @@
     });
   }
 
-  // Runs cb once the spritz preloader (snippets/preloader.liquid) has lifted, so the
+  // Runs cb as the Drop preloader (snippets/preloader.liquid) starts opening onto the page, so the
   // opening motion is seen rather than played behind the overlay.
   function afterIntro(cb) {
     var h = document.documentElement;
-    if (!h.classList.contains('pl-on')) { cb(); return; }
+    if (!h.classList.contains('pl-on') || window.hoaPreloaderRevealed) { cb(); return; }
     var done = false;
-    var go = function () { if (done) return; done = true; mo.disconnect(); cb(); };
+    var go = function () { if (done) return; done = true; mo.disconnect(); document.removeEventListener('pl:reveal', go); cb(); };
     var mo = new MutationObserver(function () { if (!h.classList.contains('pl-on')) go(); });
     mo.observe(h, { attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('pl:reveal', go);
     setTimeout(go, 10000); // never leave the opening parked if the preloader stalls
   }
 

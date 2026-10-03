@@ -41,11 +41,12 @@
 
     // Pause smoothing whenever the theme locks the page (cart drawer, menu, modals).
     var sync = function () {
-      var locked = document.body.style.overflow === 'hidden' || root.classList.contains('hoa-menu-open');
+      var locked = document.body.style.overflow === 'hidden' || root.classList.contains('hoa-menu-open') || root.classList.contains('pl-on');
       if (locked) lenis.stop(); else lenis.start();
     };
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['style', 'class'] });
     new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['class'] });
+    sync(); // the preloader may still be up when Lenis starts
 
     // In-page anchors glide instead of jumping.
     document.addEventListener('click', function (e) {
@@ -94,6 +95,20 @@
   /* ------------------------------------------------------------------ */
   /* 01 Hero                                                             */
   /* ------------------------------------------------------------------ */
+  // Runs cb as soon as the Drop preloader (snippets/preloader.liquid) starts opening onto the page,
+  // so entrances are seen rather than played behind the overlay. Immediate when there is no preloader.
+  function afterPreloader(cb) {
+    if (!root.classList.contains('pl-on') || window.hoaPreloaderRevealed) { cb(); return; }
+    var done = false;
+    var go = function () {
+      if (done) return; done = true;
+      document.removeEventListener('pl:reveal', go); clearTimeout(t); cb();
+    };
+    document.addEventListener('pl:reveal', go);
+    var t = setTimeout(go, 10000); // never leave the hero parked if the preloader stalls
+    cleanups.push(function () { document.removeEventListener('pl:reveal', go); clearTimeout(t); });
+  }
+
   function initHero() {
     var hero = document.querySelector('[data-hoa-hero]');
     if (!hero) return;
@@ -148,10 +163,12 @@
     // Entrance: words rise out of their masks, supporting copy follows.
     var words = hero.querySelectorAll('[data-hoa-hero-word]');
     var fades = hero.querySelectorAll('[data-hoa-hero-fade]');
-    gsap.timeline({ defaults: { ease: 'expo.out' } })
+    // Built paused (from-states applied now, so nothing flashes) and played as the preloader opens.
+    var intro = gsap.timeline({ defaults: { ease: 'expo.out' }, paused: true })
       .from(hero.querySelector('[data-hoa-hero-media]'), { scale: 1.12, duration: 2.6, ease: 'power3.out' }, 0)
       .from(words, { yPercent: 110, duration: 1.6, stagger: 0.12 }, 0.25)
       .from(fades, { autoAlpha: 0, y: 18, duration: 1.2, stagger: 0.08 }, 0.8);
+    afterPreloader(function () { intro.play(); });
 
     // Scroll: the frame drifts back and dims as the House takes over.
     gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
