@@ -1446,38 +1446,26 @@ setTimeout(still,4000);
   <footer class="footer hoa-footer" data-header-theme="dark">
   <div class="hoa-wrap">
 
-    <section class="hoa-footer__invite" aria-labelledby="hoa-footer-invite-title">
-      <div class="hoa-footer__invite-copy">
-        <p class="hoa-footer__eyebrow">The House Letter</p>
-        <h2 class="hoa-footer__display" id="hoa-footer-invite-title">Notes from the house, <em>before anyone else.</em></h2>
-        <p class="hoa-footer__lede">New extraits, private releases and the occasional story from the atelier. Never more than once a month.</p>
+    <div class="hoa-footer__top">
+      <div class="hoa-footer__brand">
+        <a href="/" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
+        <p class="hoa-footer__about">Concentrated Eau de Parfum from oud, amber and rare florals, composed in Hyderabad.</p>
       </div>
-      <div class="hoa-footer__invite-form"><form method="post" action="/" accept-charset="UTF-8" class="hoa-footer__form" novalidate><input type="hidden" name="form_type" value="customer"><input type="hidden" name="contact[tags]" value="newsletter">
+
+      <section class="hoa-footer__letter" aria-labelledby="hoa-footer-letter-title">
+        <h2 class="hoa-footer__label" id="hoa-footer-letter-title">The House Letter</h2>
+        <p class="hoa-footer__lede">New releases and notes from the atelier. Once a month at most.</p><form method="post" action="/" accept-charset="UTF-8" class="hoa-footer__form" novalidate><input type="hidden" name="form_type" value="customer"><input type="hidden" name="contact[tags]" value="newsletter">
           <label class="hoa-footer__field" for="hoa-footer-email">
             <span class="hoa-footer__sr">Email address</span>
-            <input id="hoa-footer-email" type="email" name="contact[email]" autocomplete="email" placeholder="Your email address" required>
+            <input id="hoa-footer-email" type="email" name="contact[email]" autocomplete="email" placeholder="Email address" required>
           </label>
           <button type="submit" class="hoa-footer__submit">
             <span>Subscribe</span>
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button></form><p class="hoa-footer__fine">By subscribing you agree to receive House of Agha emails. Unsubscribe any time.</p>
-      </div>
-    </section>
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+          </button></form></section>
+    </div>
 
     <div class="hoa-footer__main">
-      <div class="hoa-footer__brand">
-        <a href="/" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
-        <p class="hoa-footer__about">A Hyderabad fragrance house composing concentrated Eau de Parfum from oud, amber and rare florals. Made to linger, for those who notice.</p>
-        <ul class="hoa-footer__social" role="list">
-          <li><a href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="House of Agha on Instagram (opens in a new tab)">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
-          </a></li>
-          <li><a href="/pages/contact" aria-label="Contact House of Agha">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7.5L12 13l7.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a></li>
-        </ul>
-      </div>
-
       <nav class="hoa-footer__col" aria-labelledby="hoa-footer-shop">
         <h3 class="hoa-footer__title" id="hoa-footer-shop"><button type="button" class="hoa-footer__toggle" aria-expanded="true" aria-controls="hoa-footer-shop-list" data-hoa-fold>Shop<span class="hoa-footer__fold-icon" aria-hidden="true"></span></button></h3>
         <ul class="footer-links" role="list" id="hoa-footer-shop-list">
@@ -1508,15 +1496,9 @@ setTimeout(still,4000);
       </nav>
     </div>
 
-    <p class="hoa-footer__mark" aria-hidden="true">AGHA</p>
-
     <div class="footer-bottom hoa-footer__bottom">
-      <p>&copy; 2026 House of Agha. All rights reserved.</p>
-      <ul class="hoa-footer__legal" role="list">
-        <li><a href="/pages/shipping-returns">Shipping &amp; returns</a></li>
-        <li><a href="/pages/contact">Contact</a></li>
-      </ul>
-      <p class="hoa-footer__place">Composed in Hyderabad</p>
+      <p>&copy; 2026 House of Agha</p>
+      <a href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener">Instagram<span class="hoa-footer__sr"> (opens in a new tab)</span></a>
     </div>
   </div>
 </footer>
