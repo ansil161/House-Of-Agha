@@ -489,6 +489,7 @@
     var LIFT = 0.1;   // stage A length, as a share of the hero's height of scroll
     var GROW = 0.06;  // stage A: how far the bottle comes forward
     var ARC = 0.05;   // stage B: sideways bow of the flight, share of viewport width
+    var LAND = 0.85;  // stage B: share of the flight after which the bottle sits locked on the dock
     var easeA = gsap.parseEase('power1.inOut');
     var easeB = gsap.parseEase('sine.inOut');
     var lerp = function (x, y, t) { return x + (y - x) * t; };
@@ -603,19 +604,24 @@
       // B: the same node, free of the hero, flies to the card.
       toFly();
       // Its centre moves linearly with the scroll, so it holds its place on screen
-      // instead of scrolling away; only the size eases.
+      // instead of scrolling away; only the size eases. The flight completes at LAND of
+      // the stretch (position, size, arc and tilt together); from there to the dock
+      // handover it is set onto the dock's live box every frame, so it rides locked to
+      // the card instead of the card scrolling up to meet a bottle that is still a few
+      // pixels off (it used to close the last gap only at progress 1, then snap).
       var t = (p - split) / (1 - split);
-      var e = easeB(t);
+      var f = Math.min(1, t / LAND);
+      var e = easeB(f);
       var d = rel(dock.getBoundingClientRect());
       var w = lerp(boxA.width, d.width, e), h = lerp(boxA.height, d.height, e);
-      var cx = lerp(boxA.left + boxA.width / 2, d.left + d.width / 2, t) + Math.sin(Math.PI * t) * ARC * window.innerWidth;
-      var cy = lerp(boxA.top + boxA.height / 2, d.top + d.height / 2, t);
+      var cx = lerp(boxA.left + boxA.width / 2, d.left + d.width / 2, f) + Math.sin(Math.PI * f) * ARC * window.innerWidth;
+      var cy = lerp(boxA.top + boxA.height / 2, d.top + d.height / 2, f);
       gsap.set(bottle, {
         top: cy - h / 2,
         left: cx - w / 2,
         width: w,
         height: h,
-        rotation: Math.sin(Math.PI * 2 * t) * -6 * (1 - t)
+        rotation: Math.sin(Math.PI * 2 * f) * -6 * (1 - f)
       });
       bottle.style.setProperty('--hoa-lift-veil-o', String(Math.max(0, 1 - t / 0.3)));
     }

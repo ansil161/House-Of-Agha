@@ -60,8 +60,22 @@
       discountPercentage: hasOffer ? Math.round((reg - sale) / reg * 100) : 0,
       savings: hasOffer ? reg - sale : 0,
       isBestSeller: !!p.isBestSeller, isNew: !!p.isNew, rating: +p.rating || 0, reviewCount: +p.reviewCount || 0,
-      inventory: p.inventory == null ? null : +p.inventory
+      inventory: p.inventory == null ? null : +p.inventory,
+      // Sizes as on the live store; the first is the smallest and is the price cards show
+      sizes: (p.sizes || []).map(function (z) { return { title: String(z.title), price: +z.price || 0, available: z.available !== false }; })
     };
+  }
+  // Price of one size of a product (titles compared case-insensitively), or null when it has none
+  function sizePrice(p, size) {
+    if (!p || !p.sizes || !p.sizes.length || !size) return null;
+    var t = String(size).trim().toLowerCase();
+    for (var i = 0; i < p.sizes.length; i++) if (p.sizes[i].title.toLowerCase() === t) return p.sizes[i].price;
+    return null;
+  }
+  function defaultSize(p) {
+    if (!p) return 'Eau de Parfum';
+    if (p.sizes && p.sizes.length) return p.sizes[0].title;
+    return p.kind === 'set' ? (p.size || '3 × 5 ml') : 'Eau de Parfum';
   }
 
   var PRODUCTS = {}, ORDER = [];
@@ -113,7 +127,7 @@
   /* ---------------------------------------------------------------- lines */
   function makeItem(handle, size) {
     var p = product(handle);
-    return { id: handle + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e4), handle: handle, size: size || (p && p.kind === 'set' ? (p.size || '3 × 5 ml') : 'Eau de Parfum') };
+    return { id: handle + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e4), handle: handle, size: size || defaultSize(p) };
   }
 
   // A bag entry is one unit. Known products are priced from the catalog (never from stored text),
@@ -123,7 +137,10 @@
     if (p) {
       // On a live Shopify store the page passes Shopify's own price along; the mock catalog only prices what has none.
       var live = !!(window.Shopify && window.Shopify.routes) && item.price;
-      var pr = live ? parseMoney(item.price) : p.price, rg = live ? (parseMoney(item.compare) || pr) : p.regularPrice;
+      // Preview: the size's own price when the product has sizes (an offer only ever applies to the base price)
+      var sp = sizePrice(p, item.size);
+      var pr = live ? parseMoney(item.price) : (sp != null ? sp : p.price);
+      var rg = live ? (parseMoney(item.compare) || pr) : (sp != null && sp !== p.price ? sp : p.regularPrice);
       return { key: p.handle + '|' + (item.size || ''), kind: p.kind, handle: p.handle, name: p.name, image: item.image || p.image, price: pr, regular: rg > pr ? rg : pr, size: item.size || 'Eau de Parfum', product: p };
     }
     var price = parseMoney(item.price), cmp = parseMoney(item.compare);
@@ -260,7 +277,7 @@
 
   function lineHtml(g) {
     var u = g.unit, off = u.regular > u.price ? Math.round((1 - u.price / u.regular) * 100) : 0;
-    var meta = u.kind === 'set' ? (u.product.tagline || u.size) : u.size;
+    var meta = u.kind === 'set' && !(u.product.sizes && u.product.sizes.length) ? (u.product.tagline || u.size) : u.size;
     var e = esc;
     return '<article class="cart-line" data-key="' + e(g.key) + '">' +
       '<div class="cart-line__media">' + (u.image ? '<img src="' + e(u.image) + '" alt="' + e(u.name) + '">' : '') + '</div>' +
@@ -657,7 +674,7 @@
       var done = function () {
         busy(false);
         if (typeof AghaStore === 'undefined') return;
-        AghaStore.addToCart({ id: (d.productId || d.name) + '-' + Date.now(), handle: d.productId || '', title: d.name, price: d.priceText || '', compare: d.compareText || '', image: d.image || '', size: 'Eau de Parfum' });
+        AghaStore.addToCart({ id: (d.productId || d.name) + '-' + Date.now(), handle: d.productId || '', title: d.name, price: d.priceText || '', compare: d.compareText || '', image: d.image || '', size: defaultSize(product(d.productId)) });
         flash(btn);
       };
       if (window.Shopify && window.Shopify.routes) {
@@ -686,11 +703,19 @@
   // theme.js's AGHA_PRODUCTS still drives the preview product page. For every catalog fragrance its
   // prices and review figures are overwritten from the catalog, so that page cannot disagree.
   function applyToPreviewProducts(map) {
-    fragrances().forEach(function (p) {
+    var withSets = fragrances().concat(Object.keys(PRODUCTS).map(function (h) { return PRODUCTS[h]; }).filter(function (p) { return p.kind === 'set'; }));
+    withSets.forEach(function (p) {
       var t = map[p.handle];
       if (!t) return;
-      t.sizes = { 'Eau de Parfum': p.price };
-      if (p.hasOffer) t.compare = { 'Eau de Parfum': p.regularPrice }; else delete t.compare;
+      if (p.sizes.length) {
+        // The live store's sizes and prices; sold-out sizes are listed so the page can disable them
+        t.sizes = {}; t.soldOut = [];
+        p.sizes.forEach(function (z) { t.sizes[z.title] = z.price; if (!z.available) t.soldOut.push(z.title); });
+        delete t.compare;
+      } else {
+        t.sizes = { 'Eau de Parfum': p.price };
+        if (p.hasOffer) t.compare = { 'Eau de Parfum': p.regularPrice }; else delete t.compare;
+      }
       t.rating = p.rating; t.reviewCount = p.reviewCount; t.isBestSeller = p.isBestSeller; t.inventory = p.inventory;
     });
   }

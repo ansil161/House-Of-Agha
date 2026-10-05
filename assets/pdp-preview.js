@@ -61,9 +61,9 @@
     options: [size],
     price: price == null ? null : price * 100,
     compare_at_price: product.compare && product.compare[size] ? product.compare[size] * 100 : null,
-    available: true
+    available: !(product.soldOut || []).includes(size)   // sold-out sizes, from the catalog (live store)
   }));
-  const current = variants.find((v) => v.title === '50 ML') || variants[0];
+  const current = variants.find((v) => v.title === '50 ML' && v.available) || variants.find((v) => v.available) || variants[0];
   const images = product.images;
   // Buy-column slider, thumbnails, 'more views' tiles and lightbox: the product's own photo set when it has one
   // (theme.js `media`), else the catalog images. images[0] stays the plain flacon used by the dock, story, offers.
@@ -223,10 +223,10 @@
               <legend class="pdp-options__legend"><span>Size:</span><span data-pdp-option-value>${current.title}</span></legend>
               <div class="pdp-options__grid">
                 ${variants.map((v) => `
-                  <label class="pdp-tile">
+                  <label class="pdp-tile${v.available ? '' : ' is-unavailable'}">
                     <input type="radio" name="preview-option-1" value="${v.title}"${v === current ? ' checked' : ''}>
                     <span class="pdp-tile__value">${v.title}</span>
-                    <span class="pdp-tile__price">${money(v.price == null ? null : v.price / 100)}</span>
+                    <span class="pdp-tile__price">${v.available ? money(v.price == null ? null : v.price / 100) : 'Sold out'}</span>
                   </label>`).join('')}
               </div>
             </fieldset>

@@ -299,79 +299,35 @@
     }));
   }
 
-  /* ------------------------------------ Two columns: scroll in turn, 769px+ */
-  // One side holds while the other scrolls, then they swap (user request):
-  //   1. the details (right) stay fixed under the header while the photos (left) scroll;
-  //   2. once the photos reach their end they hold there, and the rest of the details scrolls by;
-  //   3. when both are done the section ends and the page carries on.
-  // Done with transforms clamped to .pdp-hero__grid, whose height is set to the total distance, so it
-  // never covers the sections below. (position: sticky can't express the hand-over, and Chrome snaps
-  // tall sticky boxes back at the release point.)
-  function initColumnSticky(main) {
-    const grid = $('.pdp-hero__grid', main);
-    const photos = $('.pdp-media', main);
-    const details = $('.pdp-info', main);
-    if (!grid || !photos || !details) return;
-    const wide = window.matchMedia('(min-width: 769px)');
-    let raf = 0;
-    const reset = () => {
-      [photos, details].forEach((c) => { c.style.removeProperty('transform'); c.classList.remove('is-held'); });
-      grid.style.removeProperty('min-height');
-    };
-    const move = (el, y) => {
-      el.style.transform = y > 0.5 ? 'translate3d(0,' + y.toFixed(1) + 'px,0)' : '';
-      el.classList.toggle('is-held', y > 0.5);
-    };
-    const update = () => {
-      raf = 0;
-      if (!wide.matches) { reset(); return; }
-      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96;
-      const pin = header + 12;                                     // where a held column rests
-      const view = Math.max(200, window.innerHeight - pin - 16);   // screen space below the header
-      const P = photos.offsetHeight;
-      const D = details.offsetHeight;
-      const a = Math.max(0, P - view);                             // phase 1: photos scroll this far
-      const b = Math.max(0, D - view);                             // phase 2: details scroll this far
-      const total = a + Math.max(D, view);
-      grid.style.minHeight = Math.max(P, total) + 'px';
-      const s = pin - grid.getBoundingClientRect().top;            // scroll progress through the section
-      move(details, Math.max(0, Math.min(a, s)));                  // held during phase 1, then scrolls
-      move(photos, Math.max(0, Math.min(b, s - a)));               // scrolls in phase 1, held in phase 2
-    };
-    const queue = () => { if (!raf) raf = requestAnimationFrame(update); };
-    listen(window, 'scroll', queue, { passive: true });
-    listen(window, 'resize', queue, { passive: true });
-    if ('ResizeObserver' in window) {
-      const ro = new ResizeObserver(queue);
-      [photos, details].forEach((c) => ro.observe(c));
-      cleanups.push(() => ro.disconnect());
-    }
-    cleanups.push(() => { if (raf) cancelAnimationFrame(raf); reset(); });
-    update();
-  }
-
-  /* --------------------------------------------- Info column: hold in view */
-  // The purchase column is sticky next to the moving images. If it is taller than the screen its
-  // sticky offset goes negative, so it scrolls until its end is in view and only then holds.
+  /* ------------------------------------------- Two columns: hold in view */
+  // 769px+: both columns are CSS position: sticky; only the shorter one has room to stick. This
+  // only sets where each rests (--pdp-col-top): just under the header when it fits the screen,
+  // otherwise the negative offset at which its end is in view, so it reads down naturally, holds
+  // with its last line showing, and releases where the section ends. Recomputed on load, resize and
+  // when a column changes height; never on scroll, so the browser does the sticking without lag.
   function initInfoSticky(main) {
-    const info = $('.pdp-info', main);
-    if (!info) return;
+    const cols = [$('.pdp-media', main), $('.pdp-info', main)].filter(Boolean);
+    if (!cols.length) return;
     const wide = window.matchMedia('(min-width: 769px)');
+    const last = new Map();
     const apply = () => {
-      info.style.removeProperty('--pdp-info-top');
-      if (!wide.matches) return;
-      const base = parseFloat(getComputedStyle(info).top) || 0;
-      const top = Math.min(base, window.innerHeight - info.offsetHeight - 24);
-      info.style.setProperty('--pdp-info-top', Math.round(top) + 'px');
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pdp-header-offset')) || 96;
+      const pin = header + 12;
+      cols.forEach((col) => {
+        if (!wide.matches) { col.style.removeProperty('--pdp-col-top'); last.delete(col); return; }
+        const top = Math.round(Math.min(pin, window.innerHeight - col.offsetHeight - 24)) + 'px';
+        if (last.get(col) !== top) { col.style.setProperty('--pdp-col-top', top); last.set(col, top); }
+      });
     };
     apply();
     if ('ResizeObserver' in window) {
       const ro = new ResizeObserver(apply);
-      ro.observe(info);
+      cols.forEach((col) => ro.observe(col));
       cleanups.push(() => ro.disconnect());
     }
     listen(window, 'resize', apply);
-    cleanups.push(() => info.style.removeProperty('--pdp-info-top'));
+    if (wide.addEventListener) { wide.addEventListener('change', apply); cleanups.push(() => wide.removeEventListener('change', apply)); }
+    cleanups.push(() => cols.forEach((col) => col.style.removeProperty('--pdp-col-top')));
   }
 
   /* --------------------------------------------------------------- Lightbox */
@@ -1448,7 +1404,6 @@
       initWishlist(main, variantState);
       initInfoSticky(main);
       initGalleryTiles(main, gallery);
-      initColumnSticky(main);
     }
     initAccordions(document);
     initRecommendations();

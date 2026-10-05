@@ -5135,10 +5135,14 @@ html:has(.pdp) body {
    MAIN PRODUCT SECTION — columns scroll in turn (2026-09-30), 769px+
    Left, held in view: the main image tall, in the photos' own 4 : 5 shape, with the product's next four
    photos two per row under it (clickable, pdp.js initGalleryTiles swaps a tile with the main image).
-   No counter. Right: the details column scrolls (≈55 / 45 split) and ends with "Why we are better".
-   pdp.js initColumnSticky holds the shorter column in view while the taller one scrolls (a transform
-   clamped to .pdp-hero__grid), so it releases exactly where the main product section ends — never
-   over the sections below. Phones (≤768px) keep the single-column mobile layout untouched.
+   No counter. Right: the details column (≈55 / 45 split), ending with "Why we are better".
+   Scroll (2026-10-05): plain CSS position: sticky on both columns. The taller one (the photos on
+   most screens) scrolls with the page and sets the section's length; the shorter one reads down
+   naturally until its end is in view, holds there, and releases exactly where the section ends.
+   pdp.js initInfoSticky only sets each rest point (--pdp-col-top) on load and resize, never on
+   scroll, so nothing lags the scroll,
+   and the section is exactly as tall as its content (no added height, no gap before the next one).
+   Phones (≤768px) keep the single-column mobile layout untouched.
    ========================================================================== */
 @media (min-width: 769px) {
   body .pdp-hero .pdp-hero__grid,
@@ -5147,22 +5151,21 @@ html:has(.pdp) body {
     column-gap: clamp(32px, 4.4vw, 80px);
     align-items: start;
   }
-  /* Held in view by pdp.js (initColumnSticky, a clamped transform), not position: sticky */
+  /* Both columns are sticky; only the shorter one ever has room to stick, so the taller one simply
+     scrolls and sets the section's length. Each rests at --pdp-col-top: header + 12px when it fits
+     under the header, otherwise the negative offset at which its end is in view (pdp.js initInfoSticky). */
   body .pdp-hero .pdp-media,
   body .pdp-hero .pdp-info {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: var(--pdp-col-top, calc(var(--pdp-header-offset) + 12px));
     align-self: start;
   }
-  body .pdp-hero .pdp-media.is-held,
-  body .pdp-hero .pdp-info.is-held { will-change: transform; }
   /* Main image is tall (4 : 5, like the photos). When the column is taller than the
      screen, pdp.js lets it scroll until the photo row is in view and holds it there. */
   body .pdp-hero .pdp-media { display: block; height: auto; max-height: none; }
   body .pdp-hero .pdp-stage,
   body .pdp-hero .pdp-stage__inner { position: relative; height: auto; }
-  /* No inner scroll: pdp.js holds the details while the photos scroll, then the photos while the rest
-     of the details scrolls (initColumnSticky). */
+  /* No inner scroll and no nested scroll container: the page scrolls, the column only sticks. */
   body .pdp-hero .pdp-info {
     max-height: none;
     overflow: visible;

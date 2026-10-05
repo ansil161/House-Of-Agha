@@ -1909,26 +1909,17 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   border-top: 0; font-family: var(--hoa-sans);
 }
 /* Hyderabad touch: a Deccan jaali lattice (assets/hoa-jaali.svg, the same pattern as the
-   About page) frames the footer on all four sides, solid white on black (client 2026-10-05).
-   ::before draws the left and right bands, ::after the top and bottom bands between them.
-   Only where the side gutter is wide enough to hold it clear of the content (1024px+);
-   the extra bottom padding keeps the legal line clear of the bottom band. */
+   About page) runs along the top and bottom edges of the footer, solid white on black
+   (client 2026-10-05; the left/right side bands were removed the same day at their request).
+   Shown from 1024px; the extra bottom padding keeps the legal line clear of the bottom band. */
 @media (min-width: 1024px) {
   .hoa-footer { padding-bottom: 34px; }
-  .hoa-footer::before,
   .hoa-footer::after {
     content: "";
     position: absolute;
+    inset: 10px;
     background: var(--ft-ink);
     pointer-events: none;
-  }
-  .hoa-footer::before {
-    inset: 10px;
-    -webkit-mask: url("hoa-jaali.svg") repeat-y left top / 24px 24px, url("hoa-jaali.svg") repeat-y right top / 24px 24px;
-            mask: url("hoa-jaali.svg") repeat-y left top / 24px 24px, url("hoa-jaali.svg") repeat-y right top / 24px 24px;
-  }
-  .hoa-footer::after {
-    inset: 10px 34px;
     -webkit-mask: url("hoa-jaali.svg") repeat-x center top / 24px 24px, url("hoa-jaali.svg") repeat-x center bottom / 24px 24px;
             mask: url("hoa-jaali.svg") repeat-x center top / 24px 24px, url("hoa-jaali.svg") repeat-x center bottom / 24px 24px;
   }

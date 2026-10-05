@@ -13,11 +13,11 @@
           "settings": {
             "handle": "agha-blue",
             "caption": "Agha Blue",
-            "note": "Into the dusk",
-            "asset": "hoa-world-profile",
-            "w": 2000,
-            "h": 1125,
-            "alt": "A man in profile holding Agha Blue against a warm amber light",
+            "note": "In snow and ice",
+            "asset": "hoa-shop-agha-blue-ice",
+            "w": 1200,
+            "h": 1490,
+            "alt": "Agha Blue lying in fresh snow among blocks of ice",
             "focus": "50% 40%"
           }
         },
