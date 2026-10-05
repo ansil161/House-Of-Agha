@@ -1,23 +1,28 @@
 {%- comment -%}
   House of Agha · About 04 · Closing card
-  One dark rounded card: headline and shop button on one side, photo on the other.
-  Grows from slightly inset to full width as it scrolls in (assets/hoa-about.js).
+  One dark brown card with a faint gold jaali: headline and shop button on one side, the
+  photo in a pointed arch with a gold hairline on the other. Copy rises and the photo
+  fades in when it arrives (assets/hoa-about.js); no scaling.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-closing" data-hoa-ab-closing>
   <div class="hoa-wrap">
     <div class="hoa-ab-cta" data-hoa-ab-cta>
       <div class="hoa-ab-cta__copy">
-        <h2 class="hoa-ab-h2">{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
-        {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+        <span class="hoa-ab-cta__orn" aria-hidden="true">{%- render 'hoa-ab-mark' -%}</span>
+        <h2 class="hoa-ab-h2" data-hoa-ab-up>{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
+        {%- if s.text != blank -%}<p data-hoa-ab-up>{{ s.text }}</p>{%- endif -%}
         {%- if s.cta_label != blank -%}
           <a class="hoa-btn hoa-btn--light" href="{{ s.cta_url | default: routes.all_products_collection_url }}"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
         {%- endif -%}
       </div>
-      <figure class="hoa-ab-cta__media"{% if s.focus != blank %} style="--pos: {{ s.focus }}"{% endif %}>
-        <div class="hoa-ab-cta__img" data-hoa-ab-parallax>
-          {%- render 'hoa-img', name: s.asset, image: s.image, w: s.w, h: s.h, alt: s.alt, sizes: '(min-width: 900px) 50vw, 100vw' -%}
+      <figure class="hoa-ab-arch hoa-ab-cta__media"{% if s.focus != blank %} style="--pos: {{ s.focus }}"{% endif %}>
+        <div class="hoa-ab-arch__frame hoa-ab-cta__frame">
+          <div class="hoa-ab-cta__img" data-hoa-ab-img>
+            {%- render 'hoa-img', name: s.asset, image: s.image, w: s.w, h: s.h, alt: s.alt, sizes: '(min-width: 900px) 50vw, 100vw' -%}
+          </div>
         </div>
+        {%- render 'hoa-ab-arch' -%}
       </figure>
     </div>
   </div>

@@ -9,6 +9,12 @@
   labelled demo reviews from snippets/agha-pdp-mock-data.liquid. Real reviews always replace them.
   To connect a real review app later: add its app block to this section (it renders in place of the
   demo cards) and let it write reviews.rating / reviews.rating_count (+ custom.rating_breakdown).
+
+  WRITE A REVIEW (signed-in customers, with photos): a signed-in customer gets the "Write a review"
+  button and the form (snippets/agha-pdp-review-form.liquid; sending: theme settings → Reviews).
+  A guest gets a link to Shopify's login that returns here with ?review=1, which opens the form.
+  The "Review form link" setting, when filled, sends everyone to that external form instead.
+  The button sits in the summary, or above the list when the summary is hidden.
 {% endcomment %}
 {%- capture pdp_json -%}{%- render 'agha-pdp-data' -%}{%- endcapture -%}
 {%- assign pdp = pdp_json | parse_json -%}
@@ -43,7 +49,27 @@
     assign show_mock = true
     assign featured_count = pdp.reviews.items.size
   endif
+  assign write_label = section.settings.write_review_label | default: 'Write a review'
+  assign review_return = product.url | append: '?review=1'
+  assign customer_name = ''
+  if customer
+    assign last_initial = customer.last_name | slice: 0
+    assign customer_name = customer.first_name | default: 'you'
+    if last_initial != blank
+      assign customer_name = customer_name | append: ' ' | append: last_initial | append: '.'
+    endif
+  endif
 -%}
+{%- capture write_control -%}
+  {%- if section.settings.write_review_url != blank -%}
+    <a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="{{ section.settings.write_review_url }}">{{ write_label }}</a>
+  {%- elsif customer -%}
+    <button type="button" class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" data-pdp-review-open aria-expanded="false" aria-controls="pdp-review-form">{{ write_label }}</button>
+  {%- else -%}
+    <a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="{{ routes.account_login_url }}?return_url={{ review_return | url_encode }}" data-pdp-review-login>{{ write_label }}</a>
+    <p class="pdp-reviews__signin">Sign in to your account to review this fragrance and add photos.</p>
+  {%- endif -%}
+{%- endcapture -%}
 <section class="pdp pdp-section pdp-reviews" id="pdp-reviews" data-pdp-reviews>
   <div class="container">
     <header class="pdp-heading pdp-heading--left" data-pdp-reveal>
@@ -72,13 +98,15 @@
             {%- endfor -%}
           </ul>
         {%- endif -%}
-        {%- if section.settings.write_review_url != blank -%}
-          <a class="pdp-btn pdp-btn--ghost pdp-btn--block pdp-reviews__write" href="{{ section.settings.write_review_url }}">{{ section.settings.write_review_label }}</a>
-        {%- endif -%}
+        {{ write_control }}
       </div>
       {%- endunless -%}
 
       <div class="pdp-reviews__list">
+        {%- if section.settings.hide_summary -%}<div class="pdp-reviews__writebar">{{ write_control }}</div>{%- endif -%}
+        {%- if customer and section.settings.write_review_url == blank -%}
+          {%- render 'agha-pdp-review-form', product: product, customer_name: customer_name -%}
+        {%- endif -%}
         {%- if featured_count > 1 -%}
           <div class="pdp-reviews__tools">
             <label for="pdp-review-sort-{{ section.id }}">Sort by</label>

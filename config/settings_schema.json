@@ -65,4 +65,22 @@
       }
     ]
   }
+  ,{
+    "name": "Reviews",
+    "settings": [
+      { "type": "paragraph", "content": "Signed-in customers can write a review with photos on the product page (snippets/agha-pdp-review-form.liquid). Guests are asked to log in first." },
+      {
+        "type": "select",
+        "id": "reviews_mode",
+        "label": "Send reviews to",
+        "default": "proxy",
+        "options": [
+          { "value": "proxy", "label": "Reviews app (App proxy, with photos)" },
+          { "value": "contact", "label": "Shop email via contact form (text only)" }
+        ],
+        "info": "\"Reviews app\" posts the review and photos to the app proxy path below for moderation. \"Shop email\" works without an app but cannot carry photos, so the photo field is hidden."
+      },
+      { "type": "text", "id": "reviews_proxy_path", "label": "Reviews app proxy path", "default": "/apps/reviews", "info": "See the contract in snippets/agha-pdp-review-form.liquid." }
+    ]
+  }
 ]

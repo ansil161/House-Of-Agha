@@ -1,9 +1,9 @@
 {%- comment -%}
   House of Agha · About 01 · Our story (opening): centered showcase
-  A centered headline, intro and button, then one wide photograph (Hyderabad's old city
-  and the Charminar) that opens from a framed window to the full width of the screen as
-  the page scrolls (assets/hoa-about.js: [data-hoa-ab-reveal]). Without JS or with
-  reduced motion the photo sits framed inside the page gutters.
+  A centered headline, intro and button, then one archival photograph (Hyderabad's old
+  city and the Charminar) inside a wide Qutb Shahi pointed arch with an antique-gold
+  hairline. On arrival the photo fades in softly and the hairline draws itself
+  (assets/hoa-about.js); without JS or with reduced motion it is simply there.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-hero hoa-ab-story" id="story" data-hoa-ab-hero>
@@ -22,13 +22,17 @@
   </div>
 
   {%- if s.asset != blank or s.image != blank -%}
-    <figure class="hoa-ab-story__show" data-hoa-ab-reveal>
-      <div class="hoa-ab-story__window" data-hoa-ab-window>
-        <div class="hoa-ab-story__img" data-hoa-ab-window-img>
-          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2400, h: 1674, alt: s.alt, sizes: '100vw', loading: 'eager' -%}
+    <figure class="hoa-wrap hoa-ab-story__show">
+      <div class="hoa-ab-arch hoa-ab-story__frame" data-hoa-ab-intro-frame>
+        <div class="hoa-ab-arch__frame hoa-ab-story__window">
+          <div class="hoa-ab-story__img" data-hoa-ab-img>
+            {%- render 'hoa-img', name: s.asset, image: s.image, w: 2400, h: 1674, alt: s.alt, sizes: '(min-width: 1260px) 1180px, 92vw', loading: 'eager' -%}
+          </div>
         </div>
+        {%- render 'hoa-ab-arch' -%}
+        <span class="hoa-ab-apex">{%- render 'hoa-ab-mark' -%}</span>
       </div>
-      {%- if s.caption != blank -%}<figcaption class="hoa-wrap hoa-ab-story__caption">{{ s.caption }}</figcaption>{%- endif -%}
+      {%- if s.caption != blank -%}<figcaption class="hoa-ab-story__caption" data-hoa-ab-line>{{ s.caption }}</figcaption>{%- endif -%}
     </figure>
   {%- endif -%}
 </section>

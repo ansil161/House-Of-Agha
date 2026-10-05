@@ -5,7 +5,8 @@
   custom.rating_breakdown first; demo numbers only in mock mode (and tagged "Demo").
   Customer media are blocks (real customer photos / videos only). The review list itself stays in
   agha-pdp-reviews, placed below this section (tick "Hide summary" there so the score isn't repeated).
-  Write a review: opens the URL below (your review app's form). Empty = scrolls to the review list.
+  Write a review: opens the URL below (your review app's form). Empty = the theme's own form in the
+  review list below (opens it for a signed-in customer, sends a guest to log in; assets/pdp.js).
 {% endcomment %}
 {{ 'pdp-editorial.css' | asset_url | stylesheet_tag }}
 <script>
@@ -66,7 +67,7 @@
         {%- endif -%}
 
         <div class="pdx-rev__cta" data-pdx-in>
-          <a class="pdx-btn" href="{{ write_url }}">{{ section.settings.write_review_label }}</a>
+          <a class="pdx-btn" href="{{ write_url }}"{% if section.settings.write_review_url == blank %} data-pdp-review-trigger{% endif %}>{{ section.settings.write_review_label }}</a>
         </div>
       </div>
     {%- endif -%}

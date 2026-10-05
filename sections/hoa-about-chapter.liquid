@@ -1,29 +1,45 @@
 {%- comment -%}
   House of Agha · About 02 · The story, in the house's own words
-  Editorial layout: the large line runs across the top as a statement; below it the
-  Qutb Shahi miniature in a pointed arch with a gold hairline (left) balances the story
-  paragraphs and the four natural ingredients (right, centred on the portrait).
+  Editorial layout under a gold divider: the large line runs across the top as a statement;
+  below it the Qutb Shahi miniature in a pointed arch with an antique-gold hairline (left)
+  balances the story paragraphs and the four natural ingredients (right).
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-chapter">
+  {%- render 'hoa-ab-rule' -%}
   <div class="hoa-wrap hoa-ab-chapter__grid">
     <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede }}</p>
     {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
-      <figure class="hoa-ab-chapter__portrait" data-hoa-ab-up>
-        <div class="hoa-ab-chapter__arch">
-          <div class="hoa-ab-chapter__img">
-            {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 36vw, 90vw' -%}
+      <figure class="hoa-ab-chapter__portrait">
+        {%- comment -%} A manuscript plate: faint jaali ground, Golconda corners, the arch on it {%- endcomment -%}
+        <div class="hoa-ab-chapter__plate">
+          <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
+          <div class="hoa-ab-arch hoa-ab-chapter__arch">
+            <div class="hoa-ab-arch__frame hoa-ab-chapter__img" data-hoa-ab-img>
+              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 30vw, 80vw' -%}
+            </div>
+            {%- render 'hoa-ab-arch' -%}
           </div>
         </div>
+        {%- if s.portrait_caption != blank -%}<figcaption class="hoa-ab-caption">{{ s.portrait_caption }}</figcaption>{%- endif -%}
       </figure>
     {%- endif -%}
     <div class="hoa-ab-chapter__body">
       {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 }}</p>{%- endif -%}
       {%- if s.p2 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p2 }}</p>{%- endif -%}
+      {%- comment -%} The four ingredients as archival specimen labels: number, name, botanical name {%- endcomment -%}
       {%- assign notes = s.ingredients | split: ',' -%}
+      {%- assign latin = s.ingredients_latin | split: ',' -%}
       {%- if notes.size > 0 -%}
-        <ul class="hoa-ab-chips hoa-ab-chapter__notes" aria-label="{{ s.ingredients_label | escape }}" data-hoa-ab-up>
-          {%- for n in notes -%}<li class="hoa-ab-chip">{{ n | strip }}</li>{%- endfor -%}
+        <ul class="hoa-ab-specimens" aria-label="{{ s.ingredients_label | escape }}" data-hoa-ab-up>
+          {%- for n in notes -%}
+            {%- assign l = latin[forloop.index0] | strip -%}
+            <li class="hoa-ab-specimen">
+              <span class="hoa-ab-specimen__no" aria-hidden="true">No. {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="hoa-ab-specimen__name">{{ n | strip }}</span>
+              {%- if l != blank -%}<span class="hoa-ab-specimen__latin" lang="la">{{ l }}</span>{%- endif -%}
+            </li>
+          {%- endfor -%}
         </ul>
       {%- endif -%}
       {%- if s.p3 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p3 }}</p>{%- endif -%}
@@ -41,6 +57,7 @@
     { "type": "textarea", "id": "p1", "label": "Paragraph 1", "default": "Welcome to House of Agha. Rooted in the rich heritage of the Qutb Shahi dynasty, we celebrate the art of fine perfumery inspired by the grandeur of Golconda and Hyderabad's golden era. Drawing from the royal legacy of aromatic indulgence, we craft fragrances that embody the sophistication and luxury once cherished by the Persian-Turkic rulers." },
     { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutb Shahi era." },
     { "type": "text", "id": "ingredients", "label": "Ingredients (comma separated)", "default": "Oud, Rose, Vetiver, Ambergris" },
+    { "type": "text", "id": "ingredients_latin", "label": "Botanical names (comma separated, same order)", "default": "Aquilaria, Rosa damascena, Chrysopogon zizanioides, Ambra grisea" },
     { "type": "text", "id": "ingredients_label", "label": "Ingredients list name (screen readers)", "default": "Natural ingredients we blend" },
     { "type": "header", "content": "Portrait (under the large line)" },
     { "type": "image_picker", "id": "portrait_image", "label": "Image" },

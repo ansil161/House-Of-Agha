@@ -22,10 +22,7 @@
    scroll container and silently disables position: sticky (the stacking cards).
    clip stops sideways scroll without creating a scroll container. */
 body.hoa-about { overflow-x: clip; overflow-y: visible; }
-/* The About page uses exact white wherever the site uses its warm off-white (paper, ivory). */
-body.hoa-about { --hoa-paper: #FFFFFF; --hoa-ivory: #FFFFFF; background: #FFFFFF; }
-body.hoa-about .hoa-header.header { background: rgba(255, 255, 255, 0.9); }
-body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.95); }
+/* Page colours (ivory, beige, dark brown, antique gold): see the DECCAN block at the end. */
 .hoa-about main { overflow-x: clip; }
 
 /* ---------- Shared type & chips ---------- */
@@ -192,162 +189,6 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
     top: calc(var(--hoa-header-h) + 20px + var(--hoa-i, 0) * 14px);
     height: min(calc(100dvh - var(--hoa-header-h) - 64px), 600px);
   }
-}
-
-/* ==========================================================================
-   02b Composed in Hyderabad (sections/hoa-about-hyderabad.liquid)
-   One card: a sand panel with the Charminar line drawing, the city's name in Urdu
-   behind it and a Deccan jaali border top and bottom; the story and heritage notes beside.
-   Palette from the city: pearl ivory, sand, antique brass. Same surfaces and radii as the bento.
-   ========================================================================== */
-.hoa-ab-hyd { padding: 0 0 var(--ab-space); }
-.hoa-ab-hyd__card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 12px;
-  padding: 12px;
-  border-radius: var(--ab-r);
-  background: #FFFFFF;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 30px 60px -40px rgba(0, 0, 0, 0.25);
-}
-.hoa-ab-hyd__visual {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: clamp(440px, 44vw, 640px);
-  padding: 64px 24px 76px;
-  overflow: hidden;
-  border-radius: var(--ab-r-in);
-  background: #FFFFFF;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  color: #0B0B0B;
-  isolation: isolate;
-}
-/* Deccan jaali lattice along the top and bottom edges of the panel */
-.hoa-ab-hyd__visual::before,
-.hoa-ab-hyd__visual::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 30px;
-  background: #0B0B0B;
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 30px 30px;
-  mask: url("hoa-jaali.svg") repeat-x center / 30px 30px;
-  opacity: 0.12;
-  pointer-events: none;
-}
-.hoa-ab-hyd__visual::before { top: 12px; }
-.hoa-ab-hyd__visual::after { bottom: 12px; }
-.hoa-ab-hyd__art {
-  position: relative; z-index: 1; display: block; height: auto; overflow: visible;
-  /* also capped by the screen height (drawing is 1.425× as tall as wide), so the whole Charminar
-     always fits below the navbar while it builds (assets/hoa-about.js holds it there) */
-  width: min(74%, 400px, calc((100svh - var(--hoa-header-h, 76px) - 96px) / 1.425));
-}
-.hoa-ab-hyd__ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
-/* the arched openings: solid ink, like the voids of the real building */
-.hoa-ab-hyd__fill { fill: currentColor; stroke: none; }
-.hoa-ab-hyd__urdu {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  z-index: 0;
-  margin: -0.7em 0 0;
-  font-family: 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Segoe UI', serif;
-  font-size: clamp(4.5rem, 11vw, 10.5rem);
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: center;
-  white-space: nowrap;
-  color: rgba(0, 0, 0, 0.045);
-  pointer-events: none;
-  user-select: none;
-}
-.hoa-ab-hyd__caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 50px;
-  z-index: 1;
-  margin: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-align: center;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.62);
-}
-.hoa-ab-hyd__copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 22px;
-  padding: clamp(18px, 3.4vw, 52px);
-}
-.hoa-ab-hyd__copy { color: #0B0B0B; }
-.hoa-ab-hyd__copy .hoa-ab-muted { color: #8A8A8A; }
-.hoa-ab-hyd__copy .hoa-ab-chip { border-color: #0B0B0B; background: #0B0B0B; color: #FFFFFF; }
-.hoa-ab-hyd__text { margin: 0; max-width: 46ch; font-size: 1rem; line-height: 1.65; color: #3A3A3A; }
-.hoa-ab-hyd__notes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  width: 100%;
-  margin: 10px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.hoa-ab-hyd__note {
-  display: grid;
-  align-content: start;
-  gap: 6px;
-  padding: 18px 16px 20px;
-  border-radius: var(--ab-r-in);
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
-}
-.hoa-ab-hyd__note:hover { background: #0B0B0B; border-color: #0B0B0B; color: #FFFFFF; }
-.hoa-ab-hyd__note:hover .hoa-ab-hyd__icon,
-.hoa-ab-hyd__note:hover .hoa-ab-hyd__note-text { color: #FFFFFF; }
-.hoa-ab-hyd__note:hover .hoa-ab-hyd__kicker { color: rgba(255, 255, 255, 0.6); }
-.hoa-ab-hyd__icon { display: block; width: 30px; height: 30px; margin-bottom: 6px; color: #0B0B0B; transition: color .3s ease; }
-.hoa-ab-hyd__icon svg { display: block; width: 100%; height: 100%; }
-.hoa-ab-hyd__kicker { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B6B6B; transition: color .3s ease; }
-.hoa-ab-hyd__note b { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em; }
-.hoa-ab-hyd__note-text { font-size: 0.84rem; line-height: 1.5; color: #3A3A3A; transition: color .3s ease; }
-
-@media (max-width: 899px) {
-  .hoa-ab-hyd__card { grid-template-columns: 1fr; }
-  .hoa-ab-hyd__visual { min-height: 0; padding: 60px 20px 80px; }
-  .hoa-ab-hyd__art { width: min(76%, 320px, calc((100svh - var(--hoa-header-h, 64px) - 96px) / 1.425)); }
-}
-@media (max-width: 640px) {
-  .hoa-ab-hyd__notes { grid-template-columns: 1fr; }
-  .hoa-ab-hyd__note { grid-template-columns: 30px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
-  .hoa-ab-hyd__icon { grid-row: 1 / span 3; margin: 2px 0 0; }
-}
-
-/* Hyderabad touches on the other About sections
-   · the tall bento photo stands inside a Qutb Shahi (Charminar) pointed arch
-   · a faint brass jaali lattice runs across the dark closing card */
-.hoa-ab-tile--b {
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
-}
-.hoa-ab-cta { position: relative; isolation: isolate; }
-.hoa-ab-cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: url("hoa-jaali.svg") repeat 0 0 / 44px 44px;
-  opacity: 0.09;
-  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -627,36 +468,6 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 }
 
 /* ==========================================================================
-   04 Closing card
-   ========================================================================== */
-.hoa-ab-closing { padding: var(--ab-space) 0; }
-.hoa-ab-cta {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 12px;
-  min-height: clamp(420px, 40vw, 580px);
-  padding: 12px;
-  border-radius: var(--ab-r);
-  background: var(--hoa-ink);
-  color: var(--hoa-ivory);
-  transform-origin: 50% 100%;
-}
-.hoa-ab-cta__copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;
-  padding: clamp(18px, 3.4vw, 52px);
-}
-.hoa-ab-cta .hoa-ab-muted { color: rgba(255, 255, 255, 0.5); }
-.hoa-ab-cta__copy p { margin: 0; max-width: 36ch; font-size: 1rem; line-height: 1.6; color: rgba(255, 255, 255, 0.72); }
-.hoa-ab-cta__copy .hoa-btn { margin-top: auto; }
-.hoa-ab-cta__media { position: relative; margin: 0; overflow: hidden; border-radius: var(--ab-r-in); background: #0a1a45; }
-.hoa-ab-cta__img { position: absolute; inset: -8% 0; }
-.hoa-ab-cta__img img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); display: block; }
-
-/* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 899px) {
@@ -671,8 +482,6 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   .hoa-ab-tile--b { grid-column: 4 / 7; grid-row: auto / span 2; }
   .hoa-ab-tile--c { grid-column: 1 / 4; grid-row: auto; aspect-ratio: 4 / 5; }
   .hoa-ab-tile--wide { grid-column: 1 / 7; grid-row: auto; }
-  .hoa-ab-cta { grid-template-columns: 1fr; }
-  .hoa-ab-cta__media { aspect-ratio: 4 / 5; }
 }
 @media (max-width: 759px) {
   .hoa-ab-card { grid-template-columns: 1fr; }
@@ -693,96 +502,328 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   .hoa-ab-tile__img img, .hoa-ab-world__cta, .hoa-ab-world__cta-ic, .hoa-ab-worlds__pin, .hoa-ab-pearl::before, .hoa-ab-world__arch path { transition: none; }
 }
 
-/* ==========================================================================
-   Story-led About (2026-09-29): our story, story text, the name, philosophy.
-   Same system as above: one sans family, surfaces 24px, media 16px, pills.
-   ========================================================================== */
 
-/* ---------- 01 Our story: centered showcase
-   Centered headline block, then one wide photograph that opens from a framed window to
-   the full screen width while scrolling (hoa-about.js animates --win, 0 = framed, 1 = full). */
+/* ==========================================================================
+   ABOUT · DECCAN VISUAL LANGUAGE (2026-10-05)
+   Six sections: story, chapter, Hyderabad, the name, philosophy, closing.
+   Palette   white page, warm beige panels, dark brown type, antique-gold hairlines.
+   Motifs    the Qutb Shahi pointed arch (--ab-arch mask + a drawn gold outline,
+             snippets/hoa-ab-arch.liquid), a Deccan jaali only as faint bands,
+             gold dividers with a small arch mark (snippets/hoa-ab-rule.liquid).
+   Photos    archival and heritage photos share one light warm tone (--ab-tone);
+             product photos stay true.
+   Motion    assets/hoa-about.js: editorial reveals, SVG line drawing, soft image
+             fades; the Charminar alone is scroll-driven and pinned. No zooms or parallax.
+   ========================================================================== */
+body.hoa-about {
+  --ab-ivory: #FFFFFF;   /* page ground: white (client, 2026-10-05) */
+  --ab-ivory-2: #FBF9F6; /* soft ivory: cards */
+  --ab-paper: #F7F3EA;   /* ivory: plates */
+  --ab-sand: #E6DED3;    /* warm beige: panels */
+  --ab-sand-2: #DDD3C4;
+  --ab-ink: #3A352F;     /* deep brown: main text */
+  --ab-ink-2: #57514A;   /* warm dark grey: body */
+  --ab-mute: #8C7A63;    /* muted bronze: labels, captions */
+  --ab-gold: #C6A15B;    /* antique gold: hairlines, ornaments only */
+  --ab-gold-ink: #9C7C40;/* the same gold, deep enough to read as small text */
+  --ab-gold-2: #D6BC88;  /* gold on the dark closing card */
+  --ab-night: #2A2622;   /* closing card */
+  --ab-hair: rgba(198, 161, 91, 0.62);
+  --ab-hair-soft: rgba(198, 161, 91, 0.3);
+  --ab-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ab-tone: sepia(0.34) saturate(0.7) contrast(0.96);
+  /* Qutb Shahi pointed arch, stretched to its box (same path as the gold outline) */
+  --ab-arch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100Z'/%3E%3C/svg%3E");
+  /* the shared tokens, re-pointed for this page (the footer keeps its own) */
+  --hoa-paper: var(--ab-ivory);
+  --hoa-ivory: var(--ab-ivory-2);
+  --hoa-ink: var(--ab-ink);
+  --hoa-ink-2: var(--ab-ink-2);
+  --hoa-mute: var(--ab-mute);
+  --hoa-line: var(--ab-hair-soft);
+  background: var(--ab-ivory);
+  color: var(--ab-ink);
+}
+body.hoa-about .hoa-header.header { background: rgba(255, 255, 255, 0.9); }
+body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.96); }
+.hoa-about .hoa-ab-h2 { color: var(--ab-ink); }
+.hoa-about .hoa-ab-muted { color: var(--ab-mute); }
+.hoa-about ::selection { background: var(--ab-sand-2); color: var(--ab-ink); }
+
+/* Eyebrow: the label pill becomes small capitals between two gold hairlines */
+.hoa-about p.hoa-ab-chip {
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ab-gold);
+}
+.hoa-about p.hoa-ab-chip::before,
+.hoa-about p.hoa-ab-chip::after { content: ""; width: 28px; height: 1px; background: var(--ab-hair); }
+
+/* ---------- Arch frame + gold outline (shared) ---------- */
+.hoa-ab-arch { --al: 10px; position: relative; }
+.hoa-ab-arch__frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--ab-sand-2);
+  -webkit-mask: var(--ab-arch) top / 100% 100% no-repeat;
+          mask: var(--ab-arch) top / 100% 100% no-repeat;
+}
+.hoa-ab-archline {
+  position: absolute;
+  top: calc(var(--al) * -1);
+  left: calc(var(--al) * -1);
+  width: calc(100% + var(--al) * 2);
+  height: calc(100% + var(--al));
+  overflow: visible;
+  pointer-events: none;
+}
+.hoa-ab-archline path {
+  fill: none;
+  stroke: var(--ab-gold);
+  stroke-width: 1;
+  opacity: 0.85;
+}
+/* Dashes only once hoa-about.js has redrawn the path in real pixels (.is-fit): on the
+   stretched fallback, Chrome scales a pathLength dash wrongly and the line breaks up. */
+.hoa-ab-archline.is-fit path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+
+/* ---------- Divider ---------- */
+.hoa-ab-rule {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 clamp(48px, 6vw, 88px);
+  color: var(--ab-gold);
+}
+.hoa-ab-rule::before,
+.hoa-ab-rule::after { content: ""; flex: 1; height: 1px; background: var(--ab-hair); }
+.hoa-ab-rule svg { flex: none; width: 16px; height: 20px; }
+
+/* ==========================================================================
+   01 Our story
+   ========================================================================== */
 .hoa-ab-story { padding-bottom: var(--ab-space); }
 .hoa-ab-story__head {
   display: grid;
   justify-items: center;
-  gap: 24px;
-  padding-top: clamp(16px, 4dvh, 48px);
-  padding-bottom: clamp(40px, 7dvh, 88px);
+  gap: 22px;
+  padding-top: clamp(20px, 4dvh, 56px);
+  padding-bottom: clamp(44px, 6dvh, 80px);
   text-align: center;
 }
-.hoa-ab-story__title { font-size: clamp(2.8rem, min(6.4vw, 11dvh), 7.4rem); line-height: 0.98; }
-.hoa-ab-story__text { margin: 0; max-width: 44ch; font-size: 1.06rem; line-height: 1.6; color: var(--hoa-ink-2); }
+.hoa-ab-story__title { font-size: clamp(2.6rem, min(5.8vw, 10dvh), 6.4rem); line-height: 1; color: var(--ab-ink); }
+.hoa-ab-story__text { margin: 0; max-width: 46ch; font-size: 1.06rem; line-height: 1.65; color: var(--ab-ink-2); }
 .hoa-ab-story__head .hoa-btn { margin-top: 6px; }
+.hoa-ab-story__show { margin: 0 auto; }
+.hoa-ab-story__frame { --al: 12px; max-width: 1180px; margin: 12px auto 0; }
+.hoa-ab-story__window { aspect-ratio: 16 / 9.5; }
+.hoa-ab-story__img { position: absolute; inset: 0; }
+.hoa-ab-story__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; filter: var(--ab-tone); }
+.hoa-ab-story__caption { margin: 22px 0 0; font-size: 0.82rem; font-style: italic; line-height: 1.4; color: var(--ab-mute); text-align: center; }
 
-.hoa-ab-story__show { margin: 0; }
-.hoa-ab-story__window {
-  --win: 0;
-  --inset: calc((1 - var(--win)) * max(var(--hoa-gutter), 14vw, (100vw - var(--hoa-max)) / 2 + var(--hoa-gutter)));
-  position: relative;
-  height: clamp(420px, 82dvh, 900px);
-  overflow: hidden;
-  clip-path: inset(0 var(--inset) round calc((1 - var(--win)) * 24px));
-  background: #2a2622;
-}
-.hoa-ab-story__img { position: absolute; inset: -6% 0; }
-.hoa-ab-story__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
-.hoa-ab-story__caption { margin-top: 14px; font-size: 0.8rem; line-height: 1.4; color: var(--hoa-mute); text-align: center; }
-
-/* ---------- 02 Story text: one held line, then the long read */
+/* ==========================================================================
+   02 The story, in the house's own words
+   ========================================================================== */
 .hoa-ab-chapter { padding: 0 0 var(--ab-space); }
 .hoa-ab-chapter__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(32px, 7vw, 120px);
-  align-items: start;
-  padding-top: clamp(40px, 5vw, 72px);
-  border-top: 1px solid var(--hoa-line);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 1fr) minmax(0, 6fr);
+  grid-template-areas: "lede lede lede" "pic . body";
+  row-gap: clamp(44px, 5.4vw, 88px);
+  align-items: center;
 }
-.hoa-ab-chapter__aside { position: sticky; top: calc(var(--hoa-header-h) + 32px); }
 .hoa-ab-chapter__lede {
+  grid-area: lede;
   margin: 0;
-  max-width: 18ch;
+  max-width: 24ch;
   font-family: var(--hoa-sans);
-  font-size: clamp(1.9rem, 3.4vw, 3.3rem);
+  font-size: clamp(1.9rem, 3.5vw, 3.4rem);
   font-weight: 500;
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.04em;
-  color: var(--hoa-ink);
+  color: var(--ab-ink);
 }
-.hoa-ab-chapter__body { display: grid; gap: 26px; max-width: 58ch; }
-.hoa-ab-chapter__p { margin: 0; font-size: 1.04rem; line-height: 1.75; color: var(--hoa-ink-2); }
-.hoa-ab-chapter__p--first { font-size: clamp(1.1rem, 1.5vw, 1.26rem); line-height: 1.65; color: var(--hoa-ink); }
-.hoa-ab-chapter__notes .hoa-ab-chip { padding: 8px 16px; font-size: 0.86rem; color: var(--hoa-ink); background: #FFFFFF; }
+.hoa-ab-lede-word { display: inline; }
+.hoa-ab-chapter__portrait { grid-area: pic; width: 100%; max-width: 440px; margin: 12px 0 0 12px; }
+.hoa-ab-chapter__portrait .hoa-ab-arch { --al: 12px; }
+.hoa-ab-chapter__img img { display: block; width: 100%; height: auto; }
+.hoa-ab-chapter__body { grid-area: body; display: grid; gap: 26px; max-width: 56ch; }
+.hoa-ab-chapter__p { margin: 0; font-size: 1.04rem; line-height: 1.75; color: var(--ab-ink-2); }
+.hoa-ab-chapter__p--first { font-size: clamp(1.1rem, 1.45vw, 1.24rem); line-height: 1.65; color: var(--ab-ink); }
+.hoa-ab-chapter__notes li.hoa-ab-chip {
+  padding: 8px 18px;
+  border: 1px solid var(--ab-hair);
+  background: transparent;
+  font-size: 0.84rem;
+  color: var(--ab-ink);
+}
 
-/* ---------- 04 The name: a dictionary entry set in Hyderabad (stone card, jaali edge, photos, icons) */
-.hoa-ab-name { padding: 0 0 var(--ab-space); }
-.hoa-ab-name__card {
-  position: relative;
-  isolation: isolate;
+/* ==========================================================================
+   02b Composed in Hyderabad
+   A sand panel framed like a manuscript page (inset gold hairline, jaali bands)
+   holds the Charminar line drawing; the story and three notes sit on the page beside it.
+   ========================================================================== */
+.hoa-ab-hyd { padding: 0 0 var(--ab-space); }
+.hoa-ab-hyd__card {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(28px, 4.4vw, 72px);
-  padding: clamp(52px, 5.4vw, 80px) clamp(24px, 4.4vw, 64px) clamp(28px, 3.6vw, 52px);
-  border-radius: var(--ab-r);
-  background: var(--hoa-stone);
-  overflow: hidden;
+  align-items: center;
 }
-/* Deccan jaali lattice along the top edge, the same band as the Hyderabad card */
-.hoa-ab-name__card::before {
+.hoa-ab-hyd__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(460px, 44vw, 640px);
+  padding: 80px 28px 92px;
+  overflow: hidden;
+  border-radius: var(--ab-r);
+  background: var(--ab-sand);
+  box-shadow: inset 0 0 0 14px var(--ab-sand), inset 0 0 0 15px var(--ab-hair);
+  color: var(--ab-ink);
+  isolation: isolate;
+}
+.hoa-ab-hyd__visual::before,
+.hoa-ab-hyd__visual::after {
   content: "";
   position: absolute;
-  top: 14px;
-  left: 0;
-  right: 0;
-  height: 26px;
-  z-index: -1;
-  background: #8a6a37;
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 26px 26px;
-          mask: url("hoa-jaali.svg") repeat-x center / 26px 26px;
+  left: 15px;
+  right: 15px;
+  height: 22px;
+  background: var(--ab-gold);
+  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
+          mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
   opacity: 0.4;
   pointer-events: none;
 }
-.hoa-ab-name__side, .hoa-ab-name__main { display: grid; align-content: start; gap: clamp(24px, 2.6vw, 36px); min-width: 0; }
+.hoa-ab-hyd__visual::before { top: 26px; }
+.hoa-ab-hyd__visual::after { bottom: 26px; }
+.hoa-ab-hyd__art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: auto;
+  overflow: visible;
+  /* also capped by the screen height (the drawing is 1.425× as tall as wide), so the whole
+     Charminar fits below the navbar at the moment it starts drawing (hoa-about.js) */
+  width: min(72%, 380px, calc((100svh - var(--hoa-header-h, 76px) - 120px) / 1.425));
+}
+.hoa-ab-hyd__ln { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.hoa-ab-hyd__fill { fill: currentColor; stroke: none; opacity: 0.86; }
+.hoa-ab-hyd__urdu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 0;
+  margin: -0.7em 0 0;
+  font-family: 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Segoe UI', serif;
+  font-size: clamp(4.5rem, 11vw, 10.5rem);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  color: rgba(166, 135, 90, 0.12);
+  pointer-events: none;
+  user-select: none;
+}
+.hoa-ab-hyd__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ab-gold);
+}
+.hoa-ab-hyd__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 22px;
+  padding: clamp(8px, 1.6vw, 24px) 0;
+}
+.hoa-ab-hyd__text { margin: 0; max-width: 46ch; font-size: 1.02rem; line-height: 1.7; color: var(--ab-ink-2); }
+.hoa-ab-hyd__notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hoa-ab-hyd__note {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 20px 18px 22px;
+  border: 1px solid var(--ab-hair-soft);
+  border-radius: var(--ab-r-in);
+  background: var(--ab-ivory-2);
+  transition: border-color 0.5s var(--hoa-ease), background-color 0.5s var(--hoa-ease);
+}
+.hoa-ab-hyd__note:hover { border-color: var(--ab-hair); background: #FFFDF8; }
+.hoa-ab-hyd__icon { display: block; width: 30px; height: 30px; margin-bottom: 8px; color: var(--ab-gold); }
+.hoa-ab-hyd__icon svg { display: block; width: 100%; height: 100%; }
+.hoa-ab-hyd__kicker { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ab-gold); }
+.hoa-ab-hyd__note b { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ab-ink); }
+.hoa-ab-hyd__note-text { font-size: 0.86rem; line-height: 1.55; color: var(--ab-ink-2); }
+
+/* ==========================================================================
+   04 The name: a dictionary entry set in Hyderabad
+   ========================================================================== */
+.hoa-ab-name { padding: 0 0 var(--ab-space); }
+.hoa-ab-name__card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--ab-r);
+  background: var(--ab-ivory-2);
+  box-shadow: inset 0 0 0 1px var(--ab-hair-soft);
+}
+.hoa-ab-name__side {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-content: start;
+  gap: clamp(28px, 3vw, 44px);
+  min-width: 0;
+  padding: clamp(64px, 5.4vw, 84px) clamp(22px, 3vw, 44px) clamp(28px, 3vw, 44px);
+  border-radius: var(--ab-r-in);
+  background: var(--ab-sand);
+  color: var(--ab-ink);
+}
+.hoa-ab-name__side::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  height: 22px;
+  z-index: -1;
+  background: var(--ab-gold);
+  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
+          mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.hoa-ab-name__main { display: grid; align-content: start; gap: clamp(24px, 2.6vw, 36px); min-width: 0; padding: clamp(20px, 2.6vw, 40px) clamp(8px, 1.6vw, 24px) 8px; }
 .hoa-ab-name__word { display: grid; align-content: start; gap: 10px; }
 .hoa-ab-name__title {
   margin: 0;
@@ -792,199 +833,341 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   line-height: 0.9;
   letter-spacing: -0.06em;
   text-transform: none;
-  color: var(--hoa-ink);
+  color: var(--ab-ink);
 }
-.hoa-ab-name__script { margin: 0; font-family: "Noto Nastaliq Urdu", serif; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.7; color: #7a5f35; justify-self: start; }
-.hoa-ab-name__meaning { margin: 6px 0 0; max-width: 30ch; font-size: 1.06rem; line-height: 1.55; color: var(--hoa-ink-2); }
+.hoa-ab-name__script { margin: 0; justify-self: start; font-family: "Noto Nastaliq Urdu", serif; font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.7; color: var(--ab-gold); }
+.hoa-ab-name__meaning { margin: 6px 0 0; max-width: 30ch; font-size: 1.04rem; line-height: 1.6; color: var(--ab-ink-2); }
 
-/* Photos: media radius inside the card; the tomb stands in a Qutb Shahi pointed arch */
 .hoa-ab-name__arch, .hoa-ab-name__photo { margin: 0; }
-.hoa-ab-name__arch figcaption, .hoa-ab-name__photo figcaption { margin-top: 10px; font-size: 0.78rem; line-height: 1.4; color: var(--hoa-ink-2); }
-.hoa-ab-name__arch-img, .hoa-ab-name__photo-img { position: relative; overflow: hidden; background: #cfc6b8; }
-.hoa-ab-name__arch-img {
-  aspect-ratio: 4 / 5;
-  border-radius: 0 0 var(--ab-r-in) var(--ab-r-in);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0c24 4 50 10 50 22v78z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+.hoa-ab-name__arch { padding: 10px 10px 0; }
+.hoa-ab-name__arch figcaption,
+.hoa-ab-name__photo figcaption { margin-top: 14px; font-size: 0.8rem; font-style: italic; line-height: 1.45; color: var(--ab-mute); }
+.hoa-ab-name__arch-img { aspect-ratio: 4 / 5; }
+/* Second photo under the arch (the arcade). Side by side, the left panel is as tall as the
+   photo column, so this one grows to fill the rest of it instead of leaving empty sand. */
+.hoa-ab-name__extra { margin: 0; }
+.hoa-ab-name__extra figcaption { margin-top: 14px; font-size: 0.8rem; font-style: italic; line-height: 1.45; color: var(--ab-mute); }
+.hoa-ab-name__extra-img { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--ab-r-in); background: var(--ab-sand-2); }
+.hoa-ab-name__extra .hoa-ab-name__img img { object-position: 50% 62%; }
+@media (min-width: 900px) {
+  .hoa-ab-name__side { display: flex; flex-direction: column; }
+  .hoa-ab-name__extra { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+  .hoa-ab-name__extra-img { flex: 1 1 auto; aspect-ratio: auto; min-height: 220px; }
 }
-/* the wide photo is shown whole */
-.hoa-ab-name__photo-img { aspect-ratio: 16 / 10; border-radius: var(--ab-r-in); }
-/* full column width; a tall photo gets a 3:4 frame (only a thin strip trimmed, mostly from the bottom, so the minaret tops stay) */
-.hoa-ab-name__photo .hoa-ab-name__photo-img { aspect-ratio: var(--ratio, 16 / 10); }
+@media (min-width: 640px) and (max-width: 899px) {
+  .hoa-ab-name__extra { grid-column: 1 / -1; }
+}
+.hoa-ab-name__photo-img { position: relative; overflow: hidden; aspect-ratio: var(--ratio, 16 / 10); border-radius: var(--ab-r-in); background: var(--ab-sand-2); }
 .hoa-ab-name__photo--tall .hoa-ab-name__photo-img { aspect-ratio: 3 / 4; }
-.hoa-ab-name__photo .hoa-ab-name__img { inset: 0; }
-.hoa-ab-name__photo--tall .hoa-ab-name__img img { object-position: 50% 30%; }
-.hoa-ab-name__img { position: absolute; inset: -5% 0; }
-.hoa-ab-name__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.hoa-ab-name__arch .hoa-ab-name__img img { object-position: 50% 30%; }
+.hoa-ab-name__img { position: absolute; inset: 0; }
+.hoa-ab-name__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: var(--ab-tone); }
 
-/* Usages with Hyderabad line icons */
 .hoa-ab-name__uses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
-.hoa-ab-name__use { display: grid; align-content: start; gap: 8px; padding: 18px 20px 22px; border-radius: var(--ab-r-in); background: rgba(255, 255, 255, 0.62); }
-.hoa-ab-name__icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 6px; border-radius: 50%; background: var(--hoa-stone); color: #6f552b; }
-.hoa-ab-name__icon svg { width: 28px; height: 28px; }
-.hoa-ab-name__use dt { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; color: var(--hoa-ink); }
-.hoa-ab-name__use dd { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--hoa-ink-2); }
-.hoa-ab-name__foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; padding-top: 18px; border-top: 1px solid rgba(20, 18, 16, 0.12); }
-.hoa-ab-name__foot p { margin: 0; font-size: 0.8rem; line-height: 1.5; color: var(--hoa-ink-2); }
-
-/* The name, black and white (same palette as the Hyderabad card): a white card, the word
-   and the tomb on a black panel, photos in monochrome, usage boxes that invert on hover. */
-.hoa-ab-name__card {
-  gap: 12px;
-  padding: 12px;
-  background: #FFFFFF;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 30px 60px -40px rgba(0, 0, 0, 0.25);
-}
-.hoa-ab-name__card::before { display: none; }
-.hoa-ab-name__side {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: clamp(56px, 5vw, 76px) clamp(22px, 3vw, 44px) clamp(24px, 3vw, 40px);
-  border-radius: var(--ab-r-in);
-  background: radial-gradient(120% 90% at 50% 30%, #1E1E1E 0%, #0B0B0B 70%);
-  color: #FFFFFF;
-}
-/* white Deccan jaali along the top of the black panel */
-.hoa-ab-name__side::before {
-  content: "";
-  position: absolute;
-  top: 14px;
-  left: 0;
-  right: 0;
-  height: 26px;
-  z-index: -1;
-  background: #FFFFFF;
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 26px 26px;
-          mask: url("hoa-jaali.svg") repeat-x center / 26px 26px;
-  opacity: 0.35;
-  pointer-events: none;
-}
-.hoa-ab-name__main { padding: clamp(20px, 2.6vw, 40px) clamp(8px, 1.6vw, 24px) 8px; }
-.hoa-ab-name__title { color: #FFFFFF; }
-.hoa-ab-name__script { color: rgba(255, 255, 255, 0.82); }
-.hoa-ab-name__meaning { color: rgba(255, 255, 255, 0.72); }
-.hoa-ab-name__arch figcaption { color: rgba(255, 255, 255, 0.55); }
-.hoa-ab-name__photo figcaption { color: #6B6B6B; }
-.hoa-ab-name__arch-img { background: #2A2A2A; }
-.hoa-ab-name__photo-img { background: transparent; }
 .hoa-ab-name__use {
-  padding: 18px 16px 20px;
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 20px 18px 22px;
+  border: 1px solid var(--ab-hair-soft);
+  border-radius: var(--ab-r-in);
+  background: transparent;
+  transition: border-color 0.5s var(--hoa-ease), background-color 0.5s var(--hoa-ease);
 }
-.hoa-ab-name__icon { width: 30px; height: 30px; margin-bottom: 6px; border-radius: 0; background: none; color: #0B0B0B; transition: color .3s ease; }
+.hoa-ab-name__use:hover { border-color: var(--ab-hair); background: #FFFDF8; }
+.hoa-ab-name__icon { display: block; width: 30px; height: 30px; margin-bottom: 6px; color: var(--ab-gold); }
 .hoa-ab-name__icon svg { width: 30px; height: 30px; }
-.hoa-ab-name__use dt { color: inherit; }
-.hoa-ab-name__use dd { color: #3A3A3A; transition: color .3s ease; }
-.hoa-ab-name__use:hover { background: #0B0B0B; border-color: #0B0B0B; color: #FFFFFF; }
-.hoa-ab-name__use:hover .hoa-ab-name__icon, .hoa-ab-name__use:hover dd { color: #FFFFFF; }
-.hoa-ab-name__foot { border-top-color: rgba(0, 0, 0, 0.1); padding: 16px clamp(8px, 1.6vw, 24px) 8px; }
-.hoa-ab-name__foot p { color: #6B6B6B; }
+.hoa-ab-name__use dt { font-size: 0.96rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ab-ink); }
+.hoa-ab-name__use dd { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--ab-ink-2); }
+.hoa-ab-name__foot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 24px;
+  padding: 16px clamp(8px, 1.6vw, 24px) 8px;
+  border-top: 1px solid var(--ab-hair-soft);
+}
+.hoa-ab-name__foot p { margin: 0; font-size: 0.8rem; line-height: 1.5; color: var(--ab-mute); }
 
-/* ---------- 05 Philosophy: six photo tiles, rows of 6/3/3 and 3/3/6 */
+/* ==========================================================================
+   05 Philosophy: an arcade of six arches
+   ========================================================================== */
 .hoa-ab-philo { padding: 0 0 var(--ab-space); }
-.hoa-ab-philo__head { max-width: 16ch; margin-bottom: clamp(28px, 3.6vw, 52px); }
-.hoa-ab-philo__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(10px, 1.1vw, 16px); }
-.hoa-ab-pillar {
+.hoa-ab-philo__head { max-width: 18ch; margin-bottom: clamp(40px, 4.6vw, 68px); }
+.hoa-ab-philo__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(48px, 4.6vw, 72px) clamp(16px, 1.8vw, 28px);
+}
+.hoa-ab-pillar { grid-column: span 3; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: span 6; }
+.hoa-ab-pillar__media { --al: 8px; margin: 8px 8px 0; }
+.hoa-ab-pillar__frame { height: clamp(300px, 27vw, 420px); }
+.hoa-ab-pillar__img { position: absolute; inset: 0; }
+.hoa-ab-pillar__img img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.6s var(--hoa-ease); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hoa-ab-pillar:hover .hoa-ab-pillar__img img { transform: scale(1.03); }
+}
+.hoa-ab-pillar__body { display: grid; gap: 14px; padding: 0 8px; }
+.hoa-ab-pillar__word {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0;
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--ab-ink);
+}
+.hoa-ab-pillar__num { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; color: var(--ab-gold); }
+.hoa-ab-pillar__copy { display: grid; gap: 10px; max-width: 42ch; padding-top: 14px; border-top: 1px solid var(--ab-hair-soft); }
+.hoa-ab-pillar__title { margin: 0; font-family: var(--hoa-sans); font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; text-transform: none; color: var(--ab-ink); }
+.hoa-ab-pillar__lines { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.hoa-ab-pillar__lines li { font-size: 0.92rem; line-height: 1.55; color: var(--ab-ink-2); }
+
+/* ==========================================================================
+   06 Closing card
+   ========================================================================== */
+.hoa-ab-closing { padding: 0 0 var(--ab-space); }
+.hoa-ab-cta {
   position: relative;
   isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  min-height: clamp(460px, 42vw, 620px);
+  padding: 12px;
   overflow: hidden;
-  grid-column: span 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 24px;
-  min-height: clamp(380px, 34vw, 500px);
-  padding: clamp(22px, 2.2vw, 32px);
   border-radius: var(--ab-r);
-  background: var(--hoa-night);
-  color: var(--hoa-ivory);
+  background: var(--ab-ink);
+  color: var(--ab-ivory);
 }
-.hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: span 6; }
-.hoa-ab-pillar__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
-.hoa-ab-pillar__img { position: absolute; inset: -6% 0; }
-.hoa-ab-pillar__img img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.001);
-  transition: transform 1.2s var(--hoa-ease);
-}
-/* Scrim: light at the top for the key word, deep at the foot for the copy */
-.hoa-ab-pillar::after {
+/* faint gold jaali across the card */
+.hoa-ab-cta::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(12, 10, 8, 0.42) 0%, rgba(12, 10, 8, 0) 30%),
-    linear-gradient(0deg, rgba(12, 10, 8, 0.9) 0%, rgba(12, 10, 8, 0.62) 34%, rgba(12, 10, 8, 0) 66%);
+  background: url("hoa-jaali.svg") repeat 0 0 / 44px 44px;
+  opacity: 0.08;
   pointer-events: none;
 }
-.hoa-ab-pillar__word {
-  margin: 0;
-  font-size: clamp(2.2rem, 3.4vw, 3.4rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  color: #FFFFFF;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+.hoa-ab-cta__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  padding: clamp(24px, 3.6vw, 56px);
 }
-.hoa-ab-pillar__copy { display: grid; gap: 12px; max-width: 40ch; }
-.hoa-ab-pillar__title { margin: 0; font-family: var(--hoa-sans); font-size: 1.15rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; text-transform: none; color: #FFFFFF; }
-.hoa-ab-pillar__lines { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; }
-.hoa-ab-pillar__lines li { font-size: 0.9rem; line-height: 1.5; color: rgba(255, 255, 255, 0.84); }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .hoa-ab-pillar:hover .hoa-ab-pillar__img img { transform: scale(1.05); }
-}
+.hoa-ab-cta .hoa-ab-h2 { color: var(--ab-ivory); }
+.hoa-ab-cta .hoa-ab-muted { color: var(--ab-gold-2); }
+.hoa-ab-cta__copy p { margin: 0; max-width: 36ch; font-size: 1rem; line-height: 1.6; color: rgba(247, 242, 233, 0.72); }
+.hoa-ab-cta__copy .hoa-btn { margin-top: auto; }
+.hoa-ab-cta__media { --al: 10px; margin: 22px 22px 0; }
+.hoa-ab-cta__media .hoa-ab-archline path { stroke: var(--ab-gold-2); opacity: 0.7; }
+.hoa-ab-cta__frame { height: 100%; background: #0a1a45; }
+.hoa-ab-cta__img { position: absolute; inset: 0; }
+.hoa-ab-cta__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); }
 
-@media (max-width: 1023px) {
-  .hoa-ab-pillar, .hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: span 6; }
-}
-@media (max-width: 899px) {
-  .hoa-ab-chapter__grid { grid-template-columns: 1fr; }
-  .hoa-ab-chapter__aside { position: static; }
-  .hoa-ab-chapter__lede { max-width: 22ch; }
-  .hoa-ab-name__card { grid-template-columns: 1fr; }
-  .hoa-ab-name__side { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); align-items: end; }
-}
-@media (max-width: 640px) {
-  .hoa-ab-philo__grid { grid-template-columns: 1fr; }
-  .hoa-ab-name__uses { grid-template-columns: 1fr; }
-  .hoa-ab-name__side { grid-template-columns: 1fr; }
-  .hoa-ab-name__arch-img { aspect-ratio: 4 / 4.2; }
-  .hoa-ab-name__foot { flex-direction: column; }
-  .hoa-ab-story__window { height: 64dvh; }
-  .hoa-ab-pillar, .hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: auto; min-height: 400px; }
-}
-
-/* ---------- Motion hooks (assets/hoa-about.js sets every initial state; these are the resting looks) */
-/* Story line: each word is a span so it can light up while the paragraphs are read */
-.hoa-ab-lede-word { display: inline; }
-
-/* Text motion hooks: words and letters rise out of masks (hoa-about.js splits them) */
+/* ==========================================================================
+   Text motion hooks (assets/hoa-about.js splits words and letters)
+   ========================================================================== */
 .hoa-ab-wmask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
 .hoa-ab-w, .hoa-ab-ch { display: inline-block; will-change: transform; }
 .hoa-ab-name__title .hoa-ab-wmask { padding-top: 0.04em; padding-bottom: 0.3em; margin-bottom: -0.3em; }
 
-/* Story text, editorial layout: statement across the top, then portrait | paragraphs */
-.hoa-ab-chapter .hoa-ab-chapter__grid {
-  grid-template-columns: minmax(0, 5fr) minmax(0, 1fr) minmax(0, 6fr);
-  grid-template-areas: "lede lede lede" "pic . body";
-  column-gap: 0;
-  row-gap: clamp(40px, 5vw, 80px);
-  align-items: center;
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .hoa-ab-pillar, .hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: span 6; }
 }
-.hoa-ab-chapter .hoa-ab-chapter__lede { grid-area: lede; max-width: 24ch; font-size: clamp(2rem, 3.8vw, 3.7rem); }
-.hoa-ab-chapter__portrait { grid-area: pic; width: 100%; max-width: 480px; margin: 0; }
-.hoa-ab-chapter .hoa-ab-chapter__body { grid-area: body; max-width: 56ch; }
-.hoa-ab-chapter__arch { position: relative; }
-.hoa-ab-chapter__img img { display: block; width: 100%; height: auto; }
 @media (max-width: 899px) {
-  .hoa-ab-chapter .hoa-ab-chapter__grid { grid-template-columns: 1fr; grid-template-areas: "lede" "pic" "body"; row-gap: 32px; }
+  .hoa-ab-chapter__grid { grid-template-columns: 1fr; grid-template-areas: "lede" "pic" "body"; row-gap: 36px; }
   .hoa-ab-chapter__portrait { max-width: 340px; }
+  .hoa-ab-hyd__card { grid-template-columns: 1fr; }
+  .hoa-ab-hyd__visual { min-height: 0; padding: 76px 20px 92px; }
+  .hoa-ab-hyd__art { width: min(76%, 320px, calc((100svh - var(--hoa-header-h, 64px) - 120px) / 1.425)); }
+  .hoa-ab-name__card { grid-template-columns: 1fr; }
+  .hoa-ab-name__side { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); align-items: end; }
+  .hoa-ab-cta { grid-template-columns: 1fr; }
+  .hoa-ab-cta__media { margin: 18px 18px 6px; }
+  .hoa-ab-cta__frame { height: auto; aspect-ratio: 4 / 5; }
 }
+@media (max-width: 640px) {
+  .hoa-ab-story__window { aspect-ratio: 4 / 3.4; }
+  .hoa-ab-story__frame { --al: 8px; margin-top: 8px; }
+  .hoa-ab-hyd__notes { grid-template-columns: 1fr; }
+  .hoa-ab-hyd__note { grid-template-columns: 30px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
+  .hoa-ab-hyd__icon { grid-row: 1 / span 3; margin: 2px 0 0; }
+  .hoa-ab-name__uses { grid-template-columns: 1fr; }
+  .hoa-ab-name__side { grid-template-columns: 1fr; }
+  .hoa-ab-name__arch-img { aspect-ratio: 4 / 4.4; }
+  .hoa-ab-name__foot { flex-direction: column; }
+  .hoa-ab-philo__grid { grid-template-columns: 1fr; }
+  .hoa-ab-pillar, .hoa-ab-pillar--1, .hoa-ab-pillar--6 { grid-column: auto; }
+  .hoa-ab-pillar__frame { height: clamp(300px, 92vw, 420px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-ab-pillar__img img, .hoa-ab-hyd__note, .hoa-ab-name__use { transition: none; }
+}
+
+/* ==========================================================================
+   ABOUT · DECCAN DETAILS (2026-10-05, second pass)
+   Serif headlines; gold kept to lines and ornaments (small gold text uses --ab-gold-ink);
+   Golconda geometry: an eight-point mark (snippets/hoa-ab-mark.liquid) and stepped
+   bastion corners (.hoa-ab-corners); one Deccan floral fleuron (snippets/hoa-ab-floral.liquid);
+   a jaali plate behind the Qutb Shahi portrait; the ingredients as specimen labels.
+   ========================================================================== */
+
+/* ---------- Type: editorial serif for headlines, the sans stays for reading ---------- */
+.hoa-about .hoa-ab-h2,
+.hoa-about .hoa-ab-story__title,
+.hoa-about .hoa-ab-chapter__lede,
+.hoa-about .hoa-ab-name__title,
+.hoa-about .hoa-ab-pillar__word {
+  font-family: var(--ab-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-weight: 500;
+}
+.hoa-about .hoa-ab-h2 { letter-spacing: -0.022em; line-height: 1.04; }
+.hoa-about .hoa-ab-story__title { letter-spacing: -0.025em; line-height: 1.02; }
+.hoa-about .hoa-ab-chapter__lede { font-weight: 400; letter-spacing: -0.015em; line-height: 1.2; }
+.hoa-about .hoa-ab-name__title { letter-spacing: -0.03em; line-height: 0.95; }
+.hoa-about .hoa-ab-pillar__word { letter-spacing: -0.01em; }
+/* the muted half of a headline stays upright; colour carries the emphasis */
+.hoa-about .hoa-ab-h2 .hoa-ab-muted,
+.hoa-about .hoa-ab-story__title .hoa-ab-muted { color: var(--ab-mute); }
+
+/* small gold text, readable on white */
+.hoa-about p.hoa-ab-chip,
+.hoa-about .hoa-ab-hyd__kicker,
+.hoa-about .hoa-ab-hyd__caption,
+.hoa-about .hoa-ab-pillar__num,
+.hoa-about .hoa-ab-name__script { color: var(--ab-gold-ink); }
+.hoa-about .hoa-ab-hyd__urdu { color: rgba(198, 161, 91, 0.16); }
+.hoa-about .hoa-ab-hyd__icon,
+.hoa-about .hoa-ab-name__icon { color: var(--ab-gold); }
+
+/* captions: small, upright, bronze */
+.hoa-about .hoa-ab-story__caption,
+.hoa-about .hoa-ab-name__arch figcaption,
+.hoa-about .hoa-ab-name__photo figcaption,
+.hoa-about .hoa-ab-name__extra figcaption,
+.hoa-ab-caption {
+  font-style: normal;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--ab-mute);
+}
+.hoa-ab-caption { margin: 16px 0 0; line-height: 1.45; text-align: center; }
+
+/* cards and boxes: hairlines and near-square corners, not app-style rounding */
+body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
+
+/* ---------- Golconda mark ---------- */
+.hoa-ab-mark { display: block; width: 18px; height: 18px; color: var(--ab-gold); }
+/* above the opening arch's point */
+.hoa-ab-apex { position: absolute; left: 50%; top: calc(var(--al) * -1 - 30px); transform: translateX(-50%); line-height: 0; }
+.hoa-ab-story__frame { margin-top: 42px; }
+
+/* ---------- Stepped bastion corners (fort geometry) ---------- */
+.hoa-ab-corners {
+  --cs: 22px;
+  position: absolute;
+  inset: var(--ci, 10px);
+  z-index: 2;
+  pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C6A15B' stroke-width='1.2'%3E%3Cpath d='M.6 23.4V9h4.2V4.8H9V.6h14.4'/%3E%3C/svg%3E") left top / var(--cs) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C6A15B' stroke-width='1.2'%3E%3Cpath transform='matrix(-1 0 0 1 24 0)' d='M.6 23.4V9h4.2V4.8H9V.6h14.4'/%3E%3C/svg%3E") right top / var(--cs) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C6A15B' stroke-width='1.2'%3E%3Cpath transform='matrix(1 0 0 -1 0 24)' d='M.6 23.4V9h4.2V4.8H9V.6h14.4'/%3E%3C/svg%3E") left bottom / var(--cs) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C6A15B' stroke-width='1.2'%3E%3Cpath transform='matrix(-1 0 0 -1 24 24)' d='M.6 23.4V9h4.2V4.8H9V.6h14.4'/%3E%3C/svg%3E") right bottom / var(--cs) no-repeat;
+}
+/* on photos the corners sit inside the edge, a little lighter so they read on the image */
+.hoa-ab-name__photo-img .hoa-ab-corners,
+.hoa-ab-name__extra-img .hoa-ab-corners { --ci: 12px; filter: brightness(1.35); opacity: 0.9; }
+/* on the Charminar panel they sit on the inset hairline's corners */
+.hoa-ab-hyd__visual .hoa-ab-corners { --ci: 15px; --cs: 26px; z-index: 1; }
+
+/* ---------- Floral fleuron (the name entry) ---------- */
+.hoa-ab-floral { display: block; width: 120px; height: 24px; margin: -4px 0 2px; color: var(--ab-gold); overflow: visible; }
+
+/* ---------- 02 Portrait on a manuscript plate ---------- */
+.hoa-ab-chapter__portrait { margin: 0; }
+.hoa-ab-chapter__plate {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(40px, 4vw, 56px) clamp(30px, 3.4vw, 48px) clamp(30px, 3.4vw, 44px);
+  background: var(--ab-paper);
+  box-shadow: inset 0 0 0 1px var(--ab-hair-soft);
+}
+/* faint jaali ground, fading out toward the middle so the portrait stays clear */
+.hoa-ab-chapter__plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ab-gold);
+  -webkit-mask: url("hoa-jaali.svg") repeat center / 26px 26px, radial-gradient(closest-side, transparent 55%, #000 100%);
+          mask: url("hoa-jaali.svg") repeat center / 26px 26px, radial-gradient(closest-side, transparent 55%, #000 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+  opacity: 0.28;
+}
+.hoa-ab-chapter__plate .hoa-ab-corners { --ci: 8px; --cs: 20px; }
+.hoa-ab-chapter__portrait .hoa-ab-arch { --al: 9px; }
+
+/* ---------- 02 Ingredients as specimen labels ---------- */
+.hoa-ab-specimens {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 2px 0;
+  padding: 0;
+  list-style: none;
+}
+.hoa-ab-specimen {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px 15px;
+  background: var(--ab-ivory-2);
+  border: 1px solid var(--ab-hair);
+  /* double rule, like a printed museum label */
+  box-shadow: inset 0 0 0 3px var(--ab-ivory-2), inset 0 0 0 4px var(--ab-hair-soft);
+}
+.hoa-ab-specimen__no { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ab-gold-ink); }
+.hoa-ab-specimen__name { font-family: var(--ab-serif); font-weight: 500; font-size: 1.32rem; line-height: 1.15; color: var(--ab-ink); }
+.hoa-ab-specimen__latin { font-size: 0.78rem; line-height: 1.4; letter-spacing: 0.01em; color: var(--ab-mute); }
+
+/* ---------- 06 Closing: the last chapter ---------- */
+.hoa-about .hoa-ab-cta { background: var(--ab-night); }
+.hoa-about .hoa-ab-cta::before { opacity: 0.05; }
+.hoa-ab-cta__orn { display: flex; align-items: center; gap: 14px; width: min(200px, 60%); color: var(--ab-gold-2); }
+.hoa-ab-cta__orn::after { content: ""; flex: 1; height: 1px; background: rgba(214, 188, 136, 0.45); }
+.hoa-ab-cta__orn .hoa-ab-mark { color: var(--ab-gold-2); }
+.hoa-about .hoa-ab-cta .hoa-ab-muted { color: var(--ab-gold-2); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 899px) {
+  .hoa-ab-chapter__portrait { max-width: 380px; width: 100%; margin: 0 auto; }
+}
+@media (max-width: 640px) {
+  .hoa-ab-apex { top: calc(var(--al) * -1 - 24px); }
+  .hoa-ab-story__frame { margin-top: 32px; }
+  .hoa-ab-mark { width: 15px; height: 15px; }
+  .hoa-ab-corners { --cs: 16px; }
+  .hoa-ab-hyd__visual .hoa-ab-corners { --cs: 18px; }
+  .hoa-ab-chapter__plate { padding: 32px 24px 24px; }
+  .hoa-ab-chapter__plate::before { opacity: 0.2; }
+  .hoa-ab-specimen { padding: 12px 12px 13px; }
+  .hoa-ab-specimen__name { font-size: 1.12rem; }
+}
+.hoa-about .hoa-ab-pillar__num { font-family: var(--hoa-sans); }
+
+/* Jaali bands on the beige panels: clearly visible (user, 2026-10-05: the pattern was too faint) */
+.hoa-about .hoa-ab-name__side::before,
+.hoa-about .hoa-ab-hyd__visual::before,
+.hoa-about .hoa-ab-hyd__visual::after { background: var(--ab-gold-ink); opacity: 0.75; }

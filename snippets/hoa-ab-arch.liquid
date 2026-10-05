@@ -1,0 +1,8 @@
+{%- comment -%}
+  About · antique-gold hairline that traces a Qutb Shahi pointed arch around an arched photo.
+  Place it inside a .hoa-ab-arch wrapper, next to the .hoa-ab-arch__frame it outlines; the
+  wrapper's --al sets the gap between photo and line. The path is the same shape as the
+  --ab-arch mask in assets/hoa-about.css, open at the foot. pathLength="1" lets
+  assets/hoa-about.js draw it in (stroke-dashoffset 1 → 0); it is fully drawn without JS.
+{%- endcomment -%}
+<svg class="hoa-ab-archline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100" pathLength="1" vector-effect="non-scaling-stroke" data-hoa-ab-archline/></svg>

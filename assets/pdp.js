@@ -1042,15 +1042,37 @@
   }
 
   /* ------------------------------------------------------------ Write a review */
-  // The form is only in the page for a signed-in customer (Liquid checks Shopify's `customer`);
-  // guests get a login link that returns here with ?review=1, which opens the form.
+  // Only a signed-in customer gets the form (Liquid checks Shopify's `customer`; the preview fakes it).
+  // A guest gets a login link that returns here with ?review=1, which opens the form. Any other
+  // "Write a review" button on the page ([data-pdp-review-trigger], e.g. the summary dashboard)
+  // opens the form for a customer and follows the login link for a guest.
+  //
+  // Photos: up to 4, JPG/PNG/WebP up to 10 MB each. They are decoded and re-encoded here as JPEG
+  // (longest side 1600 px), which also drops camera metadata such as GPS before upload.
+  //
+  // Sending (data-mode on the form box, from theme settings → Reviews):
+  //   proxy    multipart POST to the reviews app (data-endpoint): rating, title, body, product_id,
+  //            product_handle, photos[]  → JSON {status: 'pending' | 'published'}; 401/403 = signed out
+  //   contact  Shopify's contact form (text only; the photo field is not rendered in this mode)
+  //   preview  static preview: kept in this browser and shown at the top of the list as
+  //            "Awaiting approval", so the whole flow can be tried before an app is connected
   function initReviewForm() {
     const section = $('[data-pdp-reviews]');
-    const box = section && $('[data-pdp-review-form]', section);
-    const openBtn = section && $('[data-pdp-review-open]', section);
+    if (!section) return;
+    const box = $('[data-pdp-review-form]', section);
+    const openBtn = $('[data-pdp-review-open]', section);
+    const loginLink = $('[data-pdp-review-login]', section);
+
+    // Other "Write a review" buttons on the page
+    $$('[data-pdp-review-trigger]').forEach((t) => listen(t, 'click', (e) => {
+      if (box && openBtn) { e.preventDefault(); open(); }
+      else if (loginLink) { e.preventDefault(); window.location.href = loginLink.href; }
+    }));
     if (!box || !openBtn) return;
+
     const form = $('form', box);
     const done = $('[data-pdp-rdone]', box);
+    const doneText = $('[data-pdp-rdone-text]', box);
     const status = $('[data-pdp-rstatus]', box);
     const submit = $('[data-pdp-rsubmit]', box);
     const submitLabel = $('[data-pdp-rsubmit-label]', box);
@@ -1058,8 +1080,10 @@
     const bodyEl = $('[data-pdp-rbody]', box);
     const count = $('[data-pdp-rcount]', box);
     const sub = $('[data-pdp-rsub]', box);
-    const preview = box.hasAttribute('data-preview');
+    const mode = box.dataset.mode || (box.hasAttribute('data-preview') ? 'preview' : 'proxy');
+    const handle = box.dataset.productHandle || '';
     const LIMITS = { title: [3, 80], body: [20, 1000] };
+    const PHOTOS = { max: 4, bytes: 10 * 1024 * 1024, edge: 1600, types: ['image/jpeg', 'image/png', 'image/webp'] };
 
     const productName = $('[data-pdp-main]')?.dataset.productTitle || '';
     if (sub) sub.textContent = `${productName ? productName + ' · ' : ''}Posting as ${box.dataset.customerName || 'you'}`;
@@ -1072,7 +1096,7 @@
       const field = key === 'title' ? titleEl : key === 'body' ? bodyEl : null;
       if (field) field.setAttribute('aria-invalid', msg ? 'true' : 'false');
     };
-    const clearErrors = () => { ['rating', 'title', 'body'].forEach((k) => setError(k, '')); };
+    const clearErrors = () => { ['rating', 'title', 'body', 'photos'].forEach((k) => setError(k, '')); };
     const setStatus = (msg, tone) => {
       status.hidden = !msg;
       status.textContent = msg || '';
@@ -1085,7 +1109,81 @@
       submitLabel.textContent = busy ? 'Sending…' : 'Submit review';
     };
 
-    const open = ({ scroll = true } = {}) => {
+    /* ---- Photos ---- */
+    const photoBox = $('[data-pdp-rphotos]', box);
+    const photoList = photoBox && $('[data-pdp-rphotos-list]', photoBox);
+    const photoInput = photoBox && $('[data-pdp-rphotos-input]', photoBox);
+    const photoAdd = photoBox && $('[data-pdp-rphotos-add]', photoBox);
+    let photos = []; // { blob, url }
+
+    // Decode, downscale and re-encode as JPEG. Re-encoding also strips EXIF (GPS, device).
+    const prepare = async (file, edge, quality) => {
+      let src;
+      try { src = await createImageBitmap(file); } catch (e) {
+        src = await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = URL.createObjectURL(file);
+        });
+      }
+      const w = src.width || src.naturalWidth;
+      const h = src.height || src.naturalHeight;
+      const k = Math.min(1, edge / Math.max(w, h));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(w * k);
+      canvas.height = Math.round(h * k);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
+      if (src.close) src.close();
+      return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('encode'))), 'image/jpeg', quality));
+    };
+
+    const renderPhotos = () => {
+      if (!photoList) return;
+      photoList.innerHTML = '';
+      photos.forEach((p, i) => {
+        const li = document.createElement('li');
+        li.className = 'pdp-rphotos__item';
+        li.innerHTML = `<img src="${p.url}" alt="Your photo ${i + 1}"><button type="button" class="pdp-rphotos__remove" aria-label="Remove photo ${i + 1}"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>`;
+        listen($('button', li), 'click', () => {
+          URL.revokeObjectURL(p.url);
+          photos.splice(i, 1);
+          renderPhotos();
+          (photoInput || openBtn).focus({ preventScroll: true });
+        });
+        photoList.appendChild(li);
+      });
+      const full = photos.length >= PHOTOS.max;
+      if (photoAdd) photoAdd.hidden = full;
+      if (photoInput) photoInput.disabled = full;
+    };
+
+    if (photoInput) listen(photoInput, 'change', async () => {
+      setError('photos', '');
+      const files = Array.from(photoInput.files || []);
+      photoInput.value = '';
+      const room = PHOTOS.max - photos.length;
+      const problems = [];
+      if (files.length > room) problems.push(`You can add up to ${PHOTOS.max} photos.`);
+      for (const file of files.slice(0, room)) {
+        if (!PHOTOS.types.includes(file.type)) { problems.push(`${file.name} is not a JPG, PNG or WebP photo.`); continue; }
+        if (file.size > PHOTOS.bytes) { problems.push(`${file.name} is larger than 10 MB.`); continue; }
+        try {
+          const blob = await prepare(file, PHOTOS.edge, 0.85);
+          photos.push({ blob, url: URL.createObjectURL(blob) });
+        } catch (e) { problems.push(`We could not read ${file.name}.`); }
+      }
+      renderPhotos();
+      if (problems.length) setError('photos', problems.join(' '));
+    });
+
+    const resetPhotos = () => { photos.forEach((p) => URL.revokeObjectURL(p.url)); photos = []; renderPhotos(); };
+
+    /* ---- Open / close ---- */
+    function open({ scroll = true } = {}) {
       done.hidden = true;
       form.hidden = false;
       box.hidden = false;
@@ -1093,12 +1191,13 @@
       openBtn.setAttribute('aria-expanded', 'true');
       if (scroll) box.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'center' });
       setTimeout(() => { const first = $('input[name="contact[Rating]"]', box); if (first) first.focus({ preventScroll: true }); }, 200);
-    };
+    }
     const close = () => {
       box.classList.remove('is-open');
       box.hidden = true;
       openBtn.setAttribute('aria-expanded', 'false');
       form.reset();
+      resetPhotos();
       clearErrors();
       setStatus('');
       setBusy(false);
@@ -1126,15 +1225,67 @@
       return !firstBad;
     };
 
+    /* ---- Preview only: keep the review in this browser and show it as awaiting approval ---- */
+    const PREVIEW_KEY = `agha-preview-reviews:${handle}`;
+    const readMine = () => { try { return JSON.parse(localStorage.getItem(PREVIEW_KEY)) || []; } catch (e) { return []; } };
+    const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const renderMine = () => {
+      if (mode !== 'preview') return;
+      const list = $('.pdp-reviews__list', section);
+      if (!list) return;
+      let wrap = $('[data-pdp-reviews-mine]', list);
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.setAttribute('data-pdp-reviews-mine', '');
+        box.after(wrap);
+      }
+      wrap.innerHTML = readMine().map((r) => `
+        <article class="pdp-review pdp-review--mine">
+          <span class="pdp-review__top"><span class="pdp-stars" role="img" aria-label="Rated ${r.rating} out of 5"><span class="pdp-stars__fill" style="width: ${r.rating * 20}%"></span></span><span class="pdp-demo-tag">Awaiting approval</span></span>
+          <p class="pdp-review__title">${esc(r.title)}</p>
+          <p class="pdp-review__body">${esc(r.body)}</p>
+          ${r.photos.length ? `<ul class="pdp-review__photos" role="list">${r.photos.map((src, i) => `<li><img src="${src}" alt="Photo ${i + 1} from ${esc(r.name)}" loading="lazy"></li>`).join('')}</ul>` : ''}
+          <div class="pdp-review__meta">
+            <span class="pdp-review__avatar" aria-hidden="true">${esc(r.name.charAt(0))}</span>
+            <p class="pdp-review__who">${esc(r.name)}<span>${esc(r.date)} · Only you can see this until it is approved</span></p>
+          </div>
+        </article>`).join('');
+    };
+    const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
+    });
+    const saveMine = async (review) => {
+      // Smaller copies for browser storage (a few MB per site)
+      const small = await Promise.all(photos.map((p) => prepare(p.blob, 900, 0.75).then(blobToDataUrl)));
+      const all = [Object.assign(review, { photos: small })].concat(readMine()).slice(0, 5);
+      try { localStorage.setItem(PREVIEW_KEY, JSON.stringify(all)); }
+      catch (e) { review.photos = []; localStorage.setItem(PREVIEW_KEY, JSON.stringify([review].concat(readMine()).slice(0, 5))); }
+    };
+    renderMine();
+
+    /* ---- Submit ---- */
     listen(form, 'submit', async (e) => {
       e.preventDefault();
       setStatus('');
       if (!validate()) return;
       setBusy(true);
+      const rating = $('input[name="contact[Rating]"]:checked', box).value;
+      const title = titleEl.value.trim();
+      const body = bodyEl.value.trim();
+      let published = false;
       try {
-        if (preview) {
-          await new Promise((r) => setTimeout(r, 900));
-        } else {
+        if (mode === 'preview') {
+          await new Promise((r) => setTimeout(r, 700));
+          await saveMine({
+            rating: Number(rating), title, body,
+            name: box.dataset.customerName || 'You',
+            date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+          });
+          renderMine();
+        } else if (mode === 'contact') {
           const res = await fetch(form.action, {
             method: 'POST',
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -1143,14 +1294,43 @@
           // Shopify may answer with its spam check page; hand over to a normal submit so the shopper can pass it
           if (/\/challenge/.test(res.url)) { form.submit(); return; }
           if (!res.ok) throw new Error('send failed');
+        } else {
+          const data = new FormData();
+          data.append('rating', rating);
+          data.append('title', title);
+          data.append('body', body);
+          data.append('product_id', box.dataset.productId || '');
+          data.append('product_handle', handle);
+          photos.forEach((p, i) => data.append('photos[]', p.blob, `review-photo-${i + 1}.jpg`));
+          const res = await fetch(box.dataset.endpoint || form.action, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: data
+          });
+          if (res.status === 401 || res.status === 403) {
+            const err = new Error('auth'); err.auth = true; throw err;
+          }
+          if (!res.ok) throw new Error('send failed');
+          const json = await res.json().catch(() => ({}));
+          published = json && json.status === 'published';
+        }
+        if (doneText) {
+          doneText.textContent = published
+            ? 'Your review is live. Thank you for sharing it.'
+            : mode === 'preview'
+              ? 'Your review has been sent to our team. You can see it below, marked "Awaiting approval"; it goes live once approved.'
+              : 'Your review has been sent to our team. It will appear here once it has been approved.';
         }
         form.hidden = true;
         done.hidden = false;
         done.focus({ preventScroll: true });
         form.reset();
+        resetPhotos();
         if (count) count.textContent = '0';
       } catch (error) {
-        setStatus('We could not send your review. Please check your connection and try again.', 'error');
+        if (error && error.auth) setStatus('Your session has ended. Please log in again to send your review.', 'error');
+        else setStatus('We could not send your review. Please check your connection and try again.', 'error');
       } finally {
         setBusy(false);
       }

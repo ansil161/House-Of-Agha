@@ -1,11 +1,13 @@
 {%- comment -%}
   House of Agha · About 05 · Our philosophy
-  Heading, then a six-tile bento (one tile per pillar block). Rows are 6/3/3 then
-  3/3/6 columns. Every tile is a full-bleed campaign photograph with the pillar
-  written over a dark gradient at the foot (legible on any photo).
+  Heading, then six pillars (one per block) laid out like an arcade: rows of 6/3/3 then
+  3/3/6 columns. Each photograph stands in a Qutb Shahi pointed arch with an antique-gold
+  hairline (wide tiles get a lower, broader arch, as in the Charminar's central bay);
+  the numeral, word and lines sit beneath it on the ivory page, not over the photo.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-philo" id="philosophy">
+  {%- render 'hoa-ab-rule' -%}
   <div class="hoa-wrap">
     <h2 class="hoa-ab-h2 hoa-ab-philo__head">{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
     <div class="hoa-ab-philo__grid">
@@ -19,18 +21,23 @@
         {%- endif -%}
         <article class="hoa-ab-pillar hoa-ab-pillar--{{ forloop.index }}" data-hoa-ab-pillar {{ block.shopify_attributes }}>
           {%- if b.asset != blank or b.image != blank -%}
-            <div class="hoa-ab-pillar__media" aria-hidden="true">
-              <div class="hoa-ab-pillar__img" data-hoa-ab-parallax>
-                {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: img_sizes -%}
+            <div class="hoa-ab-arch hoa-ab-pillar__media" aria-hidden="true">
+              <div class="hoa-ab-arch__frame hoa-ab-pillar__frame">
+                <div class="hoa-ab-pillar__img" data-hoa-ab-img>
+                  {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: img_sizes -%}
+                </div>
               </div>
+              {%- render 'hoa-ab-arch' -%}
             </div>
           {%- endif -%}
-          <p class="hoa-ab-pillar__word" aria-hidden="true">{{ b.word }}</p>
-          <div class="hoa-ab-pillar__copy">
-            <h3 class="hoa-ab-pillar__title">{{ b.title }}</h3>
-            <ul class="hoa-ab-pillar__lines">
-              {%- for l in lines -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}
-            </ul>
+          <div class="hoa-ab-pillar__body">
+            <p class="hoa-ab-pillar__word" aria-hidden="true"><span class="hoa-ab-pillar__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{{ b.word }}</p>
+            <div class="hoa-ab-pillar__copy">
+              <h3 class="hoa-ab-pillar__title">{{ b.title }}</h3>
+              <ul class="hoa-ab-pillar__lines">
+                {%- for l in lines -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}
+              </ul>
+            </div>
           </div>
         </article>
       {%- endfor -%}

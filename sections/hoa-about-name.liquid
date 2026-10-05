@@ -1,9 +1,10 @@
 {%- comment -%}
   House of Agha · About 04 · The name
-  A dictionary-style entry for "Agha", set in Hyderabad: a Deccan jaali band on the
-  card edge, the word and its Persian script above a Qutb Shahi tomb in a pointed arch
-  (left); an early photograph of the old city and the Charminar above four usages, each
-  with a Hyderabad line icon (right). Sources, photo credits and the disclaimer below.
+  A dictionary-style entry for "Agha", set in Hyderabad: on a sand panel with a gold jaali
+  band, the word and its Persian script above a Qutb Shahi tomb in a pointed arch with a
+  gold hairline (left); an archival photograph above four usages, each with a Hyderabad
+  line icon (right). Sources, photo credits and the disclaimer below. Photos carry the
+  page's warm archival tone (--ab-tone in assets/hoa-about.css).
   Photos: Wikimedia Commons, public domain / CC0 (see the credits setting).
 {%- endcomment -%}
 {%- assign s = section.settings -%}
@@ -12,22 +13,47 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500&display=swap&text={{ s.script | url_encode }}">
 {%- endif -%}
 <section class="hoa-ab-name">
+  {%- render 'hoa-ab-rule' -%}
   <div class="hoa-wrap">
     <div class="hoa-ab-name__card">
       <div class="hoa-ab-name__side">
         <div class="hoa-ab-name__word">
           <h2 class="hoa-ab-name__title"><span class="hoa-sr">The name </span>{{ s.word }}</h2>
           {%- if s.script != blank -%}<p class="hoa-ab-name__script" lang="fa" dir="rtl">{{ s.script }}</p>{%- endif -%}
+          {%- render 'hoa-ab-floral' -%}
           {%- if s.meaning != blank -%}<p class="hoa-ab-name__meaning">{{ s.meaning }}</p>{%- endif -%}
         </div>
         {%- if s.arch_asset != blank or s.arch_image != blank -%}
-          <figure class="hoa-ab-name__arch" data-hoa-ab-up>
-            <div class="hoa-ab-name__arch-img">
-              <div class="hoa-ab-name__img" data-hoa-ab-parallax>
-                {%- render 'hoa-img', name: s.arch_asset, image: s.arch_image, w: 1200, h: 1600, alt: s.arch_alt, sizes: '(min-width: 900px) 34vw, 90vw' -%}
+          {%- liquid
+            assign aw = s.arch_w | default: 1200
+            assign ah = s.arch_h | default: 1600
+          -%}
+          <figure class="hoa-ab-name__arch">
+            <div class="hoa-ab-arch">
+              <div class="hoa-ab-arch__frame hoa-ab-name__arch-img">
+                <div class="hoa-ab-name__img" data-hoa-ab-img>
+                  {%- render 'hoa-img', name: s.arch_asset, image: s.arch_image, w: aw, h: ah, alt: s.arch_alt, sizes: '(min-width: 900px) 34vw, 90vw' -%}
+                </div>
               </div>
+              {%- render 'hoa-ab-arch' -%}
             </div>
             {%- if s.arch_caption != blank -%}<figcaption>{{ s.arch_caption }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}
+        {%- comment -%} Second photo under the arch; on wide screens it fills the rest of the panel. {%- endcomment -%}
+        {%- if s.extra_asset != blank or s.extra_image != blank -%}
+          {%- liquid
+            assign xw = s.extra_w | default: 900
+            assign xh = s.extra_h | default: 1200
+          -%}
+          <figure class="hoa-ab-name__extra">
+            <div class="hoa-ab-name__extra-img">
+              <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
+              <div class="hoa-ab-name__img" data-hoa-ab-img>
+                {%- render 'hoa-img', name: s.extra_asset, image: s.extra_image, w: xw, h: xh, alt: s.extra_alt, sizes: '(min-width: 900px) 34vw, 90vw' -%}
+              </div>
+            </div>
+            {%- if s.extra_caption != blank -%}<figcaption>{{ s.extra_caption }}</figcaption>{%- endif -%}
           </figure>
         {%- endif -%}
       </div>
@@ -45,7 +71,8 @@
         {%- if s.photo_asset != blank or s.photo_image != blank -%}
           <figure class="hoa-ab-name__photo{% if ph > pw %} hoa-ab-name__photo--tall{% endif %}" style="--ratio: {{ pw }} / {{ ph }}" data-hoa-ab-up>
             <div class="hoa-ab-name__photo-img">
-              <div class="hoa-ab-name__img">
+              <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
+              <div class="hoa-ab-name__img" data-hoa-ab-img>
                 {%- render 'hoa-img', name: s.photo_asset, image: s.photo_image, w: s.photo_w, h: s.photo_h, alt: s.photo_alt, sizes: '(min-width: 900px) 52vw, 100vw' -%}
               </div>
             </div>
@@ -98,8 +125,17 @@
     { "type": "header", "content": "Arch photo (left)" },
     { "type": "image_picker", "id": "arch_image", "label": "Image (portrait)" },
     { "type": "text", "id": "arch_asset", "label": "Fallback theme asset", "default": "hoa-hyd-tombs" },
+    { "type": "number", "id": "arch_w", "label": "Theme asset width (px)", "default": 1200 },
+    { "type": "number", "id": "arch_h", "label": "Theme asset height (px)", "default": 1600 },
     { "type": "text", "id": "arch_alt", "label": "Alt text", "default": "A domed Qutb Shahi tomb in Hyderabad with arched colonnades" },
     { "type": "text", "id": "arch_caption", "label": "Caption" },
+    { "type": "header", "content": "Second photo (under the arch)" },
+    { "type": "image_picker", "id": "extra_image", "label": "Image" },
+    { "type": "text", "id": "extra_asset", "label": "Fallback theme asset", "default": "hoa-hyd-arcade" },
+    { "type": "number", "id": "extra_w", "label": "Theme asset width (px)", "default": 900 },
+    { "type": "number", "id": "extra_h", "label": "Theme asset height (px)", "default": 1200 },
+    { "type": "text", "id": "extra_alt", "label": "Alt text", "default": "Pointed Deccan arches receding through a carved stone hall" },
+    { "type": "text", "id": "extra_caption", "label": "Caption" },
     { "type": "header", "content": "Wide photo (right)" },
     { "type": "image_picker", "id": "photo_image", "label": "Image (landscape)" },
     { "type": "text", "id": "photo_asset", "label": "Fallback theme asset", "default": "hoa-hyd-oldcity" },

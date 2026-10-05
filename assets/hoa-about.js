@@ -12,16 +12,20 @@
                        the centre, a pearl lights and the Hyderabad skyline drifts
                        behind (entrance, then storytelling). Wide screens;
                        phones get a stacked version, reduced motion a static one.
-     Our story ....... the old-city photograph opens from a framed window to the full
-                       screen width while scrolling (the city arrives).
-     Text ............ headline and philosophy words rise out of masks; the letters of
-                       Agha rise and آقا is revealed right to left, as it is written.
-     Story line ...... words sharpen from faint and soft to ink as the paragraphs are read.
-     Our name ........ the stage holds while one giant word changes script, Persian,
-                       Ottoman Turkish, Urdu, today (the word's journey, one step at a time).
-     Philosophy ...... photo tiles open from an arch into their frame (order, motif).
-     Closing card .... grows from slightly inset to full size before the shop
-                       button (emphasis).
+     Current About (Deccan pass, 2026-10-05): restrained on purpose. No zooms or parallax;
+     the Charminar is the one scroll-driven, pinned moment (client brief). Only these:
+     Our story ....... headline rises out of masks; the old-city photo fades in softly
+                       inside its arch while the gold hairline draws around it.
+     Arches .......... every gold arch outline draws itself once as it arrives, and the
+                       photo inside fades up from a hair larger (gentle image transition).
+     Dividers ........ the gold rule between sections opens from its centre.
+     Text ............ headings and paragraphs rise a little and fade in once; the letters
+                       of Agha rise and آقا is revealed right to left, as it is written.
+     Story line ...... words warm from faint to ink as the paragraphs are read.
+     Hyderabad ....... the Charminar draws tier by tier with the scroll while the card pins.
+     Philosophy ...... pillars settle in, in reading order.
+     (Seven worlds, the name pin and the stacking cards below belong to sections that
+     are not on the page now; they only run if those sections come back.)
 
    Without GSAP, or with prefers-reduced-motion, the page is static and complete:
    initial states are only ever set from JS, never from CSS.
@@ -328,7 +332,35 @@
     return el._hoaWords;
   }
 
+  /* Gold arch outlines (snippets/hoa-ab-arch.liquid) ship as a stretched 100×100 path with a
+     non-scaling stroke: right without JS, but Chrome mis-scales pathLength dashes on it, so the
+     line could not be drawn in. Here each outline is redrawn in its real pixel size (same
+     proportions as the --ab-arch mask), refitted on resize, and marked .is-fit for dashes. */
+  var archObserver = null;
+  function fitArch(svg) {
+    var w = svg.clientWidth, h = svg.clientHeight;
+    var path = svg.querySelector('path');
+    if (!w || !h || !path) return;
+    var r = function (n) { return Math.round(n * 10) / 10; };
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.removeAttribute('preserveAspectRatio');
+    path.removeAttribute('vector-effect');
+    path.setAttribute('d', 'M0 ' + h + 'V' + r(h * 0.22) +
+      'C0 ' + r(h * 0.1) + ' ' + r(w * 0.26) + ' ' + r(h * 0.04) + ' ' + r(w / 2) + ' 0' +
+      'C' + r(w * 0.74) + ' ' + r(h * 0.04) + ' ' + w + ' ' + r(h * 0.1) + ' ' + w + ' ' + r(h * 0.22) +
+      'V' + h);
+    svg.classList.add('is-fit');
+  }
+  function fitArches() {
+    var svgs = Array.prototype.slice.call(document.querySelectorAll('.hoa-ab-archline'));
+    svgs.forEach(fitArch);
+    if (!('ResizeObserver' in window)) return;
+    if (!archObserver) archObserver = new ResizeObserver(function (entries) { entries.forEach(function (e) { fitArch(e.target); }); });
+    svgs.forEach(function (s) { if (!s._hoaFit) { s._hoaFit = true; archObserver.observe(s); } });   // sections reloaded in the editor bring new nodes
+  }
+
   function build() {
+    fitArches();
     if (!hasGsap()) return;
     gsap.registerPlugin(ScrollTrigger);
     initLenis();
@@ -384,23 +416,23 @@
         afterIntro(function () { intro.play(); });
         intro
           .from(Array.prototype.slice.call(hero.querySelectorAll('[data-hoa-ab-rise]')).reduce(function (all, line) { return all.concat(maskWords(line)); }, []), {
-            yPercent: 115, rotate: 5, transformOrigin: '0% 100%', duration: 1.3, stagger: 0.07
+            yPercent: 110, duration: 1.2, stagger: 0.06
           }, 0.05)
-          .from(hero.querySelectorAll('[data-hoa-ab-line]'), { y: 20, opacity: 0, duration: 1, stagger: 0.08 }, 0.3)
+          .from(hero.querySelectorAll('[data-hoa-ab-line]'), { y: 14, opacity: 0, duration: 1, stagger: 0.08 }, 0.3)
           .from(hero.querySelectorAll('[data-hoa-ab-tile]'), {
-            y: 70, scale: 0.94, opacity: 0, duration: 1.4, stagger: 0.09, transformOrigin: '50% 100%'
+            y: 40, opacity: 0, duration: 1.2, stagger: 0.09
           }, 0.35);
-      }
 
-      /* 01 Our story: the photograph opens from a framed window to the full width of the
-         screen as it scrolls up, and settles from a slight zoom (the city arrives). */
-      var win = document.querySelector('[data-hoa-ab-window]');
-      if (win) {
-        var headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76;
-        var winST = { trigger: win, start: 'top 88%', end: 'top top+=' + headerH, scrub: 0.6 };
-        gsap.fromTo(win, { '--win': 0 }, { '--win': 1, ease: 'none', scrollTrigger: winST });
-        var winImg = win.querySelector('[data-hoa-ab-window-img]');
-        if (winImg) gsap.fromTo(winImg, { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: Object.assign({}, winST) });
+        /* The opening photo is part of the intro, not of a scroll trigger: it fades in
+           from a hair larger while its gold arch draws around it. */
+        var introFrame = hero.querySelector('[data-hoa-ab-intro-frame]');
+        if (introFrame) {
+          introFrame._hoaIntro = true;
+          var introImg = introFrame.querySelector('[data-hoa-ab-img]');
+          var introLine = introFrame.querySelector('[data-hoa-ab-archline]');
+          if (introImg) intro.fromTo(introImg, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.8, ease: 'power2.out' }, 0.45);
+          if (introLine) intro.fromTo(introLine, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 2, ease: 'power2.inOut' }, 0.6);
+        }
       }
 
       /* 04 The name: the letters of Agha rise one by one, the Persian آقا is revealed from
@@ -423,132 +455,177 @@
       if (philoHead) {
         var philoWords = maskWords(philoHead);
         gsap.from(philoWords, {
-          yPercent: 115, rotate: 5, transformOrigin: '0% 100%', duration: 1.2, ease: 'expo.out', stagger: 0.06,
+          yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.05,
           scrollTrigger: { trigger: philoHead, start: 'top 85%', once: true }
         });
       }
 
-      /* 03 Philosophy: each photo tile opens from an arch into its full frame as it
-         arrives, the photo settles and the words follow (echoes the arches, sets order). */
-      var pillars = gsap.utils.toArray('[data-hoa-ab-pillar]');
-      if (pillars.length) {
-        var archClip = 'inset(12% 9% 0% 9% round 260px 260px 24px 24px)';
-        var openClip = 'inset(0% 0% 0% 0% round 24px 24px 24px 24px)';
-        gsap.set(pillars, { clipPath: archClip });
-        gsap.set(pillars.map(function (el) { return el.querySelector('.hoa-ab-pillar__media'); }).filter(Boolean), { scale: 1.14 });
-        gsap.set(pillars.map(function (el) { return [el.querySelector('.hoa-ab-pillar__word'), el.querySelector('.hoa-ab-pillar__copy')]; }).flat().filter(Boolean), { opacity: 0, y: 24 });
-        ScrollTrigger.batch(pillars, {
-          start: 'top 88%',
+      /* 05 Philosophy: the words under each arch settle in, in reading order
+         (the arch and its photo are handled with every other arch below). */
+      var pillarBodies = gsap.utils.toArray('[data-hoa-ab-pillar] .hoa-ab-pillar__body');
+      if (pillarBodies.length) {
+        gsap.set(pillarBodies, { opacity: 0, y: 16 });
+        ScrollTrigger.batch(pillarBodies, {
+          start: 'top 92%',
+          once: true,
+          onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.12, delay: 0.25, overwrite: true }); }
+        });
+      }
+
+      /* Arches: once each arched photo arrives, its gold outline draws itself and the
+         photo fades up from a hair larger. The opening photo belongs to the intro. */
+      var arches = gsap.utils.toArray('.hoa-ab-arch').filter(function (a) { return !a._hoaIntro; });
+      if (arches.length) {
+        arches.forEach(function (a) {
+          var line = a.querySelector('[data-hoa-ab-archline]');
+          var img = a.querySelector('[data-hoa-ab-img]');
+          if (line) gsap.set(line, { strokeDashoffset: 1 });
+          if (img) gsap.set(img, { opacity: 0, scale: 1.04 });
+        });
+        ScrollTrigger.batch(arches, {
+          start: 'top 85%',
           once: true,
           onEnter: function (batch) {
-            batch.forEach(function (el, i) {
-              var d = i * 0.12;
-              gsap.to(el, { clipPath: openClip, duration: 1.2, ease: 'quart.out', delay: d, clearProps: 'clipPath' });
-              var media = el.querySelector('.hoa-ab-pillar__media');
-              if (media) gsap.to(media, { scale: 1, duration: 1.6, ease: 'expo.out', delay: d });
-              gsap.to([el.querySelector('.hoa-ab-pillar__word'), el.querySelector('.hoa-ab-pillar__copy')].filter(Boolean), {
-                opacity: 1, y: 0, duration: 0.9, ease: 'quart.out', delay: d + 0.35, stagger: 0.08
-              });
+            batch.forEach(function (a, i) {
+              var d = i * 0.14;
+              var line = a.querySelector('[data-hoa-ab-archline]');
+              var img = a.querySelector('[data-hoa-ab-img]');
+              if (img) gsap.to(img, { opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out', delay: d });
+              if (line) gsap.to(line, { strokeDashoffset: 0, duration: 1.9, ease: 'power2.inOut', delay: d + 0.15 });
             });
           }
         });
       }
 
-      // Photos drift a little inside their tiles and cards (the frames stay put).
-      gsap.utils.toArray('[data-hoa-ab-parallax]').forEach(function (el) {
-        gsap.fromTo(el, { yPercent: -4 }, {
-          yPercent: 4, ease: 'none',
-          scrollTrigger: { trigger: el.parentNode, start: 'top bottom', end: 'bottom top', scrub: true }
+      /* Photos outside an arch (the name's archival photo) only fade in */
+      var plainImgs = gsap.utils.toArray('[data-hoa-ab-img]').filter(function (el) { return !el.closest('.hoa-ab-arch'); });
+      plainImgs.forEach(function (el) {
+        gsap.fromTo(el, { opacity: 0, scale: 1.03 }, {
+          opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out',
+          scrollTrigger: { trigger: el.parentNode, start: 'top 85%', once: true }
         });
       });
 
-      /* Headings rise in once */
-      var ups = gsap.utils.toArray('[data-hoa-ab-up]');
-      gsap.set(ups, { opacity: 0, y: 40 });
-      ScrollTrigger.batch(ups, {
-        start: 'top 88%',
-        once: true,
-        onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1.1, ease: ease, stagger: 0.1, overwrite: true }); }
+      /* Gold dividers open from their centre */
+      gsap.utils.toArray('[data-hoa-ab-rule]').forEach(function (el) {
+        gsap.fromTo(el, { clipPath: 'inset(0 50% 0 50%)' }, {
+          clipPath: 'inset(0 0% 0 0%)', duration: 1.4, ease: 'power2.inOut', clearProps: 'clipPath',
+          scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+        });
       });
 
-      /* 04 Closing card grows to full size */
-      var cta = document.querySelector('[data-hoa-ab-cta]');
-      if (cta) {
-        gsap.fromTo(cta, { scale: 0.9, borderRadius: 48 }, {
-          scale: 1, borderRadius: 24, ease: 'none',
-          scrollTrigger: { trigger: cta, start: 'top bottom', end: 'top 35%', scrub: 0.8 }
+      /* Heritage ornaments (Golconda marks, bastion corners) settle in, staggered, once.
+         The opening arch's mark belongs to the intro. */
+      var orns = gsap.utils.toArray('[data-hoa-ab-orn]');
+      var introOrn = hero && hero.querySelector('[data-hoa-ab-intro-frame] [data-hoa-ab-orn]');
+      if (introOrn) {
+        orns = orns.filter(function (o) { return o !== introOrn; });
+        intro.fromTo(introOrn, { opacity: 0, rotation: -45, scale: 0.7 }, { opacity: 1, rotation: 0, scale: 1, duration: 1.2, ease: 'power3.out', clearProps: 'transform' }, 1.4);
+      }
+      if (orns.length) {
+        gsap.set(orns, { opacity: 0 });
+        ScrollTrigger.batch(orns, {
+          start: 'top 88%',
+          once: true,
+          onEnter: function (batch) { gsap.to(batch, { opacity: 1, duration: 1.2, ease: 'power2.out', stagger: 0.12, delay: 0.3, overwrite: true }); }
         });
       }
+
+      /* The floral fleuron draws its lines from the bud outward */
+      gsap.utils.toArray('[data-hoa-ab-floral]').forEach(function (svg) {
+        var paths = svg.querySelectorAll('path');
+        gsap.fromTo(paths, { strokeDasharray: 1, strokeDashoffset: 1 }, {
+          strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut', stagger: 0.06,
+          scrollTrigger: { trigger: svg, start: 'top 90%', once: true }
+        });
+      });
+
+      /* Headings and paragraphs rise a little and fade in, once */
+      var ups = gsap.utils.toArray('[data-hoa-ab-up]');
+      gsap.set(ups, { opacity: 0, y: 18 });
+      ScrollTrigger.batch(ups, {
+        start: 'top 90%',
+        once: true,
+        onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.1, overwrite: true }); }
+      });
     });
 
-    /* 02b Composed in Hyderabad: the Charminar draws itself line by line (ground up: each
-       tier's lines, then its arched openings fill with ink), and the Urdu city name surfaces
-       behind it. The drawing is nearly a screen tall, so it is only wholly in view for a few
-       dozen pixels of scrolling; a plain scrub drew the ground tiers below the screen and the
-       finials after they had left the top. So:
-         · the build is scrubbed from the moment its ground enters the screen,
-         · the card holds still (pinned) while the drawing sits centred below the navbar,
-           and the rest of the building rises there; then the page moves on.
-       Wide screens pin the card (drawing + story); stacked phones pin just the drawing panel.
-       If the drawing is taller than the space below the navbar, nothing pins and it builds
-       while the panel crosses the screen. Its own matchMedia so a resize across 900px
-       rebuilds it cleanly; the whole page's triggers are reverted on section reload. */
+    /* 02b Composed in Hyderabad: the Charminar draws itself ground to finials (each tier's
+       lines, then its arched openings fill) and the Urdu city name fades up behind it, driven
+       directly by ScrollTrigger progress (scrub), no autoplay, no delays.
+         progress 0 ...... the drawing's ground line enters the bottom of the screen, so the
+                           base starts drawing the moment the drawing is seen
+         0 → ~0.85 ....... it builds while the section rises into place and then holds:
+                           the card (wide) or drawing panel (stacked) pins, centred below
+                           the navbar, for 0.6 of a screen
+         ~0.85 ........... the Charminar is complete, still pinned in the main viewport
+         1 ............... the pin releases and the page moves on to the next section
+       The whole reveal takes about one screen of scrolling. The CSS caps the drawing so it
+       always fits below the navbar; if the pinned element is taller than that space, the
+       drawing itself is what gets centred. Its own matchMedia so a resize across 900px
+       rebuilds it; refreshPriority makes the pin spacing count for the triggers below. */
     mm.add({ wide: '(min-width: 900px)', motion: '(prefers-reduced-motion: no-preference)' }, function (ctx) {
       var hyd = document.querySelector('[data-hoa-ab-hyd]');
       if (!hyd || !ctx.conditions.motion) return;
       var panel = hyd.querySelector('.hoa-ab-hyd__visual');
-      var hydCard = hyd.querySelector('.hoa-ab-hyd__card');
-      var art = hyd.querySelector('.hoa-ab-hyd__art') || panel;
-      var pinEl = ctx.conditions.wide && hydCard ? hydCard : panel;
+      var card = hyd.querySelector('.hoa-ab-hyd__card');
+      var art = hyd.querySelector('.hoa-ab-hyd__art');
+      if (!panel || !art) return;
+      var pinEl = ctx.conditions.wide && card ? card : panel;
+      var HOLD = 0.6;   // pinned stretch, in screen heights
+      var DONE = 0.98;  // share of the timeline at which the drawing is complete (~85% of the scroll after the ease)
       var navH = function () { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76; };
-      var room = function () { return window.innerHeight - navH() - 16; };
-      // What gets centred below the navbar: the whole drawing panel (jaali borders and all) when it
-      // fits, otherwise the Charminar itself — the card's height comes from the story column and can
-      // exceed a laptop screen. The CSS caps the drawing to the screen height, so it always fits.
+      var room = function () { return window.innerHeight - navH(); };
+      // Distance from the pinned element's top to the middle of what should sit centred below
+      // the navbar: the whole drawing panel when it fits, otherwise the drawing itself.
       var focusMid = function () {
-        var f = panel.offsetHeight <= room() ? panel : art, r = f.getBoundingClientRect();
+        var f = panel.offsetHeight <= room() - 16 ? panel : art;
+        var r = f.getBoundingClientRect();
         return r.top - pinEl.getBoundingClientRect().top + r.height / 2;
       };
-      var canPin = art.getBoundingClientRect().height <= room();
+      var pinStart = function () { return 'top ' + Math.round(navH() + room() / 2 - focusMid()) + 'px'; };
 
-      var hold = canPin ? ScrollTrigger.create({
+      var hold = ScrollTrigger.create({
         trigger: pinEl,
-        start: function () { return 'top ' + Math.round(navH() + (window.innerHeight - navH()) / 2 - focusMid()) + 'px'; },
-        end: function () { return '+=' + Math.round(window.innerHeight * 0.7); },   // with the lead-in, the build takes about one screen of scroll
+        start: pinStart,
+        end: function () { return '+=' + Math.round(window.innerHeight * HOLD); },
         pin: true,
+        anticipatePin: 1,
         invalidateOnRefresh: true,
-        refreshPriority: 2          // measured first: its pin spacing moves every trigger below it
-      }) : null;
-
-      var build = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: art,
-          start: 'bottom bottom',   // the ground line comes into view
-          end: hold ? function () { return hold.end; } : function () { return 'top top+=' + Math.round(navH()); },
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-          refreshPriority: 1
-        }
+        refreshPriority: 2
       });
+
+      var draw = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
       var tiers = {};
       hyd.querySelectorAll('[data-o]').forEach(function (el) {
         var o = +el.getAttribute('data-o');
         (tiers[o] = tiers[o] || { ln: [], fill: [] })[el.classList.contains('hoa-ab-hyd__fill') ? 'fill' : 'ln'].push(el);
       });
-      Object.keys(tiers).map(Number).sort(function (a, b) { return a - b; }).forEach(function (o) {
-        var at = o * 0.62;
-        if (tiers[o].ln.length) build.fromTo(tiers[o].ln, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, stagger: 0.04 }, at);
-        if (tiers[o].fill.length) build.fromTo(tiers[o].fill, { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.03 }, at + 0.7);
+      var levels = Object.keys(tiers).map(Number).sort(function (a, b) { return a - b; });
+      var span = DONE / (levels.length + 1);   // tiers spread evenly over 0 → DONE
+      levels.forEach(function (o, i) {
+        var at = i * span;
+        if (tiers[o].ln.length) draw.fromTo(tiers[o].ln, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: span * 1.6, stagger: span * 0.02 }, at);
+        if (tiers[o].fill.length) draw.fromTo(tiers[o].fill, { opacity: 0 }, { opacity: 0.86, duration: span * 1.1, stagger: span * 0.015 }, at + span * 0.9);
       });
-
       var urdu = hyd.querySelector('[data-hoa-ab-hyd-urdu]');
-      if (urdu) {
-        gsap.fromTo(urdu, { opacity: 0, y: 50 }, {
-          opacity: 1, y: -30, ease: 'none',
-          scrollTrigger: { trigger: panel, start: 'top bottom', end: 'bottom top', scrub: true, pinnedContainer: hold ? pinEl : undefined }
-        });
-      }
+      if (urdu) draw.fromTo(urdu, { opacity: 0 }, { opacity: 1, duration: DONE * 0.6 }, DONE * 0.15);
+      // Pad the timeline to exactly 1 (complete at DONE, then held), and drive its progress
+      // from the scroll. sine.out front-loads it a little: ~50% of the scroll ≈ 3/4 drawn,
+      // complete at ~85%, the rest of the pin holds the finished Charminar.
+      draw.to({}, { duration: Math.max(0, 1 - draw.duration()) }, draw.duration());
+      gsap.to(draw, {
+        progress: 1,
+        ease: 'sine.out',
+        scrollTrigger: {
+          trigger: art,
+          start: 'bottom bottom',                       // ground line enters the screen
+          end: function () { return hold.end; },        // pin releases
+          scrub: 0.35,
+          invalidateOnRefresh: true,
+          refreshPriority: 1
+        }
+      });
     });
 
     /* 02 Story line: its words light from faint to ink while the reader moves through the
@@ -558,8 +635,8 @@
     if (lede) {
       var words = splitWords(lede);
       var ledeTween = function (trigger, start, end) {
-        return gsap.fromTo(words, { opacity: 0.14, filter: 'blur(3px)' }, {
-          opacity: 1, filter: 'blur(0px)', ease: 'none', stagger: 0.1,
+        return gsap.fromTo(words, { opacity: 0.2 }, {
+          opacity: 1, ease: 'none', stagger: 0.1,
           scrollTrigger: { trigger: trigger, start: start, end: end, scrub: 0.5 }
         });
       };
