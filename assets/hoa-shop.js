@@ -7,7 +7,8 @@
                        Grid / list switches the layout. The state is mirrored in the URL
                        (?for= &family= &price= &sort= &view=) and the layout is remembered.
      Interlude ....... the campaign photo only shows in the full, featured grid, where
-                       it fills the gap it was placed for.
+                       it fills the gap it was placed for. With slide blocks it changes
+                       fragrance (photo, name, note, link) every N seconds, by the clock.
      Reveal .......... the closing section fades up once as it enters.
 
    Without JS every product is listed in the grid.
@@ -54,7 +55,7 @@
     var items = Array.prototype.slice.call(grid.querySelectorAll('[data-hoa-item]'));
     var interlude = grid.querySelector('[data-hoa-interlude]');
     var tabs = sec.querySelectorAll('[data-hoa-for]');
-    var tags = sec.querySelectorAll('[data-hoa-family]');
+    var tags = sec.querySelectorAll('[data-hoa-line]');   // collection filter (Main Collection / Oud / Attar); state key stays 'family'
     var gift = sec.querySelector('[data-hoa-gift]');
     var views = sec.querySelectorAll('[data-hoa-fview]');
     var sort = sec.querySelector('[data-hoa-sort]');
@@ -82,11 +83,11 @@
     var priceMax = sec.querySelector('[data-hoa-price-max]');
 
     var wearers = ['men', 'women', 'unisex'];
-    var validFamilies = Array.prototype.map.call(tags, function (c) { return c.dataset.hoaFamily; });
+    var validFamilies = Array.prototype.map.call(tags, function (c) { return c.dataset.hoaLine; });
     var params = new URLSearchParams(location.search);
     var state = {
       wearer: wearers.indexOf(params.get('for')) > -1 ? params.get('for') : 'all',
-      family: validFamilies.indexOf(params.get('family')) > -1 ? params.get('family') : '',
+      family: validFamilies.indexOf(params.get('collection')) > -1 ? params.get('collection') : '',
       gift: gift ? params.get('gift') === '1' : false,
       price: parsePrice(params.get('price')),
       sort: params.get('sort') || 'featured',
@@ -112,7 +113,7 @@
     function writeUrl() {
       var p = new URLSearchParams(location.search);
       if (state.wearer !== 'all') p.set('for', state.wearer); else p.delete('for');
-      if (state.family) p.set('family', state.family); else p.delete('family');
+      if (state.family) p.set('collection', state.family); else p.delete('collection');
       if (state.gift) p.set('gift', '1'); else p.delete('gift');
       if (state.price) p.set('price', state.price); else p.delete('price');
       if (state.sort !== 'featured') p.set('sort', state.sort); else p.delete('sort');
@@ -123,7 +124,7 @@
 
     function apply(animate) {
       tabs.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.hoaFor === state.wearer)); });
-      tags.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.hoaFamily === state.family)); });
+      tags.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.hoaLine === state.family)); });
       if (gift) gift.setAttribute('aria-pressed', String(state.gift));
       views.forEach(function (v) { v.setAttribute('aria-pressed', String(v.dataset.hoaFview === state.view)); });
       if (sort) sort.value = state.sort;
@@ -147,7 +148,7 @@
       var visible = 0;
       ordered.forEach(function (it) {
         var on = (state.wearer === 'all' || it.dataset.for === state.wearer) &&
-                 (!state.family || it.dataset.family === state.family) &&
+                 (!state.family || it.dataset.line === state.family) &&
                  (!state.gift || it.dataset.gift === 'true') &&
                  (!bounds || (+it.dataset.price >= bounds.min && +it.dataset.price <= bounds.max));
         it.hidden = !on;
@@ -181,7 +182,7 @@
 
     var onTab = function (e) { set({ wearer: e.currentTarget.dataset.hoaFor }); };
     var onTag = function (e) {
-      var f = e.currentTarget.dataset.hoaFamily;
+      var f = e.currentTarget.dataset.hoaLine;
       set({ family: state.family === f ? '' : f });
     };
     var onView = function (e) {
@@ -415,7 +416,54 @@
     cleanups.push(function () { io.disconnect(); });
   }
 
-  function init() { initCatalog(); initAdd(); initReveals(); }
+  /* Interlude rotation: with "Interlude slide" blocks, the campaign photo shows one fragrance
+     at a time; photo, name, note and link change together every N seconds (default 5). The slot
+     follows the clock (seconds since 1970 / N), so every visitor sees the same fragrance in the same
+     window and a reload keeps it. The swap is a short fade; the next photo is loaded first. */
+  function initInterlude() {
+    var fig = document.querySelector('[data-hoa-interlude][data-hoa-interlude-seconds]');
+    if (!fig) return;
+    var slides = Array.prototype.slice.call(fig.querySelectorAll('template[data-hoa-interlude-slide]'));
+    if (slides.length < 2) return;
+    var period = Math.max(3, parseFloat(fig.getAttribute('data-hoa-interlude-seconds')) || 5) * 1000;
+    var current = -1;
+    var timer = 0;
+    var slotNow = function () { return Math.floor(Date.now() / period) % slides.length; };
+
+    function render(i) {
+      // replace everything except the slide templates
+      Array.prototype.slice.call(fig.children).forEach(function (c) { if (c.tagName !== 'TEMPLATE') fig.removeChild(c); });
+      fig.insertBefore(slides[i].content.cloneNode(true), fig.firstChild);
+      current = i;
+    }
+    function show(i, animate) {
+      if (i === current) return;
+      if (!animate || reduceMotion) { render(i); return; }
+      var probe = slides[i].content.querySelector('img');
+      var go = function () {
+        fig.classList.add('is-swapping');
+        setTimeout(function () { render(i); requestAnimationFrame(function () { fig.classList.remove('is-swapping'); }); }, 450);
+      };
+      if (!probe) { go(); return; }
+      var pre = new Image();
+      pre.onload = pre.onerror = go;
+      if (probe.srcset) { pre.sizes = probe.sizes; pre.srcset = probe.srcset; }
+      pre.src = probe.src;
+    }
+    function schedule() {
+      clearTimeout(timer);
+      var wait = period - (Date.now() % period) + 50;   // just after the next slot begins
+      timer = setTimeout(function () { show(slotNow(), true); schedule(); }, wait);
+    }
+    function onVisible() { if (!document.hidden) { show(slotNow(), true); schedule(); } }
+
+    show(slotNow(), false);
+    schedule();
+    document.addEventListener('visibilitychange', onVisible);
+    cleanups.push(function () { clearTimeout(timer); document.removeEventListener('visibilitychange', onVisible); });
+  }
+
+  function init() { initCatalog(); initAdd(); initReveals(); initInterlude(); }
   function destroy() {
     cleanups.forEach(function (fn) { try { fn(); } catch (e) {} });
     cleanups = [];

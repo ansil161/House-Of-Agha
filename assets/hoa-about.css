@@ -1171,3 +1171,161 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-about .hoa-ab-name__side::before,
 .hoa-about .hoa-ab-hyd__visual::before,
 .hoa-about .hoa-ab-hyd__visual::after { background: var(--ab-gold-ink); opacity: 0.75; }
+
+/* ==========================================================================
+   ABOUT · MORE HERITAGE PATTERN (2026-10-05, user: "use more heritage pattern")
+   1. Jaali spandrels: the corners above every arched photo are filled with the lattice,
+      as in carved Qutb Shahi arches (the jaali, minus the arch shape, in the outline's box).
+   2. Section dividers become jaali friezes either side of the arch mark.
+   3. The closing card's lattice reads a little more.
+   ========================================================================== */
+.hoa-ab-arch { isolation: isolate; }
+.hoa-ab-arch::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--al) * -1);
+  left: calc(var(--al) * -1);
+  width: calc(100% + var(--al) * 2);
+  height: calc(100% + var(--al));
+  background: var(--ab-gold);
+  opacity: 0.5;
+  pointer-events: none;
+  /* jaali ∩ (box − arch) */
+  -webkit-mask-image: url("hoa-jaali.svg"), linear-gradient(#000, #000), var(--ab-arch);
+          mask-image: url("hoa-jaali.svg"), linear-gradient(#000, #000), var(--ab-arch);
+  -webkit-mask-size: var(--jt, 22px) var(--jt, 22px), 100% 100%, 100% 100%;
+          mask-size: var(--jt, 22px) var(--jt, 22px), 100% 100%, 100% 100%;
+  -webkit-mask-position: center top, 0 0, 0 0;
+          mask-position: center top, 0 0, 0 0;
+  -webkit-mask-repeat: repeat, no-repeat, no-repeat;
+          mask-repeat: repeat, no-repeat, no-repeat;
+  -webkit-mask-composite: source-in, xor;
+          mask-composite: intersect, exclude;
+}
+.hoa-ab-story__frame { --jt: 26px; }
+.hoa-ab-story__frame::before { opacity: 0.55; }
+/* the portrait already sits on a jaali plate */
+.hoa-ab-chapter__arch::before { content: none; }
+/* on the sand panel and the dark card */
+.hoa-ab-name__arch .hoa-ab-arch::before { background: var(--ab-gold-ink); opacity: 0.45; }
+.hoa-ab-cta__media::before { background: var(--ab-gold-2); opacity: 0.35; }
+
+/* Dividers: a lattice frieze, not a plain hairline */
+.hoa-about .hoa-ab-rule { gap: 18px; }
+.hoa-about .hoa-ab-rule::before,
+.hoa-about .hoa-ab-rule::after {
+  height: 16px;
+  background: var(--ab-gold);
+  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 16px 16px;
+          mask: url("hoa-jaali.svg") repeat-x center / 16px 16px;
+  opacity: 0.75;
+}
+.hoa-about .hoa-ab-rule::before { -webkit-mask-position: right center; mask-position: right center; }
+.hoa-about .hoa-ab-rule::after { -webkit-mask-position: left center; mask-position: left center; }
+.hoa-about .hoa-ab-rule svg { width: 18px; height: 22px; }
+
+/* Closing card lattice */
+.hoa-about .hoa-ab-cta::before { opacity: 0.11; background-size: 40px 40px; }
+
+@media (max-width: 640px) {
+  .hoa-ab-arch { --jt: 16px; }
+  .hoa-ab-story__frame { --jt: 18px; }
+  .hoa-about .hoa-ab-rule::before,
+  .hoa-about .hoa-ab-rule::after { height: 12px; -webkit-mask-size: 12px 12px; mask-size: 12px 12px; }
+}
+
+/* ==========================================================================
+   ABOUT · INGREDIENT NICHES (2026-10-05, user: "creative design, heritage patterns")
+   Each ingredient stands in a Qutb Shahi arch: gold outline, jaali lattice in the arch head,
+   a round medallion with the ingredient drawn in line, then number, name, botanical name,
+   on a double-rule plinth. Four in a row read as an arcade.
+   ========================================================================== */
+.hoa-about .hoa-ab-specimens { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 6px 0; }
+.hoa-about .hoa-ab-specimen {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 30px 10px 18px;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  text-align: center;
+}
+/* the niche: ivory inside the arch */
+.hoa-ab-specimen::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 4px;
+  z-index: -2;
+  background: var(--ab-paper);
+  -webkit-mask: var(--ab-arch) top / 100% 100% no-repeat;
+          mask: var(--ab-arch) top / 100% 100% no-repeat;
+}
+/* jaali lattice filling the arch head, fading out above the text */
+.hoa-ab-specimen::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 4px;
+  z-index: -1;
+  background: var(--ab-gold);
+  opacity: 0.55;
+  -webkit-mask-image: url("hoa-jaali.svg"), linear-gradient(#000 0, #000 22%, transparent 46%), var(--ab-arch);
+          mask-image: url("hoa-jaali.svg"), linear-gradient(#000 0, #000 22%, transparent 46%), var(--ab-arch);
+  -webkit-mask-size: 14px 14px, 100% 100%, 100% 100%;
+          mask-size: 14px 14px, 100% 100%, 100% 100%;
+  -webkit-mask-position: center top, 0 0, 0 0;
+          mask-position: center top, 0 0, 0 0;
+  -webkit-mask-repeat: repeat, no-repeat, no-repeat;
+          mask-repeat: repeat, no-repeat, no-repeat;
+  -webkit-mask-composite: source-in, source-in;
+          mask-composite: intersect, intersect;
+  transition: opacity 0.6s var(--hoa-ease);
+}
+.hoa-ab-specimen__arch {
+  position: absolute;
+  inset: 0 0 4px;
+  width: 100%;
+  height: calc(100% - 4px);
+  overflow: visible;
+  pointer-events: none;
+}
+.hoa-ab-specimen__arch path { fill: none; stroke: var(--ab-gold); stroke-width: 1; }
+/* plinth: a double gold rule under the niche */
+.hoa-about .hoa-ab-specimen { border-bottom: 3px double var(--ab-gold); }
+.hoa-ab-specimen__medal {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: var(--ab-ivory-2);
+  box-shadow: 0 0 0 1px var(--ab-hair), 0 0 0 4px var(--ab-ivory-2), 0 0 0 5px var(--ab-hair-soft);
+  color: var(--ab-gold-ink);
+  transition: transform 0.6s var(--hoa-ease);
+}
+.hoa-ab-specimen__medal svg { width: 24px; height: 24px; }
+.hoa-about .hoa-ab-specimen__no { font-size: 0.6rem; letter-spacing: 0.22em; }
+.hoa-about .hoa-ab-specimen__name { font-size: 1.22rem; line-height: 1.1; overflow-wrap: anywhere; }
+.hoa-ab-specimen__dot { width: 5px; height: 5px; margin: 2px 0; background: var(--ab-gold); transform: rotate(45deg); }
+.hoa-about .hoa-ab-specimen__latin { font-size: 0.72rem; font-style: italic; line-height: 1.35; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hoa-ab-specimen:hover::after { opacity: 0.85; }
+  .hoa-ab-specimen:hover .hoa-ab-specimen__medal { transform: translateY(-3px); }
+}
+/* narrow body column: two by two */
+@media (max-width: 1180px) {
+  .hoa-about .hoa-ab-specimens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hoa-about .hoa-ab-specimen { padding-top: 34px; }
+}
+@media (max-width: 640px) {
+  .hoa-about .hoa-ab-specimen { padding: 28px 8px 16px; }
+  .hoa-ab-specimen__medal { width: 40px; height: 40px; }
+  .hoa-ab-specimen__medal svg { width: 21px; height: 21px; }
+  .hoa-about .hoa-ab-specimen__name { font-size: 1.1rem; }
+}

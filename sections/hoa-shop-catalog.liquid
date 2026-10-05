@@ -1,8 +1,8 @@
 {% comment %}
   SHOP · Catalogue
-  Every fragrance in the collection, filterable by wearer (Men / Women / Unisex), scent
-  family and price, sortable, and shown as a grid or a list. The toolbar sticks under the header.
-  Filtering happens in place (hoa-shop.js) and is mirrored in the URL (?for=, ?family=,
+  Every fragrance in the collection, filterable by wearer (Men / Women / Unisex),
+  collection (Main Collection / Oud / Attar) and price, sortable, and shown as a grid or a list. The toolbar sticks under the header.
+  Filtering happens in place (hoa-shop.js) and is mirrored in the URL (?for=, ?collection=,
   ?price=, ?sort=, ?view=list) so a filtered view can be linked. Without JS every product is
   listed in the grid.
 
@@ -47,9 +47,19 @@
   assign interlude_after = 3
 -%}
 
+{%- comment -%}
+  Campaign photo in the grid (the interlude). Slide 1 = the "Campaign photo" settings; every
+  "Interlude slide" block adds a fragrance. With more than one slide, assets/hoa-shop.js shows
+  them in turn: the photo, name, note and link change together every N seconds
+  (interlude_seconds, default 5). The turn follows the clock (slot = seconds since 1970 / N), so every
+  visitor sees the same fragrance in the same window and a reload keeps it. Each slide is a
+  <template> so its links are real hrefs; without JS slide 1 simply stays.
+{%- endcomment -%}
 {%- capture interlude -%}
   {%- if s.show_interlude -%}
-    <figure class="hoa-shop-interlude" data-hoa-interlude>
+    {%- assign rotate_blocks = section.blocks | where: 'type', 'interlude' -%}
+    {%- assign interlude_seconds = s.interlude_seconds | default: 5 -%}
+    <figure class="hoa-shop-interlude" data-hoa-interlude{% if rotate_blocks.size > 0 %} data-hoa-interlude-seconds="{{ interlude_seconds }}"{% endif %}>
       <a class="hoa-shop-interlude__media" href="{{ s.interlude_url | default: '/products/sea-smoke' }}">
         {%- render 'hoa-img', name: s.interlude_asset, image: s.interlude_image, w: 1200, h: 1200, alt: s.interlude_alt, sizes: '(min-width: 1000px) 62vw, 100vw' -%}
       </a>
@@ -58,6 +68,40 @@
         <p class="hoa-shop-interlude__meta">{{ s.interlude_note }}</p>
         <p class="hoa-shop-interlude__link"><a href="{{ s.interlude_url | default: '/products/sea-smoke' }}">{{ s.interlude_link }}<span aria-hidden="true">&rarr;</span></a></p>
       </figcaption>
+      {%- if rotate_blocks.size > 0 -%}
+        <template data-hoa-interlude-slide>
+          <a class="hoa-shop-interlude__media" href="{{ s.interlude_url | default: '/products/sea-smoke' }}">
+            {%- render 'hoa-img', name: s.interlude_asset, image: s.interlude_image, w: 1200, h: 1200, alt: s.interlude_alt, sizes: '(min-width: 1000px) 62vw, 100vw' -%}
+          </a>
+          <figcaption class="hoa-shop-interlude__cap">
+            <p class="hoa-shop-interlude__name">{{ s.interlude_caption }}</p>
+            <p class="hoa-shop-interlude__meta">{{ s.interlude_note }}</p>
+            <p class="hoa-shop-interlude__link"><a href="{{ s.interlude_url | default: '/products/sea-smoke' }}">{{ s.interlude_link }}<span aria-hidden="true">&rarr;</span></a></p>
+          </figcaption>
+        </template>
+        {%- for block in rotate_blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign slide_url = '/products/' | append: b.handle
+            if b.url != blank
+              assign slide_url = b.url
+            endif
+            assign slide_w = b.w | default: 1200
+            assign slide_h = b.h | default: 1200
+            assign slide_link = b.link_label | default: s.interlude_link
+          -%}
+          <template data-hoa-interlude-slide {{ block.shopify_attributes }}>
+            <a class="hoa-shop-interlude__media" href="{{ slide_url }}"{% if b.focus != blank %} style="--focus: {{ b.focus }}"{% endif %}>
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: slide_w, h: slide_h, alt: b.alt, sizes: '(min-width: 1000px) 62vw, 100vw' -%}
+            </a>
+            <figcaption class="hoa-shop-interlude__cap">
+              <p class="hoa-shop-interlude__name">{{ b.caption }}</p>
+              <p class="hoa-shop-interlude__meta">{{ b.note }}</p>
+              <p class="hoa-shop-interlude__link"><a href="{{ slide_url }}">{{ slide_link }}<span aria-hidden="true">&rarr;</span></a></p>
+            </figcaption>
+          </template>
+        {%- endfor -%}
+      {%- endif -%}
     </figure>
   {%- endif -%}
 {%- endcapture -%}
@@ -93,11 +137,11 @@
         <button type="button" class="hoa-ftab" aria-pressed="false" data-hoa-for="unisex">{{ s.unisex_label }}<sup data-hoa-count="unisex"></sup></button>
       </div>
 
-      <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by scent family">
-        <span class="hoa-shop-bar__label">Family</span>
+      <div class="hoa-shop-bar__group hoa-shop-bar__group--family" role="group" aria-label="Filter by collection">
+        <span class="hoa-shop-bar__label">{{ s.collections_label | default: 'Collection' }}</span>
         {%- for f in families -%}
           {%- assign fl = f | strip -%}
-          <button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-family="{{ fl | handleize }}">{{ fl }}</button>
+          <button type="button" class="hoa-ftag" aria-pressed="false" data-hoa-line="{{ fl | handleize }}">{{ fl }}</button>
         {%- endfor -%}
       </div>
 
@@ -166,6 +210,30 @@
           {%- if s.show_gift and product.handle == gift_handle -%}{%- continue -%}{%- endif -%}
           {%- liquid
             assign fam = product.metafields.custom.family.value | default: product.type
+            comment
+              Collection (toolbar filter): custom.collection metafield; else the product type or a
+              tag named Attar / Oud (also "collection:attar" …); else "Main Collection".
+            endcomment
+            assign line = product.metafields.custom.collection.value
+            if line == blank
+              assign line = 'Main Collection'
+              assign type_lc = product.type | downcase | strip
+              if type_lc == 'attar' or type_lc == 'attars'
+                assign line = 'Attar'
+              elsif type_lc == 'oud' or type_lc == 'ouds'
+                assign line = 'Oud'
+              endif
+              for t in product.tags
+                assign tl = t | downcase | remove: 'collection:' | strip
+                if tl == 'attar' or tl == 'attars'
+                  assign line = 'Attar'
+                  break
+                elsif tl == 'oud' or tl == 'ouds'
+                  assign line = 'Oud'
+                  break
+                endif
+              endfor
+            endif
             assign wearer = product.metafields.custom.gender.value | downcase
             if wearer == blank
               for t in product.tags
@@ -226,6 +294,7 @@
             url: product.url,
             name: product.title,
             family: fam,
+            line: line,
             wearer: wearer,
             gift: is_gift,
             img_main: img_main,
@@ -268,6 +337,7 @@
             url: purl,
             name: p.name,
             family: p.family,
+            line: p.line,
             wearer: p.wearer,
             gift: gift_v,
             img_main: img_main,
@@ -381,7 +451,8 @@
     { "type": "text", "id": "men_label", "label": "Men tab", "default": "Men" },
     { "type": "text", "id": "women_label", "label": "Women tab", "default": "Women" },
     { "type": "text", "id": "unisex_label", "label": "Unisex tab", "default": "Unisex" },
-    { "type": "text", "id": "families", "label": "Scent families (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
+    { "type": "text", "id": "collections_label", "label": "Collection filter label", "default": "Collection" },
+    { "type": "text", "id": "families", "label": "Collections (comma separated)", "info": "Matched against the custom.collection metafield. Without it, a product whose type or a tag is Oud or Attar goes there; everything else is Main Collection.", "default": "Main Collection, Oud, Attar" },
     { "type": "text", "id": "gift_label", "label": "Gift category label", "info": "Matched against the custom.gift metafield or a tag containing \"gift\".", "default": "Gift" },
     { "type": "header", "content": "Campaign photo in the grid" },
     { "type": "checkbox", "id": "show_interlude", "label": "Show photo after the third product", "default": true },
@@ -392,6 +463,7 @@
     { "type": "text", "id": "interlude_note", "label": "Caption note", "default": "By the water" },
     { "type": "text", "id": "interlude_link", "label": "Link label", "default": "View" },
     { "type": "url", "id": "interlude_url", "label": "Link" },
+    { "type": "range", "id": "interlude_seconds", "label": "Change the photo every (seconds)", "min": 3, "max": 60, "step": 1, "unit": "s", "default": 5, "info": "Only when \"Interlude slide\" blocks are added. The photo above is slide 1." },
     { "type": "header", "content": "Gift set feature after the grid" },
     { "type": "paragraph", "content": "One full-width feature: product photo beside a dark panel. The product is not repeated as a card in the grid." },
     { "type": "checkbox", "id": "show_gift", "label": "Show gift set feature", "default": true },
@@ -403,7 +475,27 @@
     { "type": "text", "id": "gift_link_label", "label": "Link label", "default": "Discover" },
     { "type": "header", "content": "No results" },
     { "type": "text", "id": "empty_title", "label": "Title", "default": "Nothing matches both filters." },
-    { "type": "text", "id": "empty_text", "label": "Text", "default": "Try another scent family, or see every fragrance." }
+    { "type": "text", "id": "empty_text", "label": "Text", "default": "Try another collection, or see every fragrance." }
+  ],
+  "blocks": [
+    {
+      "type": "interlude",
+      "name": "Interlude slide",
+      "settings": [
+        { "type": "paragraph", "content": "One more fragrance for the campaign photo in the grid. Photo, name, note and link change together." },
+        { "type": "text", "id": "handle", "label": "Product handle", "info": "Builds the link /products/<handle> unless a link is set below." },
+        { "type": "text", "id": "caption", "label": "Name" },
+        { "type": "text", "id": "note", "label": "Note" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
+        { "type": "number", "id": "w", "label": "Theme asset width (px)" },
+        { "type": "number", "id": "h", "label": "Theme asset height (px)" },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "focus", "label": "Focus point", "info": "CSS object-position, e.g. 50% 40%. The frame is wide, so tall photos are cropped." },
+        { "type": "text", "id": "link_label", "label": "Link label", "info": "Defaults to the label of slide 1." },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
   ],
   "presets": [{ "name": "HOA Shop catalogue" }]
 }

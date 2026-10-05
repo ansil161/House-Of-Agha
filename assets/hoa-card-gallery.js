@@ -12,9 +12,9 @@
    card keeps its primary image. Delegated listeners, so cards added later just work. */
 (function () {
   if (window.HOA_CARD_GALLERY) return;
-  var HOLD = 1200;            // ms an image stays fully on screen
-  var FADE = 700;             // ms crossfade (matches .hoa-pc__img--slide in hoa-card.css)
-  var FIRST = 350;            // ms before the first change, so a pass-over does nothing jarring
+  var HOLD = 600;             // ms an image stays fully on screen
+  var FADE = 350;             // ms crossfade (matches .hoa-pc__img--slide in hoa-card.css)
+  var FIRST = 200;            // ms before the first change, so a pass-over does nothing jarring
   var canHover = window.matchMedia ? matchMedia('(hover: hover) and (pointer: fine)') : { matches: true };
   var active = null;          // { card, slides, idx, z, timer, hideTimer }
 

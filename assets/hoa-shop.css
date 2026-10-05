@@ -313,7 +313,11 @@
 .hoa-shop-interlude { grid-column: span 2; display: flex; flex-direction: column; gap: 14px; margin: 0; min-width: 0; }
 .hoa-shop-interlude__cap { padding: 0 8px; }
 .hoa-shop-interlude__media { position: relative; flex: 1; min-height: 280px; overflow: hidden; border-radius: clamp(22px, 2.2vw, 30px); background: var(--hoa-stone); }
-.hoa-shop-interlude__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 55%; transition: transform 1.2s var(--hoa-ease); }
+.hoa-shop-interlude__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 40% 55%); transition: transform 1.2s var(--hoa-ease); }
+/* Rotating slides (hoa-shop.js): photo and caption fade out, swap, fade back in */
+.hoa-shop-interlude__media, .hoa-shop-interlude__cap { transition: opacity 0.45s var(--hoa-ease); }
+.hoa-shop-interlude.is-swapping .hoa-shop-interlude__media,
+.hoa-shop-interlude.is-swapping .hoa-shop-interlude__cap { opacity: 0; }
 .hoa-shop-interlude__media:hover img { transform: scale(1.02); }
 .hoa-shop-interlude__cap a { display: inline-flex; gap: 6px; color: var(--hoa-ink); font-weight: 500; text-decoration: none; }
 .hoa-shop-interlude__cap a span { transition: transform 0.4s var(--hoa-ease); }

@@ -6,7 +6,95 @@
     },
     "catalog": {
       "type": "hoa-shop-catalog",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "interlude_agha_blue": {
+          "type": "interlude",
+          "settings": {
+            "handle": "agha-blue",
+            "caption": "Agha Blue",
+            "note": "Into the dusk",
+            "asset": "hoa-world-profile",
+            "w": 2000,
+            "h": 1125,
+            "alt": "A man in profile holding Agha Blue against a warm amber light",
+            "focus": "50% 40%"
+          }
+        },
+        "interlude_shamamah": {
+          "type": "interlude",
+          "settings": {
+            "handle": "shamamah",
+            "caption": "Shamamah",
+            "note": "On old bark and moss",
+            "asset": "hoa-world-shamamah",
+            "w": 1600,
+            "h": 1600,
+            "alt": "Shamamah on old bark among moss, sandalwood and lavender",
+            "focus": "50% 55%"
+          }
+        },
+        "interlude_maha": {
+          "type": "interlude",
+          "settings": {
+            "handle": "maha",
+            "caption": "Maha",
+            "note": "In red silk",
+            "asset": "hoa-world-maha",
+            "w": 1400,
+            "h": 1738,
+            "alt": "Maha standing among folds of deep red silk",
+            "focus": "50% 62%"
+          }
+        },
+        "interlude_oud_of_dark_paradise": {
+          "type": "interlude",
+          "settings": {
+            "handle": "oud-of-dark-paradise",
+            "caption": "Oud of Dark Paradise",
+            "note": "After dark",
+            "asset": "hoa-world-hand",
+            "w": 1086,
+            "h": 1448,
+            "alt": "A hand in a dark suit holds Oud of Dark Paradise, in black and white",
+            "focus": "50% 45%"
+          }
+        },
+        "interlude_oud_fury": {
+          "type": "interlude",
+          "settings": {
+            "handle": "oud-fury",
+            "caption": "Oud Fury",
+            "note": "Under the arch",
+            "asset": "hoa-family-woody-oud-fury",
+            "w": 1200,
+            "h": 1600,
+            "alt": "Oud Fury on a carved stone ledge with oud wood, saffron and rose, a minaret through the arch",
+            "focus": "55% 72%"
+          }
+        },
+        "interlude_tobacco_enigma": {
+          "type": "interlude",
+          "settings": {
+            "handle": "tobacco-enigma",
+            "caption": "Tobacco Enigma",
+            "note": "In the green",
+            "asset": "hoa-family-green",
+            "w": 1088,
+            "h": 1445,
+            "alt": "Tobacco Enigma on moss in a sunlit forest",
+            "focus": "60% 55%"
+          }
+        }
+      },
+      "block_order": [
+        "interlude_agha_blue",
+        "interlude_shamamah",
+        "interlude_maha",
+        "interlude_oud_of_dark_paradise",
+        "interlude_oud_fury",
+        "interlude_tobacco_enigma"
+      ]
     },
     "bundles": {
       "type": "hoa-shop-bundles",

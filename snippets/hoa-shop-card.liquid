@@ -18,6 +18,7 @@
 
   Params
     index, handle, url, name, family, wearer ('men' | 'women' | 'unisex'), gift ('true' | 'false')
+    line                 collection for the shop filter ('Main Collection' | 'Oud' | 'Attar'); default Main Collection
     img_main, img_mood   pre-rendered image HTML (mood may be blank)
     gallery              optional list of extra image URLs (mock catalog `gallery`), shown after the mood image
     media                optional Shopify product.media; when given, the hover carousel uses every image after
@@ -153,7 +154,7 @@
   endif
   assign g_urls = g_urls | split: '|' | uniq | join: '|'
 -%}
-<article class="hoa-pc{% if compact == true or compact == 'true' %} hoa-pc--compact{% endif %}" data-hoa-item data-hoa-card data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
+<article class="hoa-pc{% if compact == true or compact == 'true' %} hoa-pc--compact{% endif %}" data-hoa-item data-hoa-card data-for="{{ wearer }}" data-family="{{ family | handleize }}" data-line="{{ line | default: 'Main Collection' | handleize }}" data-gift="{{ gift }}" data-name="{{ name | escape }}" data-title="{{ name | upcase | escape }}" data-index="{{ index }}" data-product-id="{{ product_id | default: handle }}"
          data-image="{{ thumb }}" data-price="{{ sale_n }}" data-price-text="{{ now_text | escape }}"{% if has_offer %} data-compare-text="{{ was_text | escape }}" data-offer="true"{% endif %}{% if is_best %} data-best="true"{% endif %}>
   <div class="hoa-pc__visual">
     <a class="hoa-pc__media" href="{{ url }}" tabindex="-1" aria-hidden="true"{% if g_urls != blank %} data-hoa-gallery="{{ g_urls | escape }}"{% endif %}>
