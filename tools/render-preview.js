@@ -368,7 +368,10 @@ async function renderTemplate(name, templateGlobals) {
     const html = fs.readFileSync(file, 'utf8');
     if (!footerRe.test(html)) { console.warn('no footer in', f); continue; }
     const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
-    const block = footerHtml.replace(/(src|href)="\/assets\//g, `$1="${pre}assets/`);
+    // Shopify links (/pages/contact …) → the preview's .html files, as for the header and sections
+    const block = footerHtml
+      .replace(/href="(\/(?!assets\/)[^"]*)"/g, (m, url) => `href="${toPreview(url)}"`)
+      .replace(/(src|href)="\/assets\//g, `$1="${pre}assets/`);
     fs.writeFileSync(file, html.replace(footerRe, () => block));
   }
   console.log('footer on', all.length, 'pages');

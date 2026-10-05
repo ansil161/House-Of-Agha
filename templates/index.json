@@ -183,7 +183,9 @@
     },
     "collection": {
       "type": "hoa-collection",
-      "settings": {}
+      "settings": {
+        "show_tabs": false
+      }
     },
     "films": {
       "type": "hoa-reels",

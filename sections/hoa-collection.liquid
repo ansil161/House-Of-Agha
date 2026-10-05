@@ -36,6 +36,7 @@
       <div>
         <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
         <p class="hoa-offer-note hoa-collection__note" data-hoa-reveal>{{ catalog.settings.messages.tiers }}</p>
+        {%- if s.show_tabs -%}
         <div class="hoa-tabs" role="tablist" aria-label="Filter by scent family" data-hoa-reveal>
           <button class="hoa-tab" role="tab" type="button" aria-selected="true" data-hoa-filter="all">{{ s.all_tab }}</button>
           {%- for t in tabs -%}
@@ -43,6 +44,7 @@
             <button class="hoa-tab" role="tab" type="button" aria-selected="false" data-hoa-filter="{{ tl | handleize }}">{{ tl }}</button>
           {%- endfor -%}
         </div>
+        {%- endif -%}
       </div>
       <a class="hoa-link" href="{{ all_url }}" data-hoa-reveal>{{ s.all_label }}</a>
     </header>
@@ -199,6 +201,7 @@
     { "type": "collection", "id": "collection", "label": "Collection", "info": "Falls back to a collection with the handle best-sellers." },
     { "type": "range", "id": "limit", "label": "Products to show", "min": 3, "max": 11, "step": 1, "default": 7 },
     { "type": "text", "id": "all_tab", "label": "First tab", "default": "All" },
+    { "type": "checkbox", "id": "show_tabs", "label": "Show family filter tabs", "default": true },
     { "type": "text", "id": "tabs", "label": "Family tabs (comma separated)", "info": "Matched against the custom.family metafield or the product type.", "default": "Woody, Fresh, Floral, Aromatic" },
     { "type": "text", "id": "product_label", "label": "Line under each product", "default": "Eau de Parfum" },
     { "type": "text", "id": "all_label", "label": "Link label", "default": "Shop all fragrances" },

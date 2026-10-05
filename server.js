@@ -23,6 +23,17 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let url = req.url.split('?')[0];
 
+  // Shopify-style page addresses (/pages/contact …) redirect to the preview's .html file. Serving
+  // the file under /pages/ would break it: its relative assets/… links would point at /pages/assets/.
+  const pageAlias = url.match(/^\/pages\/(the-house|about|private-access|contact|faq|shipping-returns)\/?$/);
+  if (pageAlias) {
+    const name = pageAlias[1] === 'about' ? 'the-house' : pageAlias[1];
+    const q = req.url.indexOf('?');
+    res.writeHead(302, { Location: '/' + name + '.html' + (q > -1 ? req.url.slice(q) : '') });
+    res.end();
+    return;
+  }
+
   // Route aliases for local preview
   if (url === '/' || url === '/index' || url === '/index.html') {
     url = 'index.html';

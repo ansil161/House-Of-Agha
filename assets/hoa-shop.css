@@ -56,11 +56,31 @@
   text-transform: uppercase;
   color: var(--hoa-mute);
 }
+/* Canela (Commercial Type, licensed) for the "All fragrances" heading only.
+   The font files are NOT in the theme yet: upload them to assets/ with exactly these names
+   (canela-light.woff2/.woff = Canela Light 300, canela-regular.woff2/.woff = Canela Regular 400).
+   Until then the heading falls back to the current Bodoni Moda and looks as before.
+   Relative urls resolve next to this stylesheet (assets/), on Shopify's CDN and in the preview. */
+@font-face {
+  font-family: 'Canela';
+  src: url('canela-light.woff2') format('woff2'), url('canela-light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela';
+  src: url('canela-regular.woff2') format('woff2'), url('canela-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 .hoa-shop-head__title {
   margin: 0;
   padding-bottom: 0.06em; /* descender room for the g */
-  font-family: var(--hoa-serif);
-  font-weight: 400;
+  font-family: 'Canela', var(--hoa-serif);
+  font-weight: 300;               /* Canela Light; Bodoni Moda's lightest is 400, so the fallback is unchanged */
+  font-synthesis: none;           /* never a faked bold or italic */
   font-size: clamp(3.4rem, 7vw, 7.2rem);
   line-height: 1.02;
   letter-spacing: -0.025em;

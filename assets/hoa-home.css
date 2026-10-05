@@ -1928,7 +1928,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   font-family: var(--font-name, var(--hoa-serif)); font-weight: 400;
   font-size: clamp(1.9rem, 3.2vw, 3rem); line-height: 1.08; letter-spacing: -0.025em; text-transform: none; color: var(--ft-ink);
 }
-.hoa-footer__display span { color: var(--ft-mute); }
+.hoa-footer__display span { color: var(--ft-ink); }   /* white, like the first line (client 2026-10-05) */
 
 /* Newsletter: outer tray + inner field, black pill button with a nested icon */
 .hoa-footer__form {
