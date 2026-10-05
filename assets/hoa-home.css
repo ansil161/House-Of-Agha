@@ -618,6 +618,9 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   color: var(--hoa-ink);
   overflow: hidden;
 }
+/* Signature carousel straight into The House: one small beat between them, not two full section paddings */
+.shopify-section:has(> .hoa-cf):has(+ .shopify-section > .hoa-manifesto) > .hoa-cf { padding-bottom: clamp(28px, 3vw, 48px); }
+.shopify-section:has(> .hoa-cf) + .shopify-section > .hoa-manifesto { padding-top: clamp(28px, 3vw, 48px); }
 .hoa-cf__head { text-align: center; }
 .hoa-cf__head .hoa-h2 {
   margin-top: 18px;

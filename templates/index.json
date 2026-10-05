@@ -128,7 +128,9 @@
         "f_tobacco",
         "f_shamamah"
       ],
-      "settings": {}
+      "settings": {
+        "all_label": ""
+      }
     },
     "bridge": {
       "type": "hoa-bridge",
