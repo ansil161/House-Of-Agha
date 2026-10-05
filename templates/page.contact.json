@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "contact": {
+      "type": "hoa-contact",
+      "blocks": {
+        "help_shipping": {
+          "type": "link",
+          "settings": { "title": "Shipping & returns", "text": "Delivery times, charges and how returns work.", "url": "/pages/shipping-returns" }
+        },
+        "help_faq": {
+          "type": "link",
+          "settings": { "title": "Questions", "text": "Answers on our fragrances, wear and care.", "url": "/pages/faq" }
+        },
+        "help_orders": {
+          "type": "link",
+          "settings": { "title": "Your orders", "text": "Track an order or see past purchases.", "url": "/account" }
+        }
+      },
+      "block_order": ["help_shipping", "help_faq", "help_orders"],
+      "settings": {}
+    }
+  },
+  "order": ["contact"]
+}

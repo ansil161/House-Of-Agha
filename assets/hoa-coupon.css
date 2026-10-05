@@ -26,7 +26,7 @@
 
 .hoa-coupon__body { padding: clamp(32px, 4vw, 52px) clamp(28px, 4vw, 48px); display: flex; flex-direction: column; align-items: flex-start; }
 .hoa-coupon__eyebrow { margin: 0 0 18px; font: 500 0.68rem/1 var(--hoa-sans); letter-spacing: 0.24em; text-transform: uppercase; color: var(--hoa-brass); }
-.hoa-coupon__title { margin: 0 0 16px; font: 400 clamp(1.8rem, 3vw, 2.5rem)/1.08 var(--hoa-serif); letter-spacing: -0.01em; color: var(--hoa-ink); }
+.hoa-coupon__title { margin: 0 0 16px; font: 400 clamp(1.8rem, 3vw, 2.5rem)/1.08 var(--hoa-serif); letter-spacing: -0.01em; font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0; color: var(--hoa-ink); }
 .hoa-coupon__title em { display: block; font-style: italic; color: var(--hoa-ink-2); }
 .hoa-coupon__desc { margin: 0 0 28px; max-width: 34ch; font: 400 0.9rem/1.6 var(--hoa-sans); color: var(--hoa-ink-2); }
 

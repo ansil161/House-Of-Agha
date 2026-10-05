@@ -20,6 +20,7 @@ engine.registerFilter('placeholder_svg_tag', () => '<svg></svg>');
 engine.registerFilter('shopify_asset_url', () => '');
 engine.registerFilter('script_tag', () => '');
 engine.registerFilter('default_pagination', () => '');
+engine.registerFilter('default_errors', () => '');
 engine.registerFilter('format_address', (a) => a ? [
   [a.first_name, a.last_name].filter(Boolean).join(' '), a.company, a.address1, a.address2,
   [a.city, a.province_code, a.zip].filter(Boolean).join(' '), a.country
@@ -40,7 +41,7 @@ engine.registerTag('schema', {
 const FORM_ACTIONS = {
   customer_login: '/account/login', recover_customer_password: '/account/recover', guest_login: '/account/login',
   create_customer: '/account', reset_customer_password: '/account/reset', activate_customer_password: '/account/activate',
-  customer_address: '/account/addresses', product: '/cart/add'
+  customer_address: '/account/addresses', product: '/cart/add', contact: '/contact'
 };
 engine.registerTag('form', {
   parse(token, remain) {
@@ -184,7 +185,7 @@ async function renderTemplate(name, templateGlobals) {
   console.log('shared header on', inner.length, 'inner pages');
 
   // Pages built from JSON templates: replace the preview file's <main> with the rendered sections.
-  const pageTemplates = { 'the-house.html': 'page.the-house', 'shop.html': 'collection' };
+  const pageTemplates = { 'the-house.html': 'page.the-house', 'shop.html': 'collection', 'contact.html': 'page.contact' };
   for (const [file, name] of Object.entries(pageTemplates)) {
     const [tplName, suffix] = name.split('.');
     const rendered = await renderTemplate(name, { template: { name: tplName, suffix } });

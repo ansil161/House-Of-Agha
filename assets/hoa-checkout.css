@@ -20,7 +20,7 @@
   --co-ok: #2E6B3E;
   --co-err: #A23B2A;
   --co-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --co-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
+  --co-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --co-name: var(--font-name, 'Fraunces', Georgia, serif);
   --co-spring: cubic-bezier(0.32, 0.72, 0, 1);
   --co-gutter: clamp(16px, 4vw, 56px);

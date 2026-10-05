@@ -1,44 +1,62 @@
 {%- comment -%}
-  House of Agha · About 05 · Our philosophy
-  Heading, then six pillars (one per block) laid out like an arcade: rows of 6/3/3 then
-  3/3/6 columns. Each photograph stands in a Qutb Shahi pointed arch with an antique-gold
-  hairline (wide tiles get a lower, broader arch, as in the Charminar's central bay);
-  the numeral, word and lines sit beneath it on the ivory page, not over the photo.
+  House of Agha · About 05 · Our philosophy, as Deccan craft
+  After the architecture of the earlier sections (arches, jaali, Golconda), this section turns
+  to Hyderabad's craft: Bidri, silver inlaid into dark metal. A charcoal band with a fine
+  silver-line pattern (assets/hoa-bidri.svg) seen only at its edges and behind the heading;
+  six photographs hung as a collection (5/4/3, then 3/3/6 columns, staggered). Each tile:
+  the photo, a hairline silver frame, its number with a small engraved ornament, the title
+  over a soft shade, and its lines beneath. Tile 06 carries an inlaid vine border.
+  Styles: the "PHILOSOPHY · BIDRI" block in assets/hoa-about.css. Motion: assets/hoa-about.js.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
-<section class="hoa-ab-philo" id="philosophy">
-  {%- render 'hoa-ab-rule' -%}
+<section class="hoa-ab-philo hoa-bd" id="philosophy" aria-labelledby="hoa-bd-title">
   <div class="hoa-wrap">
-    <h2 class="hoa-ab-h2 hoa-ab-philo__head">{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
-    <div class="hoa-ab-philo__grid">
+    <header class="hoa-bd__head">
+      <h2 class="hoa-bd__title" id="hoa-bd-title" data-hoa-bd-title>{{ s.heading }}</h2>
+      {%- if s.heading_muted != blank -%}<p class="hoa-bd__sub" data-hoa-bd-sub>{{ s.heading_muted }}</p>{%- endif -%}
+    </header>
+    <div class="hoa-bd__grid">
       {%- for block in section.blocks -%}
         {%- assign b = block.settings -%}
+        {%- assign n = forloop.index -%}
         {%- assign lines = b.lines | newline_to_br | split: '<br />' -%}
-        {%- if forloop.index == 1 or forloop.index == 6 -%}
-          {%- assign img_sizes = '(min-width: 1024px) 50vw, (min-width: 641px) 50vw, 100vw' -%}
-        {%- else -%}
-          {%- assign img_sizes = '(min-width: 1024px) 25vw, (min-width: 641px) 50vw, 100vw' -%}
-        {%- endif -%}
-        <article class="hoa-ab-pillar hoa-ab-pillar--{{ forloop.index }}" data-hoa-ab-pillar {{ block.shopify_attributes }}>
-          {%- if b.asset != blank or b.image != blank -%}
-            <div class="hoa-ab-arch hoa-ab-pillar__media" aria-hidden="true">
-              <div class="hoa-ab-arch__frame hoa-ab-pillar__frame">
-                <div class="hoa-ab-pillar__img" data-hoa-ab-img>
-                  {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: img_sizes -%}
-                </div>
+        {%- case n -%}
+          {%- when 1 -%}{%- assign img_sizes = '(min-width: 1024px) 40vw, (min-width: 641px) 50vw, 100vw' -%}
+          {%- when 6 -%}{%- assign img_sizes = '(min-width: 1024px) 50vw, 100vw' -%}
+          {%- else -%}{%- assign img_sizes = '(min-width: 1024px) 30vw, (min-width: 641px) 50vw, 100vw' -%}
+        {%- endcase -%}
+        <article class="hoa-bd-tile hoa-bd-tile--{{ n }}" data-hoa-bd-tile {{ block.shopify_attributes }}>
+          <figure class="hoa-bd-tile__media">
+            {%- if b.asset != blank or b.image != blank -%}
+              <div class="hoa-bd-tile__img">
+                {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: img_sizes -%}
               </div>
-              {%- render 'hoa-ab-arch' -%}
-            </div>
+            {%- endif -%}
+            <span class="hoa-bd-tile__edge" aria-hidden="true" data-hoa-bd-edge></span>
+            <figcaption class="hoa-bd-tile__cap">
+              <span class="hoa-bd-tile__mark" aria-hidden="true">
+                <span class="hoa-bd-tile__num">{{ n | prepend: '0' | slice: -2, 2 }}</span>
+                <svg class="hoa-bd-tile__orn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" data-hoa-bd-orn>
+                  {%- case n -%}
+                    {%- when 1 -%}{%- comment -%} engraved rosette {%- endcomment -%}<path pathLength="1" d="M12 10c-1.4-1.7-1.4-4.3 0-6 1.4 1.7 1.4 4.3 0 6zM12 14c1.4 1.7 1.4 4.3 0 6-1.4-1.7-1.4-4.3 0-6zM10 12c-1.7 1.4-4.3 1.4-6 0 1.7-1.4 4.3-1.4 6 0zM14 12c1.7-1.4 4.3-1.4 6 0-1.7 1.4-4.3 1.4-6 0z"/><path pathLength="1" d="M7.6 7.6l1.6 1.6M16.4 7.6l-1.6 1.6M7.6 16.4l1.6-1.6M16.4 16.4l-1.6-1.6"/><circle pathLength="1" cx="12" cy="12" r="1.3"/>
+                    {%- when 2 -%}{%- comment -%} botanical sprig, inlay line {%- endcomment -%}<path pathLength="1" d="M5 20.5c4.6-2.4 8-7.4 9.6-14.6"/><path pathLength="1" d="M8.6 17.2c-2.2-.4-3.6-2-4-4 2.2.2 3.6 1.7 4 4zM11.4 13.2c.2-2.2 1.6-3.8 3.6-4.2-.1 2.2-1.5 3.7-3.6 4.2zM12.6 10.4c-1.8-1-2.6-2.8-2.4-4.8 1.9.8 2.7 2.7 2.4 4.8z"/><circle pathLength="1" cx="15" cy="4.6" r="1.4"/>
+                    {%- when 3 -%}{%- comment -%} restrained geometry {%- endcomment -%}<path pathLength="1" d="M12 3.2l7.6 4.4v8.8L12 20.8l-7.6-4.4V7.6z"/><path pathLength="1" d="M12 7.6l3.8 2.2v4.4L12 16.4l-3.8-2.2V9.8z"/><circle pathLength="1" cx="12" cy="12" r="1"/>
+                    {%- when 4 -%}{%- comment -%} inlay geometry: compass of fine spokes {%- endcomment -%}<circle pathLength="1" cx="12" cy="12" r="8.6"/><circle pathLength="1" cx="12" cy="12" r="3.4"/><path pathLength="1" d="M12 3.4v5.2M12 15.4v5.2M3.4 12h5.2M15.4 12h5.2M5.9 5.9l3.7 3.7M14.4 14.4l3.7 3.7M18.1 5.9l-3.7 3.7M9.6 14.4l-3.7 3.7"/>
+                    {%- when 5 -%}{%- comment -%} small flower {%- endcomment -%}<path pathLength="1" d="M12 10.6c-1-1.3-1-3.1 0-4.3 1 1.2 1 3 0 4.3zM12 13.4c1 1.3 1 3.1 0 4.3-1-1.2-1-3 0-4.3zM10.6 12c-1.3 1-3.1 1-4.3 0 1.2-1 3-1 4.3 0zM13.4 12c1.3-1 3.1-1 4.3 0-1.2 1-3 1-4.3 0z"/><circle pathLength="1" cx="12" cy="12" r=".9"/>
+                    {%- else -%}{%- comment -%} the fullest: rosette in a ring {%- endcomment -%}<circle pathLength="1" cx="12" cy="12" r="9"/><path pathLength="1" d="M12 10c-1.4-1.7-1.4-4.3 0-6 1.4 1.7 1.4 4.3 0 6zM12 14c1.4 1.7 1.4 4.3 0 6-1.4-1.7-1.4-4.3 0-6zM10 12c-1.7 1.4-4.3 1.4-6 0 1.7-1.4 4.3-1.4 6 0zM14 12c1.7-1.4 4.3-1.4 6 0-1.7 1.4-4.3 1.4-6 0z"/><circle class="hoa-bd-tile__gem" cx="12" cy="12" r="1.3"/>
+                  {%- endcase -%}
+                </svg>
+                <span class="hoa-bd-tile__rule"></span>
+                {%- if b.word != blank -%}<span class="hoa-bd-tile__word">{{ b.word }}</span>{%- endif -%}
+              </span>
+              <h3 class="hoa-bd-tile__title"><span class="hoa-bd-tile__n hoa-sr">{{ n }}. </span>{{ b.title }}</h3>
+            </figcaption>
+          </figure>
+          {%- if lines.size > 0 -%}
+            <ul class="hoa-bd-tile__lines">
+              {%- for l in lines -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}
+            </ul>
           {%- endif -%}
-          <div class="hoa-ab-pillar__body">
-            <p class="hoa-ab-pillar__word" aria-hidden="true"><span class="hoa-ab-pillar__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{{ b.word }}</p>
-            <div class="hoa-ab-pillar__copy">
-              <h3 class="hoa-ab-pillar__title">{{ b.title }}</h3>
-              <ul class="hoa-ab-pillar__lines">
-                {%- for l in lines -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}
-              </ul>
-            </div>
-          </div>
         </article>
       {%- endfor -%}
     </div>
@@ -52,7 +70,7 @@
   "class": "hoa-ab-section",
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "Our philosophy." },
-    { "type": "text", "id": "heading_muted", "label": "Heading, muted part", "default": "What guides every bottle." }
+    { "type": "text", "id": "heading_muted", "label": "Supporting line", "default": "What guides every bottle." }
   ],
   "blocks": [
     {
@@ -62,7 +80,7 @@
         { "type": "text", "id": "word", "label": "Key word" },
         { "type": "text", "id": "title", "label": "Title" },
         { "type": "textarea", "id": "lines", "label": "Lines (one per line)" },
-        { "type": "image_picker", "id": "image", "label": "Image", "info": "Tiles 1 and 6 are wide: use a landscape photo at least 2000px wide." },
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Tile 6 is wide: a landscape photo works best there." },
         { "type": "text", "id": "asset", "label": "Fallback theme asset" },
         { "type": "number", "id": "w", "label": "Fallback asset width", "default": 1200 },
         { "type": "number", "id": "h", "label": "Fallback asset height", "default": 1500 }

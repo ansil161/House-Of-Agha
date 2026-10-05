@@ -23,7 +23,7 @@
                        of Agha rise and آقا is revealed right to left, as it is written.
      Story line ...... words warm from faint to ink as the paragraphs are read.
      Hyderabad ....... the Charminar draws tier by tier with the scroll while the card pins.
-     Philosophy ...... pillars settle in, in reading order.
+     Philosophy ...... Bidri band: heading rises, tiles enter in turn, frames draw, ornaments engrave.
      (Seven worlds, the name pin and the stacking cards below belong to sections that
      are not on the page now; they only run if those sections come back.)
 
@@ -450,25 +450,36 @@
         ScrollTrigger.create({ trigger: nameWord, start: 'top 82%', once: true, onEnter: function () { nameTl.play(); } });
       }
 
-      /* 05 Philosophy heading: the words rise into place one by one as it arrives. */
-      var philoHead = document.querySelector('.hoa-ab-philo__head');
-      if (philoHead) {
-        var philoWords = maskWords(philoHead);
-        gsap.from(philoWords, {
-          yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.05,
-          scrollTrigger: { trigger: philoHead, start: 'top 85%', once: true }
-        });
+      /* 05 Philosophy (Bidri): the heading's words rise, the line beneath fades in; the tiles
+         enter in turn, each silver frame draws in and its small ornament is engraved line by
+         line. Short and once; nothing waits on it. */
+      var bdTitle = document.querySelector('[data-hoa-bd-title]');
+      if (bdTitle) {
+        var bdHead = gsap.timeline({ scrollTrigger: { trigger: bdTitle, start: 'top 85%', once: true } });
+        bdHead.from(maskWords(bdTitle), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.06 });
+        var bdSub = document.querySelector('[data-hoa-bd-sub]');
+        if (bdSub) bdHead.from(bdSub, { y: 12, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35);
       }
-
-      /* 05 Philosophy: the words under each arch settle in, in reading order
-         (the arch and its photo are handled with every other arch below). */
-      var pillarBodies = gsap.utils.toArray('[data-hoa-ab-pillar] .hoa-ab-pillar__body');
-      if (pillarBodies.length) {
-        gsap.set(pillarBodies, { opacity: 0, y: 16 });
-        ScrollTrigger.batch(pillarBodies, {
-          start: 'top 92%',
+      var bdTiles = gsap.utils.toArray('[data-hoa-bd-tile]');
+      if (bdTiles.length) {
+        gsap.set(bdTiles, { opacity: 0, y: 28 });
+        bdTiles.forEach(function (t) {
+          var edge = t.querySelector('[data-hoa-bd-edge]');
+          if (edge) gsap.set(edge, { clipPath: 'inset(0 100% 100% 0)' });
+          gsap.set(t.querySelectorAll('[data-hoa-bd-orn] [pathLength]'), { strokeDasharray: 1, strokeDashoffset: 1 });
+        });
+        ScrollTrigger.batch(bdTiles, {
+          start: 'top 88%',
           once: true,
-          onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.12, delay: 0.25, overwrite: true }); }
+          onEnter: function (batch) {
+            batch.forEach(function (t, i) {
+              var d = i * 0.12;
+              gsap.to(t, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: d });
+              var edge = t.querySelector('[data-hoa-bd-edge]');
+              if (edge) gsap.to(edge, { clipPath: 'inset(0 0% 0% 0)', duration: 1.1, ease: 'power2.inOut', delay: d + 0.25, clearProps: 'clipPath' });
+              gsap.to(t.querySelectorAll('[data-hoa-bd-orn] [pathLength]'), { strokeDashoffset: 0, duration: 0.9, ease: 'power1.inOut', stagger: 0.08, delay: d + 0.45 });
+            });
+          }
         });
       }
 

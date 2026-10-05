@@ -1,0 +1,188 @@
+{%- comment -%}
+  House of Agha · Contact page (templates/page.contact.json)
+  Minimal editorial layout: a short head, then two columns. Left: how to reach the house
+  (email, phone, WhatsApp, hours: each shows only once filled in) and the house's
+  Hyderabad photo in a Qutb Shahi arch. Right: Shopify's contact form ({% form 'contact' %}),
+  which emails the store. Below: three links that answer most questions before a message.
+  Styles: assets/hoa-contact.css. Reveal: assets/hoa-contact.js (fade-up once, IntersectionObserver).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign email = s.email | default: shop.email -%}
+<link rel="stylesheet" href="{{ 'hoa-contact.css' | asset_url }}">
+
+<section class="hoa-ct" aria-labelledby="hoa-ct-title">
+  <div class="hoa-ct__wrap">
+    <header class="hoa-ct__head" data-hoa-ct-in>
+      {%- if s.kicker != blank -%}<p class="hoa-ct__kicker">{{ s.kicker }}</p>{%- endif -%}
+      <h1 class="hoa-ct__title" id="hoa-ct-title">{{ s.heading }}</h1>
+      {%- if s.text != blank -%}<p class="hoa-ct__lede">{{ s.text }}</p>{%- endif -%}
+    </header>
+
+    <div class="hoa-ct__grid">
+      <aside class="hoa-ct__side" aria-label="{{ s.reach_label | escape }}">
+        <dl class="hoa-ct__list" data-hoa-ct-in style="--i:1">
+          {%- if email != blank -%}
+            <div class="hoa-ct__row">
+              <dt>Email</dt>
+              <dd><a href="mailto:{{ email }}">{{ email }}</a></dd>
+            </div>
+          {%- endif -%}
+          {%- if s.phone != blank -%}
+            <div class="hoa-ct__row">
+              <dt>Phone</dt>
+              <dd><a href="tel:{{ s.phone | remove: ' ' | remove: '-' }}">{{ s.phone }}</a></dd>
+            </div>
+          {%- endif -%}
+          {%- if s.whatsapp != blank -%}
+            <div class="hoa-ct__row">
+              <dt>WhatsApp</dt>
+              <dd><a href="https://wa.me/{{ s.whatsapp | remove: '+' | remove: ' ' | remove: '-' }}" target="_blank" rel="noopener">{{ s.whatsapp }}</a></dd>
+            </div>
+          {%- endif -%}
+          {%- if s.hours != blank -%}
+            <div class="hoa-ct__row">
+              <dt>Hours</dt>
+              <dd>{{ s.hours }}</dd>
+            </div>
+          {%- endif -%}
+          {%- if s.location != blank -%}
+            <div class="hoa-ct__row">
+              <dt>House</dt>
+              <dd>{{ s.location }}</dd>
+            </div>
+          {%- endif -%}
+        </dl>
+
+        {%- if s.asset != blank or s.image != blank -%}
+          <figure class="hoa-ct__photo" data-hoa-ct-in style="--i:2">
+            <div class="hoa-ct__arch">
+              {%- render 'hoa-img', name: s.asset, image: s.image, w: s.w, h: s.h, alt: s.alt, sizes: '(min-width: 900px) 34vw, 92vw' -%}
+            </div>
+            {%- if s.caption != blank -%}<figcaption>{{ s.caption }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}
+      </aside>
+
+      <div class="hoa-ct__card" data-hoa-ct-in style="--i:2">
+        <h2 class="hoa-ct__card-title">{{ s.form_heading }}</h2>
+        {%- if s.form_text != blank -%}<p class="hoa-ct__card-text">{{ s.form_text }}</p>{%- endif -%}
+
+        {%- form 'contact', class: 'hoa-ct__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="hoa-ct__note hoa-ct__note--ok" role="status" tabindex="-1" autofocus>{{ s.success_text }}</p>
+          {%- elsif form.errors -%}
+            <div class="hoa-ct__note hoa-ct__note--err" role="alert" tabindex="-1" autofocus>
+              <p>Please check the highlighted fields.</p>
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="hoa-ct__fields">
+            <div class="hoa-ct__field">
+              <label for="hoa-ct-name">Name</label>
+              <input id="hoa-ct-name" type="text" name="contact[name]" autocomplete="name" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+            </div>
+            <div class="hoa-ct__field">
+              <label for="hoa-ct-email">Email</label>
+              <input id="hoa-ct-email" type="email" name="contact[email]" autocomplete="email" spellcheck="false" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required{% if form.errors contains 'email' %} aria-invalid="true"{% endif %}>
+            </div>
+            <div class="hoa-ct__field">
+              <label for="hoa-ct-phone">Phone <span>Optional</span></label>
+              <input id="hoa-ct-phone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}">
+            </div>
+            <div class="hoa-ct__field">
+              <label for="hoa-ct-topic">Topic</label>
+              <div class="hoa-ct__select">
+                <select id="hoa-ct-topic" name="contact[topic]">
+                  {%- assign topics = s.topics | split: ',' -%}
+                  {%- for t in topics -%}{%- assign tt = t | strip -%}<option value="{{ tt | escape }}">{{ tt }}</option>{%- endfor -%}
+                </select>
+              </div>
+            </div>
+            <div class="hoa-ct__field hoa-ct__field--full">
+              <label for="hoa-ct-order">Order number <span>Optional</span></label>
+              <input id="hoa-ct-order" type="text" name="contact[order_number]" placeholder="#1042" value="{{ form.order_number }}">
+            </div>
+            <div class="hoa-ct__field hoa-ct__field--full">
+              <label for="hoa-ct-body">Message</label>
+              <textarea id="hoa-ct-body" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
+            </div>
+          </div>
+
+          <div class="hoa-ct__send">
+            <button type="submit" class="hoa-ct__btn">{{ s.button_label }}</button>
+            {%- if s.reply_note != blank -%}<p class="hoa-ct__reply">{{ s.reply_note }}</p>{%- endif -%}
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <nav class="hoa-ct__help" aria-label="{{ s.help_heading | escape }}">
+        {%- if s.help_heading != blank -%}<h2 class="hoa-ct__help-title" data-hoa-ct-in>{{ s.help_heading }}</h2>{%- endif -%}
+        <ul class="hoa-ct__links" role="list">
+          {%- for block in section.blocks -%}
+            {%- assign b = block.settings -%}
+            <li data-hoa-ct-in style="--i:{{ forloop.index }}" {{ block.shopify_attributes }}>
+              <a class="hoa-ct__link" href="{{ b.url | default: '#' }}">
+                <span class="hoa-ct__link-title">{{ b.title }}</span>
+                {%- if b.text != blank -%}<span class="hoa-ct__link-text">{{ b.text }}</span>{%- endif -%}
+                <span class="hoa-ct__link-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg></span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+  </div>
+</section>
+<script src="{{ 'hoa-contact.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "div",
+  "class": "hoa-ct-section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Eyebrow", "default": "Client care" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We're here to help." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Questions about an order, a fragrance or a gift: write to us and the House of Agha team will reply by email." },
+    { "type": "header", "content": "How to reach us" },
+    { "type": "text", "id": "reach_label", "label": "List name (screen readers)", "default": "How to reach us" },
+    { "type": "text", "id": "email", "label": "Email", "info": "Leave empty to use the store's contact email." },
+    { "type": "text", "id": "phone", "label": "Phone", "info": "Shown only when filled in." },
+    { "type": "text", "id": "whatsapp", "label": "WhatsApp number", "info": "With country code, e.g. +91 98xxx xxxxx. Shown only when filled in." },
+    { "type": "text", "id": "hours", "label": "Hours", "info": "e.g. Mon to Sat, 10am to 7pm IST. Shown only when filled in." },
+    { "type": "text", "id": "location", "label": "Where the house is", "default": "Hyderabad, India" },
+    { "type": "header", "content": "Photograph" },
+    { "type": "image_picker", "id": "image", "label": "Image (portrait)" },
+    { "type": "text", "id": "asset", "label": "Fallback theme asset", "default": "hoa-hyd-arcade" },
+    { "type": "number", "id": "w", "label": "Fallback width", "default": 900 },
+    { "type": "number", "id": "h", "label": "Fallback height", "default": 1200 },
+    { "type": "text", "id": "alt", "label": "Alt text", "default": "A colonnade of pointed Qutb Shahi arches in Hyderabad" },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "Composed in Hyderabad" },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Send a message" },
+    { "type": "textarea", "id": "form_text", "label": "Form text", "default": "Tell us what you need and, for an order, its number." },
+    { "type": "text", "id": "topics", "label": "Topics (comma separated)", "default": "An order, A fragrance, Gifting, Something else" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Send message" },
+    { "type": "text", "id": "reply_note", "label": "Note beside the button", "default": "We reply by email." },
+    { "type": "text", "id": "success_text", "label": "Sent message", "default": "Thank you. Your message is with us and we'll reply by email." },
+    { "type": "header", "content": "Quick help" },
+    { "type": "text", "id": "help_heading", "label": "Heading", "default": "Often the quickest answer" }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Help link",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Contact" }]
+}
+{% endschema %}

@@ -12,8 +12,14 @@
 {%- assign catalog = catalog_json | parse_json -%}
 
 <section class="hoa-shop-head">
-  <div class="hoa-shop-head__media" aria-hidden="true">
-    <picture>
+  {%- comment -%}
+    Background photos crossfade every few seconds (assets/hoa-shop-hero.js). The first is the
+    "Background image" setting (or Sea Smoke by the pool); then one per Slide block, or, with no
+    blocks, the house's campaign photos below. Holds still with reduced motion.
+  {%- endcomment -%}
+  {%- assign fallback = 'hoa-pgal-agha-blue-hero|50% 45%,hoa-world-journey|50% 45%,hoa-world-hand|50% 40%,hoa-world-maha|50% 60%' | split: ',' -%}
+  <div class="hoa-shop-head__media" aria-hidden="true" data-hoa-shop-slides data-interval="{{ s.interval | default: 5 }}">
+    <picture class="hoa-shop-head__slide is-on">
       {%- if s.image_mobile != blank -%}
         <source media="(max-width: 767px)" srcset="{{ s.image_mobile | image_url: width: 1200 }}">
       {%- endif -%}
@@ -23,7 +29,32 @@
         <img src="{{ 'hoa-world-poolside.webp' | asset_url }}" srcset="{{ 'hoa-world-poolside-sm.webp' | asset_url }} 700w, {{ 'hoa-world-poolside.webp' | asset_url }} 1200w" sizes="(max-width: 767px) 100vw, 62vw" alt="" width="1200" height="1200" fetchpriority="high" decoding="async">
       {%- endif -%}
     </picture>
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- if b.image == blank and b.asset == blank -%}{%- continue -%}{%- endif -%}
+        <picture class="hoa-shop-head__slide" style="--pos: {{ b.focus | default: '50% 50%' }}" {{ block.shopify_attributes }}>
+          {%- if b.image != blank -%}
+            <img src="{{ b.image | image_url: width: 2000 }}" alt="" width="{{ b.image.width }}" height="{{ b.image.height }}" loading="lazy" decoding="async">
+          {%- else -%}
+            {%- assign big = b.asset | append: '.webp' -%}
+            {%- assign small = b.asset | append: '-sm.webp' -%}
+            <img src="{{ big | asset_url }}" srcset="{{ small | asset_url }} 700w, {{ big | asset_url }} 1200w" sizes="(max-width: 767px) 100vw, 62vw" alt="" loading="lazy" decoding="async">
+          {%- endif -%}
+        </picture>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for f in fallback -%}
+        {%- assign parts = f | split: '|' -%}
+        {%- assign big = parts[0] | append: '.webp' -%}
+        {%- assign small = parts[0] | append: '-sm.webp' -%}
+        <picture class="hoa-shop-head__slide" style="--pos: {{ parts[1] }}">
+          <img src="{{ big | asset_url }}" srcset="{{ small | asset_url }} 700w, {{ big | asset_url }} 1200w" sizes="(max-width: 767px) 100vw, 62vw" alt="" loading="lazy" decoding="async">
+        </picture>
+      {%- endfor -%}
+    {%- endif -%}
   </div>
+  <script src="{{ 'hoa-shop-hero.js' | asset_url }}" defer></script>
 
   <div class="hoa-wrap hoa-shop-head__inner">
     <div class="hoa-shop-head__copy">
@@ -65,12 +96,24 @@
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Background image", "info": "Bright, airy photography works best: it fades into the page behind the title. Defaults to Sea Smoke by the pool." },
     { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (square)" },
+    { "type": "range", "id": "interval", "label": "Seconds per photo", "min": 3, "max": 12, "step": 1, "unit": "s", "default": 5, "info": "The background photos crossfade at this pace. Add Slide blocks to choose them; without blocks the house's campaign photos are used." },
     { "type": "text", "id": "kicker", "label": "Eyebrow", "default": "Eau de Parfum" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "All fragrances" },
     { "type": "textarea", "id": "text", "label": "Text", "info": "Optional line under the heading. Leave empty for none." },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop now" },
     { "type": "text", "id": "link_1_label", "label": "Secondary link", "default": "Our story" },
     { "type": "url", "id": "link_1_url", "label": "Secondary link URL", "info": "Defaults to /pages/the-house" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Bright, airy photos fade best into the page." },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset", "info": "e.g. hoa-world-journey (needs <name>.webp and <name>-sm.webp)" },
+        { "type": "text", "id": "focus", "label": "Focus point", "default": "50% 50%" }
+      ]
+    }
   ],
   "presets": [{ "name": "HOA Shop head" }]
 }

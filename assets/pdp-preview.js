@@ -951,13 +951,14 @@
   };
   const galSet = GALLERY[handle] || [];
   const galImg = ([name, w, h, alt], sizes) => `<img src="/assets/${name}.webp" srcset="/assets/${name}-sm.webp ${w > 1500 ? 1000 : 700}w, /assets/${name}.webp ${w}w" sizes="${sizes}" width="${w}" height="${h}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
-  const galFeature = galSet.length > 1;
-  // Banner + two half-width photos underneath (mirrors sections/hoa-pdp-gallery.liquid); extra photos are not shown.
-  const galItems = (galFeature ? galSet.slice(1) : galSet).slice(0, 2).map((g) => `<li class="hoa-pgal__item">${galImg(g, '(min-width: 769px) 50vw, 100vw')}</li>`).join('');
+  const galFeature = false; // "First photo full width" is off in templates/product.json
+  // Three photos side by side in one row (mirrors sections/hoa-pdp-gallery.liquid); extra photos are not shown.
+  const galShown = (galFeature ? galSet.slice(1, 3) : galSet.slice(0, 3));
+  const galItems = galShown.map((g) => `<li class="hoa-pgal__item">${galImg(g, '(min-width: 769px) 34vw, 80vw')}</li>`).join('');
   const gallery = galSet.length ? `
   <section class="hoa-pgal" aria-label="Campaign photographs">
     ${galFeature ? `<figure class="hoa-pgal__hero" style="--pos: ${galSet[0][4] || 'center'}">${galImg(galSet[0], '100vw')}</figure>` : ''}
-    ${galItems ? `<ul class="hoa-pgal__pair" role="list">${galItems}</ul>` : ''}
+    ${galItems ? `<ul class="hoa-pgal__pair" role="list" style="--n: ${galShown.length}">${galItems}</ul>` : ''}
   </section>` : '';
 
   // Benefits marquee: mirrors sections/hoa-fragrance-benefits.liquid with the blocks in templates/product.json

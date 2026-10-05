@@ -32,6 +32,15 @@
   mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.55) 16%, #000 38%);
 }
 .hoa-shop-head__media picture { display: block; height: 100%; }
+/* Background photos stack and crossfade (assets/hoa-shop-hero.js moves .is-on every few seconds) */
+.hoa-shop-head__media .hoa-shop-head__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hoa-shop-head__media .hoa-shop-head__slide.is-on { opacity: 1; }
+.hoa-shop-head__slide[style] img { object-position: var(--pos) !important; }
 .hoa-shop-head__media img {
   display: block;
   width: 100%;
@@ -58,20 +67,20 @@
 }
 /* Canela (Commercial Type, licensed) for the "All fragrances" heading only.
    The font files are NOT in the theme yet: upload them to assets/ with exactly these names
-   (canela-light.woff2/.woff = Canela Light 300, canela-regular.woff2/.woff = Canela Regular 400).
-   Until then the heading falls back to the current Bodoni Moda and looks as before.
+   (canela-light.woff2/.woff = Canela Light, used at weight 400 here; canela-regular.woff2/.woff = Canela Regular, at 500).
+   Until then the heading uses the site serif (Fraunces, var(--hoa-serif)).
    Relative urls resolve next to this stylesheet (assets/), on Shopify's CDN and in the preview. */
 @font-face {
   font-family: 'Canela';
   src: url('canela-light.woff2') format('woff2'), url('canela-light.woff') format('woff');
-  font-weight: 300;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Canela';
   src: url('canela-regular.woff2') format('woff2'), url('canela-regular.woff') format('woff');
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -79,7 +88,7 @@
   margin: 0;
   padding-bottom: 0.06em; /* descender room for the g */
   font-family: 'Canela', var(--hoa-serif);
-  font-weight: 300;               /* Canela Light; Bodoni Moda's lightest is 400, so the fallback is unchanged */
+  font-weight: 400;               /* Canela Light when uploaded (mapped to 400 above); otherwise Fraunces 400, like every serif heading */
   font-synthesis: none;           /* never a faked bold or italic */
   font-size: clamp(3.4rem, 7vw, 7.2rem);
   line-height: 1.02;
@@ -389,7 +398,7 @@
    ========================================================================== */
 .hoa-shop-reviews { padding: 0 0 clamp(80px, 9vw, 140px); border-top: 1px solid var(--hoa-line); }
 .hoa-shop-reviews__head { padding: clamp(56px, 7vw, 96px) 0 clamp(32px, 4vw, 56px); }
-.hoa-shop-reviews__title { margin: 14px 0 0; font-family: var(--hoa-sans); font-weight: 400; font-size: clamp(2rem, 3.6vw, 3.2rem); line-height: 1; letter-spacing: -0.045em; }
+.hoa-shop-reviews__title { margin: 14px 0 0; font-family: var(--hoa-serif); font-weight: 400; font-size: clamp(2rem, 3.6vw, 3.2rem); line-height: 1.02; letter-spacing: -0.025em; }
 
 .hoa-shop-reviews__grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
 

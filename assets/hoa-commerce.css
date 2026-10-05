@@ -92,7 +92,7 @@
 /* ---------------------------------------------------------------- shop bundles */
 .hoa-bundles { padding: clamp(64px, 9vw, 130px) 0; background: var(--hoa-paper, #F6F3EE); scroll-margin-top: 90px; }
 .hoa-bundles__head { max-width: 640px; margin-bottom: clamp(28px, 4vw, 52px); }
-.hoa-bundles__title { margin: 8px 0 12px; font: 400 clamp(2rem, 4vw, 3.2rem)/1.06 var(--hoa-serif, Georgia, serif); letter-spacing: -0.01em; color: var(--hoa-ink, #141210); text-transform: none; }
+.hoa-bundles__title { margin: 8px 0 12px; font: 400 clamp(2rem, 4vw, 3.2rem)/1.06 var(--hoa-serif, Georgia, serif); letter-spacing: -0.01em; font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0; /* the font shorthand resets it; keep the editorial cut */ color: var(--hoa-ink, #141210); text-transform: none; }
 .hoa-bundles__text { margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--hoa-ink-2, #3B3631); }
 .hoa-bundles__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); align-items: stretch; }
 .hoa-bundle {

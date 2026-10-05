@@ -74,11 +74,11 @@
 .hoa-acct-head__crumb a:hover { color: var(--hoa-ink); }
 .hoa-auth__title {
   margin: 0;
-  font-family: var(--hoa-sans);
+  font-family: var(--hoa-serif, var(--font-serif));   /* editorial serif (client 2026-10-05) */
   font-weight: 400;
   font-size: clamp(2.4rem, 4.4vw, 3.6rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   text-transform: none;
   color: var(--hoa-ink);
   text-wrap: balance;

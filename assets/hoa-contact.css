@@ -1,0 +1,269 @@
+/* ==========================================================================
+   HOUSE OF AGHA · CONTACT (sections/hoa-contact.liquid)
+   Minimal and editorial: white page, warm hairlines (1px), crisp radii (12px cards, 6px
+   controls), Fraunces for headings, Plus Jakarta Sans for reading. Antique gold is used once,
+   as a hairline accent. Reveal: assets/hoa-contact.js.
+   ========================================================================== */
+.hoa-ct {
+  --ct-ink: #2B2622;
+  --ct-ink-2: #57514A;
+  --ct-mute: #7A726A;
+  --ct-line: #E9E4DC;
+  --ct-line-2: #D9D2C6;
+  --ct-soft: #FAF8F5;
+  --ct-gold: #C6A15B;
+  --ct-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ct-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ct-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  isolation: isolate;
+  padding: clamp(56px, 8vw, 120px) 0 clamp(80px, 10vw, 152px);
+  background: #FFFFFF;
+  color: var(--ct-ink);
+  font-family: var(--ct-sans);
+}
+/* one soft warm light behind the head, so the page is not flat */
+.hoa-ct::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 520px;
+  z-index: -1;
+  background: radial-gradient(60% 70% at 18% 0%, rgba(198, 161, 91, 0.09), transparent 70%);
+  pointer-events: none;
+}
+.hoa-ct__wrap { width: 100%; max-width: var(--hoa-max, 1240px); margin: 0 auto; padding: 0 var(--hoa-gutter, clamp(16px, 4vw, 48px)); }
+
+/* ---------- Head ---------- */
+.hoa-ct__head { max-width: 760px; margin-bottom: clamp(48px, 6vw, 88px); }
+.hoa-ct__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ct-mute);
+}
+.hoa-ct__kicker::before { content: ""; width: 28px; height: 1px; background: var(--ct-gold); }
+.hoa-ct__title {
+  margin: 0;
+  font-family: var(--ct-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;   /* opsz held at 48: no Didone hairlines at display sizes (client 2026-10-05) */
+  font-weight: 500;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  color: var(--ct-ink);
+}
+.hoa-ct__lede { margin: 24px 0 0; max-width: 52ch; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.65; color: var(--ct-ink-2); }
+
+/* ---------- Two columns ---------- */
+.hoa-ct__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.hoa-ct__side { display: grid; gap: clamp(32px, 4vw, 48px); }
+
+/* how to reach: a quiet definition list, hairline rows */
+.hoa-ct__list { margin: 0; border-top: 1px solid var(--ct-line); }
+.hoa-ct__row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--ct-line);
+}
+.hoa-ct__row dt { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ct-mute); padding-top: 3px; }
+.hoa-ct__row dd { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--ct-ink); overflow-wrap: anywhere; }
+.hoa-ct__row a { color: inherit; text-decoration: underline; text-decoration-color: var(--ct-line-2); text-underline-offset: 4px; transition: text-decoration-color 0.2s; }
+.hoa-ct__row a:hover { text-decoration-color: var(--ct-ink); }
+
+/* the house's photo, in a Qutb Shahi arch */
+.hoa-ct__photo { margin: 0; }
+.hoa-ct__arch {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--ct-soft);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100Z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100Z'/%3E%3C/svg%3E") top / 100% 100% no-repeat;
+}
+.hoa-ct__arch img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; filter: sepia(0.2) saturate(0.85); }
+.hoa-ct__photo figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ct-mute);
+}
+.hoa-ct__photo figcaption::after { content: ""; flex: 1; height: 1px; background: var(--ct-line); }
+
+/* ---------- Form card ---------- */
+.hoa-ct__card {
+  padding: clamp(24px, 3.4vw, 48px);
+  border: 1px solid var(--ct-line);
+  border-radius: 12px;
+  background: #FFFFFF;
+}
+.hoa-ct__card-title {
+  margin: 0;
+  font-family: var(--ct-serif);
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;   /* opsz held at 48: no Didone hairlines at display sizes (client 2026-10-05) */
+  font-weight: 500;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ct-ink);
+}
+.hoa-ct__card-text { margin: 10px 0 0; font-size: 0.95rem; line-height: 1.6; color: var(--ct-mute); }
+.hoa-ct__form { margin-top: clamp(24px, 3vw, 36px); }
+
+.hoa-ct__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+.hoa-ct__field { display: grid; gap: 8px; min-width: 0; }
+.hoa-ct__field--full { grid-column: 1 / -1; }
+.hoa-ct__field label { font-size: 0.8rem; font-weight: 600; color: var(--ct-ink); }
+.hoa-ct__field label span { margin-left: 6px; font-weight: 500; color: var(--ct-mute); }
+.hoa-ct__field input,
+.hoa-ct__field textarea,
+.hoa-ct__field select {
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--ct-line-2);
+  border-radius: 6px;
+  background: #FFFFFF;
+  font: 400 1rem/1.5 var(--ct-sans); /* 16px: no zoom on iOS */
+  color: var(--ct-ink);
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hoa-ct__field textarea { min-height: 148px; resize: vertical; }
+.hoa-ct__field input::placeholder, .hoa-ct__field textarea::placeholder { color: #B5ADA3; }
+.hoa-ct__field input:hover, .hoa-ct__field textarea:hover, .hoa-ct__field select:hover { border-color: #BFB6A9; }
+.hoa-ct__field input:focus, .hoa-ct__field textarea:focus, .hoa-ct__field select:focus {
+  outline: none;
+  border-color: var(--ct-ink);
+  box-shadow: 0 0 0 3px rgba(198, 161, 91, 0.22);
+}
+.hoa-ct__field [aria-invalid="true"] { border-color: #9F2F2D; }
+.hoa-ct__select { position: relative; }
+.hoa-ct__select::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -5px;
+  border-right: 1.5px solid var(--ct-ink);
+  border-bottom: 1.5px solid var(--ct-ink);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.hoa-ct__select select { padding-right: 40px; cursor: pointer; }
+
+.hoa-ct__send { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 28px; }
+.hoa-ct__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 6px;
+  background: #1A1714;
+  font: 600 0.95rem/1 var(--ct-sans);
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+.hoa-ct__btn:hover { background: #3A352F; }
+.hoa-ct__btn:active { transform: scale(0.98); }
+.hoa-ct__btn:focus-visible { outline: 2px solid var(--ct-gold); outline-offset: 3px; }
+.hoa-ct__reply { margin: 0; font-size: 0.85rem; color: var(--ct-mute); }
+
+.hoa-ct__note { margin: 0 0 24px; padding: 14px 16px; border-radius: 6px; font-size: 0.92rem; line-height: 1.5; }
+.hoa-ct__note--ok { background: #EDF3EC; color: #346538; }
+.hoa-ct__note--err { background: #FDEBEC; color: #9F2F2D; }
+.hoa-ct__note--err p { margin: 0 0 4px; font-weight: 600; }
+.hoa-ct__note--err ul { margin: 0; padding-left: 18px; }
+
+/* ---------- Quick help ---------- */
+.hoa-ct__help { margin-top: clamp(72px, 9vw, 128px); }
+.hoa-ct__help-title {
+  margin: 0 0 24px;
+  font-family: var(--ct-serif);
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;   /* opsz held at 48: no Didone hairlines at display sizes (client 2026-10-05) */
+  font-weight: 500;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ct-ink);
+}
+.hoa-ct__links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.hoa-ct__link {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  height: 100%;
+  padding: 24px 56px 26px 24px;
+  border: 1px solid var(--ct-line);
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: var(--ct-ink);
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+.hoa-ct__link:hover { border-color: var(--ct-line-2); background: var(--ct-soft); box-shadow: 0 2px 8px rgba(43, 38, 34, 0.04); }
+.hoa-ct__link:focus-visible { outline: 2px solid var(--ct-gold); outline-offset: 3px; }
+.hoa-ct__link-title { font-size: 1.02rem; font-weight: 600; letter-spacing: -0.01em; }
+.hoa-ct__link-text { font-size: 0.9rem; line-height: 1.55; color: var(--ct-mute); }
+.hoa-ct__link-arrow { position: absolute; top: 24px; right: 22px; width: 16px; height: 16px; color: var(--ct-ink); transition: transform 0.25s var(--ct-ease); }
+.hoa-ct__link-arrow svg { display: block; width: 100%; height: 100%; }
+.hoa-ct__link:hover .hoa-ct__link-arrow { transform: translate(2px, -2px); }
+
+/* ---------- Reveal (only once the script is running) ---------- */
+.hoa-ct.is-js [data-hoa-ct-in] { opacity: 0; transform: translateY(12px); }
+.hoa-ct.is-js [data-hoa-ct-in].is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s var(--ct-ease), transform 0.6s var(--ct-ease);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 899px) {
+  .hoa-ct { padding-top: 96px; }
+  .hoa-ct__grid { grid-template-columns: 1fr; }
+  .hoa-ct__card { order: -1; }
+  .hoa-ct__side { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); align-items: start; }
+  .hoa-ct__links { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hoa-ct__side { grid-template-columns: 1fr; }
+  .hoa-ct__photo { max-width: 360px; }
+  .hoa-ct__fields { grid-template-columns: 1fr; }
+  .hoa-ct__row { grid-template-columns: 92px minmax(0, 1fr); }
+  .hoa-ct__btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-ct.is-js [data-hoa-ct-in] { opacity: 1; transform: none; }
+  .hoa-ct__link, .hoa-ct__link-arrow, .hoa-ct__btn { transition: none; }
+}
