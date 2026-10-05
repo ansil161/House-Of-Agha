@@ -1,0 +1,77 @@
+/* =====================================================================
+   Agha V2 · About = V1's About page, unchanged.
+   The page body is copied from V1 (the-house.html) and styled by V1's own
+   ../assets/hoa-about.css + hoa-about.js. This file only supplies what
+   those files expect from V1's global CSS (theme.css, hoa-home.css,
+   hoa-mobile.css), scoped to this page so the V2 header and footer keep
+   their own look.
+   ===================================================================== */
+body.hoa-about {
+  /* hoa-home.css tokens */
+  --hoa-paper-2: #EFEBE4;
+  --hoa-stone: #E4DED5;
+  --hoa-ink: #141210;
+  --hoa-ink-2: #3B3631;
+  --hoa-mute: #857D72;
+  --hoa-line: rgba(20, 18, 16, 0.12);
+  --hoa-night: #0C0A08;
+  --hoa-brass: #B08D57;
+  --hoa-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --hoa-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
+  --hoa-gutter: clamp(20px, 4vw, 56px);
+  --hoa-max: 1520px;
+  --hoa-section: clamp(96px, 13vw, 200px);
+  --hoa-radius: 2px;
+  --hoa-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hoa-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* V2's header is sticky (in the flow), so pins and sticky cards sit under its height */
+  --hoa-header-h: var(--head);
+}
+
+/* theme.css base, inside the About content only */
+body.hoa-about main {
+  font-family: var(--hoa-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--hoa-ink);
+}
+body.hoa-about main h1, body.hoa-about main h2, body.hoa-about main h3 {
+  font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; color: var(--hoa-ink);
+}
+body.hoa-about main p, body.hoa-about main ul, body.hoa-about main ol, body.hoa-about main figure { margin: 0; padding: 0; }
+
+/* V1's header is fixed over the hero; V2's is in the flow, so drop that offset from the hero */
+body.hoa-about .hoa-ab-hero { padding-top: clamp(28px, 4vw, 56px); }
+
+/* hoa-home.css: wrap, pill button, Lenis */
+.hoa-wrap { width: 100%; max-width: var(--hoa-max); margin: 0 auto; padding: 0 var(--hoa-gutter); }
+.hoa-btn {
+  --hoa-btn-bg: var(--hoa-ink);
+  --hoa-btn-fg: var(--hoa-paper);
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 8px 8px 8px 24px; border-radius: 999px;
+  border: 1px solid var(--hoa-btn-bg); background: var(--hoa-btn-bg); color: var(--hoa-btn-fg);
+  font-family: var(--hoa-sans); font-size: 0.86rem; font-weight: 500; letter-spacing: -0.005em;
+  text-decoration: none; text-transform: none; cursor: pointer; white-space: nowrap;
+  transition: background-color 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease), border-color 0.5s var(--hoa-ease);
+}
+.hoa-btn__icon {
+  position: relative; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--hoa-btn-fg); color: var(--hoa-btn-bg);
+  display: inline-grid; place-items: center; overflow: hidden; flex-shrink: 0;
+}
+.hoa-btn__icon svg { width: 14px; height: 14px; transition: transform 0.6s var(--hoa-ease); }
+.hoa-btn__icon svg + svg { position: absolute; transform: translate(-150%, 150%); }
+.hoa-btn:hover .hoa-btn__icon svg:first-child { transform: translate(150%, -150%); }
+.hoa-btn:hover .hoa-btn__icon svg + svg { transform: translate(0, 0); }
+.hoa-btn--light { --hoa-btn-bg: var(--hoa-ivory); --hoa-btn-fg: var(--hoa-ink); }
+.hoa-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* hoa-mobile.css */
+@media (max-width: 767px) {
+  .hoa-ab-hyd__kicker { font-size: 11.5px; }
+}

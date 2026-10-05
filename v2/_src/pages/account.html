@@ -1,0 +1,39 @@
+<!--{"title":"Account","nav":"account"}-->
+    <section class="wrap">
+      <div class="auth">
+        <h1 class="t-title">Account</h1>
+        <div class="auth__tabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-tab="in">Sign in</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="up">Create account</button>
+        </div>
+        <form class="form" data-panel="in">
+          <div class="field"><label for="a-email">Email</label><input class="input" id="a-email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="a-pass">Password</label><input class="input" id="a-pass" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn--block" type="submit">Sign in</button>
+          <a class="note" href="mailto:info@aghaperfumes.com" style="text-decoration:underline;justify-self:start">Forgot your password?</a>
+        </form>
+        <form class="form" data-panel="up" hidden>
+          <div class="row">
+            <div class="field"><label for="r-first">First name</label><input class="input" id="r-first" autocomplete="given-name"></div>
+            <div class="field"><label for="r-last">Last name</label><input class="input" id="r-last" autocomplete="family-name"></div>
+          </div>
+          <div class="field"><label for="r-email">Email</label><input class="input" id="r-email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="r-pass">Password</label><input class="input" id="r-pass" type="password" autocomplete="new-password" required></div>
+          <button class="btn btn--block" type="submit">Create account</button>
+        </form>
+        <p class="note" data-auth-note hidden>Accounts open on the live store. This preview does not sign you in.</p>
+      </div>
+    </section>
+    <script>
+      document.addEventListener('click', (e) => {
+        const tab = e.target.closest('[data-tab]');
+        if (!tab) return;
+        document.querySelectorAll('[data-tab]').forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+        document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+      });
+      document.addEventListener('submit', (e) => {
+        if (!e.target.matches('[data-panel]')) return;
+        e.preventDefault();
+        document.querySelector('[data-auth-note]').hidden = false;
+      });
+    </script>

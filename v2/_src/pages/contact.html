@@ -1,0 +1,41 @@
+<!--{"title":"Contact","nav":"contact","description":"Write to House of Agha."}-->
+    <section class="page-head">
+      <div class="wrap" data-reveal>
+        <p class="t-meta">Contact</p>
+        <h1 class="t-display" style="margin-top:14px">Write to us</h1>
+        <p class="t-lead">Questions about a fragrance, an order or a gift. We read every message.</p>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:0">
+      <div class="wrap two">
+        <dl class="contact-list" data-reveal>
+          <div><dt class="t-meta">Email</dt><dd><a href="mailto:info@aghaperfumes.com">info@aghaperfumes.com</a></dd></div>
+          <div><dt class="t-meta">Orders</dt><dd class="t-body" style="font-size:15px">Please include your order ID. For returns, add photos of the item received.</dd></div>
+          <div><dt class="t-meta">Help</dt><dd><a class="link" href="help.html">Shipping &amp; returns</a></dd></div>
+        </dl>
+        <form class="form" data-contact data-reveal>
+          <div class="row">
+            <div class="field"><label for="c-name">Name</label><input class="input" id="c-name" autocomplete="name" required></div>
+            <div class="field"><label for="c-email">Email</label><input class="input" id="c-email" type="email" autocomplete="email" required></div>
+          </div>
+          <div class="field">
+            <label for="c-topic">Topic</label>
+            <select class="select" id="c-topic">
+              <option>A fragrance</option>
+              <option>An order</option>
+              <option>Gifting</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="field"><label for="c-msg">Message</label><textarea class="textarea" id="c-msg" required></textarea></div>
+          <button class="btn" type="submit" style="justify-self:start">Send message</button>
+        </form>
+      </div>
+    </section>
+    <script>
+      document.addEventListener('submit', (e) => {
+        if (!e.target.matches('[data-contact]')) return;
+        e.preventDefault();
+        e.target.innerHTML = '<p class="t-name">Thank you.</p><p class="t-body">Your message has been sent. We will reply by email.</p>';
+      });
+    </script>

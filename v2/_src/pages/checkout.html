@@ -1,0 +1,68 @@
+<!--{"title":"Checkout","nav":"checkout","bare":true}-->
+    <section class="wrap co">
+      <form class="co__form" data-co>
+        <div class="co__block">
+          <h1 class="t-title">Checkout</h1>
+          <p class="t-meta" style="color:var(--ink);margin-top:10px">Contact</p>
+          <div class="field"><label for="co-email">Email or phone</label><input class="input" id="co-email" autocomplete="email" required></div>
+        </div>
+        <div class="co__block">
+          <p class="t-meta" style="color:var(--ink)">Delivery</p>
+          <div class="form">
+            <div class="row">
+              <div class="field"><label for="co-first">First name</label><input class="input" id="co-first" autocomplete="given-name" required></div>
+              <div class="field"><label for="co-last">Last name</label><input class="input" id="co-last" autocomplete="family-name" required></div>
+            </div>
+            <div class="field"><label for="co-addr">Address</label><input class="input" id="co-addr" autocomplete="address-line1" required></div>
+            <div class="row">
+              <div class="field"><label for="co-city">City</label><input class="input" id="co-city" autocomplete="address-level2" required></div>
+              <div class="field"><label for="co-pin">PIN code</label><input class="input" id="co-pin" inputmode="numeric" autocomplete="postal-code" required></div>
+            </div>
+            <div class="field"><label for="co-phone">Phone</label><input class="input" id="co-phone" type="tel" autocomplete="tel" required></div>
+          </div>
+        </div>
+        <div class="co__block">
+          <p class="t-meta" style="color:var(--ink)">Shipping</p>
+          <label class="radio"><input type="radio" name="ship" checked> Express <span>Free on prepaid orders</span></label>
+        </div>
+        <div class="co__block">
+          <p class="t-meta" style="color:var(--ink)">Payment</p>
+          <label class="radio"><input type="radio" name="pay" checked> UPI</label>
+          <label class="radio"><input type="radio" name="pay"> Credit or debit card</label>
+          <label class="radio"><input type="radio" name="pay"> Net banking</label>
+          <button class="btn btn--block" type="submit" style="margin-top:8px" data-pay>Pay now</button>
+          <p class="note" data-co-note hidden>Preview only: payment runs on the live store's checkout.</p>
+          <a class="link" href="shop.html" style="justify-self:start;margin-top:8px">Continue shopping</a>
+        </div>
+      </form>
+
+      <aside class="co__summary" aria-label="Order summary">
+        <p class="t-meta" style="color:var(--ink)">Order summary</p>
+        <div data-co-lines></div>
+        <div class="bag__row"><span class="note">Subtotal</span><span data-co-sub></span></div>
+        <div class="bag__row"><span class="note">Shipping</span><span class="note">Free (prepaid)</span></div>
+        <div class="bag__row" style="border-top:1px solid var(--line);padding-top:14px"><span class="t-name">Total</span><span class="t-name" data-co-total></span></div>
+        <p class="note">Prices include taxes.</p>
+      </aside>
+    </section>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const draw = () => {
+          const ls = V2.bag.lines();
+          document.querySelector('[data-co-lines]').innerHTML = ls.length
+            ? ls.map((l) => `<div class="line" style="grid-template-columns:56px minmax(0,1fr) auto"><span class="line__img"><img src="${l.p.images[0].sm}" alt=""></span><div><span class="t-name">${V2.esc(l.p.name)}</span><p class="line__meta">${V2.esc(l.size.label)} × ${l.qty}</p></div><span class="line__price">${AGHA.money(l.total)}</span></div>`).join('')
+            : '<p class="note" style="padding:12px 0">Your bag is empty. <a href="shop.html" style="text-decoration:underline">Shop</a></p>';
+          const sub = AGHA.money(V2.bag.subtotal());
+          document.querySelector('[data-co-sub]').textContent = sub;
+          document.querySelector('[data-co-total]').textContent = sub;
+          document.querySelector('[data-pay]').disabled = !ls.length;
+        };
+        document.addEventListener('v2:bag', draw);
+        draw();
+      });
+      document.addEventListener('submit', (e) => {
+        if (!e.target.matches('[data-co]')) return;
+        e.preventDefault();
+        document.querySelector('[data-co-note]').hidden = false;
+      });
+    </script>

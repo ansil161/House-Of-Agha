@@ -1,0 +1,70 @@
+<!--{"title":"Shop","nav":"shop","footer":"footer-shop","bodyClass":"is-shop","styles":["https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap"],"scripts":["v2-shop.js"],"description":"All House of Agha fragrances: eaux de parfum, attar and gift sets."}-->
+    <div class="sh">
+      <div class="xwrap">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="index.html">Home</a><span aria-hidden="true">/</span>
+          <span data-crumb-shop hidden><a href="shop.html">Shop</a><span aria-hidden="true">/</span></span>
+          <span aria-current="page" data-crumb-current>Shop</span>
+        </nav>
+
+        <header class="sh-head">
+          <h1 class="sh-head__title" data-shop-title>Shop all products</h1>
+          <p class="sh-head__count" data-shop-count></p>
+        </header>
+
+        <div class="sh-bar">
+          <div class="sh-bar__label" aria-hidden="true">
+            <svg viewBox="0 0 36 26"><path d="M1 5h34M1 13h34M1 21h34"/><circle cx="12" cy="5" r="3"/><circle cx="24" cy="13" r="3"/><circle cx="12" cy="21" r="3"/></svg>
+            Filters
+          </div>
+          <button class="sh-bar__btn" type="button" data-facets-open aria-controls="facets">
+            <svg viewBox="0 0 36 26" aria-hidden="true"><path d="M1 5h34M1 13h34M1 21h34"/><circle cx="12" cy="5" r="3"/><circle cx="24" cy="13" r="3"/><circle cx="12" cy="21" r="3"/></svg>
+            Filter <span data-filter-n></span>
+          </button>
+          <div class="sh-bar__right">
+            <span class="sh-bar__showing" data-showing></span>
+            <label class="sh-sort"><span class="sr">Sort by</span>
+              <select data-sort>
+                <option value="featured">Featured</option>
+                <option value="az">Alphabetically, A-Z</option>
+                <option value="za">Alphabetically, Z-A</option>
+                <option value="low">Price, low to high</option>
+                <option value="high">Price, high to low</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="sh-layout">
+          <div class="sh-scrim" data-facets-scrim></div>
+          <aside class="sh-side" id="facets" data-facets aria-label="Filters" tabindex="-1">
+            <div class="sh-side__head">
+              <div>
+                <h2>Filter and sort</h2>
+                <p data-drawer-showing></p>
+              </div>
+              <button class="head__icon" type="button" data-facets-close aria-label="Close filters">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+              </button>
+            </div>
+            <div class="sh-side__body" data-facet-groups></div>
+            <div class="sh-side__foot">
+              <button class="sh-side__clear" type="button" data-clear>Clear Filters</button>
+              <button class="sh-side__apply" type="button" data-apply>Apply Filters</button>
+            </div>
+          </aside>
+
+          <div class="sh-main">
+            <div class="sh-chips" data-chips hidden></div>
+            <div class="sh-grid" data-grid></div>
+            <div class="sh-empty" data-empty hidden>
+              <p class="t-name" data-empty-title>No fragrances match these filters.</p>
+              <div class="sh-empty__actions">
+                <button class="btn btn--line" type="button" data-clear data-empty-clear>Clear filters</button>
+                <a class="btn" href="shop.html">Shop all</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

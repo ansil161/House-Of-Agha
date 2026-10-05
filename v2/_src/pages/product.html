@@ -1,0 +1,103 @@
+<!--{"title":"Fragrance","nav":"shop","scripts":["v2-product.js"]}-->
+    <!-- Product page, on the Sarkar PDP structure: gallery left (one packshot, then a two-up grid),
+         sticky buy column right; then a full-width band, the description with notes, small accordions, related. -->
+    <section class="pdp" data-pdp>
+      <div class="pdp__grid">
+        <div class="pdp__media">
+          <div class="gal fade" data-fade data-gallery aria-label="Product images"></div>
+          <p class="gal__count" data-gal-count aria-hidden="true"></p>
+        </div>
+
+        <div class="pdp__info">
+          <div class="pdp__head fade" data-fade>
+            <h1 class="pdp__name"><span data-name></span> <small data-name-size></small></h1>
+            <div class="chips" data-chips></div>
+            <p class="t-notes" data-notes></p>
+            <p class="pdp__tagline" data-tagline></p>
+          </div>
+
+          <div class="pdp__price fade" data-fade>
+            <p data-price></p>
+            <small>Incl. of all taxes</small>
+          </div>
+
+          <div class="opt" data-variant-wrap>
+            <p class="opt__label">Choose fragrance</p>
+            <div class="variants" data-variants role="list"></div>
+          </div>
+
+          <div class="opt" data-size-wrap>
+            <p class="opt__label">Size</p>
+            <div class="sizes" data-sizes role="group" aria-label="Size"></div>
+          </div>
+
+          <div class="buy">
+            <div class="qty" data-qty>
+              <button type="button" data-step="-1" aria-label="Decrease quantity">−</button>
+              <span data-qty-value>1</span>
+              <button type="button" data-step="1" aria-label="Increase quantity">+</button>
+            </div>
+            <button class="btn" type="button" data-buy>Add to bag</button>
+          </div>
+          <p class="pdp__ship">* Dispatched within 24 hours of ordering.</p>
+
+          <div class="offers">
+            <p class="opt__label">Offers</p>
+            <div class="offer">
+              <span class="offer__tag">Prepaid</span>
+              <div class="offer__body">
+                <p class="offer__title">Free shipping &amp; returns</p>
+                <p class="offer__text">On all prepaid orders in India.</p>
+                <p class="offer__applied">Applied at checkout</p>
+              </div>
+            </div>
+          </div>
+
+          <a class="link pdp__more" href="#details" data-more>View full details</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band fade" data-band aria-hidden="true"></section>
+
+    <section class="details" id="details">
+      <div class="wrap">
+        <div class="acc">
+          <details open data-desc>
+            <summary>Product description</summary>
+            <div class="acc__body details__body fade" data-fade>
+              <p class="details__text" data-description></p>
+              <dl class="notes" data-pyramid></dl>
+            </div>
+          </details>
+          <details>
+            <summary>Shipping</summary>
+            <div class="acc__body">
+              <p>All orders are dispatched within 24 hours. Delivery then takes 2–5 days to metro cities and 3–7 days to other areas. We use express shipping at no extra cost, and shipping is free on prepaid orders.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Returns</summary>
+            <div class="acc__body">
+              <p>We accept returns only if the product is damaged, defective or incorrect on delivery. It must be unused, in its original packaging, and reported within 48 hours of delivery. <a href="help.html" style="text-decoration:underline">Full policy</a></p>
+            </div>
+          </details>
+          <details>
+            <summary>Questions</summary>
+            <div class="acc__body">
+              <p>Write to <a href="mailto:info@aghaperfumes.com" style="text-decoration:underline">info@aghaperfumes.com</a> or see <a href="help.html" style="text-decoration:underline">Help</a>.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec--white related">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="t-title">You may also like</h2>
+          <a class="link" href="shop.html">Shop all</a>
+        </div>
+        <div class="grid" data-related></div>
+      </div>
+    </section>
