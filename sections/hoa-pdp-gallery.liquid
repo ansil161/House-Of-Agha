@@ -1,11 +1,8 @@
 {%- comment -%}
   House of Agha · PDP campaign gallery
-  One line of wide campaign photos. Every few seconds it slides one photo to the left;
-  after the last photo it glides back to the first (no duplicated loop). Swipeable; keeps
-  sliding under the mouse, holds only while touched or off screen; jumps instead of gliding with reduced motion.
-  Styles: assets/pdp.css ("Campaign gallery"). Behaviour: assets/hoa-pgal.js.
-  With "First photo full width" on, the first photo is shown alone as an edge-to-edge
-  banner above the row, and only the remaining photos slide.
+  Fixed layout, no slider: the first photo is a full-width banner, then the next two photos
+  sit side by side at half width each. Any further photos are not shown.
+  Styles: assets/pdp.css ("Campaign gallery").
 
   Photos belong to a product, so each product page shows only its own campaign:
     1. the product's metafield custom.gallery (list of files), when filled, in that order;
@@ -51,28 +48,33 @@
   endif
 -%}
 {%- if total > 0 -%}
+  {%- assign shown = 0 -%}
   {%- capture items -%}
     {%- if mf != blank -%}
       {%- for img in mf -%}
         {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
+        {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
+        {%- assign shown = shown | plus: 1 -%}
         {%- assign img_alt = img.alt | default: product.title -%}
         <li class="hoa-pgal__item">
-          {%- render 'hoa-img', image: img, alt: img_alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
+          {%- render 'hoa-img', image: img, alt: img_alt, sizes: '(min-width: 769px) 50vw, 100vw' -%}
         </li>
       {%- endfor -%}
     {%- else -%}
       {%- for i in picked -%}
         {%- if feature and forloop.first -%}{%- continue -%}{%- endif -%}
+        {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
+        {%- assign shown = shown | plus: 1 -%}
         {%- assign n = i | plus: 0 -%}
         {%- assign block = section.blocks[n] -%}
         {%- assign b = block.settings -%}
         <li class="hoa-pgal__item" {{ block.shopify_attributes }}>
-          {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 900px) 40vw, 84vw' -%}
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 769px) 50vw, 100vw' -%}
         </li>
       {%- endfor -%}
     {%- endif -%}
   {%- endcapture -%}
-  <section class="hoa-pgal" data-hoa-pgal data-interval="{{ s.interval | default: 3 }}" aria-label="{{ s.label | default: 'Campaign photographs' | escape }}">
+  <section class="hoa-pgal" aria-label="{{ s.label | default: 'Campaign photographs' | escape }}">
     {%- if s.heading != blank -%}
       <div class="hoa-pgal__head"><h2 class="hoa-pgal__title">{{ s.heading }}</h2></div>
     {%- endif -%}
@@ -92,11 +94,10 @@
         </figure>
       {%- endif -%}
     {%- endif -%}
-    <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
-      <ul class="hoa-pgal__list" role="list">{{ items }}</ul>
-    </div>
+    {%- if shown > 0 -%}
+      <ul class="hoa-pgal__pair" role="list">{{ items }}</ul>
+    {%- endif -%}
   </section>
-  <script src="{{ 'hoa-pgal.js' | asset_url }}" defer></script>
 {%- endif -%}
 
 {% schema %}
@@ -106,8 +107,7 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "info": "Optional. Leave empty for a photo-only strip." },
     { "type": "text", "id": "label", "label": "Accessible label", "default": "Campaign photographs" },
-    { "type": "checkbox", "id": "feature_first", "label": "First photo full width", "default": true, "info": "Shows the first photo as an edge-to-edge banner above the sliding row." },
-    { "type": "range", "id": "interval", "label": "Seconds per slide", "min": 2, "max": 10, "step": 1, "unit": "s", "default": 3 }
+    { "type": "checkbox", "id": "feature_first", "label": "First photo full width", "default": true, "info": "Shows the first photo as an edge-to-edge banner above the two half-width photos." }
   ],
   "blocks": [
     {

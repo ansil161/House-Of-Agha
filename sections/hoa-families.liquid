@@ -1,7 +1,7 @@
 {% comment %}
   04 — DISCOVER YOUR SCENT
-  Four ways into the House: image tiles by scent family, each with a glass label and
-  the fragrances it holds. The button links to the full catalogue.
+  Three ways into the House: image tiles by collection (perfume, attar, gift set), the name and a short line
+  set under each photo. The button links to the full catalogue.
 {% endcomment %}
 
 {%- assign s = section.settings -%}
@@ -25,11 +25,13 @@
           assign b_alt = b.alt | default: b.title
         -%}
         <a class="hoa-family" href="{{ b.url | default: routes.all_products_collection_url }}" data-hoa-reveal style="transition-delay: {{ forloop.index0 | times: 90 }}ms" {{ block.shopify_attributes }}>
-          {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1600, alt: b_alt, sizes: '(min-width: 961px) 25vw, 76vw' -%}
-          <span class="hoa-family__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <span class="hoa-family__media">
+            {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1600, alt: b_alt, sizes: '(min-width: 961px) 33vw, 76vw' -%}
+            <span class="hoa-family__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          </span>
           <span class="hoa-family__body">
+            <span class="hoa-family__title">{{ b.title }}<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             {%- if b.names != blank -%}<span class="hoa-family__names">{{ b.names }}</span>{%- endif -%}
-            <span class="hoa-family__pill">{{ b.title }}<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </span>
         </a>
       {%- endfor -%}
@@ -42,7 +44,7 @@
   "name": "HOA Discover Your Scent",
   "tag": "div",
   "class": "hoa-families-section",
-  "max_blocks": 4,
+  "max_blocks": 3,
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Discover your scent" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Four ways" },
@@ -54,10 +56,10 @@
   "blocks": [
     {
       "type": "family",
-      "name": "Scent family",
+      "name": "Collection",
       "settings": [
-        { "type": "text", "id": "title", "label": "Family" },
-        { "type": "text", "id": "names", "label": "Fragrances in this family" },
+        { "type": "text", "id": "title", "label": "Collection" },
+        { "type": "text", "id": "names", "label": "Short line" },
         { "type": "url", "id": "url", "label": "Link" },
         { "type": "image_picker", "id": "image", "label": "Image (3:4)" },
         { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },

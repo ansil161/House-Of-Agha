@@ -169,9 +169,13 @@ async function renderTemplate(name, templateGlobals) {
   for (const f of inner) {
     const file = path.join(THEME, f);
     let html = fs.readFileSync(file, 'utf8');
-    const re = /[ \t]*(?:<!-- Navigation Header[^>]*-->\s*)?<header class="header[\s\S]*?<\/header>(?:\s*<nav class="hoa-menu"[\s\S]*?<\/nav>)?/;
+    // Also swallow the search sheet(s) that follow the menu, or every build stacks another copy
+    const re = /[ \t]*(?:<!-- Navigation Header[^>]*-->\s*)?<header class="header[\s\S]*?<\/header>(?:\s*<nav class="hoa-menu"[\s\S]*?<\/nav>)?(?:\s*<div class="hoa-search"[\s\S]*?data-hoa-search-results><\/ul>\s*<\/div>\s*<\/div>\s*<\/div>)*/;
     if (!re.test(html)) { console.warn('no header found in', f); continue; }
     html = html.replace(re, () => headerHtml);
+    let seenSearch = false;
+    html = html.replace(/<div class="hoa-search"[\s\S]*?data-hoa-search-results><\/ul>\s*<\/div>\s*<\/div>\s*<\/div>/g,
+      (m) => (seenSearch ? '' : ((seenSearch = true), m)));
     if (!html.includes('assets/hoa-home.css')) {
       html = html.replace(/(<link rel="stylesheet" href="(\/?)assets\/theme\.css">)/, '$1\n  <link rel="stylesheet" href="$2assets/hoa-home.css">');
     }

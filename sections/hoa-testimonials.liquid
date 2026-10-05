@@ -1,20 +1,13 @@
 {% comment %}
-  HOUSE OF AGHA — TESTIMONIALS (scroll-choreographed)
+  HOUSE OF AGHA — TESTIMONIALS (continuous marquee)
 
-  Structure
-    hoa-testimonials            section (TestimonialsSection)
-    ├── .hoa-voices__intro       eyebrow + line (TestimonialsIntro)
-    └── .hoa-voices__stage       pinned stage (TestimonialsStage)
-        ├── .hoa-voices__statement   giant background statement (BackgroundStatement)
-        └── .hoa-voices__cards       one card per "testimonial" block (TestimonialCards)
-  Data: "testimonial" blocks (TestimonialsData) — edit in the Theme Editor or templates/index.json.
-
-  Motion lives in assets/hoa-testimonials.js (isolated GSAP module: gsap.context,
-  gsap.matchMedia, one master ScrollTrigger timeline per breakpoint, reverted on unload).
-  Without JS, or with prefers-reduced-motion, the same content renders as a static
-  editorial layout: statement above, cards in a grid.
-
-  Statement: three lines; wrap a line in *asterisks* to set it in the serif italic.
+  Header: eyebrow + statement heading on the left, intro line on the right.
+  Below: the boxed testimonials glide right-to-left without stopping and loop seamlessly.
+  No arrows, no dots, no clicking (client brief). The group of boxes is printed twice
+  and the track moves by one group width (CSS keyframes in assets/hoa-home.css);
+  assets/hoa-testimonials.js only sets a constant speed and pauses it off-screen.
+  Data: "testimonial" blocks, edited in the Theme Editor or templates/index.json.
+  Statement: wrap a line in *asterisks* to set it in the serif italic.
 {% endcomment %}
 
 {%- liquid
@@ -23,26 +16,31 @@
   assign cards = section.blocks | where: 'type', 'testimonial'
 -%}
 <section class="hoa-voices" id="testimonials" data-hoa-voices aria-labelledby="voices-{{ section.id }}-title">
-  <div class="hoa-voices__stage" data-hoa-voices-stage>
-    <div class="hoa-voices__intro" data-hoa-voices-intro>
-      <p class="hoa-eyebrow">{{ s.eyebrow }}</p>
-      {%- if s.intro != blank -%}<p class="hoa-voices__lede">{{ s.intro }}</p>{%- endif -%}
-    </div>
+  <div class="hoa-wrap">
+    <header class="hoa-voices__head">
+      <div>
+        <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
+        <h2 class="hoa-h2 hoa-voices__title" id="voices-{{ section.id }}-title" data-hoa-reveal>
+          {%- for line in lines -%}
+            {%- assign l = line | strip -%}
+            {%- if l == blank -%}{%- continue -%}{%- endif -%}
+            {%- if l contains '*' -%}<em>{{ l | remove: '*' }}</em>{%- else -%}{{ l }}{%- endif -%}
+            {%- unless forloop.last %} {% endunless -%}
+          {%- endfor -%}
+        </h2>
+      </div>
+      <div class="hoa-voices__side" data-hoa-reveal>
+        {%- if s.intro != blank -%}<p class="hoa-voices__lede">{{ s.intro }}</p>{%- endif -%}
+      </div>
+    </header>
+  </div>
 
-    <h2 class="hoa-voices__statement" id="voices-{{ section.id }}-title" data-hoa-voices-statement>
-      {%- for line in lines -%}
-        {%- assign l = line | strip -%}
-        {%- if l == blank -%}{%- continue -%}{%- endif -%}
-        {%- if l contains '*' -%}
-          <span class="hoa-voices__line hoa-voices__line--{{ forloop.index }} hoa-voices__line--serif" data-hoa-voices-line>{{ l | remove: '*' }}</span>
-        {%- else -%}
-          <span class="hoa-voices__line hoa-voices__line--{{ forloop.index }}" data-hoa-voices-line>{{ l }}</span>
-        {%- endif -%}
-      {%- endfor -%}
-    </h2>
-
-    <ul class="hoa-voices__cards" role="list">
-      {%- for block in cards -%}
+  {%- comment -%} The group is printed twice; the track slides by exactly one group, so the loop has no seam. {%- endcomment -%}
+  <div class="hoa-voices__marquee" data-hoa-voices-marquee>
+    <div class="hoa-voices__track" data-hoa-voices-track>
+      {%- for pass in (1..2) -%}
+      <ul class="hoa-voices__group" role="list"{% if pass == 2 %} aria-hidden="true"{% endif %}>
+        {%- for block in cards -%}
         {%- liquid
           assign b = block.settings
           assign initials = ''
@@ -53,13 +51,16 @@
           endfor
           assign rating = b.rating | default: 5
         -%}
-        <li class="hoa-voice hoa-voice--{{ forloop.index }}" data-hoa-voice {{ block.shopify_attributes }}>
+        <li class="hoa-voice" data-hoa-voice{% if pass == 1 %} {{ block.shopify_attributes }}{% endif %}>
           <figure class="hoa-voice__card">
-            {%- if b.show_rating -%}
-              <p class="hoa-voice__rating" aria-label="Rated {{ rating }} out of 5">
-                {%- for i in (1..5) -%}<span{% if i > rating %} class="is-off"{% endif %} aria-hidden="true">★</span>{%- endfor -%}
-              </p>
-            {%- endif -%}
+            <div class="hoa-voice__top">
+              {%- if b.show_rating -%}
+                <p class="hoa-voice__rating" aria-label="Rated {{ rating }} out of 5">
+                  {%- for i in (1..5) -%}<span{% if i > rating %} class="is-off"{% endif %} aria-hidden="true">★</span>{%- endfor -%}
+                </p>
+              {%- endif -%}
+              <span class="hoa-voice__mark" aria-hidden="true">&ldquo;</span>
+            </div>
             <blockquote class="hoa-voice__quote"><p>{{ b.quote }}</p></blockquote>
             <figcaption class="hoa-voice__who">
               {%- if b.avatar != blank -%}
@@ -75,7 +76,9 @@
           </figure>
         </li>
       {%- endfor -%}
-    </ul>
+      </ul>
+      {%- endfor -%}
+    </div>
   </div>
 </section>
 

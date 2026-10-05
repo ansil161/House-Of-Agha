@@ -1,7 +1,7 @@
 {% comment %}
   SITE FOOTER · light editorial split
   Left: a short serif statement and the newsletter as a nested pill field (button-in-button).
-  Right: three link columns. Bottom: logo, legal line, Instagram. Black ground, hairlines,
+  Right: three link columns. Logo heads the left column. Bottom: legal line, social icons. Black ground, hairlines,
   no watermark. Styles: the "Footer" block in assets/hoa-home.css (loaded on every page).
   The local preview build swaps this same markup into every static page
   (tools/render-preview.js), so edit it here only.
@@ -14,6 +14,7 @@
 
     <div class="hoa-footer__split">
       <section class="hoa-footer__letter" aria-labelledby="hoa-footer-letter-title">
+        <a href="{{ routes.root_url }}" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="House of Agha" width="500" height="156" loading="lazy"></a>
         <p class="hoa-footer__eyebrow">The House Letter</p>
         <h2 class="hoa-footer__display" id="hoa-footer-letter-title">Made to linger.<br><span>Written to you once a month.</span></h2>
         {%- form 'customer', class: 'hoa-footer__form' -%}
@@ -67,9 +68,14 @@
     </div>
 
     <div class="footer-bottom hoa-footer__bottom">
-      <a href="{{ routes.root_url }}" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="House of Agha" width="500" height="156" loading="lazy"></a>
       <p>&copy; {{ 'now' | date: '%Y' }} House of Agha &middot; Composed in Hyderabad</p>
-      <a class="hoa-footer__social" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener">Instagram<span class="hoa-footer__sr"> (opens in a new tab)</span></a>
+      {%- comment -%} Facebook, YouTube and WhatsApp hrefs are placeholders until the real links arrive {%- endcomment -%}
+      <ul class="hoa-footer__socials" role="list">
+        <li><a class="hoa-footer__social" href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3.9" stroke="currentColor" stroke-width="1.5"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg></a></li>
+        <li><a class="hoa-footer__social" href="#" target="_blank" rel="noopener" aria-label="Facebook (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13.5 20.5v-7.25h2.6l.4-3h-3v-1.9c0-.87.25-1.45 1.5-1.45h1.6V4.2a21 21 0 0 0-2.33-.12c-2.3 0-3.87 1.4-3.87 3.98v2.19H7.8v3h2.6v7.25" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="hoa-footer__social" href="#" target="_blank" rel="noopener" aria-label="YouTube (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.75" y="5.5" width="18.5" height="13" rx="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.25 9.25v5.5L15 12z" fill="currentColor"/></svg></a></li>
+        <li><a class="hoa-footer__social" href="#" target="_blank" rel="noopener" aria-label="WhatsApp (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.2 19.8l1.1-3.9A8.25 8.25 0 1 1 8.4 19z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.2 8.4c.2-.4.5-.4.8-.4h.5c.2 0 .4.1.5.4l.6 1.5c.1.2 0 .5-.1.6l-.5.6c.6 1.1 1.4 1.9 2.5 2.5l.6-.5c.2-.2.4-.2.6-.1l1.5.6c.3.1.4.3.4.5v.5c0 .3-.1.6-.4.8-.5.4-1.2.5-1.9.3-2.4-.7-4.4-2.7-5.1-5.1-.2-.7-.1-1.4.3-1.9z" fill="currentColor"/></svg></a></li>
+      </ul>
     </div>
   </div>
 </footer>

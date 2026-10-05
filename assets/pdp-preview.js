@@ -952,13 +952,12 @@
   const galSet = GALLERY[handle] || [];
   const galImg = ([name, w, h, alt], sizes) => `<img src="/assets/${name}.webp" srcset="/assets/${name}-sm.webp ${w > 1500 ? 1000 : 700}w, /assets/${name}.webp ${w}w" sizes="${sizes}" width="${w}" height="${h}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
   const galFeature = galSet.length > 1;
-  const galItems = (galFeature ? galSet.slice(1) : galSet).map((g) => `<li class="hoa-pgal__item">${galImg(g, '(min-width: 900px) 40vw, 84vw')}</li>`).join('');
+  // Banner + two half-width photos underneath (mirrors sections/hoa-pdp-gallery.liquid); extra photos are not shown.
+  const galItems = (galFeature ? galSet.slice(1) : galSet).slice(0, 2).map((g) => `<li class="hoa-pgal__item">${galImg(g, '(min-width: 769px) 50vw, 100vw')}</li>`).join('');
   const gallery = galSet.length ? `
-  <section class="hoa-pgal" data-hoa-pgal data-interval="3" aria-label="Campaign photographs">
+  <section class="hoa-pgal" aria-label="Campaign photographs">
     ${galFeature ? `<figure class="hoa-pgal__hero" style="--pos: ${galSet[0][4] || 'center'}">${galImg(galSet[0], '100vw')}</figure>` : ''}
-    <div class="hoa-pgal__viewport" data-hoa-pgal-viewport tabindex="0">
-      <ul class="hoa-pgal__list" role="list">${galItems}</ul>
-    </div>
+    ${galItems ? `<ul class="hoa-pgal__pair" role="list">${galItems}</ul>` : ''}
   </section>` : '';
 
   // Benefits marquee: mirrors sections/hoa-fragrance-benefits.liquid with the blocks in templates/product.json
@@ -987,8 +986,6 @@
   window.AghaPDP?.init();
   if (window.HOA_BNF) window.HOA_BNF.init();
   else { const b = document.createElement('script'); b.src = '/assets/hoa-benefits.js'; document.body.appendChild(b); }
-  if (window.HOA_PGAL) window.HOA_PGAL.init();
-  else { const g = document.createElement('script'); g.src = '/assets/hoa-pgal.js'; document.body.appendChild(g); }
   if (reels) {
     const sc = document.createElement('script');
     sc.src = '/assets/hoa-reels.js';

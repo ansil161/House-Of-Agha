@@ -5082,6 +5082,13 @@ html:has(.pdp) body {
   .hoa-pgal__list { gap: 10px; }
   .hoa-pgal__item { width: 78vw; border-radius: 14px; }
 }
+/* Fixed layout: two photos side by side under the banner, half width each */
+.hoa-pgal__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.hoa-pgal__pair .hoa-pgal__item { width: auto; aspect-ratio: 4 / 5; border-radius: 0; }
+.hoa-pgal__pair .hoa-pgal__item:only-child { grid-column: 1 / -1; }
+@media (max-width: 768px) {
+  .hoa-pgal__pair { gap: 10px; }
+}
 
 /* Image icons (assets/hoa-icon-*.png: the brand's free-shipping truck and badge), tinted to the
    surrounding icon colour with a mask so they sit in the same gold / wine as the line icons. */

@@ -726,8 +726,7 @@
         "photo_31"
       ],
       "settings": {
-        "feature_first": true,
-        "interval": 3
+        "feature_first": true
       }
     },
     "benefits": {

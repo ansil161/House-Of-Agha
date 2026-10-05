@@ -137,58 +137,47 @@
     "discover": {
       "type": "hoa-families",
       "blocks": {
-        "fam_woody": {
+        "col_perfume": {
           "type": "family",
           "settings": {
-            "title": "Woody & Smoky",
-            "names": "Oud Fury · Oud of Dark Paradise",
-            "url": "/collections/all",
-            "asset": "hoa-family-woody-oud-fury",
-            "alt": "Oud Fury on a carved stone ledge with oud wood, saffron and rose, a minaret through the arch"
-          }
-        },
-        "fam_fresh": {
-          "type": "family",
-          "settings": {
-            "title": "Fresh & Aquatic",
-            "names": "Agha Blue · Sea Smoke",
-            "url": "/collections/all",
-            "asset": "hoa-family-aquatic-sea-smoke",
-            "alt": "Sea Smoke lying on wet sand at the edge of the surf"
-          }
-        },
-        "fam_floral": {
-          "type": "family",
-          "settings": {
-            "title": "Floral & Luminous",
-            "names": "Maha · Shamamah",
+            "title": "Perfume",
+            "names": "Eau de parfum · The full House",
             "url": "/collections/all",
             "asset": "hoa-family-floral",
             "alt": "Maha among lilies and white flowers on silk"
           }
         },
-        "fam_aromatic": {
+        "col_attar": {
           "type": "family",
           "settings": {
-            "title": "Aromatic & Green",
-            "names": "Tobacco Enigma",
+            "title": "Attar",
+            "names": "Pure perfume oils",
             "url": "/collections/all",
-            "asset": "hoa-family-green",
-            "alt": "Tobacco Enigma on moss in a sunlit forest"
+            "asset": "hoa-family-woody",
+            "alt": "Oud Fury among glowing oud wood and smoke"
+          }
+        },
+        "col_gift": {
+          "type": "family",
+          "settings": {
+            "title": "Gift Set",
+            "names": "Royal Gift Set",
+            "url": "/products/royal-gift-set",
+            "asset": "hoa-world-gift",
+            "alt": "Agha Blue in an open blue gift box among peonies"
           }
         }
       },
       "block_order": [
-        "fam_woody",
-        "fam_fresh",
-        "fam_floral",
-        "fam_aromatic"
+        "col_perfume",
+        "col_attar",
+        "col_gift"
       ],
-      "settings": {}
-    },
-    "art": {
-      "type": "hoa-craft",
-      "settings": {}
+      "settings": {
+        "heading": "Three ways",
+        "heading_serif": "into the House.",
+        "text": "Perfume, attar or a gift set. Start with what you want to wear, or the person you are buying for."
+      }
     },
     "collection": {
       "type": "hoa-collection",
@@ -457,9 +446,8 @@
     "bridge",
     "signature",
     "the_house",
-    "discover",
-    "art",
     "collection",
+    "discover",
     "testimonials",
     "product_film",
     "world",
