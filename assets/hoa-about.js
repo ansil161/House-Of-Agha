@@ -450,15 +450,34 @@
         ScrollTrigger.create({ trigger: nameWord, start: 'top 82%', once: true, onEnter: function () { nameTl.play(); } });
       }
 
-      /* 05 Philosophy (Bidri): the heading's words rise, the line beneath fades in; the tiles
-         enter in turn, each silver frame draws in and its small ornament is engraved line by
-         line. Short and once; nothing waits on it. */
+      /* 05 Philosophy (Deccan ornament): the heading's words rise and the pattern behind it
+         fades in to its low opacity; the tiles enter in turn, each inner hairline draws in and
+         its small mark is engraved line by line; the divider ornament draws and the line at
+         the foot opens from the centre. Short and once; nothing waits on it. */
       var bdTitle = document.querySelector('[data-hoa-bd-title]');
       if (bdTitle) {
         var bdHead = gsap.timeline({ scrollTrigger: { trigger: bdTitle, start: 'top 85%', once: true } });
         bdHead.from(maskWords(bdTitle), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.06 });
         var bdSub = document.querySelector('[data-hoa-bd-sub]');
         if (bdSub) bdHead.from(bdSub, { y: 12, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35);
+      }
+      var bdPattern = document.querySelector('[data-hoa-bd-pattern]');
+      if (bdPattern) {
+        gsap.from(bdPattern, { opacity: 0, duration: 1.6, ease: 'power1.out', clearProps: 'opacity',
+          scrollTrigger: { trigger: bdPattern, start: 'top 85%', once: true } });
+      }
+      var bdDivider = document.querySelector('[data-hoa-bd-divider]');
+      if (bdDivider) {
+        var bdDivPaths = bdDivider.querySelectorAll('[pathLength]');
+        gsap.set(bdDivPaths, { strokeDasharray: 1, strokeDashoffset: 1 });
+        gsap.timeline({ scrollTrigger: { trigger: bdDivider, start: 'top 88%', once: true } })
+          .fromTo(bdDivider, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.2, ease: 'power2.inOut', clearProps: 'clipPath' }, 0)
+          .to(bdDivPaths, { strokeDashoffset: 0, duration: 1, ease: 'power1.inOut', stagger: 0.1 }, 0.2);
+      }
+      var bdFoot = document.querySelector('[data-hoa-bd-foot]');
+      if (bdFoot) {
+        gsap.fromTo(bdFoot, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.6, ease: 'power2.inOut', clearProps: 'clipPath',
+          scrollTrigger: { trigger: bdFoot, start: 'top 95%', once: true } });
       }
       var bdTiles = gsap.utils.toArray('[data-hoa-bd-tile]');
       if (bdTiles.length) {

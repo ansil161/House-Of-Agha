@@ -3515,6 +3515,17 @@ html:has(.pdp) body {
 }
 
 /* Recommendations: three relevant cards; a swipe row on phones */
+/* Head row: heading left, "View all" right on its baseline, then air before the cards */
+.pdp-related__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: clamp(24px, 3vw, 40px);
+}
+.pdp-related__head .pdp-heading { margin-bottom: 0; }
+.pdp-related__head .pdp-link { flex: none; margin-bottom: 6px; }
 .pdp-related .hoa-shop-grid.pdp-related-cards[data-view='grid'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 768px) {
   .pdp-related .hoa-shop-grid.pdp-related-cards[data-view='grid'] {

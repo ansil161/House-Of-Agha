@@ -933,7 +933,7 @@
     ],
     'oud-fury': [
       ["hoa-pgal-oud-fury-hero", 1792, 2400, "Oud Fury by a palace window at dusk", "50% 60%"],
-      ["hoa-pdp-gal-3", 1000, 1250, "A man holds Oud Fury in warm low light"],
+      ["hoa-pgal-oud-fury-2", 1200, 1500, "A hand raises Oud Fury on a crystal stand with smoking agarwood"],
       ["hoa-alt-oud-fury", 1080, 1350, "Oud Fury among pieces of agarwood"],
       ["hoa-oud-fury-smoke", 2000, 1125, "Oud Fury in smoke and embers"],
       ["hoa-hero-oud-fury", 2000, 1125, "Oud Fury on agarwood in amber light"]
