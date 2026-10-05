@@ -1011,8 +1011,9 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   }
   .hoa-tabs::-webkit-scrollbar { display: none; }
   .hoa-tab { font-size: 2rem; white-space: nowrap; }
-  .hoa-collection__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 10px; }
-  .hoa-card--feature { grid-column: span 2; }
+  /* Phones: one product per row, stacked (client 2026-10-05) */
+  .hoa-collection__grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .hoa-card--feature { grid-column: auto; }
   .hoa-card--feature .hoa-card__media { aspect-ratio: 16 / 12; }
 }
 
