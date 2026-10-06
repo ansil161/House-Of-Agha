@@ -39,7 +39,7 @@ const bothRear = (fn) => { fn(96); fn(304); };     // rear minaret centres
 // A cylinder band: top and bottom edges sag a little so the round towers read as round.
 const band = (cx, h, y1, y2, sag = 1.6) =>
   `M${f(cx - h)} ${y1} Q${cx} ${f(y1 + sag)} ${f(cx + h)} ${y1} V${y2} Q${cx} ${f(y2 + sag)} ${f(cx - h)} ${y2} Z`;
-// A pointed (Qutb Shahi) arch from x1 to x2, springing at ys, apex at ya, open down to yb.
+// A pointed (Qutub Shahi) arch from x1 to x2, springing at ys, apex at ya, open down to yb.
 const arch = (x1, x2, ys, ya, yb, close) => {
   const w = x2 - x1, h = ys - ya, m = (x1 + x2) / 2;
   return `M${f(x1)} ${yb} V${ys} C${f(x1)} ${f(ys - h * 0.62)} ${f(m - w * 0.14)} ${f(ya + h * 0.18)} ${f(m)} ${ya} ` +

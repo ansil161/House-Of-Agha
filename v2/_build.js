@@ -28,7 +28,7 @@ for (const file of fs.readdirSync(path.join(SRC, 'pages')).filter((f) => f.endsW
     .join('\n');
   const html = part('head')
     .replace(/{{title}}/g, meta.title ? `${meta.title} · House of Agha` : 'House of Agha')
-    .replace('{{description}}', meta.description || 'House of Agha, fine perfumery rooted in the Qutb Shahi heritage of Golconda and Hyderabad.')
+    .replace('{{description}}', meta.description || 'House of Agha, fine perfumery rooted in the Qutub Shahi heritage of Golconda and Hyderabad.')
     .replace('{{scripts}}', scripts)
     .replace('{{page}}', meta.nav || file.replace('.html', ''))
     .replace('{{bodyClass}}', meta.bodyClass ? ` class="${meta.bodyClass}"` : '')

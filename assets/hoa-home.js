@@ -656,6 +656,68 @@
   /* ------------------------------------------------------------------ */
   /* 06 The Collection: tabs                                             */
   /* ------------------------------------------------------------------ */
+  /* Campaign tile: span whatever is left of its row, so the grid never ends on an empty
+     column (one product short of a row = span 2, a full row = span all). Phones stack. */
+  function fitFeature(sec) {
+    var tile = sec && sec.querySelector('[data-hoa-feature]');
+    var grid = tile && tile.parentNode;
+    if (!tile) return;
+    var cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+    if (cols < 2) { tile.style.gridColumn = ''; return; }
+    var n = Array.prototype.filter.call(grid.children, function (c) {
+      return c !== tile && c.offsetParent !== null;
+    }).length;
+    var left = cols - (n % cols);
+    tile.style.gridColumn = 'span ' + left;
+  }
+
+  /* Campaign tile slides: turn every N seconds (default 3), following the clock so every
+     visitor sees the same slide; preload the next photo, then a 0.45s cross-fade. */
+  function initFeature() {
+    var sec = document.querySelector('[data-hoa-collection]');
+    var fig = sec && sec.querySelector('[data-hoa-feature]');
+    if (!fig) return;
+    fitFeature(sec);
+    var onResize = function () { fitFeature(sec); };
+    window.addEventListener('resize', onResize, { passive: true });
+
+    var slides = Array.prototype.slice.call(fig.querySelectorAll('template[data-hoa-feature-slide]'));
+    if (slides.length < 2 || !fig.hasAttribute('data-hoa-feature-seconds')) return;
+    var period = Math.max(3, parseFloat(fig.getAttribute('data-hoa-feature-seconds')) || 3) * 1000;
+    var current = 0;
+    var timer = 0;
+    var slotNow = function () { return Math.floor(Date.now() / period) % slides.length; };
+
+    function render(i) {
+      Array.prototype.slice.call(fig.children).forEach(function (c) { if (c.tagName !== 'TEMPLATE') fig.removeChild(c); });
+      fig.insertBefore(slides[i].content.cloneNode(true), fig.firstChild);
+      current = i;
+    }
+    function show(i, animate) {
+      if (i === current) return;
+      if (!animate || reduceMotion) { render(i); return; }
+      var go = function () {
+        fig.classList.add('is-swapping');
+        setTimeout(function () { render(i); requestAnimationFrame(function () { fig.classList.remove('is-swapping'); }); }, 450);
+      };
+      var probe = slides[i].content.querySelector('img');
+      if (!probe) { go(); return; }
+      var pre = new Image();
+      pre.onload = pre.onerror = go;
+      if (probe.srcset) { pre.sizes = probe.sizes; pre.srcset = probe.srcset; }
+      pre.src = probe.src;
+    }
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(function () { show(slotNow(), true); schedule(); }, period - (Date.now() % period) + 50);
+    }
+    show(slotNow(), false);
+    schedule();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { clearTimeout(timer); } else { show(slotNow(), true); schedule(); }
+    });
+  }
+
   function initCollection() {
     var sec = document.querySelector('[data-hoa-collection]');
     if (!sec) return;
@@ -675,6 +737,7 @@
         if (hasGsap() && !reduceMotion) {
           gsap.fromTo(shown, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.05, ease: 'expo.out', overwrite: true });
         }
+        fitFeature(sec);
         if (window.ScrollTrigger) ScrollTrigger.refresh();
       });
     });
@@ -739,6 +802,7 @@
     initLenis();
     initReveals();
     initCollection();
+    initFeature();
     initTileVideos();
 
     if (hasGsap()) {

@@ -85,7 +85,7 @@
 .hoa-ct__row a { color: inherit; text-decoration: underline; text-decoration-color: var(--ct-line-2); text-underline-offset: 4px; transition: text-decoration-color 0.2s; }
 .hoa-ct__row a:hover { text-decoration-color: var(--ct-ink); }
 
-/* the house's photo, in a Qutb Shahi arch */
+/* the house's photo, in a Qutub Shahi arch */
 .hoa-ct__photo { margin: 0; }
 .hoa-ct__arch {
   position: relative;
@@ -266,4 +266,36 @@
 @media (prefers-reduced-motion: reduce) {
   .hoa-ct.is-js [data-hoa-ct-in] { opacity: 1; transform: none; }
   .hoa-ct__link, .hoa-ct__link-arrow, .hoa-ct__btn { transition: none; }
+}
+
+/* ---------- Deccani geometry (2026-10-06) ----------
+   A large twelve-petal rosette in the head's empty right side, and a single row of the
+   pointed-cross lattice closing the intro. Masks of snippets/hoa-qutub-pattern.liquid's assets. */
+.hoa-ct::after {
+  content: "";
+  position: absolute;
+  top: clamp(48px, 7vw, 104px);
+  right: max(16px, calc((100% - var(--hoa-max, 1240px)) / 2 + 24px));
+  z-index: -1;
+  width: clamp(150px, 22vw, 290px);
+  aspect-ratio: 1;
+  background: var(--ct-gold);
+  opacity: 0.32;
+  -webkit-mask: url("hoa-qutub-star12.svg") no-repeat center / contain;
+          mask: url("hoa-qutub-star12.svg") no-repeat center / contain;
+  pointer-events: none;
+}
+.hoa-ct__head::after {
+  content: "";
+  display: block;
+  width: min(100%, 420px);
+  height: 20px;
+  margin-top: clamp(28px, 3vw, 40px);
+  background: var(--ct-gold);
+  opacity: 0.55;
+  -webkit-mask: url("hoa-qutub-cross.svg") repeat-x left center / 20px 20px;
+          mask: url("hoa-qutub-cross.svg") repeat-x left center / 20px 20px;
+}
+@media (max-width: 640px) {
+  .hoa-ct::after { top: 24px; width: 120px; opacity: 0.22; }
 }

@@ -1,7 +1,7 @@
 {%- comment -%}
   House of Agha · About 01 · Our story (opening): centered showcase
   A centered headline, intro and button, then one archival photograph (Hyderabad's old
-  city and the Charminar) inside a wide Qutb Shahi pointed arch with an antique-gold
+  city and the Charminar) inside a wide Qutub Shahi pointed arch with an antique-gold
   hairline. On arrival the photo fades in softly and the hairline draws itself
   (assets/hoa-about.js); without JS or with reduced motion it is simply there.
 {%- endcomment -%}
@@ -30,7 +30,7 @@
           </div>
         </div>
         {%- render 'hoa-ab-arch' -%}
-        <span class="hoa-ab-apex">{%- render 'hoa-qutb-pattern', variant: 'ornament', class: 'hoa-ab-mark', attrs: 'data-hoa-ab-orn' -%}</span>
+        <span class="hoa-ab-apex">{%- render 'hoa-qutub-pattern', variant: 'ornament', class: 'hoa-ab-mark', attrs: 'data-hoa-ab-orn' -%}</span>
       </div>
       {%- if s.caption != blank -%}<figcaption class="hoa-ab-story__caption" data-hoa-ab-line>{{ s.caption }}</figcaption>{%- endif -%}
     </figure>
@@ -44,9 +44,9 @@
   "class": "hoa-ab-section",
   "settings": [
     { "type": "text", "id": "chip", "label": "Label", "default": "Our story" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Where tradition meets" },
-    { "type": "text", "id": "heading_muted", "label": "Heading, second line (muted)", "default": "timeless elegance." },
-    { "type": "textarea", "id": "text", "label": "Intro (keep it under 20 words)", "default": "Rooted in the Qutb Shahi heritage of Golconda and Hyderabad, we keep the royal art of fine perfumery alive." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Rooted in Qutub Shahi" },
+    { "type": "text", "id": "heading_muted", "label": "Heading, second line (muted)", "default": "heritage." },
+    { "type": "textarea", "id": "text", "label": "Intro (keep it under 20 words)", "default": "From Golconda to Hyderabad, where tradition meets timeless elegance, we keep the royal art of fine perfumery alive." },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Our philosophy" },
     { "type": "url", "id": "cta_url", "label": "Button link", "info": "Leave empty to scroll to the philosophy section." },
     { "type": "header", "content": "Wide photograph" },

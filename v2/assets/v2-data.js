@@ -77,7 +77,7 @@ window.AGHA = (() => {
       handle: 'shamamah', name: 'Shamamah', type: 'Attar', for: 'unisex', collections: ['attar'],
       notes: 'Aged woods · Spice · Earth',
       tagline: 'The essence of the Deccan. Aged two years, 100% natural, alcohol free.',
-      description: 'Born from ancient alchemy and a tribute to the Qutb Shahi dynasty: aged woods, exotic spices and earthy undertones, crafted through a centuries-old distillation process.',
+      description: 'Born from ancient alchemy and a tribute to the Qutub Shahi dynasty: aged woods, exotic spices and earthy undertones, crafted through a centuries-old distillation process.',
       pyramid: null,
       sizes: [{ label: '12 ml', price: 3999, available: true }],
       cutout: img('hoa-cutout-shamamah'),

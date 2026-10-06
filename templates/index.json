@@ -185,7 +185,109 @@
       "type": "hoa-collection",
       "settings": {
         "show_tabs": false
-      }
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "handle": "sea-smoke",
+            "caption": "Sea Smoke",
+            "note": "By the water",
+            "asset": "hoa-world-poolside",
+            "w": 1200,
+            "h": 1200,
+            "alt": "Sea Smoke on a tray beside a pool",
+            "focus": "40% 55%"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "handle": "agha-blue",
+            "caption": "Agha Blue",
+            "note": "In snow and ice",
+            "asset": "hoa-shop-agha-blue-ice",
+            "w": 1200,
+            "h": 1490,
+            "alt": "Agha Blue lying in fresh snow among blocks of ice",
+            "focus": "50% 40%"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "handle": "shamamah",
+            "caption": "Shamamah",
+            "note": "On old bark and moss",
+            "asset": "hoa-world-shamamah",
+            "w": 1600,
+            "h": 1600,
+            "alt": "Shamamah on old bark among moss, sandalwood and lavender",
+            "focus": "50% 55%"
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "handle": "maha",
+            "caption": "Maha",
+            "note": "In red silk",
+            "asset": "hoa-world-maha",
+            "w": 1400,
+            "h": 1738,
+            "alt": "Maha standing among folds of deep red silk",
+            "focus": "50% 62%"
+          }
+        },
+        "slide_5": {
+          "type": "slide",
+          "settings": {
+            "handle": "oud-of-dark-paradise",
+            "caption": "Oud of Dark Paradise",
+            "note": "After dark",
+            "asset": "hoa-world-hand",
+            "w": 1086,
+            "h": 1448,
+            "alt": "A hand in a dark suit holds Oud of Dark Paradise, in black and white",
+            "focus": "50% 45%"
+          }
+        },
+        "slide_6": {
+          "type": "slide",
+          "settings": {
+            "handle": "oud-fury",
+            "caption": "Oud Fury",
+            "note": "Under the arch",
+            "asset": "hoa-family-woody-oud-fury",
+            "w": 1200,
+            "h": 1600,
+            "alt": "Oud Fury on a carved stone ledge with oud wood, saffron and rose, a minaret through the arch",
+            "focus": "55% 72%"
+          }
+        },
+        "slide_7": {
+          "type": "slide",
+          "settings": {
+            "handle": "tobacco-enigma",
+            "caption": "Tobacco Enigma",
+            "note": "In the green",
+            "asset": "hoa-family-green",
+            "w": 1088,
+            "h": 1445,
+            "alt": "Tobacco Enigma on moss in a sunlit forest",
+            "focus": "60% 55%"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4",
+        "slide_5",
+        "slide_6",
+        "slide_7"
+      ]
     },
     "films": {
       "type": "hoa-reels",
@@ -228,7 +330,13 @@
         "reel_dark_paradise",
         "reel_maha"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "",
+        "heading": "Follow us",
+        "heading_serif": "on Instagram.",
+        "subtext": "<p>Wear it, share it, let it linger. Show us how House of Agha becomes part of your story by tagging <a href=\"https://www.instagram.com/aghaperfumes/\" target=\"_blank\">@aghaperfumes</a>, and your moment may take its place here.</p>",
+        "elfsight_app_id": ""
+      }
     },
     "testimonials": {
       "type": "hoa-testimonials",

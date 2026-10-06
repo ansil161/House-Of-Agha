@@ -3,7 +3,7 @@
    Editorial Architecture: White-First Surface + Black Contrast & Serif Rhythm
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=GFS+Didot&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* White-First Color Palette */
@@ -25,9 +25,14 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   /* Product names: heavy, low-contrast serif (no Didone hairlines). Low optical size keeps
      strokes thick at every size; SOFT/WONK 0 keeps the letterforms sober. */
-  --font-name: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-name-axes: "opsz" 24, "SOFT" 0, "WONK" 0;
-  --font-name-weight: 600;
+  /* Didot (2026-10-06, user request): Mac's own Didot first, GFS Didot (Google Fonts) everywhere else.
+     GFS Didot ships one weight (400), so names stay 400; a heavier weight would be faux-bolded. */
+  --font-didot: 'Didot', 'GFS Didot', 'Bodoni 72', Georgia, serif;
+  /* italic accents: GFS Didot has no italic, so use a true Didone italic instead of a faux slant */
+  --font-didot-italic: 'Didot', 'Bodoni Moda', 'Bodoni 72', Georgia, serif;
+  --font-name: var(--font-didot);
+  --font-name-axes: normal;
+  --font-name-weight: 400;
 
   /* Spacing Scale */
   --space-xs: 8px;

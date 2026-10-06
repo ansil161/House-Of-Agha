@@ -317,14 +317,19 @@
   }
 
   // Wraps each word of el in a span once (kept across rebuilds); returns the spans.
+  // Words inside an .hoa-ab-em phrase keep the italic via hoa-ab-lede-word--em.
   function splitWords(el) {
     if (el._hoaWords) return el._hoaWords;
-    var text = el.textContent.trim().split(/\s+/);
+    var text = [];
+    Array.prototype.slice.call(el.childNodes).forEach(function (n) {
+      var em = n.nodeType === 1 && n.classList.contains('hoa-ab-em');
+      n.textContent.trim().split(/\s+/).forEach(function (w) { if (w) text.push({ w: w, em: em }); });
+    });
     el.textContent = '';
-    el._hoaWords = text.map(function (w, i) {
+    el._hoaWords = text.map(function (t, i) {
       var span = document.createElement('span');
-      span.className = 'hoa-ab-lede-word';
-      span.textContent = w;
+      span.className = 'hoa-ab-lede-word' + (t.em ? ' hoa-ab-lede-word--em' : '');
+      span.textContent = t.w;
       el.appendChild(span);
       if (i < text.length - 1) el.appendChild(document.createTextNode(' '));
       return span;
@@ -707,4 +712,56 @@
   document.addEventListener('shopify:section:load', function () { destroy(); build(); });
   document.addEventListener('shopify:section:unload', destroy);
   document.addEventListener('shopify:section:reorder', function () { destroy(); build(); });
+})();
+
+
+/* 02 Four boxes on the plate: every 2 s the four images move one place clockwise
+   (top-left → top-right → bottom-right → bottom-left). The new places are set with CSS
+   `order`, then each box glides from its old spot (FLIP, Web Animations API) with a small
+   dip in scale so they pass each other. Pauses off screen, in a hidden tab and on hover;
+   never runs with reduced motion. */
+(function () {
+  'use strict';
+  var CLOCKWISE = [0, 1, 3, 2]; // grid slots in clockwise order (0 TL, 1 TR, 2 BL, 3 BR)
+  function init(root) {
+    var box = (root || document).querySelector('[data-hoa-ab-mosaic]');
+    if (!box || box.dataset.ready) return;
+    var tiles = Array.prototype.slice.call(box.children);
+    if (tiles.length !== 4) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    box.dataset.ready = '1';
+    var step = 0, onScreen = false, hovered = false, timer = null;
+    function place() {
+      tiles.forEach(function (t, i) { t.style.order = CLOCKWISE[(i + step) % 4]; });
+    }
+    place();
+    function tick() {
+      if (!onScreen || hovered || document.hidden) return;
+      var before = tiles.map(function (t) { return t.getBoundingClientRect(); });
+      step = (step + 1) % 4;
+      place();
+      tiles.forEach(function (t, i) {
+        var a = before[i], b = t.getBoundingClientRect();
+        var dx = a.left - b.left, dy = a.top - b.top;
+        if (!dx && !dy) return;
+        if (!t.animate) return;
+        t.animate([
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1)' },
+          { transform: 'translate(' + dx / 2 + 'px,' + dy / 2 + 'px) scale(0.9)', offset: 0.5 },
+          { transform: 'translate(0,0) scale(1)' }
+        ], { duration: 750, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });
+      });
+    }
+    timer = setInterval(tick, 2000);
+    box.addEventListener('mouseenter', function () { hovered = true; });
+    box.addEventListener('mouseleave', function () { hovered = false; });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) { onScreen = entries[0].isIntersecting; }, { threshold: 0.25 }).observe(box);
+    } else {
+      onScreen = true;
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(); });
+  else init();
+  document.addEventListener('shopify:section:load', function (e) { init(e.target); });
 })();

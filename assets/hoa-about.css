@@ -197,7 +197,7 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
    hoa-about.js adds .is-panning (768px+, motion allowed): the section pins, carved palace
    doors over the stage swing open, then the canvas pans sideways. .is-scrolly = phones.
    Heritage dress: dark stage tinted by the world in focus, a faint jaali lattice, a line
-   skyline of the city drifting behind (hoa-skyline.svg), every photograph set in a Qutb
+   skyline of the city drifting behind (hoa-skyline.svg), every photograph set in a Qutub
    Shahi pointed arch with a brass outline, Urdu numerals, and a string of pearls for
    progress. Palette: night, pearl ivory, antique brass.
    ========================================================================== */
@@ -226,8 +226,8 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 .hoa-ab-worlds__jaali {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: var(--w-ivory);
-  -webkit-mask: url("hoa-qutb.svg") repeat center / 64px 32px;
-  mask: url("hoa-qutb.svg") repeat center / 64px 32px;
+  -webkit-mask: url("hoa-qutub.svg") repeat center / 64px 32px;
+  mask: url("hoa-qutub.svg") repeat center / 64px 32px;
   opacity: 0.045;
 }
 /* The city on the horizon; wider than the stage when panning (width set in JS) */
@@ -427,8 +427,8 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
   content: ""; position: absolute;
   top: calc(var(--hoa-header-h) + 5vh); bottom: 7vh; left: 16%; right: 16%;
   background: #B08D57;
-  -webkit-mask: url("hoa-qutb.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
-  mask: url("hoa-qutb.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
+  -webkit-mask: url("hoa-qutub.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
+  mask: url("hoa-qutub.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
   opacity: 0.9;
@@ -509,8 +509,8 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
    ABOUT · DECCAN VISUAL LANGUAGE (2026-10-05)
    Six sections: story, chapter, Hyderabad, the name, philosophy, closing.
    Palette   white page, warm beige panels, dark brown type, antique-gold hairlines.
-   Motifs    the Qutb Shahi pointed arch (--ab-arch mask + a drawn gold outline,
-             snippets/hoa-ab-arch.liquid), the Qutb Shahi arcade frieze (snippets/hoa-qutb-pattern.liquid) only as faint bands,
+   Motifs    the Qutub Shahi pointed arch (--ab-arch mask + a drawn gold outline,
+             snippets/hoa-ab-arch.liquid), the Qutub Shahi arcade frieze (snippets/hoa-qutub-pattern.liquid) only as faint bands,
              gold dividers with a small arch mark (snippets/hoa-ab-rule.liquid).
    Photos    archival and heritage photos share one light warm tone (--ab-tone);
              product photos stay true.
@@ -534,7 +534,7 @@ body.hoa-about {
   --ab-hair-soft: rgba(198, 161, 91, 0.3);
   --ab-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --ab-tone: sepia(0.34) saturate(0.7) contrast(0.96);
-  /* Qutb Shahi pointed arch, stretched to its box (same path as the gold outline) */
+  /* Qutub Shahi pointed arch, stretched to its box (same path as the gold outline) */
   --ab-arch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100Z'/%3E%3C/svg%3E");
   /* the shared tokens, re-pointed for this page (the footer keeps its own) */
   --hoa-paper: var(--ab-ivory);
@@ -699,8 +699,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   right: 15px;
   height: 22px;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
-          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+  -webkit-mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
   opacity: 0.4;
   pointer-events: none;
 }
@@ -819,8 +819,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   height: 22px;
   z-index: -1;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
-          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+  -webkit-mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
   opacity: 0.4;
   pointer-events: none;
 }
@@ -877,8 +877,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-ab-name__use:hover { border-color: var(--ab-hair); background: #FFFDF8; }
 .hoa-ab-name__icon { display: block; width: 30px; height: 30px; margin-bottom: 6px; color: var(--ab-gold); }
 .hoa-ab-name__icon svg { width: 30px; height: 30px; }
-.hoa-ab-name__use dt { font-size: 0.96rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ab-ink); }
-.hoa-ab-name__use dd { margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--ab-ink-2); }
+.hoa-ab-name__use dt { font-size: clamp(1.3rem, 1.7vw, 1.6rem); font-weight: 700; letter-spacing: -0.01em; color: var(--ab-ink); }
+.hoa-ab-name__use dd { margin: 0; font-size: clamp(1.06rem, 1.3vw, 1.2rem); line-height: 1.6; font-weight: 500; color: var(--ab-ink-2); }
 .hoa-ab-name__foot {
   grid-column: 1 / -1;
   display: flex;
@@ -951,8 +951,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   inset: 24px;
   z-index: -1;
   background: var(--ab-gold-2);
-  -webkit-mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 39px;
-          mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 39px;
+  -webkit-mask: url("hoa-qutub-heritage.svg") repeat-x center bottom / auto 39px;
+          mask: url("hoa-qutub-heritage.svg") repeat-x center bottom / auto 39px;
   opacity: 0.3;
   pointer-events: none;
 }
@@ -1019,9 +1019,9 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 /* ==========================================================================
    ABOUT · DECCAN DETAILS (2026-10-05, second pass)
    Serif headlines; gold kept to lines and ornaments (small gold text uses --ab-gold-ink);
-   Golconda geometry: a lotus mark (the Qutb Shahi ornament, snippets/hoa-qutb-pattern.liquid) and stepped
+   Golconda geometry: a lotus mark (the Qutub Shahi ornament, snippets/hoa-qutub-pattern.liquid) and stepped
    bastion corners (.hoa-ab-corners); one Deccan floral fleuron (snippets/hoa-ab-floral.liquid);
-   an arcade plate behind the Qutb Shahi portrait; the ingredients as specimen labels.
+   an arcade plate behind the Qutub Shahi portrait; the ingredients as specimen labels.
    ========================================================================== */
 
 /* ---------- Type: editorial serif for headlines, the sans stays for reading ---------- */
@@ -1040,7 +1040,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-about .hoa-ab-chapter__lede { font-weight: 400; letter-spacing: -0.015em; line-height: 1.2; }
 .hoa-about .hoa-ab-name__title { letter-spacing: -0.03em; line-height: 0.95; }
 .hoa-about .hoa-ab-pillar__word { letter-spacing: -0.01em; }
-/* the muted half of a headline stays upright; colour carries the emphasis */
+/* the muted half of a headline keeps its colour; the italic serif is set in the EMPHASIS block at the end */
 .hoa-about .hoa-ab-h2 .hoa-ab-muted,
 .hoa-about .hoa-ab-story__title .hoa-ab-muted { color: var(--ab-mute); }
 
@@ -1070,7 +1070,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 /* cards and boxes: hairlines and near-square corners, not app-style rounding */
 body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 
-/* ---------- Lotus mark (hoa-qutb-pattern, variant ornament) ---------- */
+/* ---------- Lotus mark (hoa-qutub-pattern, variant ornament) ---------- */
 .hoa-ab-mark { width: 20px; height: 20px; color: var(--ab-gold); }
 /* above the opening arch's point */
 .hoa-ab-apex { position: absolute; left: 50%; top: calc(var(--al) * -1 - 30px); transform: translateX(-50%); line-height: 0; }
@@ -1114,8 +1114,8 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   inset: 0;
   z-index: -1;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-qutb.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
-          mask: url("hoa-qutb.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
+  -webkit-mask: url("hoa-qutub.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
+          mask: url("hoa-qutub.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
   opacity: 0.28;
@@ -1169,16 +1169,16 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 }
 .hoa-about .hoa-ab-pillar__num { font-family: var(--hoa-sans); }
 
-/* Qutb Shahi friezes on the beige panels: readable, but under the type and the drawing */
+/* Qutub Shahi friezes on the beige panels: readable, but under the type and the drawing */
 .hoa-about .hoa-ab-name__side::before,
 .hoa-about .hoa-ab-hyd__visual::before,
 .hoa-about .hoa-ab-hyd__visual::after { background: var(--ab-gold-ink); opacity: 0.5; }
 
 /* ==========================================================================
    ABOUT · MORE HERITAGE PATTERN (2026-10-05, user: "use more heritage pattern")
-   Reworked 2026-10-06 in the Qutb Shahi language (snippets/hoa-qutb-pattern.liquid):
+   Reworked 2026-10-06 in the Qutub Shahi language (snippets/hoa-qutub-pattern.liquid):
    1. Spandrels: the Hyderabadi floral rosette in each upper corner beside every arched
-      photo, as the stucco rosettes sit in Qutb Shahi spandrels (--jt = its size).
+      photo, as the stucco rosettes sit in Qutub Shahi spandrels (--jt = its size).
    2. Section dividers: the heritage band, Hyderabad's monuments on the arcade (2026-10-06).
    3. The closing card: a silver Bidri inlay border along its top, the heritage band along its bottom.
    ========================================================================== */
@@ -1194,10 +1194,10 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   background: var(--ab-gold);
   opacity: 0.5;
   pointer-events: none;
-  -webkit-mask: url("hoa-qutb-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
-                url("hoa-qutb-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
-          mask: url("hoa-qutb-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
-                url("hoa-qutb-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
+  -webkit-mask: url("hoa-qutub-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
+                url("hoa-qutub-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
+          mask: url("hoa-qutub-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
+                url("hoa-qutub-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
 }
 .hoa-ab-story__frame { --jt: 26px; }
 .hoa-ab-story__frame::before { opacity: 0.55; }
@@ -1213,13 +1213,13 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-about .hoa-ab-rule::after {
   height: 14px;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
-          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+  -webkit-mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
   opacity: 0.6;
 }
 .hoa-about .hoa-ab-rule::before { -webkit-mask-position: right center; mask-position: right center; }
 .hoa-about .hoa-ab-rule::after { -webkit-mask-position: left center; mask-position: left center; }
-.hoa-about .hoa-ab-rule .hoa-qutb--arch { width: 21px; height: 24px; }
+.hoa-about .hoa-ab-rule .hoa-qutub--arch { width: 21px; height: 24px; }
 
 /* Closing card friezes */
 .hoa-about .hoa-ab-cta::before { opacity: 0.3; }
@@ -1228,10 +1228,10 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-about .hoa-ab-rule--heritage { gap: 0; }
 .hoa-about .hoa-ab-rule--heritage::before,
 .hoa-about .hoa-ab-rule--heritage::after { content: none; }
-.hoa-about .hoa-ab-rule--heritage .hoa-qutb--heritage { flex: 1; --qutb-h: 52px; opacity: 0.7; }
+.hoa-about .hoa-ab-rule--heritage .hoa-qutub--heritage { flex: 1; --qutub-h: 52px; opacity: 0.7; }
 
 @media (max-width: 640px) {
-  .hoa-about .hoa-ab-rule--heritage .hoa-qutb--heritage { --qutb-h: 39px; }
+  .hoa-about .hoa-ab-rule--heritage .hoa-qutub--heritage { --qutub-h: 39px; }
   .hoa-ab-arch { --jt: 16px; }
   .hoa-ab-story__frame { --jt: 18px; }
   .hoa-about .hoa-ab-rule::before,
@@ -1240,7 +1240,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 
 /* ==========================================================================
    ABOUT · INGREDIENT NICHES (2026-10-05, user: "creative design, heritage patterns")
-   Each ingredient stands in a Qutb Shahi arch: gold outline, a carved lotus under the apex,
+   Each ingredient stands in a Qutub Shahi arch: gold outline, a carved lotus under the apex,
    a round medallion with the ingredient drawn in line, then number, name, botanical name,
    on a double-rule plinth. Four in a row read as an arcade.
    ========================================================================== */
@@ -1281,8 +1281,8 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   transform: translateX(-50%);
   background: var(--ab-gold);
   opacity: 0.7;
-  -webkit-mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
-          mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
+  -webkit-mask: url("hoa-qutub-lotus.svg") no-repeat center / contain;
+          mask: url("hoa-qutub-lotus.svg") no-repeat center / contain;
   transition: opacity 0.6s var(--hoa-ease);
 }
 .hoa-ab-specimen__arch {
@@ -1315,7 +1315,50 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-about .hoa-ab-specimen__latin { font-size: 0.72rem; font-style: italic; line-height: 1.35; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .hoa-ab-specimen:hover::after { opacity: 0.85; }
-  .hoa-ab-specimen:hover .hoa-ab-specimen__medal { transform: translateY(-3px); }
+}
+/* Hover / focus / tap (tabindex makes a tap focus it on phones): the niche turns into a photo of the ingredient (2026-10-06).
+   The photo is clipped to the same arch, rises out of a slight zoom, a brown wash
+   keeps the type readable and the type turns ivory; the medallion steps aside. */
+.hoa-ab-specimen { cursor: default; outline: none; }
+.hoa-ab-specimen__photo {
+  position: absolute;
+  inset: 0 0 4px;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0;
+  -webkit-mask: var(--ab-arch) top / 100% 100% no-repeat;
+          mask: var(--ab-arch) top / 100% 100% no-repeat;
+  transition: opacity 0.55s var(--hoa-ease);
+}
+.hoa-ab-specimen__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+  transition: transform 1.1s var(--hoa-ease);
+}
+.hoa-ab-specimen__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(36, 28, 20, 0.08) 0%, rgba(36, 28, 20, 0.28) 45%, rgba(36, 28, 20, 0.82) 100%);
+}
+.hoa-ab-specimen__medal,
+.hoa-ab-specimen__no,
+.hoa-ab-specimen__name,
+.hoa-ab-specimen__latin,
+.hoa-ab-specimen__dot { transition: color 0.45s var(--hoa-ease), background-color 0.45s var(--hoa-ease), opacity 0.45s var(--hoa-ease), transform 0.6s var(--hoa-ease); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo) .hoa-ab-specimen__photo { opacity: 1; }
+.hoa-ab-specimen:is(:hover, :focus) .hoa-ab-specimen__photo img { transform: scale(1); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo) .hoa-ab-specimen__medal { opacity: 0; transform: translateY(-8px) scale(0.85); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo) :is(.hoa-ab-specimen__no, .hoa-ab-specimen__name) { color: #FBF6EC; transform: translateY(6px); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo) .hoa-ab-specimen__latin { color: rgba(251, 246, 236, 0.82); transform: translateY(6px); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo) .hoa-ab-specimen__dot { background: #E2C98F; transform: translateY(6px) rotate(45deg); }
+.hoa-ab-specimen:is(:hover, :focus):has(.hoa-ab-specimen__photo)::after { background: #E2C98F; opacity: 0.95; }
+.hoa-ab-specimen:focus-visible .hoa-ab-specimen__arch path { stroke-width: 2; }
+@media (prefers-reduced-motion: reduce) {
+  .hoa-ab-specimen__photo img { transform: none; transition: none; }
+  .hoa-ab-specimen :is(.hoa-ab-specimen__medal, .hoa-ab-specimen__no, .hoa-ab-specimen__name, .hoa-ab-specimen__latin) { transform: none !important; }
 }
 /* narrow body column: two by two */
 @media (max-width: 1180px) {
@@ -1617,7 +1660,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 }
 
 /* ==========================================================================
-   ABOUT · DECCAN CRAFTS (2026-10-06) · snippets/hoa-qutb-pattern.liquid
+   ABOUT · DECCAN CRAFTS (2026-10-06) · snippets/hoa-qutub-pattern.liquid
    Deccani textile: a Himroo-style keri buti ground, very faint, on the two beige panels.
    Bidri inlay: the silver vine border along the top of the dark closing card.
    Hyderabadi floral: the stucco rosette in the spandrels of the arched photos (above).
@@ -1628,7 +1671,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   z-index: -1;
   color: var(--ab-gold-ink);
   opacity: 0.13;
-  --qutb-tile: 40px;
+  --qutub-tile: 40px;
 }
 .hoa-ab-name__side { isolation: isolate; }
 .hoa-ab-hyd__visual > .hoa-ab-textile { inset: 56px 15px; }
@@ -1639,11 +1682,144 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   left: 24px;
   right: 24px;
   z-index: -1;
-  --qutb-h: 16px;
+  --qutub-h: 16px;
   color: #CFCAC0;
   opacity: 0.5;
 }
 @media (max-width: 640px) {
-  .hoa-ab-textile { --qutb-tile: 32px; }
-  .hoa-ab-cta__bidri { top: 18px; left: 18px; right: 18px; --qutb-h: 12px; }
+  .hoa-ab-textile { --qutub-tile: 32px; }
+  .hoa-ab-cta__bidri { top: 18px; left: 18px; right: 18px; --qutub-h: 12px; }
+}
+
+/* ---------- EMPHASIS: dominant words in Fraunces italic (About only, 2026-10-06) ----------
+   The closing half of each two-part headline, the name "Agha" and the story line's key phrase.
+   Size, colour and spacing are inherited; only family, style and a lighter weight change. */
+.hoa-about .hoa-ab-story__title .hoa-ab-muted,
+.hoa-about .hoa-ab-hyd .hoa-ab-h2 .hoa-ab-muted,
+.hoa-about .hoa-ab-cta .hoa-ab-h2 .hoa-ab-muted,
+.hoa-about .hoa-ab-name__title,
+.hoa-about .hoa-ab-chapter__lede .hoa-ab-em,
+.hoa-about .hoa-ab-lede-word--em {
+  font-family: var(--ab-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;
+}
+/* word masks clip overflow: give the italic's right-leaning overhang room without moving the line */
+.hoa-about .hoa-ab-story__title .hoa-ab-muted .hoa-ab-wmask,
+.hoa-about .hoa-ab-name__title .hoa-ab-wmask { padding-right: 0.14em; margin-right: -0.14em; }
+/* emphasis colour: deep antique gold on the light sections (the closing card keeps its gold-2) */
+.hoa-about .hoa-ab-story__title .hoa-ab-muted,
+.hoa-about .hoa-ab-hyd .hoa-ab-h2 .hoa-ab-muted,
+.hoa-about .hoa-ab-name__title,
+.hoa-about .hoa-ab-chapter__lede .hoa-ab-em,
+.hoa-about .hoa-ab-lede-word--em { color: var(--ab-gold-ink); }
+
+/* ---------- DECCANI GEOMETRY (2026-10-06): one pattern per place, none repeated ----------
+   Story keeps the lotus + floral rosette, Chapter the heritage divider + arcade plate.
+   Hyderabad divider: cross lattice · Name divider: square-knot lattice · Name side band: girih
+   stars · Name spandrels: sharp twelve-point star · Closing spandrels: twelve-petal rosette ·
+   Closing bottom edge: eight-point interlace row · Closing mark: the Qutub arch. */
+.hoa-about .hoa-ab-rule--cross,
+.hoa-about .hoa-ab-rule--knot { gap: 0; }
+.hoa-about .hoa-ab-rule--cross::before,
+.hoa-about .hoa-ab-rule--cross::after,
+.hoa-about .hoa-ab-rule--knot::before,
+.hoa-about .hoa-ab-rule--knot::after { content: none; }
+.hoa-about .hoa-ab-rule--cross .hoa-qutub--cross { flex: 1; height: 24px; --qutub-tile: 24px; opacity: 0.8; }
+.hoa-about .hoa-ab-rule--knot .hoa-qutub--knot { flex: 1; height: 32px; --qutub-tile: 32px; opacity: 0.8; }
+
+.hoa-about .hoa-ab-name__side::before {
+  -webkit-mask: url("hoa-qutub-girih.svg") repeat-x center / 44px 44px;
+          mask: url("hoa-qutub-girih.svg") repeat-x center / 44px 44px;
+}
+.hoa-about .hoa-ab-name .hoa-ab-arch::before {
+  -webkit-mask-image: url("hoa-qutub-star.svg"), url("hoa-qutub-star.svg");
+          mask-image: url("hoa-qutub-star.svg"), url("hoa-qutub-star.svg");
+}
+.hoa-about .hoa-ab-cta__media::before {
+  -webkit-mask-image: url("hoa-qutub-star12.svg"), url("hoa-qutub-star12.svg");
+          mask-image: url("hoa-qutub-star12.svg"), url("hoa-qutub-star12.svg");
+}
+.hoa-about .hoa-ab-cta::before {
+  -webkit-mask: url("hoa-qutub-star8.svg") space no-repeat center bottom / 26px 26px;
+          mask: url("hoa-qutub-star8.svg") space no-repeat center bottom / 26px 26px;
+}
+.hoa-about .hoa-ab-cta__orn .hoa-qutub--arch { width: 18px; height: 21px; }
+@media (max-width: 640px) {
+  .hoa-about .hoa-ab-rule--cross .hoa-qutub--cross { height: 20px; --qutub-tile: 20px; }
+  .hoa-about .hoa-ab-rule--knot .hoa-qutub--knot { height: 26px; --qutub-tile: 26px; }
+}
+
+/* ==========================================================================
+   ABOUT 02 · FOUR BOXES IN THE PLATE (2026-10-06)
+   sections/hoa-about-chapter.liquid: the miniature + three Golconda images in a 2×2 box
+   on the manuscript plate. Every 2 s they move one place clockwise (assets/hoa-about.js
+   sets `order` and animates the move); without JS / with reduced motion they stay put.
+   ========================================================================== */
+.hoa-ab-mosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 0.9vw, 12px);
+}
+.hoa-ab-mosaic__tile {
+  position: relative;
+  aspect-ratio: 1 / 1.1;
+  overflow: hidden;
+  border-radius: var(--ab-r-in, 4px);
+  background: var(--ab-ivory-2);
+  box-shadow: 0 0 0 1px var(--ab-hair), 0 10px 22px -16px rgba(58, 53, 47, 0.45);
+  will-change: transform;
+}
+.hoa-ab-mosaic__tile img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--hoa-ease);
+}
+/* a gold hairline set just inside each box, like the plate's own frame */
+.hoa-ab-mosaic__tile::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(226, 201, 143, 0.7);
+  border-radius: 2px;
+  pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hoa-ab-mosaic__tile:hover img { transform: scale(1.04); }
+}
+@media (max-width: 640px) {
+  .hoa-ab-mosaic__tile::after { inset: 4px; }
+}
+/* the four boxes fill the plate edge to edge (user, 2026-10-06): only a thin paper rim
+   stays round them; the corner ornaments and arcade ground would sit under the photos */
+.hoa-ab-chapter__plate:has(.hoa-ab-mosaic) { padding: clamp(6px, 0.7vw, 10px); }
+.hoa-ab-chapter__plate:has(.hoa-ab-mosaic)::before,
+.hoa-ab-chapter__plate:has(.hoa-ab-mosaic) .hoa-ab-corners { display: none; }
+.hoa-ab-chapter__plate .hoa-ab-mosaic { gap: clamp(6px, 0.7vw, 10px); }
+/* the box takes the whole picture column (desktop) and the full content width (tablet/phone) */
+.hoa-ab-chapter__portrait:has(.hoa-ab-mosaic) { max-width: none; width: 100%; margin: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+@media (max-width: 899px) {
+  .hoa-ab-chapter__portrait:has(.hoa-ab-mosaic) { max-width: none; margin: 0; }
+}
+/* desktop: the box also takes the empty spacer column beside it, keeping a small gap to the text */
+@media (min-width: 900px) {
+  .hoa-ab-chapter__portrait:has(.hoa-ab-mosaic) { grid-column: 1 / 3; width: auto; margin-right: clamp(28px, 3vw, 48px); }
+}
+
+/* Chapter: the opening "Welcome to House of Agha." reads as a small heading above its paragraph */
+.hoa-about .hoa-ab-chapter__hello {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--ab-serif);
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ab-ink);
 }

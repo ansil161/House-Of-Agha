@@ -1,33 +1,53 @@
 {%- comment -%}
   House of Agha · About 02 · The story, in the house's own words
   Editorial layout under a gold divider: the large line runs across the top as a statement;
-  below it the Qutb Shahi miniature in a pointed arch with an antique-gold hairline (left)
+  below it the Qutub Shahi miniature in a pointed arch with an antique-gold hairline (left)
   balances the story paragraphs and the four natural ingredients (right).
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="hoa-ab-chapter">
   {%- render 'hoa-ab-rule' -%}
   <div class="hoa-wrap hoa-ab-chapter__grid">
-    <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede }}</p>
+    {%- comment -%} The line's dominant phrase is set in Fraunces italic; edited copy without it renders plain {%- endcomment -%}
+    <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede | replace: 'the intoxicating allure of tradition.', '<em class="hoa-ab-em">the intoxicating allure of tradition.</em>' }}</p>
     {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
       <figure class="hoa-ab-chapter__portrait">
         {%- comment -%} A manuscript plate: faint jaali ground, Golconda corners, the arch on it {%- endcomment -%}
         <div class="hoa-ab-chapter__plate">
           <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
-          <div class="hoa-ab-arch hoa-ab-chapter__arch">
-            <div class="hoa-ab-arch__frame hoa-ab-chapter__img" data-hoa-ab-img>
-              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 30vw, 80vw' -%}
+          {%- comment -%}
+            Four boxes in one box (2026-10-06): the miniature + three Golconda images. Every 2 s
+            the four move one place clockwise (assets/hoa-about.js, data-hoa-ab-mosaic); static
+            with reduced motion or without JS. Golconda photo: Unsplash, Aamir (tM4HEI-nY2Y).
+            The sketch and the fort photo were supplied by the client.
+          {%- endcomment -%}
+          <div class="hoa-ab-mosaic" data-hoa-ab-mosaic>
+            <div class="hoa-ab-mosaic__tile">
+              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 15vw, 45vw' -%}
             </div>
-            {%- render 'hoa-ab-arch' -%}
+            {%- for i in (2..4) -%}
+              {%- capture k_img -%}tile_{{ i }}_image{%- endcapture -%}
+              {%- capture k_asset -%}tile_{{ i }}_asset{%- endcapture -%}
+              {%- capture k_alt -%}tile_{{ i }}_alt{%- endcapture -%}
+              {%- if s[k_asset] != blank or s[k_img] != blank -%}
+                <div class="hoa-ab-mosaic__tile">
+                  {%- if s[k_img] != blank -%}
+                    {{ s[k_img] | image_url: width: 700 | image_tag: alt: s[k_alt], loading: 'lazy', sizes: '(min-width: 900px) 15vw, 45vw' }}
+                  {%- else -%}
+                    <img src="{{ s[k_asset] | append: '.webp' | asset_url }}" alt="{{ s[k_alt] | escape }}" width="600" height="660" loading="lazy" decoding="async">
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
           </div>
         </div>
         {%- if s.portrait_caption != blank -%}<figcaption class="hoa-ab-caption">{{ s.portrait_caption }}</figcaption>{%- endif -%}
       </figure>
     {%- endif -%}
     <div class="hoa-ab-chapter__body">
-      {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 }}</p>{%- endif -%}
+      {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 | replace: 'Welcome to House of Agha.', '<span class="hoa-ab-chapter__hello">Welcome to House of Agha.</span>' }}</p>{%- endif -%}
       {%- if s.p2 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p2 }}</p>{%- endif -%}
-      {%- comment -%} The four ingredients as specimen niches: a Qutb Shahi arch with a jaali head, a medallion with the ingredient drawn in line, number, name, botanical name, on a double-rule plinth {%- endcomment -%}
+      {%- comment -%} The four ingredients as specimen niches: a Qutub Shahi arch with a jaali head, a medallion with the ingredient drawn in line, number, name, botanical name, on a double-rule plinth {%- endcomment -%}
       {%- assign notes = s.ingredients | split: ',' -%}
       {%- assign latin = s.ingredients_latin | split: ',' -%}
       {%- if notes.size > 0 -%}
@@ -35,7 +55,13 @@
           {%- for n in notes -%}
             {%- assign l = latin[forloop.index0] | strip -%}
             {%- assign nh = n | strip | handleize -%}
-            <li class="hoa-ab-specimen">
+            {%- assign photo = 'hoa-ing-' | append: nh | append: '.webp' -%}
+            {%- if nh == 'agarwood' -%}{%- assign photo = 'hoa-ing-oud.webp' -%}{%- elsif nh == 'amber' -%}{%- assign photo = 'hoa-ing-ambergris.webp' -%}{%- endif -%}
+            <li class="hoa-ab-specimen" tabindex="0">
+              {%- comment -%} Hover/focus: the niche turns into a photo of the ingredient. Photos (assets/hoa-ing-*.webp, 720x960): oud = Wikimedia Commons "Oud Wood Supreme Quality.JPG" (CC0); rose, vetiver, ambergris = Unsplash photo-1599665395079, photo-1713084875932, photo-1613825432127 (Unsplash License, free commercial use) {%- endcomment -%}
+              {%- if nh == 'oud' or nh == 'agarwood' or nh == 'rose' or nh == 'vetiver' or nh == 'ambergris' or nh == 'amber' -%}
+                <span class="hoa-ab-specimen__photo" aria-hidden="true"><img src="{{ photo | asset_url }}" alt="" width="720" height="960" loading="lazy" decoding="async"></span>
+              {%- endif -%}
               <svg class="hoa-ab-specimen__arch" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100" vector-effect="non-scaling-stroke"/></svg>
               <span class="hoa-ab-specimen__medal" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
@@ -68,16 +94,26 @@
   "class": "hoa-ab-section",
   "settings": [
     { "type": "textarea", "id": "lede", "label": "Large line", "default": "Every fragrance tells a story: of bustling royal courts, serene palace gardens and the intoxicating allure of tradition." },
-    { "type": "textarea", "id": "p1", "label": "Paragraph 1", "default": "Welcome to House of Agha. Rooted in the rich heritage of the Qutb Shahi dynasty, we celebrate the art of fine perfumery inspired by the grandeur of Golconda and Hyderabad's golden era. Drawing from the royal legacy of aromatic indulgence, we craft fragrances that embody the sophistication and luxury once cherished by the Persian-Turkic rulers." },
-    { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutb Shahi era." },
+    { "type": "textarea", "id": "p1", "label": "Paragraph 1", "default": "Welcome to House of Agha. Rooted in the rich heritage of the Qutub Shahi dynasty, we celebrate the art of fine perfumery inspired by the grandeur of Golconda and Hyderabad's golden era. Drawing from the royal legacy of aromatic indulgence, we craft fragrances that embody the sophistication and luxury once cherished by the Persian-Turkic rulers." },
+    { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutub Shahi era." },
     { "type": "text", "id": "ingredients", "label": "Ingredients (comma separated)", "default": "Oud, Rose, Vetiver, Ambergris" },
     { "type": "text", "id": "ingredients_latin", "label": "Botanical names (comma separated, same order)", "default": "Aquilaria, Rosa damascena, Chrysopogon zizanioides, Ambra grisea" },
     { "type": "text", "id": "ingredients_label", "label": "Ingredients list name (screen readers)", "default": "Natural ingredients we blend" },
     { "type": "header", "content": "Portrait (under the large line)" },
     { "type": "image_picker", "id": "portrait_image", "label": "Image" },
-    { "type": "text", "id": "portrait_asset", "label": "Fallback theme asset", "default": "hoa-qutb-shah" },
-    { "type": "text", "id": "portrait_alt", "label": "Alt text", "default": "Miniature portrait of a Qutb Shahi ruler in a jewelled turban, holding a rose" },
-    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutb Shahi miniature" },
+    { "type": "text", "id": "portrait_asset", "label": "Fallback theme asset", "default": "hoa-qutub-shah" },
+    { "type": "text", "id": "portrait_alt", "label": "Alt text", "default": "Miniature portrait of a Qutub Shahi ruler in a jewelled turban, holding a rose" },
+    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutub Shahi miniature and Golconda Fort" },
+    { "type": "header", "content": "Box images 2–4 (rotate with the portrait every 2 s)" },
+    { "type": "image_picker", "id": "tile_2_image", "label": "Image 2" },
+    { "type": "text", "id": "tile_2_asset", "label": "Image 2 fallback theme asset", "default": "hoa-golconda-palace" },
+    { "type": "text", "id": "tile_2_alt", "label": "Image 2 alt text", "default": "A Qutub Shahi pavilion on the granite crest of Golconda Fort at dusk" },
+    { "type": "image_picker", "id": "tile_3_image", "label": "Image 3" },
+    { "type": "text", "id": "tile_3_asset", "label": "Image 3 fallback theme asset", "default": "hoa-golconda-sketch" },
+    { "type": "text", "id": "tile_3_alt", "label": "Image 3 alt text", "default": "Pen-and-ink sketch of Golconda Fort's walls and gateways" },
+    { "type": "image_picker", "id": "tile_4_image", "label": "Image 4" },
+    { "type": "text", "id": "tile_4_asset", "label": "Image 4 fallback theme asset", "default": "hoa-golconda-fort" },
+    { "type": "text", "id": "tile_4_alt", "label": "Image 4 alt text", "default": "The ramparts and arched gateways of Golconda Fort above a garden lawn" },
     { "type": "textarea", "id": "p3", "label": "Paragraph 3", "default": "Our passion lies in bridging history and modernity. Deeply rooted in the past, our fragrances are made for today's connoisseurs: an elegant fusion of heritage and contemporary sophistication." }
   ],
   "presets": [{ "name": "About: story text" }]

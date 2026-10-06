@@ -108,19 +108,20 @@
   pointer-events: none;
   box-shadow: 0 3px 8px -3px rgba(20, 18, 16, 0.25);
 }
-/* Metallic gold: banded highlights like polished metal, a bright top edge and a dark lower lip */
+/* Royal burgundy with ivory lettering: stands out on the beige and gold product photos;
+   a fine gold rim and a soft top sheen keep it jewel-like (black lacquer was too quiet, 2026-10-06) */
 .hoa-pc__tag--best {
-  border-color: #8a6420;
+  border-color: rgba(222, 186, 112, 0.9);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 45%),
-    linear-gradient(115deg, #a8792c 0%, #f6e3a1 22%, #c99a3f 40%, #fff1bf 55%, #b8862f 72%, #e9cd7e 88%, #9c6f25 100%);
-  color: #2a1d05;
-  text-shadow: 0 1px 0 rgba(255, 244, 205, 0.6);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 50%),
+    linear-gradient(115deg, #6E1423 0%, #8E1F31 50%, #5E101D 100%);
+  color: #FBF3E4;
+  text-shadow: 0 1px 0 rgba(60, 6, 16, 0.4);
   box-shadow:
-    0 4px 12px -4px rgba(120, 84, 22, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -1px 0 rgba(110, 76, 18, 0.55);
+    0 4px 12px -4px rgba(94, 16, 29, 0.6),
+    inset 0 1px 0 rgba(255, 220, 200, 0.22);
 }
+.hoa-pc__tag--best::before { color: #E9C77F; }
 .hoa-pc__tag--new {
   border-color: rgba(11, 11, 11, 0.14);
   background: #FFFFFF;

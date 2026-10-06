@@ -16,8 +16,8 @@
           "settings": {
             "icon": "arch",
             "kicker": "1591",
-            "title": "The Qutb Shahi city",
-            "text": "Founded by Muhammad Quli Qutb Shah, with the Charminar at its heart."
+            "title": "The Qutub Shahi city",
+            "text": "Founded by Muhammad Quli Qutub Shah, with the Charminar at its heart."
           }
         },
         "note_attar": {
@@ -25,7 +25,7 @@
           "settings": {
             "icon": "attar",
             "kicker": "The old city",
-            "title": "The attar lanes",
+            "title": "The Attar lanes",
             "text": "Around the Charminar, fragrance has been blended and sold for generations."
           }
         },
@@ -92,7 +92,7 @@
         "photo_asset": "hoa-hyd-tomb-detail",
         "photo_w": 1400,
         "photo_h": 2100,
-        "photo_alt": "Carved parapet, jaali screens and pointed arches of a Qutb Shahi tomb in Hyderabad",
+        "photo_alt": "Carved parapet, jaali screens and pointed arches of a Qutub Shahi tomb in Hyderabad",
         "photo_caption": ""
       }
     },

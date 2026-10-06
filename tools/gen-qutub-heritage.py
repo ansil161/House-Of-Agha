@@ -1,6 +1,6 @@
-"""Generates assets/hoa-qutb-heritage.svg: a seamless 240x52 tile. Four Hyderabad monuments in
-line (Charminar, a Qutb Shahi tomb, Golconda Fort, Mecca Masjid) with a carved lotus between each,
-standing on a slim plinth of the Qutb Shahi arcade (hoa-qutb.svg at half size, ten modules)."""
+"""Generates assets/hoa-qutub-heritage.svg: a seamless 240x52 tile. Four Hyderabad monuments in
+line (Charminar, a Qutub Shahi tomb, Golconda Fort, Mecca Masjid) with a carved lotus between each,
+standing on a slim plinth of the Qutub Shahi arcade (hoa-qutub.svg at half size, ten modules)."""
 import sys
 
 B = 39.5  # ground line
@@ -8,7 +8,7 @@ P = []    # main paths (stroke 1)
 F = []    # fine detail (stroke .7)
 
 def arch(cx, hw, spring, apex, base=B):
-    """pointed Qutb Shahi arch, shouldered, from base up to apex"""
+    """pointed Qutub Shahi arch, shouldered, from base up to apex"""
     l, r = cx - hw, cx + hw
     sh = hw * 0.55
     return (f"M{l:g} {base:g}V{spring:g}C{l:g} {spring-(spring-apex)*0.55:g} {cx-sh:g} {apex+(spring-apex)*0.25:g} {cx:g} {apex:g}"
@@ -37,7 +37,7 @@ P.append("M15.5 20H44.5M15.5 23.5H44.5")
 P.append(arch(30, 8, 29.5, 24.8))
 F.append("".join(arch(cx, 1.7, 22.6, 20.9, 23.5) for cx in (20, 25, 35, 40)))  # upper gallery arcade
 
-# 2 · Qutb Shahi tomb (x 64-96), as at the Qutb Shahi Tombs: a two-storey arcaded square, corner
+# 2 · Qutub Shahi tomb (x 64-96), as at the Qutub Shahi Tombs: a two-storey arcaded square, corner
 #     finials, a ring of lotus petals on the drum and the high bulbous dome with its finial
 P.append("M65 39.5V24H95V39.5M63.6 30H96.4M63.6 24H96.4")
 P.append("".join(arch(cx, 2.6, 34.6, 31.4) for cx in (71, 80, 89)))
@@ -68,7 +68,7 @@ LOTUS = ('<g id="l"><path d="M0 -10.6C1.9 -8.8 2.1 -6.4 0 -4.2-2.1 -6.4-1.9 -8.8
          '<path d="M-3.4 -3.3C-1.9 -1.9 1.9 -1.9 3.4 -3.3"/></g>')
 uses = "".join(f'<use href="#l" x="{x:g}" y="38"/>' for x in (57, 101, 161, 228))
 
-# the arcade plinth: the hoa-qutb.svg module at half size, ten across, under the ground line
+# the arcade plinth: the hoa-qutub.svg module at half size, ten across, under the ground line
 ARC = ('<g id="a"><path d="M7 23.5V13.5C7 8.6 13.4 6.6 18.8 5.4 21.4 4.8 23.3 3.9 24 2.6 24.7 3.9 26.6 4.8 29.2 5.4 34.6 6.6 41 8.6 41 13.5V23.5"/>'
        '<path d="M10.5 23.5V14C10.5 10.6 15.4 9 19.6 8.1 21.8 7.6 23.4 6.9 24 5.8 24.6 6.9 26.2 7.6 28.4 8.1 32.6 9 37.5 10.6 37.5 14V23.5" stroke-width="1.4"/>'
        '<use href="#al"/><use href="#al" x="48"/></g>'

@@ -1,0 +1,48 @@
+{%- comment -%}
+  House of Agha · Qutub Shahi pattern (2026-10-06). The one architectural ornament of the site,
+  replacing the old diamond jaali (assets/hoa-jaali.svg). Drawn from Qutub Shahi arches and
+  their stucco: a pointed, shouldered arch, a thin inner arch, a carved lotus in the spandrel,
+  and Hyderabad's monuments. Geometry lives only in the assets below; this snippet is the markup side, and CSS that
+  needs the motif inside a pseudo-element masks the same files.
+
+    frieze    assets/hoa-qutub.svg        an arcade band that repeats seamlessly (48×24 tile)
+    arch      assets/hoa-qutub-arch.svg   one arch with a lotus inside, a single mark
+    ornament  assets/hoa-qutub-lotus.svg  the lotus boss alone, a small mark
+    heritage  assets/hoa-qutub-heritage.svg  Hyderabad's monuments in line (Charminar, a Qutub Shahi
+              tomb, Golconda Fort, Mecca Masjid) with lotuses between, standing on the arcade
+              frieze at half size: the heritage pattern and the monuments in one band (240×52
+              tile, seamless; regenerate with tools/gen-qutub-heritage.py)
+    textile   assets/hoa-qutub-textile.svg  Deccani textile ground: Himroo-style keri (paisley)
+              butis in a half-drop with four-dot phool seeds (40×40 tile, both axes)
+    bidri     assets/hoa-qutub-bidri.svg    Bidri inlay border: a scrolling vine, four-petal flowers
+              and leaves between double rules; meant in silver on a dark ground (80×20 tile)
+    floral    assets/hoa-qutub-floral.svg   Hyderabadi floral: the eight-petal stucco rosette in a
+              double roundel, as in Qutub Shahi spandrels (a single mark)
+    Deccani geometry (2026-10-06, the client's reference sheet; regenerate with
+    tools/gen-qutub-geometry.py):
+    star12    assets/hoa-qutub-star12.svg   twelve-petal rosette round a twelve-point star (a mark)
+    star      assets/hoa-qutub-star.svg     sharp twelve-point star, double outline (a mark)
+    star8     assets/hoa-qutub-star8.svg    eight-point interlace of two squares (a mark)
+    cross     assets/hoa-qutub-cross.svg    pointed-cross lattice (32×32 tile, both axes)
+    knot      assets/hoa-qutub-knot.svg     square-knot lattice with small squares (48×48 tile)
+    girih     assets/hoa-qutub-girih.svg    eight-point star strapwork (48×48 tile)
+    The three lattices fill their box like textile (--qutub-tile sets the repeat); give the
+    element a height equal to the tile for a single-row band.
+
+  Colour is currentColor (set `color` on the element or its parent); size with --qutub-h on a
+  frieze (keep it even so the tile width stays a whole pixel), width/height on the others.
+  Styles: assets/hoa-home.css, "QUTUB SHAHI PATTERN".
+
+  Params: variant ('frieze' | 'arch' | 'ornament' | 'heritage' | 'textile' | 'bidri' | 'floral' | 'star12' | 'star' | 'star8' | 'cross' | 'knot' | 'girih', default 'frieze'), class, attrs (raw
+  attributes, e.g. 'data-hoa-ab-orn'). Decorative only, always aria-hidden.
+
+  {% render 'hoa-qutub-pattern', variant: 'frieze', class: 'hoa-footer__frieze' %}
+{%- endcomment -%}
+{%- liquid
+  assign qutub_variant = variant | default: 'frieze'
+  assign qutub_known = 'frieze,arch,ornament,heritage,textile,bidri,floral,star12,star,star8,cross,knot,girih' | split: ','
+  unless qutub_known contains qutub_variant
+    assign qutub_variant = 'frieze'
+  endunless
+-%}
+<span class="hoa-qutub hoa-qutub--{{ qutub_variant }}{% if class != blank %} {{ class }}{% endif %}" aria-hidden="true"{% if attrs != blank %} {{ attrs }}{% endif %}></span>

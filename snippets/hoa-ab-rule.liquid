@@ -1,7 +1,10 @@
 {%- comment -%}
-  About · section divider: the heritage band (snippets/hoa-qutb-pattern.liquid, variant heritage):
-  Hyderabad's monuments (Charminar, a Qutb Shahi tomb, Golconda Fort, Mecca Masjid) standing on
-  the Qutb Shahi arcade, in antique gold. Opens from the centre when it scrolls in
-  (assets/hoa-about.js, [data-hoa-ab-rule]).
+  About · section divider. Opens from the centre when it scrolls in (assets/hoa-about.js,
+  [data-hoa-ab-rule]). Each divider wears a different pattern so none repeats down the page:
+    heritage (default)  Hyderabad's monuments (Charminar, a Qutub Shahi tomb, Golconda Fort,
+                        Mecca Masjid) standing on the Qutub Shahi arcade
+    cross | knot        a single row of a Deccani lattice (snippets/hoa-qutub-pattern.liquid)
+  Params: variant.
 {%- endcomment -%}
-<div class="hoa-wrap"><span class="hoa-ab-rule hoa-ab-rule--heritage" aria-hidden="true" data-hoa-ab-rule>{%- render 'hoa-qutb-pattern', variant: 'heritage' -%}</span></div>
+{%- assign rule_variant = variant | default: 'heritage' -%}
+<div class="hoa-wrap"><span class="hoa-ab-rule hoa-ab-rule--{{ rule_variant }}" aria-hidden="true" data-hoa-ab-rule>{%- render 'hoa-qutub-pattern', variant: rule_variant -%}</span></div>

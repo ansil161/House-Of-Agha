@@ -1,7 +1,7 @@
 {%- comment -%}
   House of Agha · About 04 · The name
   A dictionary-style entry for "Agha", set in Hyderabad: on a sand panel with a gold jaali
-  band, the word and its Persian script above a Qutb Shahi tomb in a pointed arch with a
+  band, the word and its Persian script above a Qutub Shahi tomb in a pointed arch with a
   gold hairline (left); an archival photograph above four usages, each with a Hyderabad
   line icon (right). Sources, photo credits and the disclaimer below. Photos carry the
   page's warm archival tone (--ab-tone in assets/hoa-about.css).
@@ -13,11 +13,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500&display=swap&text={{ s.script | url_encode }}">
 {%- endif -%}
 <section class="hoa-ab-name">
-  {%- render 'hoa-ab-rule' -%}
+  {%- render 'hoa-ab-rule', variant: 'knot' -%}
   <div class="hoa-wrap">
     <div class="hoa-ab-name__card">
       <div class="hoa-ab-name__side">
-        {%- render 'hoa-qutb-pattern', variant: 'textile', class: 'hoa-ab-textile' -%}
+        {%- render 'hoa-qutub-pattern', variant: 'textile', class: 'hoa-ab-textile' -%}
         <div class="hoa-ab-name__word">
           <h2 class="hoa-ab-name__title"><span class="hoa-sr">The name </span>{{ s.word }}</h2>
           {%- if s.script != blank -%}<p class="hoa-ab-name__script" lang="fa" dir="rtl">{{ s.script }}</p>{%- endif -%}
@@ -122,13 +122,13 @@
   "settings": [
     { "type": "text", "id": "word", "label": "Word", "default": "Agha" },
     { "type": "text", "id": "script", "label": "Word in Persian script", "default": "آقا" },
-    { "type": "textarea", "id": "meaning", "label": "Meaning", "default": "A title of respect, authority and nobility in Qutb Shahi culture." },
+    { "type": "textarea", "id": "meaning", "label": "Meaning", "default": "A title of respect, authority and nobility in Qutub Shahi culture." },
     { "type": "header", "content": "Arch photo (left)" },
     { "type": "image_picker", "id": "arch_image", "label": "Image (portrait)" },
     { "type": "text", "id": "arch_asset", "label": "Fallback theme asset", "default": "hoa-hyd-tombs" },
     { "type": "number", "id": "arch_w", "label": "Theme asset width (px)", "default": 1200 },
     { "type": "number", "id": "arch_h", "label": "Theme asset height (px)", "default": 1600 },
-    { "type": "text", "id": "arch_alt", "label": "Alt text", "default": "A domed Qutb Shahi tomb in Hyderabad with arched colonnades" },
+    { "type": "text", "id": "arch_alt", "label": "Alt text", "default": "A domed Qutub Shahi tomb in Hyderabad with arched colonnades" },
     { "type": "text", "id": "arch_caption", "label": "Caption" },
     { "type": "header", "content": "Second photo (under the arch)" },
     { "type": "image_picker", "id": "extra_image", "label": "Image" },
@@ -157,7 +157,7 @@
         { "type": "select", "id": "icon", "label": "Icon", "default": "arch", "options": [
           { "value": "qalam", "label": "Qalam (pen)" },
           { "value": "crest", "label": "Crown" },
-          { "value": "arch", "label": "Qutb Shahi arch" },
+          { "value": "arch", "label": "Qutub Shahi arch" },
           { "value": "pearl", "label": "Pearl" },
           { "value": "jaali", "label": "Jaali" }
         ] },

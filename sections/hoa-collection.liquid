@@ -166,27 +166,56 @@
           assign disc_url = s.discovery_url | default: routes.all_products_collection_url
         endif
       -%}
-      <article class="hoa-card hoa-card--feature" data-family="all" data-hoa-card id="discovery">
-        <a class="hoa-card__media" href="{{ disc_url }}">
-          <span class="hoa-card__img">
-            {%- if s.discovery_image != blank -%}
-              {{ s.discovery_image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: s.discovery_title }}
-            {%- elsif disc != blank and disc.featured_media -%}
-              {{ disc.featured_media.preview_image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: disc.title }}
-            {%- else -%}
-              <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="{{ s.discovery_title | escape }}" loading="lazy" width="1200" height="900">
-            {%- endif -%}
-          </span>
-          <div class="hoa-card__overlay">
-            <div>
-              <p class="hoa-eyebrow">{{ s.discovery_eyebrow }}</p>
-              <h3>{% if disc != blank %}{{ disc.title }}{% else %}{{ s.discovery_title }}{% endif %}</h3>
-              <p>{{ s.discovery_text }}</p>
-            </div>
-            <span class="hoa-btn hoa-btn--light hoa-btn--small" style="align-self: flex-start;"><span>{{ s.discovery_cta }}</span>{% render 'hoa-btn-icon' %}</span>
-          </div>
-        </a>
-      </article>
+      {%- comment -%}
+        Campaign tile, as on the Shop grid (hoa-shop-catalog interlude): a rounded photo with
+        name, note and link beneath. It stretches across whatever is left of its row
+        (assets/hoa-home.js fits the span), and with "Campaign slide" blocks it turns every
+        rotate_seconds (default 3), clock-aligned: slide 1 is the Discovery Collection, then
+        one slide per fragrance. Each slide is a <template>; the first is also rendered live.
+      {%- endcomment -%}
+      {%- capture disc_img -%}
+        {%- if s.discovery_image != blank -%}
+          {{ s.discovery_image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: s.discovery_title, sizes: '(min-width: 768px) 66vw, 100vw' }}
+        {%- elsif disc != blank and disc.featured_media -%}
+          {{ disc.featured_media.preview_image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: disc.title, sizes: '(min-width: 768px) 66vw, 100vw' }}
+        {%- else -%}
+          <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="{{ s.discovery_title | escape }}" loading="lazy" width="1200" height="900">
+        {%- endif -%}
+      {%- endcapture -%}
+      {%- capture disc_slide -%}
+        <a class="hoa-feature__media" href="{{ disc_url }}">{{ disc_img }}</a>
+        <figcaption class="hoa-feature__cap">
+          <p class="hoa-feature__name">{% if disc != blank %}{{ disc.title }}{% else %}{{ s.discovery_title }}{% endif %}</p>
+          <p class="hoa-feature__meta">{{ s.discovery_text }}</p>
+          <p class="hoa-feature__link"><a href="{{ disc_url }}">{{ s.discovery_cta }}<span aria-hidden="true">&rarr;</span></a></p>
+        </figcaption>
+      {%- endcapture -%}
+      {%- assign slide_blocks = section.blocks | where: 'type', 'slide' -%}
+      <figure class="hoa-card hoa-feature" data-family="all" data-hoa-card data-hoa-feature id="discovery"{% if slide_blocks.size > 0 %} data-hoa-feature-seconds="{{ s.rotate_seconds | default: 3 }}"{% endif %}>
+        {{ disc_slide }}
+        {%- if slide_blocks.size > 0 -%}
+          <template data-hoa-feature-slide>{{ disc_slide }}</template>
+          {%- for block in slide_blocks -%}
+            {%- liquid
+              assign b = block.settings
+              assign slide_url = '/products/' | append: b.handle
+              if b.url != blank
+                assign slide_url = b.url
+              endif
+            -%}
+            <template data-hoa-feature-slide {{ block.shopify_attributes }}>
+              <a class="hoa-feature__media" href="{{ slide_url }}"{% if b.focus != blank %} style="--focus: {{ b.focus }}"{% endif %}>
+                {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 768px) 66vw, 100vw' -%}
+              </a>
+              <figcaption class="hoa-feature__cap">
+                <p class="hoa-feature__name">{{ b.caption }}</p>
+                <p class="hoa-feature__meta">{{ b.note }}</p>
+                <p class="hoa-feature__link"><a href="{{ slide_url }}">{{ b.link_label | default: 'View' }}<span aria-hidden="true">&rarr;</span></a></p>
+              </figcaption>
+            </template>
+          {%- endfor -%}
+        {%- endif -%}
+      </figure>
     </div>
   </div>
 </section>
@@ -214,7 +243,28 @@
     { "type": "text", "id": "discovery_title", "label": "Title (when no product is picked)", "default": "The Discovery Collection" },
     { "type": "textarea", "id": "discovery_text", "label": "Text", "default": "Wear the House at home before you choose a full bottle." },
     { "type": "text", "id": "discovery_cta", "label": "Button label", "default": "Explore the set" },
-    { "type": "url", "id": "discovery_url", "label": "Link when no product is picked" }
+    { "type": "url", "id": "discovery_url", "label": "Link when no product is picked" },
+    { "type": "range", "id": "rotate_seconds", "label": "Campaign tile: seconds per slide", "min": 3, "max": 30, "step": 1, "unit": "s", "default": 3, "info": "Used when Campaign slide blocks are added; slide 1 is the Discovery Collection." }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Campaign slide",
+      "settings": [
+        { "type": "paragraph", "content": "One more fragrance for the campaign tile at the end of the grid. Photo, name, note and link change together." },
+        { "type": "text", "id": "handle", "label": "Product handle", "info": "Builds the link /products/<handle> unless a link is set below." },
+        { "type": "text", "id": "caption", "label": "Name" },
+        { "type": "text", "id": "note", "label": "Note" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },
+        { "type": "number", "id": "w", "label": "Theme asset width (px)" },
+        { "type": "number", "id": "h", "label": "Theme asset height (px)" },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "focus", "label": "Focus point", "info": "CSS object-position, e.g. 50% 40%. The frame is wide, so tall photos are cropped." },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "View" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
   ],
   "presets": [{ "name": "HOA The Collection" }]
 }

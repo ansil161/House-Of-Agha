@@ -78,6 +78,21 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   font-weight: 400;
   letter-spacing: -0.02em;
 }
+/* Home section headings in Didot (user, 2026-10-06); other pages keep the Fraunces serif.
+   Didot is a single 400 weight with fine hairlines, so tracking opens up slightly. */
+.hoa-home .hoa-h2 {
+  font-family: var(--font-didot);
+  font-variation-settings: normal;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.04;
+}
+.hoa-home .hoa-h2 em {
+  font-family: var(--font-didot-italic);
+  font-variation-settings: normal;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
 .hoa-lede {
   font-size: clamp(1rem, 1.15vw, 1.12rem);
   line-height: 1.65;
@@ -921,7 +936,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   align-items: center;
   gap: 12px;
   font-family: var(--font-name, var(--hoa-serif));
-  font-weight: 600;
+  font-weight: var(--font-name-weight, 600);
   font-size: clamp(1.25rem, 1.6vw, 1.5rem);
   line-height: 1.15;
 }
@@ -1083,6 +1098,25 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 .hoa-card__overlay p:not(.hoa-eyebrow) { font-size: 0.88rem; line-height: 1.55; color: rgba(246, 241, 231, 0.8); max-width: 28ch; }
 
+/* Campaign tile (2026-10-06): the Shop grid's interlude design, closing the last row.
+   hoa-home.js sets grid-column to span the rest of the row and turns the slides. */
+.hoa-feature { grid-column: span 2; display: flex; flex-direction: column; gap: 14px; margin: 0; min-width: 0; }
+.hoa-feature__media { position: relative; display: block; flex: 1; min-height: 280px; overflow: hidden; border-radius: clamp(22px, 2.2vw, 30px); background: var(--hoa-stone, #E8E2D8); }
+.hoa-feature__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50% 55%); transition: transform 1.2s var(--hoa-ease); }
+.hoa-feature__media:hover img { transform: scale(1.02); }
+.hoa-feature__cap { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 16px; padding: 0 8px; }
+.hoa-feature__name { margin: 0; font-family: var(--hoa-serif); font-size: clamp(1.15rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--hoa-ink); }
+.hoa-feature__meta { grid-column: 1; margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--hoa-mute); }
+.hoa-feature__link { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.hoa-feature__link a { display: inline-flex; gap: 8px; color: var(--hoa-ink); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+.hoa-feature a:focus-visible { outline: 1px solid var(--hoa-ink); outline-offset: 3px; }
+.hoa-feature__media, .hoa-feature__cap { transition: opacity 0.45s var(--hoa-ease); }
+.hoa-feature.is-swapping .hoa-feature__media,
+.hoa-feature.is-swapping .hoa-feature__cap { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .hoa-feature__media img, .hoa-feature__media, .hoa-feature__cap { transition: none; }
+}
+
 @media (max-width: 1100px) {
   .hoa-collection__grid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -1102,6 +1136,8 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-collection__grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
   .hoa-card--feature { grid-column: auto; }
   .hoa-card--feature .hoa-card__media { aspect-ratio: 16 / 12; }
+  .hoa-collection__grid .hoa-feature { grid-column: auto !important; }
+  .hoa-feature__media { flex: none; aspect-ratio: 4 / 5; min-height: 0; }
 }
 
 /* ==========================================================================
@@ -1589,19 +1625,37 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reel__open { position: absolute; inset: 0; z-index: 1; }
 .hoa-reel__open:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: -4px; }
 .hoa-reel__ig {
-  position: absolute; z-index: 2; top: 12px; left: 12px; right: 96px;
+  position: absolute; z-index: 3; top: 12px; left: 12px; right: 96px;
   display: flex; align-items: center; gap: 8px; color: var(--hoa-ivory); pointer-events: none;
   text-shadow: 0 1px 8px rgba(12, 10, 8, 0.55);
 }
+/* Profile picture in an Instagram story ring: yellow → orange → rose, a white gap, then the crest */
 .hoa-reel__avatar {
-  flex: none; width: 30px; height: 30px; border-radius: 50%;
-  display: grid; place-items: center;
-  font-family: var(--hoa-serif); font-style: italic; font-size: 0.95rem; line-height: 1;
-  color: var(--hoa-ivory); background: var(--hoa-night);
-  box-shadow: 0 0 0 2px var(--hoa-brass), 0 0 0 3.5px rgba(12, 10, 8, 0.4);
+  flex: none; width: 34px; height: 34px; padding: 2px; border-radius: 50%;
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 35%, #d62976 70%, #c13584 100%);
+  box-shadow: 0 2px 10px rgba(12, 10, 8, 0.35);
+}
+.hoa-reel__avatar img {
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  object-fit: cover; background: #fff; border: 2px solid #fff;
 }
 .hoa-reel__handle { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8rem; font-weight: 500; letter-spacing: -0.01em; }
-.hoa-reel__glyph { flex: none; width: 16px; height: 16px; opacity: 0.85; }
+/* Hover: the card dims and the Instagram glyph rises in the centre (the whole card opens the post) */
+.hoa-reel__hover {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  display: grid; place-items: center; color: #fff;
+  background: rgba(12, 10, 8, 0.34); opacity: 0;
+  transition: opacity 0.45s var(--hoa-ease);
+}
+.hoa-reel__hover svg {
+  width: 54px; height: 54px; filter: drop-shadow(0 4px 18px rgba(12, 10, 8, 0.45));
+  transform: scale(0.82); transition: transform 0.55s var(--hoa-ease);
+}
+@media (hover: hover) {
+  .hoa-reel__frame:hover .hoa-reel__hover { opacity: 1; }
+  .hoa-reel__frame:hover .hoa-reel__hover svg { transform: scale(1); }
+}
+.hoa-reel__open:focus-visible ~ .hoa-reel__hover { opacity: 1; }
 .hoa-reel__badge {
   position: absolute; z-index: 2; left: 12px; bottom: 12px;
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px 6px 9px; border-radius: 999px;
@@ -1610,6 +1664,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: none;
 }
 .hoa-reel__badge svg { width: 14px; height: 14px; }
+.hoa-reel__badge--icon { padding: 7px; }
 .hoa-reel__ctrl { position: relative; z-index: 3; }
 .hoa-reel__controls { z-index: 3; }
 
@@ -1996,19 +2051,19 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   background: #000000; color: var(--ft-ink);
   border-top: 0; font-family: var(--hoa-sans);
 }
-/* Hyderabad touch: the Qutb Shahi arcade frieze (snippets/hoa-qutb-pattern.liquid) runs along
+/* Hyderabad touch: the Qutub Shahi arcade frieze (snippets/hoa-qutub-pattern.liquid) runs along
    the top edge of the footer, and the bottom edge too from 1024px. Grey, not white: it should
    read as carved into the black (2026-10-06, replaced the white diamond jaali). On narrower
    screens it is shorter and top-only, so the legal line needs no extra room. */
 .hoa-footer__frieze {
   position: absolute; left: 10px; right: 10px; top: 10px;
-  --qutb-h: 16px;
+  --qutub-h: 16px;
   color: var(--ft-pattern, #3A3A3A);
 }
 .hoa-footer .hoa-footer__frieze--bottom { top: auto; bottom: 10px; display: none; }
 @media (min-width: 1024px) {
   .hoa-footer { padding-bottom: 34px; }
-  .hoa-footer__frieze { --qutb-h: 22px; }
+  .hoa-footer__frieze { --qutub-h: 22px; }
   .hoa-footer .hoa-footer__frieze--bottom { display: block; }
 }
 .hoa-footer a { color: inherit; text-decoration: none; }
@@ -2102,48 +2157,161 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-voices { background: #ECE4D8; }
 
 /* ==========================================================================
-   QUTB SHAHI PATTERN (2026-10-06) · snippets/hoa-qutb-pattern.liquid
+   QUTUB SHAHI PATTERN (2026-10-06) · snippets/hoa-qutub-pattern.liquid
    One architectural motif for the whole site: the arcade frieze, a single arch, the lotus
    boss, the heritage band (monuments on the arcade), the Deccani textile ground, the Bidri
-   inlay border and the Hyderabadi floral rosette; assets/hoa-qutb*.svg, drawn as
+   inlay border and the Hyderabadi floral rosette; assets/hoa-qutub*.svg, drawn as
    masks so they take currentColor.
    Supporting detail only: thin, low contrast, never louder than type or photographs.
    ========================================================================== */
-.hoa-qutb { display: block; flex: none; background: currentColor; pointer-events: none; }
-.hoa-qutb--frieze {
-  height: var(--qutb-h, 24px);
-  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
-          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+.hoa-qutub { display: block; flex: none; background: currentColor; pointer-events: none; }
+.hoa-qutub--frieze {
+  height: var(--qutub-h, 24px);
+  -webkit-mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutub.svg") repeat-x center / auto 100%;
 }
-.hoa-qutb--arch {
+.hoa-qutub--arch {
   width: 21px; height: 24px;
-  -webkit-mask: url("hoa-qutb-arch.svg") no-repeat center / contain;
-          mask: url("hoa-qutb-arch.svg") no-repeat center / contain;
+  -webkit-mask: url("hoa-qutub-arch.svg") no-repeat center / contain;
+          mask: url("hoa-qutub-arch.svg") no-repeat center / contain;
 }
-.hoa-qutb--ornament {
+.hoa-qutub--ornament {
   width: 20px; height: 20px;
-  -webkit-mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
-          mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
+  -webkit-mask: url("hoa-qutub-lotus.svg") no-repeat center / contain;
+          mask: url("hoa-qutub-lotus.svg") no-repeat center / contain;
 }
-/* keep --qutb-h a multiple of 13 (52px tile) or an even number, so the tile stays crisp */
-.hoa-qutb--heritage {
-  height: var(--qutb-h, 52px);
-  -webkit-mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 100%;
-          mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 100%;
+/* keep --qutub-h a multiple of 13 (52px tile) or an even number, so the tile stays crisp */
+.hoa-qutub--heritage {
+  height: var(--qutub-h, 52px);
+  -webkit-mask: url("hoa-qutub-heritage.svg") repeat-x center bottom / auto 100%;
+          mask: url("hoa-qutub-heritage.svg") repeat-x center bottom / auto 100%;
 }
-/* Deccani textile ground: fills its box (place it absolutely); --qutb-tile sets the repeat */
-.hoa-qutb--textile {
-  -webkit-mask: url("hoa-qutb-textile.svg") repeat center / var(--qutb-tile, 40px) var(--qutb-tile, 40px);
-          mask: url("hoa-qutb-textile.svg") repeat center / var(--qutb-tile, 40px) var(--qutb-tile, 40px);
+/* Deccani textile ground: fills its box (place it absolutely); --qutub-tile sets the repeat */
+.hoa-qutub--textile {
+  -webkit-mask: url("hoa-qutub-textile.svg") repeat center / var(--qutub-tile, 40px) var(--qutub-tile, 40px);
+          mask: url("hoa-qutub-textile.svg") repeat center / var(--qutub-tile, 40px) var(--qutub-tile, 40px);
 }
-/* Bidri inlay border: silver on dark by intent; keep --qutb-h even */
-.hoa-qutb--bidri {
-  height: var(--qutb-h, 20px);
-  -webkit-mask: url("hoa-qutb-bidri.svg") repeat-x center / auto 100%;
-          mask: url("hoa-qutb-bidri.svg") repeat-x center / auto 100%;
+/* Bidri inlay border: silver on dark by intent; keep --qutub-h even */
+.hoa-qutub--bidri {
+  height: var(--qutub-h, 20px);
+  -webkit-mask: url("hoa-qutub-bidri.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutub-bidri.svg") repeat-x center / auto 100%;
 }
-.hoa-qutb--floral {
+.hoa-qutub--floral {
   width: 28px; height: 28px;
-  -webkit-mask: url("hoa-qutb-floral.svg") no-repeat center / contain;
-          mask: url("hoa-qutb-floral.svg") no-repeat center / contain;
+  -webkit-mask: url("hoa-qutub-floral.svg") no-repeat center / contain;
+          mask: url("hoa-qutub-floral.svg") no-repeat center / contain;
 }
+
+/* Deccani geometry (2026-10-06): three rosette marks and three lattices, tools/gen-qutub-geometry.py */
+.hoa-qutub--star12,
+.hoa-qutub--star,
+.hoa-qutub--star8 { width: 28px; height: 28px; }
+.hoa-qutub--star12 { -webkit-mask: url("hoa-qutub-star12.svg") no-repeat center / contain; mask: url("hoa-qutub-star12.svg") no-repeat center / contain; }
+.hoa-qutub--star { -webkit-mask: url("hoa-qutub-star.svg") no-repeat center / contain; mask: url("hoa-qutub-star.svg") no-repeat center / contain; }
+.hoa-qutub--star8 { -webkit-mask: url("hoa-qutub-star8.svg") no-repeat center / contain; mask: url("hoa-qutub-star8.svg") no-repeat center / contain; }
+.hoa-qutub--cross { -webkit-mask: url("hoa-qutub-cross.svg") repeat center / var(--qutub-tile, 32px) var(--qutub-tile, 32px); mask: url("hoa-qutub-cross.svg") repeat center / var(--qutub-tile, 32px) var(--qutub-tile, 32px); }
+.hoa-qutub--knot { -webkit-mask: url("hoa-qutub-knot.svg") repeat center / var(--qutub-tile, 48px) var(--qutub-tile, 48px); mask: url("hoa-qutub-knot.svg") repeat center / var(--qutub-tile, 48px) var(--qutub-tile, 48px); }
+.hoa-qutub--girih { -webkit-mask: url("hoa-qutub-girih.svg") repeat center / var(--qutub-tile, 48px) var(--qutub-tile, 48px); mask: url("hoa-qutub-girih.svg") repeat center / var(--qutub-tile, 48px) var(--qutub-tile, 48px); }
+.hoa-reels__sub { max-width: 46ch; margin-top: 16px; color: var(--hoa-muted, #6b645b); font-size: 0.95rem; line-height: 1.6; }
+.hoa-reels__sub p { margin: 0; }
+.hoa-reels__sub a { color: var(--hoa-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.hoa-reels__sub a:hover { text-decoration-thickness: 2px; }
+/* Home: heading + invitation centred, the invitation set bold; follow link + arrows centred below */
+.hoa-reels__head--center { flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; }
+.hoa-reels__head--center .hoa-reels__sub {
+  max-width: min(100%, 64ch); margin: 20px auto 0;   /* wide enough to sit on two lines */
+  font-size: clamp(1.05rem, 1.35vw, 1.25rem); font-weight: 600; line-height: 1.55; letter-spacing: -0.01em;
+  color: var(--hoa-ink);
+}
+.hoa-reels__head--center .hoa-reels__sub a { font-weight: 600; text-decoration: none; }
+.hoa-reels__head--center .hoa-reels__sub a:hover { opacity: 0.7; }
+.hoa-reels__head--center .hoa-reels__nav { justify-content: center; }
+
+/* Deccani geometry on the three beige home bands (2026-10-06), a different lattice in each:
+   The House = eight-point star girih, Discover = pointed crosses, In their words = square knots.
+   Faint, gold, fading out before the content. */
+.hoa-families { position: relative; }
+.hoa-manifesto,
+.hoa-families,
+.hoa-voices { isolation: isolate; }
+.hoa-manifesto::before,
+.hoa-families::before,
+.hoa-voices::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #A8842F;
+  pointer-events: none;
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+.hoa-manifesto::before {
+  opacity: 0.2;
+  -webkit-mask: url("hoa-qutub-girih.svg") repeat 0 0 / 56px 56px, radial-gradient(ellipse 46% 62% at 0% 100%, #000 20%, transparent 100%);
+          mask: url("hoa-qutub-girih.svg") repeat 0 0 / 56px 56px, radial-gradient(ellipse 46% 62% at 0% 100%, #000 20%, transparent 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+.hoa-families::before {
+  opacity: 0.2;
+  -webkit-mask: url("hoa-qutub-cross.svg") repeat center top / 32px 32px, linear-gradient(#000, transparent 200px);
+          mask: url("hoa-qutub-cross.svg") repeat center top / 32px 32px, linear-gradient(#000, transparent 200px);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+.hoa-voices::before {
+  opacity: 0.2;
+  -webkit-mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 16%, transparent 84%, #000);
+          mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 16%, transparent 84%, #000);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+@media (max-width: 640px) {
+  .hoa-voices::before { opacity: 0.14; }
+}
+
+/* Follow @aghaperfumes: water button. The pill holds a little water that waves at its foot;
+   on hover/focus the water rises and fills it, the label turns ivory. transform-only motion. */
+.hoa-reels__follow {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 52px; padding: 0 28px; border-radius: 999px;
+  border: 1px solid var(--hoa-ink); color: var(--hoa-ink); background: transparent;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);   /* keeps the clip round in Safari */
+  transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hoa-reels__follow:active { transform: scale(0.98); }
+.hoa-reels__follow:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 3px; }
+.hoa-reels__follow-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; }
+.hoa-reels__follow-label svg { width: 18px; height: 18px; flex: none; }
+.hoa-reels__water {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 100%; z-index: 0; pointer-events: none;
+  transform: translateY(64%);   /* resting level: a shallow pool along the foot, crest visible */
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hoa-reels__water::after {   /* the body of water under the wave crest */
+  content: ''; position: absolute; left: 0; right: 0; top: 10px; bottom: -2px; background: var(--hoa-ink);
+}
+.hoa-reels__wave {
+  position: absolute; left: 0; top: 0; width: 200%; height: 12px; fill: var(--hoa-ink);
+  animation: hoa-wave 3.2s linear infinite;
+}
+.hoa-reels__wave--back { opacity: 0.3; top: -4px; animation-duration: 5s; animation-direction: reverse; }
+@keyframes hoa-wave { to { transform: translateX(-50%); } }
+.hoa-reels__follow:hover, .hoa-reels__follow:focus-visible { color: var(--hoa-ivory, #F6F1E7); }
+.hoa-reels__follow:hover .hoa-reels__water,
+.hoa-reels__follow:focus-visible .hoa-reels__water { transform: translateY(-12px); }
+@media (hover: none) {
+  .hoa-reels__water { transform: translateY(56%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-reels__wave { animation: none; }
+  .hoa-reels__water { transition: none; }
+}
+
+/* Home: World of Agha runs straight into the Instagram reels with only a small breath between them */
+.hoa-world-section:has(+ .hoa-reels-section) .hoa-world { padding-bottom: clamp(28px, 3vw, 44px); }
+.hoa-world-section + .hoa-reels-section .hoa-reels { padding-top: clamp(28px, 3vw, 44px); }

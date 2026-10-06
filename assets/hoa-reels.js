@@ -545,11 +545,144 @@
     }, root);
   }
 
+  /* ---------------- Live Instagram feed ----------------
+     With a feed URL set (section setting, a behold.so JSON feed or anything with
+     the same shape) the latest posts replace the theme blocks: reels play like the
+     block films, photos and albums show as stills. Any failure keeps the blocks. */
+  var IG_GLYPH = '<svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>';
+  var REEL_ICON = '<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9H20M9.5 4L7.5 9M15.5 4L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10.5 12.5V16.5L14 14.5L10.5 12.5Z" fill="currentColor"/></svg>';
+  var ALBUM_ICON = '<svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="7.5" width="13" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 3.5H18A2.5 2.5 0 0 1 20.5 6V16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  var CONTROLS = '<div class="hoa-reel__controls"><button type="button" class="hoa-reel__ctrl" data-hoa-reel-play aria-label="Pause reel"><svg class="hoa-reel__i-play" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg><svg class="hoa-reel__i-pause" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" fill="currentColor"/></svg></button><button type="button" class="hoa-reel__ctrl" data-hoa-reel-sound aria-label="Turn sound on" aria-pressed="false"><svg class="hoa-reel__i-muted" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16.5 9.5L21 14.5M21 9.5L16.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><svg class="hoa-reel__i-sound" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5V14.5H8L13 18.5V5.5L8 9.5H4Z" fill="currentColor"/><path d="M16 9C17.2 10.1 17.2 13.9 16 15M18.6 6.6C21.1 9 21.1 15 18.6 17.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>';
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function feedCard(post, handle, avatar) {
+    var type = String(post.mediaType || post.media_type || 'IMAGE').toUpperCase();
+    var media = post.mediaUrl || post.media_url || '';
+    var sizes = post.sizes || {};
+    var still = (sizes.large && sizes.large.mediaUrl) || (sizes.medium && sizes.medium.mediaUrl) || post.thumbnailUrl || post.thumbnail_url || (type === 'VIDEO' ? '' : media);
+    var isVideo = type === 'VIDEO' && media;
+    var isReel = isVideo || type === 'REEL';   // REEL = a reel known only by its cover (Elfsight source)
+    var link = post.permalink || ('https://www.instagram.com/' + handle + '/');
+    var caption = String(post.prunedCaption || post.caption || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+    var label = caption || ('@' + handle + (isReel ? ' reel' : ' post'));
+    var badge = isReel ? '<span class="hoa-reel__badge" aria-hidden="true">' + REEL_ICON + 'Reel</span>'
+      : type === 'CAROUSEL_ALBUM' ? '<span class="hoa-reel__badge hoa-reel__badge--icon" aria-hidden="true">' + ALBUM_ICON + '</span>' : '';
+    return '<li class="hoa-reel" data-hoa-reel><div class="hoa-reel__frame"><div class="hoa-reel__stage" data-hoa-reel-stage>' +
+      (still ? '<img class="hoa-reel__poster" src="' + esc(still) + '" alt="' + esc(label) + '" loading="lazy" decoding="async">' : '') +
+      (isVideo ? '<video class="hoa-reel__video" data-hoa-reel-video muted loop playsinline preload="none" disablepictureinpicture data-src="' + esc(media) + '" aria-label="' + esc(label) + '"></video>' : '') +
+      '<a class="hoa-reel__open" href="' + esc(link) + '" target="_blank" rel="noopener" aria-label="Watch this ' + (isReel ? 'reel' : 'post') + ' on Instagram (opens in a new tab)"></a>' +
+      '<div class="hoa-reel__ig"><span class="hoa-reel__avatar" aria-hidden="true"><img src="' + esc(avatar) + '" alt="" width="64" height="64" loading="lazy" decoding="async"></span><span class="hoa-reel__handle">@' + esc(handle) + '</span></div>' +
+      '<span class="hoa-reel__hover" aria-hidden="true">' + IG_GLYPH + '</span>' +
+      (isVideo ? CONTROLS : '') + badge +
+      '</div></div></li>';
+  }
+
+  function loadFeed(root, track) {
+    var url = root.dataset.hoaReelsFeed;
+    if (!url || !window.fetch) return Promise.resolve();
+    var limit = parseInt(root.dataset.feedLimit, 10) || 12;
+    var handle = root.dataset.igHandle || 'aghaperfumes';
+    var avatar = root.dataset.igAvatar || '';
+    return fetch(url, { credentials: 'omit' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (data) {
+        var posts = Array.isArray(data) ? data : (data.posts || data.data || []);
+        posts = posts.filter(function (p) { return p && (p.mediaUrl || p.media_url || p.thumbnailUrl || p.thumbnail_url); }).slice(0, limit);
+        if (!posts.length) return;
+        if (data.username) handle = data.username;
+        track.innerHTML = posts.map(function (p) { return feedCard(p, handle, avatar); }).join('');
+        track.scrollLeft = 0;
+      })
+      .catch(function () { /* keep the theme blocks */ });
+  }
+
+  /* Elfsight as a data source only: its Instagram Feed widget renders off screen (inside its
+     own shadow root), the reels are read from it (post link, cover, caption; a reel is a card
+     whose media carries Elfsight's reel icon) and drawn as House cards. Elfsight never puts the
+     video files in the page, so a card shows the reel's cover and opens the reel on Instagram.
+     Resolves with [] if the widget does not render in time. */
+  function loadElfsight(root) {
+    var id = String(root.dataset.hoaReelsElfsight).replace(/[^a-z0-9-]/gi, '');
+    var limit = parseInt(root.dataset.feedLimit, 10) || 12;
+    return new Promise(function (resolve) {
+      var host = document.createElement('div');
+      host.setAttribute('aria-hidden', 'true');
+      host.setAttribute('inert', '');
+      host.style.cssText = 'position:absolute;left:-10000px;top:0;width:1200px;opacity:0;pointer-events:none;';
+      host.innerHTML = '<div class="elfsight-app-' + id + '"></div>';
+      document.body.appendChild(host);
+      if (!document.querySelector('script[src*="elfsightcdn.com/platform.js"]')) {
+        var sc = document.createElement('script');
+        sc.src = 'https://elfsightcdn.com/platform.js';
+        sc.async = true;
+        document.head.appendChild(sc);
+      }
+      var tries = 0, settle = 0, last = -1;
+      var timer = setInterval(function () {
+        tries++;
+        var embed = host.querySelector('.es-embed-root');
+        var sr = embed && embed.shadowRoot;
+        var cards = sr ? sr.querySelectorAll('.es-card-container') : [];
+        // posts stream in: read once the card count has held steady for ~1s
+        if (cards.length && cards.length === last) settle++; else settle = 0;
+        last = cards.length;
+        if (!((cards.length && settle >= 3) || tries > 50)) return;
+        clearInterval(timer);
+        var posts = [];
+        Array.prototype.forEach.call(cards, function (c) {
+          var a = c.querySelector('a[href*="instagram.com/p/"], a[href*="instagram.com/reel/"]');
+          var img = c.querySelector('.es-media-image');
+          var cover = img && (img.currentSrc || img.src);
+          var isReel = !!c.querySelector('.es-card-media-icon-slot svg');
+          if (!a || !cover || !isReel) return;
+          var text = c.querySelector('[class*="es-card-text"]');
+          posts.push({ mediaType: 'REEL', thumbnailUrl: cover, permalink: a.href.split('?')[0], caption: text ? text.textContent : '' });
+        });
+        host.remove();
+        resolve(posts.slice(0, limit));
+      }, 300);
+    });
+  }
+
+  function applyFeed(root, posts) {
+    var track = root.querySelector('[data-hoa-reels-track]');
+    if (!track || !posts.length) return;   // nothing read: keep the theme's own films
+    destroy(root);
+    // Fewer live reels than a full row: the theme's own films follow them so the row never has a gap
+    var keep = posts.length < 4 ? Array.prototype.slice.call(track.children, 0, 4 - posts.length) : [];
+    track.innerHTML = posts.map(function (p) {
+      return feedCard(p, root.dataset.igHandle || 'aghaperfumes', root.dataset.igAvatar || '');
+    }).join('');
+    keep.forEach(function (li) { li.removeAttribute('style'); track.appendChild(li); });
+    track.scrollLeft = 0;
+    root._hoaFeedDone = true;
+    init(root);
+  }
+
   /* ---------------- Lifecycle ---------------- */
   function init(root) {
-    if (!root || instances.has(root)) return;
+    if (!root || instances.has(root) || root._hoaReelsLoading) return;
     var track = root.querySelector('[data-hoa-reels-track]');
     if (!track) return;
+    if (root.dataset.hoaReelsFeed && !root._hoaFeedDone) {
+      root._hoaReelsLoading = true;
+      loadFeed(root, track).then(function () {
+        root._hoaReelsLoading = false;
+        root._hoaFeedDone = true;
+        init(root);
+      });
+      return;
+    }
+    // Elfsight: the theme's own films show (and play) until the live reels arrive, then swap in
+    if (root.dataset.hoaReelsElfsight && !root._hoaFeedDone && !root._hoaElfsightAsked) {
+      root._hoaElfsightAsked = true;
+      loadElfsight(root).then(function (posts) { applyFeed(root, posts); });
+    }
     instances.set(root, {
       videos: initVideos(root, track),
       carousel: initCarousel(root, track),
