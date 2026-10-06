@@ -877,8 +877,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 .hoa-ab-name__use:hover { border-color: var(--ab-hair); background: #FFFDF8; }
 .hoa-ab-name__icon { display: block; width: 30px; height: 30px; margin-bottom: 6px; color: var(--ab-gold); }
 .hoa-ab-name__icon svg { width: 30px; height: 30px; }
-.hoa-ab-name__use dt { font-size: clamp(1.3rem, 1.7vw, 1.6rem); font-weight: 700; letter-spacing: -0.01em; color: var(--ab-ink); }
-.hoa-ab-name__use dd { margin: 0; font-size: clamp(1.06rem, 1.3vw, 1.2rem); line-height: 1.6; font-weight: 500; color: var(--ab-ink-2); }
+.hoa-ab-name__use dt { font-size: clamp(1.15rem, 1.45vw, 1.35rem); font-weight: 700; letter-spacing: -0.01em; color: var(--ab-ink); }
+.hoa-ab-name__use dd { margin: 0; font-size: clamp(0.98rem, 1.15vw, 1.08rem); line-height: 1.6; font-weight: 500; color: var(--ab-ink-2); }
 .hoa-ab-name__foot {
   grid-column: 1 / -1;
   display: flex;

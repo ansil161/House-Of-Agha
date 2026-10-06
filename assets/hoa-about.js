@@ -16,6 +16,8 @@
      the Charminar is the one scroll-driven, pinned moment (client brief). Only these:
      Our story ....... headline rises out of masks; the old-city photo fades in softly
                        inside its arch while the gold hairline draws around it.
+                       While scrolling, the arch window opens from a narrower frame to its full
+                       width and the city settles from a slight zoom (restored 2026-10-06).
      Arches .......... every gold arch outline draws itself once as it arrives, and the
                        photo inside fades up from a hair larger (gentle image transition).
      Dividers ........ the gold rule between sections opens from its centre.
@@ -437,6 +439,19 @@
           var introLine = introFrame.querySelector('[data-hoa-ab-archline]');
           if (introImg) intro.fromTo(introImg, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.8, ease: 'power2.out' }, 0.45);
           if (introLine) intro.fromTo(introLine, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 2, ease: 'power2.inOut' }, 0.6);
+
+          /* Scrolled with the page (brought back 2026-10-06 at the user's request): the arch
+             window opens from a narrower frame to its full width while the city inside settles
+             from a slight zoom. It ends exactly on the static design (no clip, scale 1).
+             The clip runs past top and bottom so the apex ornament above the arch is never cut. */
+          var winPic = introFrame.querySelector('[data-hoa-ab-img] img');
+          var headH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 76;
+          var side = window.matchMedia('(max-width: 899px)').matches ? 7 : 13;
+          var winST = { trigger: introFrame, start: 'top 92%', end: 'top top+=' + Math.round(headH + 24), scrub: 0.6, invalidateOnRefresh: true };
+          gsap.fromTo(introFrame,
+            { clipPath: 'inset(-30% ' + side + '% -30% ' + side + '%)' },
+            { clipPath: 'inset(-30% 0% -30% 0%)', ease: 'none', scrollTrigger: winST });
+          if (winPic) gsap.fromTo(winPic, { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: Object.assign({}, winST) });
         }
       }
 
