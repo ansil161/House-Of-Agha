@@ -8,8 +8,9 @@
 <section class="hoa-ab-closing" data-hoa-ab-closing>
   <div class="hoa-wrap">
     <div class="hoa-ab-cta" data-hoa-ab-cta>
+      {%- render 'hoa-qutb-pattern', variant: 'bidri', class: 'hoa-ab-cta__bidri' -%}
       <div class="hoa-ab-cta__copy">
-        <span class="hoa-ab-cta__orn" aria-hidden="true">{%- render 'hoa-ab-mark' -%}</span>
+        <span class="hoa-ab-cta__orn" aria-hidden="true">{%- render 'hoa-qutb-pattern', variant: 'ornament', class: 'hoa-ab-mark', attrs: 'data-hoa-ab-orn' -%}</span>
         <h2 class="hoa-ab-h2" data-hoa-ab-up>{{ s.heading }}{% if s.heading_muted != blank %} <span class="hoa-ab-muted">{{ s.heading_muted }}</span>{% endif %}</h2>
         {%- if s.text != blank -%}<p data-hoa-ab-up>{{ s.text }}</p>{%- endif -%}
         {%- if s.cta_label != blank -%}

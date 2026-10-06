@@ -978,7 +978,7 @@
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft) → campaign gallery
   //   → reviews (right after the gallery, client 2026-10-05) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + gallery + reviewSummary + reviewsSection + faq + reels + pair + related + finale;
+  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');

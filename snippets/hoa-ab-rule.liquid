@@ -1,5 +1,7 @@
 {%- comment -%}
-  About · section divider: two antique-gold hairlines meeting at a small pointed-arch mark.
-  Opens from the centre when it scrolls in (assets/hoa-about.js, [data-hoa-ab-rule]).
+  About · section divider: the heritage band (snippets/hoa-qutb-pattern.liquid, variant heritage):
+  Hyderabad's monuments (Charminar, a Qutb Shahi tomb, Golconda Fort, Mecca Masjid) standing on
+  the Qutb Shahi arcade, in antique gold. Opens from the centre when it scrolls in
+  (assets/hoa-about.js, [data-hoa-ab-rule]).
 {%- endcomment -%}
-<div class="hoa-wrap"><span class="hoa-ab-rule" aria-hidden="true" data-hoa-ab-rule><svg viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path d="M1.5 21V9.5C1.5 6 6 3.5 9 1c3 2.5 7.5 5 7.5 8.5V21"/><path d="M5.5 21v-8c0-1.8 2-3.2 3.5-4.6 1.5 1.4 3.5 2.8 3.5 4.6v8"/></svg></span></div>
+<div class="hoa-wrap"><span class="hoa-ab-rule hoa-ab-rule--heritage" aria-hidden="true" data-hoa-ab-rule>{%- render 'hoa-qutb-pattern', variant: 'heritage' -%}</span></div>

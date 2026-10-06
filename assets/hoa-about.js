@@ -544,13 +544,13 @@
         });
       });
 
-      /* Heritage ornaments (Golconda marks, bastion corners) settle in, staggered, once.
+      /* Heritage ornaments (lotus marks, bastion corners) settle in, staggered, once.
          The opening arch's mark belongs to the intro. */
       var orns = gsap.utils.toArray('[data-hoa-ab-orn]');
       var introOrn = hero && hero.querySelector('[data-hoa-ab-intro-frame] [data-hoa-ab-orn]');
       if (introOrn) {
         orns = orns.filter(function (o) { return o !== introOrn; });
-        intro.fromTo(introOrn, { opacity: 0, rotation: -45, scale: 0.7 }, { opacity: 1, rotation: 0, scale: 1, duration: 1.2, ease: 'power3.out', clearProps: 'transform' }, 1.4);
+        intro.fromTo(introOrn, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', clearProps: 'transform' }, 1.4);
       }
       if (orns.length) {
         gsap.set(orns, { opacity: 0 });

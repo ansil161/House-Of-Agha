@@ -18,6 +18,11 @@
 (function () {
   'use strict';
 
+  // Every hoa-reels section prints its own <script> tag; run once, or each
+  // button gets two click handlers that undo each other (pause → play, unmute → mute).
+  if (window.__hoaReelsLoaded) return;
+  window.__hoaReelsLoaded = true;
+
   var SELECTOR = '[data-hoa-reels]';
   var instances = new WeakMap();
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

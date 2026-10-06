@@ -314,6 +314,10 @@ html.hoa-search-open, html.hoa-search-open body { overflow: hidden; }
 }
 @media (max-width: 767px) {
   .hoa-reel__view, .hoa-reel__add { height: 44px; font-size: 0.72rem; }
+  /* narrow reel cards: "View product" + "Add to bag" can't share one row at this size,
+     so they stack full-width instead of the label spilling out of the pill */
+  .hoa-reel__acts { flex-wrap: wrap; }
+  .hoa-reel__view, .hoa-reel__add { flex: 1 1 auto; padding: 0 14px; }
   .hoa-duo__opt { min-height: 40px; padding: 0 15px; font-size: 0.84rem; }
   .hoa-acct-head__nav a { display: inline-flex; align-items: center; min-height: 44px; }
   .hoa-orders__id, .hoa-acct__link, .hoa-acct__signout { display: inline-flex; align-items: center; min-height: 44px; }

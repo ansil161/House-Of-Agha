@@ -226,8 +226,8 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 .hoa-ab-worlds__jaali {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: var(--w-ivory);
-  -webkit-mask: url("hoa-jaali.svg") repeat center / 64px 64px;
-  mask: url("hoa-jaali.svg") repeat center / 64px 64px;
+  -webkit-mask: url("hoa-qutb.svg") repeat center / 64px 32px;
+  mask: url("hoa-qutb.svg") repeat center / 64px 32px;
   opacity: 0.045;
 }
 /* The city on the horizon; wider than the stage when panning (width set in JS) */
@@ -426,9 +426,11 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
 .hoa-ab-gate__leaf::before {
   content: ""; position: absolute;
   top: calc(var(--hoa-header-h) + 5vh); bottom: 7vh; left: 16%; right: 16%;
-  background: url("hoa-jaali.svg") repeat center / 46px 46px;
-  -webkit-mask: var(--w-arch) no-repeat center / 100% 100%;
-  mask: var(--w-arch) no-repeat center / 100% 100%;
+  background: #B08D57;
+  -webkit-mask: url("hoa-qutb.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
+  mask: url("hoa-qutb.svg") repeat center / 48px 24px, var(--w-arch) no-repeat center / 100% 100%;
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
   opacity: 0.9;
 }
 /* Ring pulls near the meeting edge */
@@ -508,7 +510,7 @@ body.hoa-about { overflow-x: clip; overflow-y: visible; }
    Six sections: story, chapter, Hyderabad, the name, philosophy, closing.
    Palette   white page, warm beige panels, dark brown type, antique-gold hairlines.
    Motifs    the Qutb Shahi pointed arch (--ab-arch mask + a drawn gold outline,
-             snippets/hoa-ab-arch.liquid), a Deccan jaali only as faint bands,
+             snippets/hoa-ab-arch.liquid), the Qutb Shahi arcade frieze (snippets/hoa-qutb-pattern.liquid) only as faint bands,
              gold dividers with a small arch mark (snippets/hoa-ab-rule.liquid).
    Photos    archival and heritage photos share one light warm tone (--ab-tone);
              product photos stay true.
@@ -604,7 +606,6 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 }
 .hoa-ab-rule::before,
 .hoa-ab-rule::after { content: ""; flex: 1; height: 1px; background: var(--ab-hair); }
-.hoa-ab-rule svg { flex: none; width: 16px; height: 20px; }
 
 /* ==========================================================================
    01 Our story
@@ -667,7 +668,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 
 /* ==========================================================================
    02b Composed in Hyderabad
-   A sand panel framed like a manuscript page (inset gold hairline, jaali bands)
+   A sand panel framed like a manuscript page (inset gold hairline, arcade friezes)
    holds the Charminar line drawing; the story and three notes sit on the page beside it.
    ========================================================================== */
 .hoa-ab-hyd { padding: 0 0 var(--ab-space); }
@@ -698,8 +699,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   right: 15px;
   height: 22px;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
-          mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
+  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
   opacity: 0.4;
   pointer-events: none;
 }
@@ -818,8 +819,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   height: 22px;
   z-index: -1;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
-          mask: url("hoa-jaali.svg") repeat-x center / 22px 22px;
+  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
   opacity: 0.4;
   pointer-events: none;
 }
@@ -943,14 +944,16 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
   background: var(--ab-ink);
   color: var(--ab-ivory);
 }
-/* faint gold jaali across the card */
+/* Hyderabad's monuments on the arcade along the card's bottom edge (the Bidri border runs along the top) */
 .hoa-ab-cta::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 24px;
   z-index: -1;
-  background: url("hoa-jaali.svg") repeat 0 0 / 44px 44px;
-  opacity: 0.08;
+  background: var(--ab-gold-2);
+  -webkit-mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 39px;
+          mask: url("hoa-qutb-heritage.svg") repeat-x center bottom / auto 39px;
+  opacity: 0.3;
   pointer-events: none;
 }
 .hoa-ab-cta__copy {
@@ -1016,9 +1019,9 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 /* ==========================================================================
    ABOUT · DECCAN DETAILS (2026-10-05, second pass)
    Serif headlines; gold kept to lines and ornaments (small gold text uses --ab-gold-ink);
-   Golconda geometry: an eight-point mark (snippets/hoa-ab-mark.liquid) and stepped
+   Golconda geometry: a lotus mark (the Qutb Shahi ornament, snippets/hoa-qutb-pattern.liquid) and stepped
    bastion corners (.hoa-ab-corners); one Deccan floral fleuron (snippets/hoa-ab-floral.liquid);
-   a jaali plate behind the Qutb Shahi portrait; the ingredients as specimen labels.
+   an arcade plate behind the Qutb Shahi portrait; the ingredients as specimen labels.
    ========================================================================== */
 
 /* ---------- Type: editorial serif for headlines, the sans stays for reading ---------- */
@@ -1067,8 +1070,8 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
 /* cards and boxes: hairlines and near-square corners, not app-style rounding */
 body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 
-/* ---------- Golconda mark ---------- */
-.hoa-ab-mark { display: block; width: 18px; height: 18px; color: var(--ab-gold); }
+/* ---------- Lotus mark (hoa-qutb-pattern, variant ornament) ---------- */
+.hoa-ab-mark { width: 20px; height: 20px; color: var(--ab-gold); }
 /* above the opening arch's point */
 .hoa-ab-apex { position: absolute; left: 50%; top: calc(var(--al) * -1 - 30px); transform: translateX(-50%); line-height: 0; }
 .hoa-ab-story__frame { margin-top: 42px; }
@@ -1104,15 +1107,15 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   background: var(--ab-paper);
   box-shadow: inset 0 0 0 1px var(--ab-hair-soft);
 }
-/* faint jaali ground, fading out toward the middle so the portrait stays clear */
+/* faint arcade ground, fading out toward the middle so the portrait stays clear */
 .hoa-ab-chapter__plate::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-jaali.svg") repeat center / 26px 26px, radial-gradient(closest-side, transparent 55%, #000 100%);
-          mask: url("hoa-jaali.svg") repeat center / 26px 26px, radial-gradient(closest-side, transparent 55%, #000 100%);
+  -webkit-mask: url("hoa-qutb.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
+          mask: url("hoa-qutb.svg") repeat center / 40px 20px, radial-gradient(closest-side, transparent 55%, #000 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
   opacity: 0.28;
@@ -1144,7 +1147,6 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 
 /* ---------- 06 Closing: the last chapter ---------- */
 .hoa-about .hoa-ab-cta { background: var(--ab-night); }
-.hoa-about .hoa-ab-cta::before { opacity: 0.05; }
 .hoa-ab-cta__orn { display: flex; align-items: center; gap: 14px; width: min(200px, 60%); color: var(--ab-gold-2); }
 .hoa-ab-cta__orn::after { content: ""; flex: 1; height: 1px; background: rgba(214, 188, 136, 0.45); }
 .hoa-ab-cta__orn .hoa-ab-mark { color: var(--ab-gold-2); }
@@ -1157,7 +1159,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 @media (max-width: 640px) {
   .hoa-ab-apex { top: calc(var(--al) * -1 - 24px); }
   .hoa-ab-story__frame { margin-top: 32px; }
-  .hoa-ab-mark { width: 15px; height: 15px; }
+  .hoa-ab-mark { width: 17px; height: 17px; }
   .hoa-ab-corners { --cs: 16px; }
   .hoa-ab-hyd__visual .hoa-ab-corners { --cs: 18px; }
   .hoa-ab-chapter__plate { padding: 32px 24px 24px; }
@@ -1167,17 +1169,18 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 }
 .hoa-about .hoa-ab-pillar__num { font-family: var(--hoa-sans); }
 
-/* Jaali bands on the beige panels: clearly visible (user, 2026-10-05: the pattern was too faint) */
+/* Qutb Shahi friezes on the beige panels: readable, but under the type and the drawing */
 .hoa-about .hoa-ab-name__side::before,
 .hoa-about .hoa-ab-hyd__visual::before,
-.hoa-about .hoa-ab-hyd__visual::after { background: var(--ab-gold-ink); opacity: 0.75; }
+.hoa-about .hoa-ab-hyd__visual::after { background: var(--ab-gold-ink); opacity: 0.5; }
 
 /* ==========================================================================
    ABOUT · MORE HERITAGE PATTERN (2026-10-05, user: "use more heritage pattern")
-   1. Jaali spandrels: the corners above every arched photo are filled with the lattice,
-      as in carved Qutb Shahi arches (the jaali, minus the arch shape, in the outline's box).
-   2. Section dividers become jaali friezes either side of the arch mark.
-   3. The closing card's lattice reads a little more.
+   Reworked 2026-10-06 in the Qutb Shahi language (snippets/hoa-qutb-pattern.liquid):
+   1. Spandrels: the Hyderabadi floral rosette in each upper corner beside every arched
+      photo, as the stucco rosettes sit in Qutb Shahi spandrels (--jt = its size).
+   2. Section dividers: the heritage band, Hyderabad's monuments on the arcade (2026-10-06).
+   3. The closing card: a silver Bidri inlay border along its top, the heritage band along its bottom.
    ========================================================================== */
 .hoa-ab-arch { isolation: isolate; }
 .hoa-ab-arch::before {
@@ -1191,53 +1194,53 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   background: var(--ab-gold);
   opacity: 0.5;
   pointer-events: none;
-  /* jaali ∩ (box − arch) */
-  -webkit-mask-image: url("hoa-jaali.svg"), linear-gradient(#000, #000), var(--ab-arch);
-          mask-image: url("hoa-jaali.svg"), linear-gradient(#000, #000), var(--ab-arch);
-  -webkit-mask-size: var(--jt, 22px) var(--jt, 22px), 100% 100%, 100% 100%;
-          mask-size: var(--jt, 22px) var(--jt, 22px), 100% 100%, 100% 100%;
-  -webkit-mask-position: center top, 0 0, 0 0;
-          mask-position: center top, 0 0, 0 0;
-  -webkit-mask-repeat: repeat, no-repeat, no-repeat;
-          mask-repeat: repeat, no-repeat, no-repeat;
-  -webkit-mask-composite: source-in, xor;
-          mask-composite: intersect, exclude;
+  -webkit-mask: url("hoa-qutb-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
+                url("hoa-qutb-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
+          mask: url("hoa-qutb-floral.svg") no-repeat left var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px),
+                url("hoa-qutb-floral.svg") no-repeat right var(--jo, 10px) top var(--jo, 10px) / var(--jt, 22px) var(--jt, 22px);
 }
 .hoa-ab-story__frame { --jt: 26px; }
 .hoa-ab-story__frame::before { opacity: 0.55; }
-/* the portrait already sits on a jaali plate */
+/* the portrait already sits on an arcade plate */
 .hoa-ab-chapter__arch::before { content: none; }
 /* on the sand panel and the dark card */
 .hoa-ab-name__arch .hoa-ab-arch::before { background: var(--ab-gold-ink); opacity: 0.45; }
 .hoa-ab-cta__media::before { background: var(--ab-gold-2); opacity: 0.35; }
 
-/* Dividers: a lattice frieze, not a plain hairline */
-.hoa-about .hoa-ab-rule { gap: 18px; }
+/* Dividers: an arcade frieze either side of the arch mark, not a plain hairline */
+.hoa-about .hoa-ab-rule { gap: 16px; }
 .hoa-about .hoa-ab-rule::before,
 .hoa-about .hoa-ab-rule::after {
-  height: 16px;
+  height: 14px;
   background: var(--ab-gold);
-  -webkit-mask: url("hoa-jaali.svg") repeat-x center / 16px 16px;
-          mask: url("hoa-jaali.svg") repeat-x center / 16px 16px;
-  opacity: 0.75;
+  -webkit-mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+          mask: url("hoa-qutb.svg") repeat-x center / auto 100%;
+  opacity: 0.6;
 }
 .hoa-about .hoa-ab-rule::before { -webkit-mask-position: right center; mask-position: right center; }
 .hoa-about .hoa-ab-rule::after { -webkit-mask-position: left center; mask-position: left center; }
-.hoa-about .hoa-ab-rule svg { width: 18px; height: 22px; }
+.hoa-about .hoa-ab-rule .hoa-qutb--arch { width: 21px; height: 24px; }
 
-/* Closing card lattice */
-.hoa-about .hoa-ab-cta::before { opacity: 0.11; background-size: 40px 40px; }
+/* Closing card friezes */
+.hoa-about .hoa-ab-cta::before { opacity: 0.3; }
+
+/* Heritage dividers: the monuments on the arcade (variant heritage) run the full measure */
+.hoa-about .hoa-ab-rule--heritage { gap: 0; }
+.hoa-about .hoa-ab-rule--heritage::before,
+.hoa-about .hoa-ab-rule--heritage::after { content: none; }
+.hoa-about .hoa-ab-rule--heritage .hoa-qutb--heritage { flex: 1; --qutb-h: 52px; opacity: 0.7; }
 
 @media (max-width: 640px) {
+  .hoa-about .hoa-ab-rule--heritage .hoa-qutb--heritage { --qutb-h: 39px; }
   .hoa-ab-arch { --jt: 16px; }
   .hoa-ab-story__frame { --jt: 18px; }
   .hoa-about .hoa-ab-rule::before,
-  .hoa-about .hoa-ab-rule::after { height: 12px; -webkit-mask-size: 12px 12px; mask-size: 12px 12px; }
+  .hoa-about .hoa-ab-rule::after { height: 12px; }
 }
 
 /* ==========================================================================
    ABOUT · INGREDIENT NICHES (2026-10-05, user: "creative design, heritage patterns")
-   Each ingredient stands in a Qutb Shahi arch: gold outline, jaali lattice in the arch head,
+   Each ingredient stands in a Qutb Shahi arch: gold outline, a carved lotus under the apex,
    a round medallion with the ingredient drawn in line, then number, name, botanical name,
    on a double-rule plinth. Four in a row read as an arcade.
    ========================================================================== */
@@ -1266,24 +1269,20 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   -webkit-mask: var(--ab-arch) top / 100% 100% no-repeat;
           mask: var(--ab-arch) top / 100% 100% no-repeat;
 }
-/* jaali lattice filling the arch head, fading out above the text */
+/* a carved lotus under the apex of each niche */
 .hoa-ab-specimen::after {
   content: "";
   position: absolute;
-  inset: 0 0 4px;
+  left: 50%;
+  top: 9px;
   z-index: -1;
+  width: 15px;
+  height: 15px;
+  transform: translateX(-50%);
   background: var(--ab-gold);
-  opacity: 0.55;
-  -webkit-mask-image: url("hoa-jaali.svg"), linear-gradient(#000 0, #000 22%, transparent 46%), var(--ab-arch);
-          mask-image: url("hoa-jaali.svg"), linear-gradient(#000 0, #000 22%, transparent 46%), var(--ab-arch);
-  -webkit-mask-size: 14px 14px, 100% 100%, 100% 100%;
-          mask-size: 14px 14px, 100% 100%, 100% 100%;
-  -webkit-mask-position: center top, 0 0, 0 0;
-          mask-position: center top, 0 0, 0 0;
-  -webkit-mask-repeat: repeat, no-repeat, no-repeat;
-          mask-repeat: repeat, no-repeat, no-repeat;
-  -webkit-mask-composite: source-in, source-in;
-          mask-composite: intersect, intersect;
+  opacity: 0.7;
+  -webkit-mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
+          mask: url("hoa-qutb-lotus.svg") no-repeat center / contain;
   transition: opacity 0.6s var(--hoa-ease);
 }
 .hoa-ab-specimen__arch {
@@ -1615,4 +1614,36 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 @media (prefers-reduced-motion: reduce) {
   .hoa-bd-tile__img img, .hoa-bd-tile__edge, .hoa-bd-tile__rule, .hoa-bd-tile__word, .hoa-about .hoa-bd-tile__title,
   .hoa-bd-tile__frame--border::before, .hoa-bd-tile__frame--corners::before, .hoa-bd-tile__frame--corners::after { transition: none; }
+}
+
+/* ==========================================================================
+   ABOUT · DECCAN CRAFTS (2026-10-06) · snippets/hoa-qutb-pattern.liquid
+   Deccani textile: a Himroo-style keri buti ground, very faint, on the two beige panels.
+   Bidri inlay: the silver vine border along the top of the dark closing card.
+   Hyderabadi floral: the stucco rosette in the spandrels of the arched photos (above).
+   ========================================================================== */
+.hoa-ab-textile {
+  position: absolute;
+  inset: 15px;
+  z-index: -1;
+  color: var(--ab-gold-ink);
+  opacity: 0.13;
+  --qutb-tile: 40px;
+}
+.hoa-ab-name__side { isolation: isolate; }
+.hoa-ab-hyd__visual > .hoa-ab-textile { inset: 56px 15px; }
+.hoa-ab-name__side > .hoa-ab-textile { inset: 48px 0 0; }
+.hoa-ab-cta__bidri {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: -1;
+  --qutb-h: 16px;
+  color: #CFCAC0;
+  opacity: 0.5;
+}
+@media (max-width: 640px) {
+  .hoa-ab-textile { --qutb-tile: 32px; }
+  .hoa-ab-cta__bidri { top: 18px; left: 18px; right: 18px; --qutb-h: 12px; }
 }

@@ -4811,6 +4811,9 @@ html:has(.pdp) body {
   body .pdp-hero .pdp-rating { order: 4; }
   body .pdp-hero .pdp-price { order: 5; }
   body .pdp-hero .pdp-deals { order: 6; }
+  /* size (50 ml / 100 ml): shares 6 so it follows the deals in source order, as on desktop —
+     without an order it fell to 0 and jumped above the gallery */
+  body .pdp-hero .pdp-options { order: 6; }
   body .pdp-hero .pdp-offers { order: 7; }
   body .pdp-hero .pdp-buy { order: 8; }
   body .pdp-hero .pdp-buynow { order: 9; }
@@ -4833,9 +4836,9 @@ html:has(.pdp) body {
   body .pdp-hero .pdp-stage { position: relative; margin: 0 calc(var(--m-pad) * -1); width: auto; }
   body .pdp-hero .pdp-story[data-pdp-thumbs] .pdp-stage__track {
     display: flex;
-    aspect-ratio: auto;
-    /* the photographs are 4:5; on shorter phones leave room for name + price above the bar */
-    height: min(125vw, max(50svh, calc(100svh - 330px)));
+    /* always 4:5, the photographs' own shape (was a screen-height formula that went wider on short phones) */
+    aspect-ratio: 4 / 5;
+    height: auto;
     max-height: none;
     width: 100%;
     overflow-x: auto;
@@ -4954,6 +4957,7 @@ html:has(.pdp) body {
   body .pdp-hero .pdp-deals .pdp-deal__auto { width: auto; margin: 0; padding: 0; border-top: 0; flex: none; font-size: 0.66rem; white-space: nowrap; }
 
   /* 5 · Buy more: three compact options side by side */
+  body .pdp-hero .pdp-options { margin: 18px 0 0; }
   body .pdp-hero .pdp-offers { margin: 18px 0 0; padding: 0; border: 0; min-width: 0; }
   body .pdp-hero .pdp-offers__legend { margin: 0 0 8px; padding: 0; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--m-mute); }
   body .pdp-hero .pdp-offers__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }

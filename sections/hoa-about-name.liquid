@@ -17,6 +17,7 @@
   <div class="hoa-wrap">
     <div class="hoa-ab-name__card">
       <div class="hoa-ab-name__side">
+        {%- render 'hoa-qutb-pattern', variant: 'textile', class: 'hoa-ab-textile' -%}
         <div class="hoa-ab-name__word">
           <h2 class="hoa-ab-name__title"><span class="hoa-sr">The name </span>{{ s.word }}</h2>
           {%- if s.script != blank -%}<p class="hoa-ab-name__script" lang="fa" dir="rtl">{{ s.script }}</p>{%- endif -%}

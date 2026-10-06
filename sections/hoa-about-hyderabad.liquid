@@ -3,7 +3,7 @@
   The house's city, told through its own lines: a detailed Charminar line drawing (vector
   paths from tools/charminar-svg.js, not a photo) that builds itself from the ground up as the
   section scrolls in: each tier's lines draw, then its arched openings fill in, the city's name in Urdu
-  (حیدرآباد) behind it, a Deccan jaali lattice (assets/hoa-jaali.svg) along the card edge,
+  (حیدرآباد) behind it, a Qutb Shahi arcade frieze (assets/hoa-qutb.svg) along the card edge,
   and three heritage notes (blocks). Set on a warm sand panel with an inset gold hairline,
   like a manuscript page. The drawing follows the scroll: it starts as its ground line
   enters the screen and completes while the card is pinned below the navbar. Complete and fully drawn without JS; motion in assets/hoa-about.js.
@@ -19,6 +19,7 @@
   <div class="hoa-wrap">
     <div class="hoa-ab-hyd__card">
       <div class="hoa-ab-hyd__visual">
+        {%- render 'hoa-qutb-pattern', variant: 'textile', class: 'hoa-ab-textile' -%}
         <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
         {%- if s.urdu != blank -%}<p class="hoa-ab-hyd__urdu" lang="ur" dir="rtl" aria-hidden="true" data-hoa-ab-hyd-urdu>{{ s.urdu }}</p>{%- endif -%}
         <svg class="hoa-ab-hyd__art" viewBox="0 70 400 570" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
