@@ -780,3 +780,55 @@
   else init();
   document.addEventListener('shopify:section:load', function (e) { init(e.target); });
 })();
+
+/* Golconda line art: draws itself once, in build order, as it scrolls in (CSS .is-armed → .is-in).
+   Armed only with motion allowed and IntersectionObserver, so it is never left undrawn. */
+(function () {
+  'use strict';
+  function arm(root) {
+    var art = (root || document).querySelector('[data-hoa-ab-golconda]');
+    if (!art || art.dataset.armed || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var r = art.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.85 && r.bottom > 0) return;   // already on screen: show it drawn
+    art.dataset.armed = '1';
+    art.classList.add('is-armed');
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      requestAnimationFrame(function () { art.classList.add('is-in'); });
+    }, { rootMargin: '0px 0px -15% 0px', threshold: 0.2 });
+    io.observe(art);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { arm(); });
+  else arm();
+  document.addEventListener('shopify:section:load', function (e) { arm(e.target); });
+})();
+
+/* Big single motifs (snippets/hoa-ab-motif.liquid): each draws itself once as it enters the
+   screen. Armed only when motion is allowed and it starts below the fold, so it is never hidden. */
+(function () {
+  'use strict';
+  function arm(root) {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els = Array.prototype.slice.call((root || document).querySelectorAll('[data-hoa-ab-motif]:not([data-armed])'));
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        requestAnimationFrame(function () { e.target.classList.add('is-in'); });
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.2 });
+    els.forEach(function (el) {
+      el.dataset.armed = '1';
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) return; // already on screen: leave it drawn
+      el.classList.add('is-armed');
+      io.observe(el);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { arm(); });
+  else arm();
+  document.addEventListener('shopify:section:load', function (e) { arm(e.target); });
+})();

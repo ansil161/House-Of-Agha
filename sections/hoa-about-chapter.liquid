@@ -10,35 +10,17 @@
   <div class="hoa-wrap hoa-ab-chapter__grid">
     {%- comment -%} The line's dominant phrase is set in Fraunces italic; edited copy without it renders plain {%- endcomment -%}
     <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede | replace: 'the intoxicating allure of tradition.', '<em class="hoa-ab-em">the intoxicating allure of tradition.</em>' }}</p>
+    {%- render 'hoa-ab-motif', variant: 'knot', class: 'hoa-ab-motif--lede' -%}
     {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
       <figure class="hoa-ab-chapter__portrait">
         {%- comment -%} A manuscript plate: faint jaali ground, Golconda corners, the arch on it {%- endcomment -%}
         <div class="hoa-ab-chapter__plate">
           <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
-          {%- comment -%}
-            Four boxes in one box (2026-10-06): the miniature + three Golconda images. Every 2 s
-            the four move one place clockwise (assets/hoa-about.js, data-hoa-ab-mosaic); static
-            with reduced motion or without JS. Golconda photo: Unsplash, Aamir (tM4HEI-nY2Y).
-            The sketch and the fort photo were supplied by the client.
-          {%- endcomment -%}
-          <div class="hoa-ab-mosaic" data-hoa-ab-mosaic>
-            <div class="hoa-ab-mosaic__tile">
-              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 15vw, 45vw' -%}
+          <div class="hoa-ab-arch hoa-ab-chapter__arch">
+            <div class="hoa-ab-arch__frame hoa-ab-chapter__img" data-hoa-ab-img>
+              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 30vw, 80vw' -%}
             </div>
-            {%- for i in (2..4) -%}
-              {%- capture k_img -%}tile_{{ i }}_image{%- endcapture -%}
-              {%- capture k_asset -%}tile_{{ i }}_asset{%- endcapture -%}
-              {%- capture k_alt -%}tile_{{ i }}_alt{%- endcapture -%}
-              {%- if s[k_asset] != blank or s[k_img] != blank -%}
-                <div class="hoa-ab-mosaic__tile">
-                  {%- if s[k_img] != blank -%}
-                    {{ s[k_img] | image_url: width: 700 | image_tag: alt: s[k_alt], loading: 'lazy', sizes: '(min-width: 900px) 15vw, 45vw' }}
-                  {%- else -%}
-                    <img src="{{ s[k_asset] | append: '.webp' | asset_url }}" alt="{{ s[k_alt] | escape }}" width="600" height="660" loading="lazy" decoding="async">
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
+            {%- render 'hoa-ab-arch' -%}
           </div>
         </div>
         {%- if s.portrait_caption != blank -%}<figcaption class="hoa-ab-caption">{{ s.portrait_caption }}</figcaption>{%- endif -%}
@@ -103,17 +85,7 @@
     { "type": "image_picker", "id": "portrait_image", "label": "Image" },
     { "type": "text", "id": "portrait_asset", "label": "Fallback theme asset", "default": "hoa-qutub-shah" },
     { "type": "text", "id": "portrait_alt", "label": "Alt text", "default": "Miniature portrait of a Qutub Shahi ruler in a jewelled turban, holding a rose" },
-    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutub Shahi miniature and Golconda Fort" },
-    { "type": "header", "content": "Box images 2–4 (rotate with the portrait every 2 s)" },
-    { "type": "image_picker", "id": "tile_2_image", "label": "Image 2" },
-    { "type": "text", "id": "tile_2_asset", "label": "Image 2 fallback theme asset", "default": "hoa-golconda-palace" },
-    { "type": "text", "id": "tile_2_alt", "label": "Image 2 alt text", "default": "A Qutub Shahi pavilion on the granite crest of Golconda Fort at dusk" },
-    { "type": "image_picker", "id": "tile_3_image", "label": "Image 3" },
-    { "type": "text", "id": "tile_3_asset", "label": "Image 3 fallback theme asset", "default": "hoa-golconda-sketch" },
-    { "type": "text", "id": "tile_3_alt", "label": "Image 3 alt text", "default": "Pen-and-ink sketch of Golconda Fort's walls and gateways" },
-    { "type": "image_picker", "id": "tile_4_image", "label": "Image 4" },
-    { "type": "text", "id": "tile_4_asset", "label": "Image 4 fallback theme asset", "default": "hoa-golconda-fort" },
-    { "type": "text", "id": "tile_4_alt", "label": "Image 4 alt text", "default": "The ramparts and arched gateways of Golconda Fort above a garden lawn" },
+    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutub Shahi miniature" },
     { "type": "textarea", "id": "p3", "label": "Paragraph 3", "default": "Our passion lies in bridging history and modernity. Deeply rooted in the past, our fragrances are made for today's connoisseurs: an elegant fusion of heritage and contemporary sophistication." }
   ],
   "presets": [{ "name": "About: story text" }]
