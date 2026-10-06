@@ -6,6 +6,75 @@
     },
     "chapter": {
       "type": "hoa-about-chapter",
+      "blocks": {
+        "card_qutub": {
+          "type": "card",
+          "settings": {
+            "title": "Qutub",
+            "text": "The royal roots\nof a timeless\njourney.",
+            "asset": "hoa-hc-qutub",
+            "focus": "50% 62%",
+            "tone": "light",
+            "arrow": "text",
+            "url": "shopify://collections/all"
+          }
+        },
+        "card_roses": {
+          "type": "card",
+          "settings": {
+            "title": "Roses",
+            "text": "The soul of\nromance and\nroyal gardens.",
+            "asset": "hoa-hc-rose",
+            "focus": "40% 50%",
+            "tone": "dark",
+            "arrow": "foot",
+            "url": "shopify://collections/all"
+          }
+        },
+        "card_vetiver": {
+          "type": "card",
+          "settings": {
+            "title": "Vetiver",
+            "text": "Earthy depths,\nendless elegance.",
+            "asset": "hoa-hc-vetiver",
+            "focus": "50% 50%",
+            "tone": "dark",
+            "arrow": "foot",
+            "url": "shopify://collections/all"
+          }
+        },
+        "card_ambergris": {
+          "type": "card",
+          "settings": {
+            "title": "Ambergris",
+            "text": "The rarest\ngift from\nthe ocean.",
+            "asset": "hoa-hc-ambergris",
+            "focus": "50% 50%",
+            "tone": "light",
+            "arrow": "text",
+            "url": "shopify://collections/all"
+          }
+        },
+        "card_oudh": {
+          "type": "card",
+          "settings": {
+            "title": "Oudh",
+            "text": "The essence\nof the East,\nforever.",
+            "asset": "hoa-hc-oud",
+            "focus": "50% 50%",
+            "tone": "dark",
+            "arrow": "text",
+            "url": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "card_qutub",
+        "card_roses",
+        "card_vetiver",
+        "card_ambergris",
+        "card_oudh"
+      ],
       "settings": {}
     },
     "hyderabad": {

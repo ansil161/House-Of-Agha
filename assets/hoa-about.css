@@ -2020,3 +2020,489 @@ body.hoa-about {
 /* the tile notes sit on the dark brown wall now: beige type */
 .hoa-about .hoa-bd-tile__lines li { color: color-mix(in srgb, var(--ab-g-beige) 86%, var(--ab-g-brown)); }
 .hoa-about .hoa-bd-tile__lines { border-color: rgba(232, 220, 203, 0.18); }
+
+/* ==========================================================================
+   HERITAGE CARD COLLECTION (sections/hoa-about-chapter.liquid, 2026-10-06)
+   Built to the client's "Heritage Fragrance Card Collection" reference and
+   refined the same day to read as ONE screen on desktop.
+   Units (desktop, 1200px+), all in reference px of the 1536-wide artboard:
+     --p  horizontal unit = section width / 1536 (container units)
+     --v  size + vertical unit: --p on tall screens (reference proportions);
+          on shorter laptop screens it eases down so the whole composition
+          (990 units tall) fits the viewport under the navbar, but never below
+          80% of --p, so the type and cards keep their presence.
+     --H  composition height = 990 x --v
+     --u  card-stage unit (= --v on desktop; the tablet scales the stage to its width)
+   Horizontal anchors (left copy, foot row, card stage right edge) use --p;
+   all sizes and vertical positions use --v.
+   ========================================================================== */
+.hoa-hc {
+  --hc-paper: #E9E4D9;
+  --hc-ink: #26201A;
+  --hc-ink-2: #3D342B;
+  --hc-mute: #76695B;
+  --hc-hair: rgba(70, 54, 38, 0.3);
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(46% 60% at 64% 44%, rgba(244, 240, 232, 0.55), rgba(244, 240, 232, 0) 72%),
+    var(--hc-paper);
+  color: var(--hc-ink);
+  font-family: var(--hoa-sans);
+}
+.hoa-hc__canvas {
+  --p: calc(min(100cqw, 1680px) / 1536);
+  --v: max(calc(0.8 * var(--p)), min(var(--p), calc((100svh - var(--hoa-header-h, 76px)) / 990)));
+  --H: calc(990 * var(--v));
+  --u: var(--v);
+  position: relative;
+  width: min(100cqw, 1680px);
+  height: var(--H);
+  margin: 0 auto;
+}
+
+/* Left copy: one column from the eyebrow down to the miniature ---------- */
+.hoa-hc__copy {
+  position: absolute;
+  left: calc(87 * var(--p));
+  top: calc(44 * var(--v));
+  height: calc(812 * var(--v));
+  width: calc(500 * var(--p));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hoa-hc__kicker,
+.hoa-hc__foot-label {
+  margin: 0;
+  font-family: var(--hoa-sans);
+  font-size: max(10px, calc(11.5 * var(--v)));
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--hc-ink-2);
+}
+.hoa-hc__title {
+  margin: calc(34 * var(--v)) 0 0;
+  font-family: var(--ab-serif, 'Fraunces', Georgia, serif);
+  font-size: calc(90 * var(--v));
+  font-weight: 300;
+  font-variation-settings: "opsz" 120, "SOFT" 0, "WONK" 0;
+  line-height: 1;
+  letter-spacing: -0.014em;
+  text-transform: none;
+  white-space: nowrap;
+  color: var(--hc-ink);
+}
+.hoa-hc__title span { display: block; }
+.hoa-hc__rule {
+  display: block;
+  flex: none;
+  width: calc(46 * var(--v));
+  height: 1px;
+  margin: calc(28 * var(--v)) 0 calc(26 * var(--v));
+  background: var(--hc-ink-2);
+  transform-origin: left center;
+}
+.hoa-hc__rule--2 { width: calc(42 * var(--v)); margin: calc(38 * var(--v)) 0 calc(26 * var(--v)); }
+.hoa-hc__text {
+  margin: 0;
+  font-size: max(13px, calc(16.2 * var(--v)));
+  line-height: 1.78;
+  letter-spacing: 0.004em;
+  color: var(--hc-ink-2);
+}
+.hoa-hc__text-2 {
+  margin: 0;
+  font-size: max(11.5px, calc(12.8 * var(--v)));
+  line-height: 1.85;
+  color: var(--hc-mute);
+}
+
+/* The Qutub Shahi miniature, at the foot of the left column: a small round-top
+   window with a hairline, its caption beside it. It takes whatever height the
+   column has left, so the copy above never gets pushed into the foot row. */
+.hoa-hc__mini {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(18 * var(--v));
+  margin: calc(30 * var(--v)) 0 0;
+}
+.hoa-hc__mini-frame {
+  position: relative;
+  height: 100%;
+  max-height: calc(190 * var(--v));
+  min-height: 96px;
+  aspect-ratio: 654 / 820;
+  padding: calc(5 * var(--v));
+  border: 1px solid var(--hc-hair);
+  border-radius: 999px 999px 0 0;
+}
+.hoa-hc__mini-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  background: #D9CDBB;
+}
+.hoa-hc__mini-img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; filter: sepia(0.18) saturate(0.86); }
+.hoa-hc__mini-cap {
+  margin: 0 0 calc(4 * var(--v));
+  max-width: calc(150 * var(--v));
+  font-family: var(--ab-serif, 'Fraunces', Georgia, serif);
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;
+  font-size: max(12px, calc(13.5 * var(--v)));
+  line-height: 1.4;
+  color: var(--hc-mute);
+}
+
+/* Top right, as the reference: a point, a thin vertical line, SCROLL TO EXPLORE;
+   the story line sits quietly under the label in italic serif. */
+.hoa-hc__lede {
+  position: absolute;
+  left: calc(1323 * var(--p));
+  top: calc(52 * var(--v));
+  width: calc(165 * var(--v));
+  margin: 0;
+  padding-left: calc(22 * var(--v));
+  font-family: var(--ab-serif, 'Fraunces', Georgia, serif);
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 48, "SOFT" 0, "WONK" 0;
+  font-size: max(11.5px, calc(12.5 * var(--v)));
+  line-height: 1.5;
+  color: var(--hc-mute);
+}
+.hoa-hc__scroll {
+  display: block;
+  white-space: nowrap;
+  margin: 0 0 calc(16 * var(--v));
+  font-family: var(--hoa-sans);
+  font-style: normal;
+  font-size: max(9px, calc(10 * var(--v)));
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--hc-ink-2);
+}
+.hoa-hc__lede br { display: none; }
+.hoa-hc__lede-mark {
+  position: absolute;
+  left: 0;
+  top: calc(4 * var(--v));
+  width: 1px;
+  height: calc(84 * var(--v));
+  background: var(--hc-hair);
+}
+.hoa-hc__lede-mark::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5A4636;
+}
+
+/* Stage: the reference's own coordinates. Stage px = reference px minus (478, 300),
+   i.e. the stage box is reference x 478-1480, y 300-860 (1002 x 560); the moon and the
+   monument rise above it. On tall screens --u = --p and every card lands exactly where
+   the reference draws it; on shorter screens the stage scales round Vetiver's centre
+   (reference x 974). Depth, back to front: moon (1) < orbit (2) < monument (3) < cards (4),
+   so the orbit sweeps over the moon and passes behind the Charminar and the cards. */
+.hoa-hc__stage {
+  position: absolute;
+  left: calc(974 * var(--p) - 497 * var(--u));
+  top: calc(837 * var(--v) - 537 * var(--u));
+  width: calc(1002 * var(--u));
+  height: calc(560 * var(--u));
+}
+.hoa-hc__orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 2;
+  pointer-events: none;
+}
+.hoa-hc__orbit path { fill: none; stroke: rgba(96, 76, 56, 0.34); stroke-width: 0.9; }
+.hoa-hc__node { fill: #4E3B2C; }
+
+/* The moon: a round-top window of warm ivory (reference x 763-1180, top 127); the
+   Charminar stands in it and its minarets rise past the curve (cut-out photo, sky removed). */
+.hoa-hc__arch { position: absolute; inset: 0; pointer-events: none; }
+.hoa-hc__arch-ground {
+  position: absolute;
+  z-index: 1;
+  left: calc(285 * var(--u));
+  top: calc(-173 * var(--u));
+  width: calc(417 * var(--u));
+  height: calc(560 * var(--u));
+  border-radius: calc(209 * var(--u)) calc(209 * var(--u)) 0 0;
+  background:
+    radial-gradient(70% 60% at 50% 42%, rgba(246, 242, 234, 0.55), rgba(246, 242, 234, 0) 100%),
+    linear-gradient(180deg, rgba(222, 211, 194, 0.55) 0%, rgba(226, 216, 201, 0.4) 50%, rgba(232, 226, 215, 0) 92%);
+  box-shadow: inset 0 0 calc(40 * var(--u)) rgba(186, 166, 140, 0.34);
+  filter: blur(0.6px);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0) 94%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0) 94%);
+}
+/* front minarets on the reference's (x 872 and 1060, tips near y 80) */
+.hoa-hc__arch-photo {
+  position: absolute;
+  z-index: 3;
+  left: calc(306 * var(--u));
+  top: calc(-258 * var(--u));
+  width: calc(335 * var(--u));
+  aspect-ratio: 1140 / 1410;
+  /* sky already removed in the file (transparent); the foot dissolves into the moon */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 74%, rgba(0,0,0,0) 96%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 74%, rgba(0,0,0,0) 96%);
+}
+.hoa-hc__arch-photo img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 0; }
+
+.hoa-hc__cards { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; z-index: 4; }
+/* soft floor shadow under the collection */
+.hoa-hc__cards::after {
+  content: '';
+  position: absolute;
+  left: calc(30 * var(--u));
+  right: calc(10 * var(--u));
+  top: calc(515 * var(--u));
+  height: calc(50 * var(--u));
+  background: radial-gradient(50% 50% at 50% 30%, rgba(70, 50, 30, 0.11), rgba(70, 50, 30, 0) 75%);
+  z-index: -1;
+  pointer-events: none;
+}
+.hoa-hc__slot {
+  position: absolute;
+  margin: 0;
+  perspective: 1000px;
+}
+/* stage px (reference px - 478 / - 300): left, top, width, height, as the reference draws them.
+   Vetiver is the peak (top 393) and the tallest; Qutub, Ambergris and Oudh stand level a step
+   lower (425-430); Roses is the lowest (463) and the shortest. The cards nearly touch (2-5px
+   gaps, no overlap), and each turns a little so its right edge recedes, strongest on Qutub,
+   as the reference's slight perspective shows. */
+.hoa-hc__slot:nth-child(1) { left: calc(23 * var(--u));  top: calc(130 * var(--u)); width: calc(189 * var(--u)); height: calc(390 * var(--u)); --ry: 12deg; z-index: 1; }
+.hoa-hc__slot:nth-child(2) { left: calc(214 * var(--u)); top: calc(163 * var(--u)); width: calc(175 * var(--u)); height: calc(369 * var(--u)); --ry: 7deg;  z-index: 2; }
+.hoa-hc__slot:nth-child(3) { left: calc(391 * var(--u)); top: calc(93 * var(--u));  width: calc(210 * var(--u)); height: calc(444 * var(--u)); --ry: 3deg;  z-index: 3; }
+.hoa-hc__slot:nth-child(4) { left: calc(605 * var(--u)); top: calc(125 * var(--u)); width: calc(197 * var(--u)); height: calc(390 * var(--u)); --ry: 5deg;  z-index: 2; }
+.hoa-hc__slot:nth-child(5) { left: calc(807 * var(--u)); top: calc(126 * var(--u)); width: calc(185 * var(--u)); height: calc(377 * var(--u)); --ry: 6deg;  z-index: 1; }
+
+.hoa-hc-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: max(9px, calc(14 * var(--u)));
+  background: #3B2E24;
+  color: #F4EDE2;
+  text-decoration: none;
+  transform: rotateY(var(--ry, 0deg));
+  transform-origin: 50% 50%;
+  box-shadow:
+    0 calc(14 * var(--u)) calc(26 * var(--u)) calc(-14 * var(--u)) rgba(52, 36, 22, 0.22),
+    0 1px 2px rgba(52, 36, 22, 0.08);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  isolation: isolate;
+}
+.hoa-hc-card--light { background: #D9D2C6; color: var(--hc-ink); }
+.hoa-hc-card__media { position: absolute; inset: 0; z-index: -2; }
+.hoa-hc-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* heritage tone: light photos share the parchment's warmth */
+.hoa-hc-card--light .hoa-hc-card__media img { filter: sepia(0.38) saturate(0.72) contrast(1.02); }
+/* a light scrim at the head of each card only: the photograph stays the subject */
+.hoa-hc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(18, 12, 8, 0.6) 0%, rgba(18, 12, 8, 0.3) 30%, rgba(18, 12, 8, 0) 54%, rgba(18, 12, 8, 0) 80%, rgba(18, 12, 8, 0.22) 100%);
+}
+.hoa-hc-card--light::before {
+  background: linear-gradient(180deg, rgba(240, 233, 222, 0.8) 0%, rgba(240, 233, 222, 0.5) 30%, rgba(240, 233, 222, 0) 54%);
+}
+.hoa-hc-card__body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: calc(30 * var(--u)) calc(22 * var(--u));
+}
+.hoa-hc-card__no {
+  font-size: max(10px, calc(12.5 * var(--u)));
+  letter-spacing: 0.14em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.hoa-hc-card__no::after {
+  content: '';
+  display: block;
+  width: calc(40 * var(--u));
+  height: 1px;
+  margin: calc(8 * var(--u)) 0 calc(16 * var(--u));
+  background: currentColor;
+  opacity: 0.6;
+}
+.hoa-hc-card__title {
+  font-family: var(--ab-serif, 'Fraunces', Georgia, serif);
+  font-size: calc(32 * var(--u));
+  font-weight: 300;
+  font-variation-settings: "opsz" 96, "SOFT" 0, "WONK" 0;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.hoa-hc__slot:nth-child(3) .hoa-hc-card__title { font-size: calc(36 * var(--u)); }
+.hoa-hc-card__text {
+  margin-top: calc(13 * var(--u));
+  font-size: max(10.5px, calc(13.8 * var(--u)));
+  line-height: 1.42;
+  opacity: 0.92;
+}
+.hoa-hc-card__arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: max(19px, calc(23 * var(--u)));
+  height: max(19px, calc(23 * var(--u)));
+  margin-top: calc(26 * var(--u));
+  border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
+  border-radius: 50%;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+.hoa-hc-card__arrow svg { width: 58%; height: 58%; stroke-width: 1.2; }
+.hoa-hc-card--arrow-foot .hoa-hc-card__arrow { position: absolute; left: calc(22 * var(--u)); bottom: calc(30 * var(--u)); margin: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+  .hoa-hc-card:hover {
+    transform: rotateY(var(--ry, 0deg)) translateY(-8px);
+    box-shadow:
+      0 calc(24 * var(--u)) calc(38 * var(--u)) calc(-14 * var(--u)) rgba(52, 36, 22, 0.36),
+      0 1px 3px rgba(52, 36, 22, 0.1);
+  }
+  .hoa-hc-card:hover .hoa-hc-card__media img { transform: scale(1.045); }
+  .hoa-hc-card:hover .hoa-hc-card__arrow { background: #F4EDE2; border-color: #F4EDE2; color: #2A231C; }
+  .hoa-hc-card--light:hover .hoa-hc-card__arrow { background: var(--hc-ink); border-color: var(--hc-ink); color: #F4EDE2; }
+}
+.hoa-hc-card:focus-visible { outline: 1px solid var(--hc-ink); outline-offset: 4px; }
+
+/* Foot: OUR HERITAGE, a long hairline, the closing line, on the copy's left edge */
+.hoa-hc__foot-label { position: absolute; left: calc(87 * var(--p)); top: calc(912 * var(--v)); }
+.hoa-hc__foot-line {
+  position: absolute;
+  left: calc(235 * var(--p));
+  top: calc(917 * var(--v));
+  width: calc(687 * var(--p));
+  height: 1px;
+  background: var(--hc-hair);
+  transform-origin: left center;
+}
+.hoa-hc__foot-text {
+  position: absolute;
+  left: calc(964 * var(--p));
+  top: calc(893 * var(--v));
+  width: calc(380 * var(--p));
+  margin: 0;
+  font-size: max(11px, calc(12.6 * var(--v)));
+  line-height: 1.48;
+  color: var(--hc-mute);
+}
+
+/* narrower desktops: the small paragraph re-wraps instead of running into the cards */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .hoa-hc__text-2 { max-width: calc(400 * var(--p)); }
+  .hoa-hc__text-2 br { display: none; }
+}
+/* the client's line breaks hold on the desktop composition only */
+@media (max-width: 1199px) { .hoa-hc__text br, .hoa-hc__text-2 br, .hoa-hc__foot-text br { display: none; } }
+
+/* Tablet: same pieces, stacked; the card stage scales as one piece ------- */
+@media (max-width: 1199px) {
+  .hoa-hc { background: var(--hc-paper); }
+  .hoa-hc__canvas { --p: 1px; --v: 1px; --H: auto; --pad: clamp(24px, 5vw, 48px); width: auto; height: auto; padding: 72px var(--pad) 64px; display: flex; flex-direction: column; }
+  .hoa-hc__copy, .hoa-hc__lede, .hoa-hc__stage, .hoa-hc__foot-label, .hoa-hc__foot-line, .hoa-hc__foot-text { position: relative; left: auto; right: auto; top: auto; }
+  .hoa-hc__copy { width: auto; height: auto; max-width: 640px; }
+  .hoa-hc__kicker { font-size: 11px; }
+  .hoa-hc__title { font-size: clamp(2.7rem, 7.6vw, 4.6rem); margin-top: 24px; white-space: normal; }
+  .hoa-hc__text { max-width: 560px; font-size: 16px; }
+  .hoa-hc__text-2 { max-width: 460px; font-size: 13.5px; }
+  .hoa-hc__mini { flex: none; margin-top: 32px; }
+  .hoa-hc__mini-frame { height: 200px; max-height: none; padding: 5px; }
+  .hoa-hc__mini-cap { font-size: 14px; max-width: 170px; }
+  .hoa-hc__lede { width: auto; max-width: 440px; margin-top: 36px; padding-left: 22px; font-size: 17px; }
+  .hoa-hc__lede-mark { height: 100%; top: 4px; }
+  .hoa-hc__stage { --u: calc((100cqw - 2 * var(--pad)) / 1002); width: calc(1002 * var(--u)); height: calc(560 * var(--u)); margin-top: calc(270 * var(--u) + 24px); }
+  .hoa-hc__foot { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 22px 28px; margin-top: 48px; }
+  .hoa-hc__foot-line { width: auto; }
+  .hoa-hc__foot-text { grid-column: 1 / -1; width: auto; max-width: 460px; font-size: 13px; }
+}
+
+/* Phones: the collection becomes a sideways scroll of tall cards --------- */
+@media (max-width: 699px) {
+  .hoa-hc__canvas { padding: 64px 0 56px; }
+  .hoa-hc__copy, .hoa-hc__lede, .hoa-hc__foot { margin-left: 20px; margin-right: 20px; }
+  .hoa-hc__title { font-size: clamp(2.5rem, 11.6vw, 3.3rem); line-height: 0.98; }
+  .hoa-hc__text { font-size: 15.5px; line-height: 1.7; }
+  .hoa-hc__rule--2 { margin-top: 32px; }
+  .hoa-hc__mini-frame { height: 170px; }
+  .hoa-hc__lede { font-size: 16.5px; }
+  .hoa-hc__stage { --u: 1.08px; width: auto; height: auto; margin-top: 36px; }
+  .hoa-hc__stage > * { top: auto; }
+  .hoa-hc__orbit, .hoa-hc__arch { display: none; }
+  .hoa-hc__cards {
+    position: relative;
+    inset: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 6px 20px 36px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .hoa-hc__cards::-webkit-scrollbar { display: none; }
+  .hoa-hc__cards::after { display: none; }
+  .hoa-hc__slot,
+  .hoa-hc__slot:nth-child(n) {
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: 0 0 min(64vw, 260px);
+    width: auto;
+    height: min(132vw, 520px);
+    scroll-snap-align: start;
+    --ry: 0deg;
+    perspective: none;
+  }
+  /* keep the stagger: Vetiver stands highest, the outer cards lowest */
+  .hoa-hc__slot:nth-child(1), .hoa-hc__slot:nth-child(5) { margin-top: 24px; }
+  .hoa-hc__slot:nth-child(2), .hoa-hc__slot:nth-child(4) { margin-top: 12px; }
+  .hoa-hc-card { box-shadow: 0 14px 24px -14px rgba(52, 36, 22, 0.4); }
+  .hoa-hc__foot { margin-top: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-hc-card, .hoa-hc-card__media img, .hoa-hc-card__arrow { transition: none; }
+}

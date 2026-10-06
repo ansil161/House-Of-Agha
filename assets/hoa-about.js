@@ -832,3 +832,61 @@
   else arm();
   document.addEventListener('shopify:section:load', function (e) { arm(e.target); });
 })();
+
+/* Heritage card collection (sections/hoa-about-chapter.liquid): one quiet entrance, once.
+   The left type rises gently, the dividers open, the Charminar arch fades up, the orbit line
+   draws round to its node, the five cards arrive one by one with a small lift, and the foot
+   hairline runs out from OUR HERITAGE. No parallax, no zoom, no scrub. Initial states are set
+   here only, so without GSAP or with reduced motion the section is static and complete. */
+(function () {
+  'use strict';
+  var made = [];
+  function init(root) {
+    if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.registerPlugin(ScrollTrigger);
+    var sec = (root || document).querySelector('[data-hoa-hc]');
+    if (!sec || sec._hoaHc) return;
+    sec._hoaHc = true;
+    var q = function (s) { return Array.prototype.slice.call(sec.querySelectorAll(s)); };
+    var ins = q('.hoa-hc__copy [data-hoa-hc-in], .hoa-hc__lede');
+    var rules = q('[data-hoa-hc-rule]');
+    var arch = sec.querySelector('[data-hoa-hc-arch]');
+    var orbit = sec.querySelector('[data-hoa-hc-orbit]');
+    var node = sec.querySelector('[data-hoa-hc-node]');
+    var cards = q('[data-hoa-hc-card]');
+    var line = sec.querySelector('[data-hoa-hc-line]');
+    var foot = q('.hoa-hc__foot [data-hoa-hc-in]');
+
+    gsap.set(ins, { opacity: 0, y: 22 });
+    gsap.set(rules, { scaleX: 0 });
+    if (arch) gsap.set(arch, { opacity: 0, y: 14 });
+    if (orbit) gsap.set(orbit, { strokeDasharray: 1, strokeDashoffset: 1 });
+    if (node) gsap.set(node, { opacity: 0, scale: 0.4, transformOrigin: '50% 50%' });
+    gsap.set(cards, { opacity: 0, y: 36 });
+    if (line) gsap.set(line, { scaleX: 0 });
+    gsap.set(foot, { opacity: 0, y: 10 });
+
+    var tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+    tl.to(ins, { opacity: 1, y: 0, duration: 1.1, stagger: 0.12 }, 0)
+      .to(rules, { scaleX: 1, duration: 1, ease: 'power2.inOut', stagger: 0.3 }, 0.35);
+    if (arch) tl.to(arch, { opacity: 1, y: 0, duration: 1.8, ease: 'power2.out', clearProps: 'transform' }, 0.15);
+    if (orbit) tl.to(orbit, { strokeDashoffset: 0, duration: 2.2, ease: 'power2.inOut' }, 0.5);
+    if (node) tl.to(node, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(2)' }, 2.3);
+    tl.to(cards, { opacity: 1, y: 0, duration: 1.15, stagger: 0.13, clearProps: 'transform,opacity' }, 0.45);
+    var foot0 = line ? line : foot[0];
+    var st = ScrollTrigger.create({ trigger: sec, start: 'top 68%', once: true, onEnter: function () { tl.play(); } });
+    var tl2 = gsap.timeline({ paused: true });
+    if (line) tl2.to(line, { scaleX: 1, duration: 1.6, ease: 'power2.inOut' }, 0);
+    tl2.to(foot, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.15 }, 0.2);
+    var st2 = foot0 ? ScrollTrigger.create({ trigger: foot0, start: 'top 92%', once: true, onEnter: function () { tl2.play(); } }) : null;
+    made.push({ sec: sec, kill: function () { st.kill(); if (st2) st2.kill(); tl.progress(1).kill(); tl2.progress(1).kill(); sec._hoaHc = false; } });
+  }
+  function start() { init(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+  document.addEventListener('shopify:section:unload', function (e) {
+    made = made.filter(function (m) { if (e.target.contains(m.sec)) { m.kill(); return false; } return true; });
+  });
+  document.addEventListener('shopify:section:load', function (e) { init(e.target); });
+})();

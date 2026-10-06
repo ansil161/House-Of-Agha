@@ -1,93 +1,303 @@
 {%- comment -%}
-  House of Agha · About 02 · The story, in the house's own words
-  Editorial layout under a gold divider: the large line runs across the top as a statement;
-  below it the Qutub Shahi miniature in a pointed arch with an antique-gold hairline (left)
-  balances the story paragraphs and the four natural ingredients (right).
+  House of Agha · About 02 · Heritage card collection (redesigned 2026-10-06 to the client's
+  "Heritage Fragrance Card Collection" reference).
+  Warm parchment ground. Left: THE HOUSE, "Welcome to House of Agha.", two hairline dividers
+  and the heritage copy. Right: five tall portrait cards (Qutub, Roses, Vetiver, Ambergris, Oudh)
+  standing as one staggered collection in front of a soft Charminar arch, a faint orbit line
+  with one node passing behind them. Foot: OUR HERITAGE, a long hairline and the closing line.
+  Desktop composition is drawn on the reference's 1536px canvas in container units (hoa-about.css,
+  block "HERITAGE CARD COLLECTION"); tablet keeps the stage, phones scroll the cards sideways.
+  Motion: assets/hoa-about.js, block "Heritage card collection" (static and complete without it).
+
+  Photos: Unsplash License (free commercial use):
+    hoa-hc-qutub      Golconda Fort at golden hour   photo-1470075446540-4391a96ec621
+    hoa-hc-rose       red rose                       photo-1559563362-c667ba5f5480
+    hoa-hc-vetiver    hanging roots                  photo-1692148292961-210789f8d8c0
+    hoa-hc-oud        agarwood pieces                photo-1736098687867-3ec9f69aff2e
+    hoa-hc-charminar-front  Charminar, sky keyed out, sepia  photo-1696941515998-d83f24967aca
+    hoa-hc-ambergris  = hoa-ing-ambergris (Unsplash photo-1613825432127)
 {%- endcomment -%}
 {%- assign s = section.settings -%}
-<section class="hoa-ab-chapter">
-  {%- render 'hoa-ab-rule' -%}
-  <div class="hoa-wrap hoa-ab-chapter__grid">
-    {%- comment -%} The line's dominant phrase is set in Fraunces italic; edited copy without it renders plain {%- endcomment -%}
-    <p class="hoa-ab-chapter__lede" data-hoa-ab-lede>{{ s.lede | replace: 'the intoxicating allure of tradition.', '<em class="hoa-ab-em">the intoxicating allure of tradition.</em>' }}</p>
-    {%- render 'hoa-ab-motif', variant: 'knot', class: 'hoa-ab-motif--lede' -%}
-    {%- if s.portrait_asset != blank or s.portrait_image != blank -%}
-      <figure class="hoa-ab-chapter__portrait">
-        {%- comment -%} A manuscript plate: faint jaali ground, Golconda corners, the arch on it {%- endcomment -%}
-        <div class="hoa-ab-chapter__plate">
-          <span class="hoa-ab-corners" aria-hidden="true" data-hoa-ab-orn></span>
-          <div class="hoa-ab-arch hoa-ab-chapter__arch">
-            <div class="hoa-ab-arch__frame hoa-ab-chapter__img" data-hoa-ab-img>
-              {%- render 'hoa-img', name: s.portrait_asset, image: s.portrait_image, w: 654, h: 686, alt: s.portrait_alt, sizes: '(min-width: 900px) 30vw, 80vw' -%}
-            </div>
-            {%- render 'hoa-ab-arch' -%}
-          </div>
-        </div>
-        {%- if s.portrait_caption != blank -%}<figcaption class="hoa-ab-caption">{{ s.portrait_caption }}</figcaption>{%- endif -%}
-      </figure>
-    {%- endif -%}
-    <div class="hoa-ab-chapter__body">
-      {%- if s.p1 != blank -%}<p class="hoa-ab-chapter__p hoa-ab-chapter__p--first" data-hoa-ab-up>{{ s.p1 | replace: 'Welcome to House of Agha.', '<span class="hoa-ab-chapter__hello">Welcome to House of Agha.</span>' }}</p>{%- endif -%}
-      {%- if s.p2 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p2 }}</p>{%- endif -%}
-      {%- comment -%} The four ingredients as specimen niches: a Qutub Shahi arch with a jaali head, a medallion with the ingredient drawn in line, number, name, botanical name, on a double-rule plinth {%- endcomment -%}
-      {%- assign notes = s.ingredients | split: ',' -%}
-      {%- assign latin = s.ingredients_latin | split: ',' -%}
-      {%- if notes.size > 0 -%}
-        <ul class="hoa-ab-specimens" aria-label="{{ s.ingredients_label | escape }}" data-hoa-ab-up>
-          {%- for n in notes -%}
-            {%- assign l = latin[forloop.index0] | strip -%}
-            {%- assign nh = n | strip | handleize -%}
-            {%- assign photo = 'hoa-ing-' | append: nh | append: '.webp' -%}
-            {%- if nh == 'agarwood' -%}{%- assign photo = 'hoa-ing-oud.webp' -%}{%- elsif nh == 'amber' -%}{%- assign photo = 'hoa-ing-ambergris.webp' -%}{%- endif -%}
-            <li class="hoa-ab-specimen" tabindex="0">
-              {%- comment -%} Hover/focus: the niche turns into a photo of the ingredient. Photos (assets/hoa-ing-*.webp, 720x960): oud = Wikimedia Commons "Oud Wood Supreme Quality.JPG" (CC0); rose, vetiver, ambergris = Unsplash photo-1599665395079, photo-1713084875932, photo-1613825432127 (Unsplash License, free commercial use) {%- endcomment -%}
-              {%- if nh == 'oud' or nh == 'agarwood' or nh == 'rose' or nh == 'vetiver' or nh == 'ambergris' or nh == 'amber' -%}
-                <span class="hoa-ab-specimen__photo" aria-hidden="true"><img src="{{ photo | asset_url }}" alt="" width="720" height="960" loading="lazy" decoding="async"></span>
+<section class="hoa-hc" data-hoa-hc aria-labelledby="hoa-hc-title-{{ section.id }}">
+  <div class="hoa-hc__canvas">
+
+    <div class="hoa-hc__copy">
+      {%- if s.kicker != blank -%}<p class="hoa-hc__kicker" data-hoa-hc-in>{{ s.kicker }}</p>{%- endif -%}
+      <h2 class="hoa-hc__title" id="hoa-hc-title-{{ section.id }}" data-hoa-hc-in>
+        {%- if s.title_1 != blank -%}<span>{{ s.title_1 }}</span>{%- endif -%}
+        {%- if s.title_2 != blank -%} <span>{{ s.title_2 }}</span>{%- endif -%}
+      </h2>
+      <span class="hoa-hc__rule" aria-hidden="true" data-hoa-hc-rule></span>
+      {%- if s.text != blank -%}<p class="hoa-hc__text" data-hoa-hc-in>{{ s.text | newline_to_br }}</p>{%- endif -%}
+      <span class="hoa-hc__rule hoa-hc__rule--2" aria-hidden="true" data-hoa-hc-rule></span>
+      {%- if s.text_2 != blank -%}<p class="hoa-hc__text-2" data-hoa-hc-in>{{ s.text_2 | newline_to_br }}</p>{%- endif -%}
+      {%- comment -%} The Qutub Shahi miniature, small, at the foot of the left column (client, 2026-10-06) {%- endcomment -%}
+      {%- if s.mini_asset != blank or s.mini_image != blank -%}
+        <figure class="hoa-hc__mini" data-hoa-hc-in>
+          <span class="hoa-hc__mini-frame">
+            <span class="hoa-hc__mini-img">
+              {%- if s.mini_image != blank -%}
+                {{ s.mini_image | image_url: width: 500 | image_tag: widths: '300, 500', sizes: '180px', loading: 'lazy', alt: s.mini_alt }}
+              {%- else -%}
+                <img src="{{ s.mini_asset | append: '-sm.webp' | asset_url }}" srcset="{{ s.mini_asset | append: '-sm.webp' | asset_url }} 400w, {{ s.mini_asset | append: '.webp' | asset_url }} 654w" sizes="180px" width="654" height="686" alt="{{ s.mini_alt | escape }}" loading="lazy" decoding="async">
               {%- endif -%}
-              <svg class="hoa-ab-specimen__arch" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 100V22C0 10 26 4 50 0C74 4 100 10 100 22V100" vector-effect="non-scaling-stroke"/></svg>
-              <span class="hoa-ab-specimen__medal" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-                  {%- case nh -%}
-                    {%- when 'oud', 'agarwood' -%}<path d="M5 17.5c1.8-6.2 6-10.3 14-11.5-1 7.2-5.2 11.3-11.6 13.2z"/><path d="M8.2 16.4c2.2-3.2 5-5.8 8.6-7.8M10.4 18c1.6-1.8 3.2-3.1 5.2-4.2"/>
-                    {%- when 'rose' -%}<path d="M12 6.5c2.6 0 4.2 1.7 4.2 3.8 0 2.7-2.5 4.6-4.2 4.6s-4.2-1.9-4.2-4.6c0-2.1 1.6-3.8 4.2-3.8z"/><path d="M10.4 9.6c.6-.9 2.6-1 3.2.2.5 1-.4 2-1.5 1.9"/><path d="M12 15v6.5M12 18.6c-2.1-.2-3.4-1.3-3.8-2.8 1.9 0 3.2.9 3.8 2.8z"/>
-                    {%- when 'vetiver' -%}<path d="M12 12.5V3.5M12 12.5c-1.4-3-3.4-5-6-6.2M12 12.5c1.4-3 3.4-5 6-6.2M12 12.5c-.6-2.4-1.8-4.2-3.6-5.6M12 12.5c.6-2.4 1.8-4.2 3.6-5.6"/><path d="M5.5 12.5h13"/><path d="M12 12.5v8M12 14.8l-3 4.2M12 14.8l3 4.2M10.6 13.6l-3.2 1.8M13.4 13.6l3.2 1.8"/>
-                    {%- when 'ambergris', 'amber' -%}<path d="M5 12.8c0-3.4 3-5.8 7-5.8s7 2.2 7 5.4-2.6 5.3-7 5.3-7-1.6-7-4.9z"/><path d="M9 11.2c.8-1 2-1.6 3.4-1.6"/><path d="M3 20.6c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0"/>
-                    {%- else -%}<path d="M5.6 5.6h12.8v12.8H5.6z"/><path d="M12 2.9 21.1 12 12 21.1 2.9 12z"/><circle cx="12" cy="12" r="2.1"/>
-                  {%- endcase -%}
-                </svg>
-              </span>
-              <span class="hoa-ab-specimen__no" aria-hidden="true">No. {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-              <span class="hoa-ab-specimen__name">{{ n | strip }}</span>
-              <span class="hoa-ab-specimen__dot" aria-hidden="true"></span>
-              {%- if l != blank -%}<span class="hoa-ab-specimen__latin" lang="la">{{ l }}</span>{%- endif -%}
-            </li>
-          {%- endfor -%}
-        </ul>
+            </span>
+          </span>
+          {%- if s.mini_caption != blank -%}<figcaption class="hoa-hc__mini-cap">{{ s.mini_caption }}</figcaption>{%- endif -%}
+        </figure>
       {%- endif -%}
-      {%- if s.p3 != blank -%}<p class="hoa-ab-chapter__p" data-hoa-ab-up>{{ s.p3 }}</p>{%- endif -%}
     </div>
+
+    <p class="hoa-hc__lede" data-hoa-hc-in>
+      <span class="hoa-hc__lede-mark" aria-hidden="true"></span>
+      {%- if s.scroll_label != blank -%}<span class="hoa-hc__scroll">{{ s.scroll_label }}</span>{%- endif -%}
+      {%- if s.lede != blank -%}<span class="hoa-hc__lede-text">{{ s.lede | newline_to_br }}</span>{%- endif -%}
+    </p>
+
+    <div class="hoa-hc__stage">
+      {%- comment -%} Orbit, traced from the reference (stage px = reference px - 478 / - 300): a small loop
+        out of Qutub's left edge round the node, an arc rising from behind Qutub to the moon's left
+        edge, and an arc from the monument's right side down to Oudh's top; it runs behind the
+        Charminar and the cards. {%- endcomment -%}
+      <svg class="hoa-hc__orbit" viewBox="0 0 1002 560" aria-hidden="true" focusable="false">
+        <path data-hoa-hc-orbit pathLength="1" d="M24 245C8 262 0 288 1 310C2 330 10 342 24 334M150 152C200 120 244 100 300 82C390 52 560 46 640 72C740 84 860 102 917 126C940 138 956 156 966 176"/>
+        <circle class="hoa-hc__node" data-hoa-hc-node cx="1" cy="310" r="4.5"/>
+      </svg>
+      {%- if s.arch_asset != blank or s.arch_image != blank -%}
+        <div class="hoa-hc__arch" aria-hidden="true" data-hoa-hc-arch>
+          <span class="hoa-hc__arch-ground"></span>
+          <span class="hoa-hc__arch-photo">
+            {%- if s.arch_image != blank -%}
+              {{ s.arch_image | image_url: width: 1200 | image_tag: widths: '640, 1100', sizes: '(min-width: 1200px) 24vw, 40vw', loading: 'lazy', alt: '' }}
+            {%- else -%}
+              <img src="{{ s.arch_asset | append: '.webp' | asset_url }}" srcset="{{ s.arch_asset | append: '-sm.webp' | asset_url }} 560w, {{ s.arch_asset | append: '.webp' | asset_url }} 1140w" sizes="(min-width: 1200px) 22vw, 36vw" width="1140" height="1410" alt="" loading="lazy" decoding="async">
+            {%- endif -%}
+          </span>
+        </div>
+      {%- endif -%}
+
+      <ul class="hoa-hc__cards" role="list">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          {%- capture tag -%}{% if b.url != blank %}a{% else %}div{% endif %}{%- endcapture -%}
+          <li class="hoa-hc__slot" {{ block.shopify_attributes }} data-hoa-hc-card>
+            <{{ tag }} class="hoa-hc-card hoa-hc-card--{{ b.tone }} hoa-hc-card--arrow-{{ b.arrow }}"{% if b.url != blank %} href="{{ b.url }}"{% endif %}>
+              <span class="hoa-hc-card__media" aria-hidden="true">
+                {%- if b.image != blank -%}
+                  {%- assign focus_css = b.focus | default: '50% 50%' | prepend: 'object-position: ' -%}
+                  {{ b.image | image_url: width: 900 | image_tag: widths: '480, 900', sizes: '(min-width: 1200px) 14vw, (min-width: 700px) 22vw, 62vw', loading: 'lazy', alt: '', style: focus_css }}
+                {%- elsif b.asset != blank -%}
+                  <img src="{{ b.asset | append: '.webp' | asset_url }}" srcset="{{ b.asset | append: '-sm.webp' | asset_url }} 480w, {{ b.asset | append: '.webp' | asset_url }} 800w" sizes="(min-width: 1200px) 14vw, (min-width: 700px) 22vw, 62vw" width="800" height="1200" alt="" loading="lazy" decoding="async"{% if b.focus != blank %} style="object-position: {{ b.focus }}"{% endif %}>
+                {%- endif -%}
+              </span>
+              <span class="hoa-hc-card__body">
+                <span class="hoa-hc-card__no">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                <span class="hoa-hc-card__title">{{ b.title }}</span>
+                {%- if b.text != blank -%}<span class="hoa-hc-card__text">{{ b.text | newline_to_br }}</span>{%- endif -%}
+                <span class="hoa-hc-card__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12h10M13 8l4 4-4 4"/></svg></span>
+              </span>
+            </{{ tag }}>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <div class="hoa-hc__foot">
+      {%- if s.foot_label != blank -%}<p class="hoa-hc__foot-label" data-hoa-hc-in>{{ s.foot_label }}</p>{%- endif -%}
+      <span class="hoa-hc__foot-line" aria-hidden="true" data-hoa-hc-line></span>
+      {%- if s.foot_text != blank -%}<p class="hoa-hc__foot-text" data-hoa-hc-in>{{ s.foot_text | newline_to_br }}</p>{%- endif -%}
+    </div>
+
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "About: story text",
+  "name": "About: heritage cards",
   "tag": "div",
   "class": "hoa-ab-section",
+  "max_blocks": 5,
   "settings": [
-    { "type": "textarea", "id": "lede", "label": "Large line", "default": "Every fragrance tells a story: of bustling royal courts, serene palace gardens and the intoxicating allure of tradition." },
-    { "type": "textarea", "id": "p1", "label": "Paragraph 1", "default": "Welcome to House of Agha. Rooted in the rich heritage of the Qutub Shahi dynasty, we celebrate the art of fine perfumery inspired by the grandeur of Golconda and Hyderabad's golden era. Drawing from the royal legacy of aromatic indulgence, we craft fragrances that embody the sophistication and luxury once cherished by the Persian-Turkic rulers." },
-    { "type": "textarea", "id": "p2", "label": "Paragraph 2", "default": "We honour the ancient craft of attar making, blending the finest natural ingredients into scents of timeless beauty. Each bottle is a tribute to the refinement and cultural richness that defined the Qutub Shahi era." },
-    { "type": "text", "id": "ingredients", "label": "Ingredients (comma separated)", "default": "Oud, Rose, Vetiver, Ambergris" },
-    { "type": "text", "id": "ingredients_latin", "label": "Botanical names (comma separated, same order)", "default": "Aquilaria, Rosa damascena, Chrysopogon zizanioides, Ambra grisea" },
-    { "type": "text", "id": "ingredients_label", "label": "Ingredients list name (screen readers)", "default": "Natural ingredients we blend" },
-    { "type": "header", "content": "Portrait (under the large line)" },
-    { "type": "image_picker", "id": "portrait_image", "label": "Image" },
-    { "type": "text", "id": "portrait_asset", "label": "Fallback theme asset", "default": "hoa-qutub-shah" },
-    { "type": "text", "id": "portrait_alt", "label": "Alt text", "default": "Miniature portrait of a Qutub Shahi ruler in a jewelled turban, holding a rose" },
-    { "type": "text", "id": "portrait_caption", "label": "Caption", "default": "A Qutub Shahi miniature" },
-    { "type": "textarea", "id": "p3", "label": "Paragraph 3", "default": "Our passion lies in bridging history and modernity. Deeply rooted in the past, our fragrances are made for today's connoisseurs: an elegant fusion of heritage and contemporary sophistication." }
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Eyebrow",
+      "default": "The House"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Heading line 1",
+      "default": "Welcome to"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Heading line 2",
+      "default": "House of Agha."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Heritage paragraph (line breaks kept on desktop)",
+      "default": "Rooted in the rich heritage of the Qutub Shahi dynasty,\nwe celebrate the art of fine perfumery inspired by the grandeur\nof Golconda and Hyderabad’s golden era. Drawing from\nthe royal legacy of aromatic indulgence, we craft fragrances\nthat embody the sophistication and luxury once cherished\nby the Persian, Turkish rulers."
+    },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "Second paragraph",
+      "default": "With honor the ancient craft of attar making, blending the finest\nnatural ingredients into scents of timeless luxury. Each bottle\nis a tribute to the refinement and cultural richness that defined\nthe Qutub Shahi era."
+    },
+    {
+      "type": "text",
+      "id": "scroll_label",
+      "label": "Top-right label",
+      "default": "Scroll to explore"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Story line (top right)",
+      "default": "Every fragrance tells a story:\nof bustling royal courts, serene palace gardens\nand the intoxicating allure of tradition."
+    },
+    {
+      "type": "header",
+      "content": "Charminar arch (behind the cards)"
+    },
+    {
+      "type": "image_picker",
+      "id": "arch_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "arch_asset",
+      "label": "Fallback theme asset",
+      "default": "hoa-hc-charminar-front",
+      "info": "Cut-out (transparent sky) so the minarets rise past the arch"
+    },
+    {
+      "type": "header",
+      "content": "Qutub Shahi miniature (left, under the copy)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mini_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "mini_asset",
+      "label": "Fallback theme asset",
+      "default": "hoa-qutub-shah"
+    },
+    {
+      "type": "text",
+      "id": "mini_alt",
+      "label": "Alt text",
+      "default": "Miniature portrait of a Qutub Shahi ruler in a jewelled turban, holding a rose"
+    },
+    {
+      "type": "text",
+      "id": "mini_caption",
+      "label": "Caption",
+      "default": "A Qutub Shahi miniature"
+    },
+    {
+      "type": "header",
+      "content": "Foot"
+    },
+    {
+      "type": "text",
+      "id": "foot_label",
+      "label": "Label",
+      "default": "Our Heritage"
+    },
+    {
+      "type": "textarea",
+      "id": "foot_text",
+      "label": "Text",
+      "default": "Our passion lies in bridging history and modernity,\ndeeply rooted in the past, our fragrances are made\nfor today’s connoisseurs — an elegant fusion of heritage\nand contemporary sophistication."
+    }
   ],
-  "presets": [{ "name": "About: story text" }]
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Qutub"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text (line breaks kept)",
+          "default": "The royal roots\nof a timeless\njourney."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "asset",
+          "label": "Fallback theme asset",
+          "default": "hoa-hc-qutub"
+        },
+        {
+          "type": "text",
+          "id": "focus",
+          "label": "Image focus (object-position)",
+          "default": "50% 50%"
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Image tone",
+          "default": "dark",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Dark image, light text"
+            },
+            {
+              "value": "light",
+              "label": "Light image, dark text"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "arrow",
+          "label": "Arrow",
+          "default": "foot",
+          "options": [
+            {
+              "value": "text",
+              "label": "Under the text"
+            },
+            {
+              "value": "foot",
+              "label": "At the bottom"
+            }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About: heritage cards"
+    }
+  ]
 }
 {% endschema %}
