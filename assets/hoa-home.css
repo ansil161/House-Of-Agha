@@ -668,17 +668,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-js .hoa-manifesto__plate.hoa-is-in:hover .hoa-manifesto__core img { transform: scale(1.03); }
 }
 .hoa-manifesto__plate--sub.hoa-is-in { transition-delay: 0.18s; }
-.hoa-manifesto__caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  max-width: 44%;
-  text-align: right;
-  font: 400 0.74rem/1.45 var(--hoa-sans);
-  letter-spacing: 0.02em;
-  color: var(--hoa-mute);
-}
 
 @media (max-width: 960px) {
   .hoa-manifesto__grid { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
@@ -688,8 +677,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-manifesto__media { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 0; }
   .hoa-manifesto__plate--sub { position: relative; left: auto; bottom: auto; width: auto; }
   .hoa-manifesto__plate--sub .hoa-manifesto__core { aspect-ratio: 4 / 5; }
-  .hoa-manifesto__caption { position: static; grid-column: 1 / -1; max-width: none; text-align: left; }
-}
+  }
 @media (max-width: 767px) {
   .hoa-manifesto { --hm-r: 18px; --hm-pad: 5px; }
   .hoa-manifesto__text { font-size: clamp(1.85rem, 8.4vw, 2.4rem); max-width: none; }

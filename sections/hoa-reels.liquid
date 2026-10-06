@@ -241,9 +241,12 @@
               <p class="hoa-reel__price"><span>{{ shop_now }}</span>{% if shop_was != blank %}<s><span class="hoa-sr">MRP </span>{{ shop_was }}</s>{% endif %}</p>
             </div>
             <div class="hoa-reel__acts">
-              {%- unless r_handle == product.handle -%}
+              {%- comment -%} Every card keeps both buttons; on its own product page it scrolls back up to the product {%- endcomment -%}
+              {%- if r_handle == product.handle -%}
+                <a class="hoa-reel__view" href="#top">View product</a>
+              {%- else -%}
                 <a class="hoa-reel__view" href="{{ shop_url }}">View product</a>
-              {%- endunless -%}
+              {%- endif -%}
               <button type="button" class="hoa-reel__add" data-hoa-reel-add data-handle="{{ r_handle }}" data-variant="{{ shop_variant }}" data-title="{{ shop_name | escape }}" data-price="{{ shop_now }}" data-compare="{{ shop_was }}" data-image="{{ shop_img }}"{% unless shop_available %} disabled{% endunless %}>
                 <span>{% if shop_available %}Add to bag{% else %}Sold out{% endif %}</span>
               </button>

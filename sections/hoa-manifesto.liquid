@@ -62,9 +62,6 @@
           </div>
         </figure>
       </div>
-      {%- if s.caption != blank -%}
-        <p class="hoa-manifesto__caption" data-hoa-reveal>{{ s.caption }}</p>
-      {%- endif -%}
     </div>
   </div>
 </section>
@@ -89,8 +86,7 @@
     { "type": "text", "id": "note_3_text", "label": "Principle 3 line", "default": "Eaux de parfum meant to stay near the skin." },
     { "type": "header", "content": "Photographs" },
     { "type": "image_picker", "id": "image_one", "label": "Main image (portrait)" },
-    { "type": "image_picker", "id": "image_two", "label": "Detail image (square)" },
-    { "type": "text", "id": "caption", "label": "Caption", "default": "Shamamah, held in a dried lily" }
+    { "type": "image_picker", "id": "image_two", "label": "Detail image (square)" }
   ],
   "presets": [{ "name": "HOA The House" }]
 }

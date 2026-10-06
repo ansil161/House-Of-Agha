@@ -856,7 +856,7 @@
                 <p class="hoa-reel__price"><span>${s.now}</span>${s.was ? `<s><span class="hoa-sr">MRP </span>${s.was}</s>` : ''}</p>
               </div>
               <div class="hoa-reel__acts">
-                ${h === handle ? '' : `<a class="hoa-reel__view" href="${s.url}">View product</a>`}
+                <a class="hoa-reel__view" href="${h === handle ? '#top' : s.url}">View product</a>
                 <button type="button" class="hoa-reel__add" data-hoa-reel-add data-handle="${h}" data-variant="" data-title="${esc(s.name)}" data-price="${s.now}" data-compare="${s.was}" data-image="${s.img}"${s.sold ? ' disabled' : ''}><span>${s.sold ? 'Sold out' : 'Add to bag'}</span></button>
               </div>
             </div>
