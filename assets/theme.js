@@ -4,6 +4,64 @@
 
 // Local product catalogue for the static preview. On Shopify, the same fields come from
 // product data + metafields (custom.tagline, custom.family, custom.top_notes, …).
+// TEMPORARY LOCAL-DEV FALLBACK: placeholder fragrance notes + claims per real handle, used only
+// while Shopify is not connected (no custom.top_notes / heart_notes / base_notes metafields yet).
+// Read by the product page (assets/pdp-preview.js) and the reel viewer (assets/hoa-reels.js);
+// real data always wins. Delete once real notes exist.
+window.AGHA_DEV_NOTES = {
+  'oud-fury': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'agha-blue': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  maha: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'oud-of-dark-paradise': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'sea-smoke': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'tobacco-enigma': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  shamamah: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'oud-royal': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] }
+};
+
+// REAL product descriptions, copied from the live store (aghaperfumes.com/products.json, body_html,
+// 2026-10-06), one string per paragraph. Used by the reel viewer's Description while the preview has
+// no Shopify; on Shopify the product's own description is used instead. Keep in step with the store.
+window.AGHA_STORIES = {
+  "shamamah": [
+    "Shamamah – The Essence of the Deccan",
+    "2 Years Aged",
+    "100% Natural",
+    "Alcohol Free",
+    "A fragrance born from ancient alchemy, Shamama is a tribute to the rich heritage of the Qutub Shahi dynasty. Deep, complex, and mysterious, this attar is a fusion of aged woods, exotic spices, and earthy undertones, crafted through a centuries-old distillation process.",
+    "Reminiscent of the opulent traditions of Golconda, Shamama carries the warmth of royal hearths, the whispers of sufi gatherings, and the grandeur of Hyderabad’s golden era. With every drop, it unveils a timeless story - of power, poetry, and an undying connection to the land of the Deccan."
+  ],
+  "tobacco-enigma": [
+    "Embark on a journey to the vibrant heart of India with our signature fragrance—a harmonious blend of fresh bergamot, zesty lemon, and soothing lavender. This captivating aroma reveals a warm heart of cinnamon, golden honey, and luxurious jasmine. Grounded by earthy tobacco leaf, tonka, and creamy vanilla, this perfume captures the rich heritage and timeless allure. A tribute to its grandeur, this fragrance is a celebration of tradition with a modern twist."
+  ],
+  "agha-blue": [
+    "Agha blue",
+    "Blue is a Symphony of Fresh Elegance and Smoky Depth",
+    "Step into a world where clarity meets complexity. This exquisite fragrance opens with the sparkling zest of mandarin orange and the crisp, refreshing coolness of cucumber—a vibrant awakening for the senses. As the scent unfolds, the aromatic heart reveals a sophisticated blend of basil and sage, infusing the composition with earthy green nuances and a refined herbal edge.",
+    "In its final evolution, the base notes emerge with irresistible allure—suede brings a smooth, sensual warmth, while woody accords, and a whisper of musk wrap the skin in a lingering veil of smoky, masculine sophistication. Bold yet balanced, fresh yet deeply grounded—this fragrance is a signature of timeless charisma."
+  ],
+  "oud-fury": [
+    "A fragrance that embodies passion, mystery, and opulence, this scent is a captivating blend of exotic ingredients, weaving together a story of sensuality and depth.",
+    "The Opening – A Lush and Fiery Invitation",
+    "At first breath, the fragrance unveils an intoxicating burst of passion fruit, its tropical sweetness infused with the luxurious warmth of saffron. The delicate yet bold essence of rose adds a romantic touch, setting the stage for a mesmerizing olfactory journey.",
+    "The Heart – A Deep and Mysterious Core",
+    "As the scent unfolds, the richness of Agarwood (Oud) takes center stage—its deep, woody aroma exuding an air of mystery and power. The earthy warmth of patchouli intertwines with the resinous sweetness of benzoin, creating a heart that is both sensual and sophisticated.",
+    "The Base – A Seductive and Lasting Impression",
+    "The fragrance settles into a luxurious base where the raw sensuality of leather meets the creamy, comforting embrace of vanilla. The golden glow of amber lingers on the skin, adding an irresistible warmth that captivates and enchants.",
+    "This perfume is a masterpiece of contrasts—a bold yet delicate interplay of fruity brightness, smoky woods, and rich, sensual accords. Perfect for those who embrace their individuality and leave a lasting impression wherever they go."
+  ],
+  "maha": [
+    "A radiant symphony of light and warmth, this fragrance opens with the zesty brightness of lime, awakening the senses like the first rays of sunrise. At its heart, the delicate embrace of tiare flower and freesia blossoms into a bouquet of tropical elegance. The journey concludes with the velvety depth of cedarwood and the creamy sweetness of tonka bean, leaving a trail that is both captivating and unforgettable—a perfect balance of fresh vitality and soft allure."
+  ],
+  "oud-of-dark-paradise": [
+    "DARK PARADISE OUD",
+    "Embodies the essence of power and prestige, evoking the very soul of greatness. At its heart lies the rich, opulent allure of Oud Wood, revered for centuries as a symbol of luxury and spiritual depth. Crafted with unrivaled mastery, this bold fragrance is softened by elegant accents of Patchouli and Musk. A fresh burst of the exotic spice of Nutmeg and Saffron, creating a dynamic, textured composition. Enchanting and irresistible, this perfume celebrates the timeless magnificence of dark paradise Oud\"."
+  ],
+  "sea-smoke": [
+    "SEA SMOKE is a boundless embrace of nature's raw elegance, this fragrance captures the essence of untamed shores. Fresh bergamot greets you with a vibrant sparkle, while seaweed unveils the soul of the ocean—salty and enigmatic. Soft musk intertwines with rugged cedarwood, grounding the scent in earthy warmth. It's a call to the infinite, an ode to the sea's mysteries—here, there, everywhere."
+  ]
+};
+
 const AGHA_PRODUCTS = {
   // Real House of Agha line-up. Photography from the brand's Drive folder (see HOA-ASSETS.md).
   // The prices below are overwritten from the shared catalog (see applyToPreviewProducts); on Shopify they come from the product variants.

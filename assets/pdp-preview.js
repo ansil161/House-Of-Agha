@@ -507,16 +507,8 @@
   // so it is easy to delete once real notes/claims exist. It is used ONLY when a product has
   // no real data (AGHA_PRODUCTS[handle].notes / .claims, standing in for Shopify metafields);
   // real data always wins, and handles not listed here still render nothing without data.
-  const DEV_FRAGRANCE_MOCK = {
-    'oud-fury': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    'agha-blue': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    maha: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    'oud-of-dark-paradise': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    'sea-smoke': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    'tobacco-enigma': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    shamamah: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-    'oud-royal': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] }
-  };
+  // The placeholder notes now live in assets/theme.js (window.AGHA_DEV_NOTES), shared with the reel viewer.
+  const DEV_FRAGRANCE_MOCK = window.AGHA_DEV_NOTES || {};
   const tfMock = DEV_FRAGRANCE_MOCK[handle];
   // "Shopify data" here is AGHA_PRODUCTS[handle].notes / .claims — real data always takes priority.
   const tfTop = notes.top || (tfMock && tfMock.topNotes.join(', ')) || '';
@@ -869,10 +861,9 @@
     return `
             <template data-hoa-reel-panel>
               <div class="hoa-rvp__gallery" data-rvp-gallery>${shots.map((src) => `<figure class="hoa-rvp__shot"><img src="${src}" alt="${esc(s.name)}" decoding="async"></figure>`).join('')}</div>
-              <div class="hoa-rvp__body">
+              <div class="hoa-rvp__body" data-rvp-handle="${h}">
                 <h3 class="hoa-rvp__name">${esc(s.name)}</h3>
                 <p class="hoa-rvp__price"><b>${s.now}</b>${s.was ? `<s><span class="hoa-sr">MRP </span>${s.was}</s>` : ''}</p>
-                ${p.description ? `<div class="hoa-rvp__desc"><h4>Description</h4><p class="hoa-rvp__text" data-rvp-text>${esc(p.description)}</p><button type="button" class="hoa-rvp__more-text" data-rvp-more hidden>Read more</button></div>` : ''}
               </div>
               <div class="hoa-rvp__foot">
                 <a class="hoa-rvp__info" href="${s.url}">More info</a>

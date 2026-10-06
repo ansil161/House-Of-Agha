@@ -1950,3 +1950,73 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 @media (prefers-reduced-motion: reduce) {
   .hoa-ab-motif__svg { animation: none; }
 }
+
+/* ==========================================================================
+   ABOUT · BEIGE → DARK BROWN GRADIENT (2026-10-06)
+   User: "use a gradient of two colours on the About page, beige and dark brown,
+   wherever possible". One pair of colours, mixed with color-mix so every surface
+   stays in the same family: light panels run beige into a brown-tinted beige (dark
+   type stays readable), dark surfaces run dark brown into a warm mid brown.
+   ========================================================================== */
+body.hoa-about {
+  --ab-g-beige: #E8DCCB;
+  --ab-g-brown: #3B2A1F;
+  --ab-g-mid: color-mix(in srgb, var(--ab-g-brown) 62%, var(--ab-g-beige));
+  /* light surfaces: beige, deepening toward brown */
+  --ab-grad-light: linear-gradient(165deg, color-mix(in srgb, var(--ab-g-beige) 55%, #fff) 0%, var(--ab-g-beige) 52%, color-mix(in srgb, var(--ab-g-beige) 66%, var(--ab-g-brown)) 100%);
+  --ab-grad-soft: linear-gradient(165deg, color-mix(in srgb, var(--ab-g-beige) 30%, #fff) 0%, color-mix(in srgb, var(--ab-g-beige) 88%, var(--ab-g-brown)) 100%);
+  /* dark surfaces: dark brown, warming toward beige */
+  --ab-grad-dark: linear-gradient(125deg, var(--ab-g-brown) 0%, var(--ab-g-brown) 34%, var(--ab-g-mid) 100%);
+  /* the page itself: white at the top, settling into beige by the footer */
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 18%, color-mix(in srgb, var(--ab-g-beige) 45%, #fff) 60%, var(--ab-g-beige) 100%);
+}
+
+/* Composed in Hyderabad: the Charminar panel (the 14px sand ring becomes an outline so the gradient shows through) */
+.hoa-about .hoa-ab-hyd__visual {
+  background: var(--ab-grad-light);
+  box-shadow: none;
+  outline: 1px solid var(--ab-hair);
+  outline-offset: -15px;
+}
+.hoa-about .hoa-ab-hyd__note { background: var(--ab-grad-soft); }
+
+/* The name card: soft beige card, beige → brown side panel */
+.hoa-about .hoa-ab-name__card { background: var(--ab-grad-soft); }
+.hoa-about .hoa-ab-name__side { background: var(--ab-grad-light); }
+
+/* Plates, specimen niches, medallions and photo placeholders */
+.hoa-about .hoa-ab-chapter__plate,
+.hoa-about .hoa-ab-specimen::before { background: var(--ab-grad-soft); }
+.hoa-about .hoa-ab-specimen__medal,
+.hoa-about .hoa-ab-arch__frame,
+.hoa-about .hoa-ab-name__extra-img,
+.hoa-about .hoa-ab-name__photo-img { background: var(--ab-grad-light); }
+
+/* Philosophy: the band falls from beige under the heading into dark brown under the
+   tiles; the tile wall is dark brown warming to mid brown */
+.hoa-about .hoa-bd {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ab-g-beige) 45%, #fff) 0%, var(--ab-g-beige) 22%, color-mix(in srgb, var(--ab-g-beige) 55%, var(--ab-g-brown)) 62%, var(--ab-g-brown) 100%);
+}
+.hoa-about .hoa-bd__grid {
+  background: var(--ab-grad-dark);
+  box-shadow: 0 0 0 1px rgba(214, 188, 136, 0.28);
+}
+
+/* Closing card */
+.hoa-about .hoa-ab-cta { background: var(--ab-grad-dark); }
+
+/* Dark buttons: dark brown → mid brown pill (hover stays the house swap) */
+.hoa-about .hoa-btn:not(.hoa-btn--light) {
+  --hoa-btn-bg: var(--ab-g-brown);
+  --hoa-btn-fg: var(--ab-g-beige);
+  border-color: transparent;
+  background: linear-gradient(120deg, var(--ab-g-brown) 0%, var(--ab-g-mid) 100%);
+}
+.hoa-about .hoa-btn--light {
+  --hoa-btn-fg: var(--ab-g-brown);
+  border-color: transparent;
+  background: linear-gradient(120deg, #FFFFFF 0%, var(--ab-g-beige) 100%);
+}
+/* the tile notes sit on the dark brown wall now: beige type */
+.hoa-about .hoa-bd-tile__lines li { color: color-mix(in srgb, var(--ab-g-beige) 86%, var(--ab-g-brown)); }
+.hoa-about .hoa-bd-tile__lines { border-color: rgba(232, 220, 203, 0.18); }

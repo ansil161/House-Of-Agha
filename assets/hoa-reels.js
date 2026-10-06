@@ -384,6 +384,8 @@
             '<button type="button" class="hoa-reelview__sound" data-rv-sound aria-pressed="true" aria-label="Mute">' + ICON_SOUND + '</button>' +
             '<span class="hoa-reelview__count" data-rv-count></span>' +
             '<span class="hoa-reelview__bar" aria-hidden="true"><i data-rv-bar></i></span>' +
+            '<div class="hoa-reelview__photo" data-rv-photo hidden><img alt="" data-rv-photo-img>' +
+              '<button type="button" class="hoa-reelview__photo-back" data-rv-photo-back><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5V18.5L19 12L8 5.5Z" fill="currentColor"/></svg><span>Back to film</span></button></div>' +
           '</figure>' +
           '<div class="hoa-reelview__panel" data-rv-shop></div>' +
         '</div>' +
@@ -396,8 +398,171 @@
     var count = dlg.querySelector('[data-rv-count]');
     var bar = dlg.querySelector('[data-rv-bar]');
     var soundBtn = dlg.querySelector('[data-rv-sound]');
+    // Thumbnails open their photo large over the film (the film pauses); "Back to film" or a
+    // new film closes it. Each thumbnail is a button for keyboard and screen readers.
+    var photo = dlg.querySelector('[data-rv-photo]');
+    var photoImg = dlg.querySelector('[data-rv-photo-img]');
+    var photoWasPlaying = false;
+    var markShots = function () {
+      shop.querySelectorAll('.hoa-rvp__shot').forEach(function (f, i) {
+        var im = f.querySelector('img');
+        f.setAttribute('role', 'button');
+        f.setAttribute('tabindex', '0');
+        f.setAttribute('aria-label', 'View photo ' + (i + 1) + (im && im.alt ? ': ' + im.alt : ''));
+      });
+    };
+    var showPhoto = function (fig) {
+      var im = fig.querySelector('img');
+      if (!im) return;
+      if (photo.hidden) photoWasPlaying = !video.paused;
+      video.pause();
+      photoImg.src = im.currentSrc || im.src;
+      photoImg.alt = im.alt || '';
+      photo.hidden = false;
+      dlg.classList.add('is-photo');
+      shop.querySelectorAll('.hoa-rvp__shot').forEach(function (f) { f.classList.toggle('is-current', f === fig); f.setAttribute('aria-pressed', String(f === fig)); });
+    };
+    var hidePhoto = function (resume) {
+      if (photo.hidden) return;
+      photo.hidden = true;
+      dlg.classList.remove('is-photo');
+      photoImg.removeAttribute('src');
+      shop.querySelectorAll('.hoa-rvp__shot').forEach(function (f) { f.classList.remove('is-current'); f.setAttribute('aria-pressed', 'false'); });
+      if (resume && photoWasPlaying) play();
+    };
     var toggle = dlg.querySelector('[data-rv-toggle]');
     var v = { dlg: dlg, list: [], index: 0, root: null, opener: null, muted: false };
+
+    // Preview fallback for the product panel: Shopify renders the description and the notes
+    // (custom.*_notes metafields) in the Liquid; without them, fill both from the local catalogue
+    // (AGHA_PRODUCTS in assets/theme.js) and window.AGHA_DEV_NOTES, so the space under the
+    // photos holds the product's story and its notes as small ingredient icons.
+    var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    // Fragrance-note line icons (24px, 1.3 stroke), injected once as an SVG sprite so the Liquid
+    // panel (sections/hoa-reels.liquid: <use href="#hoa-ni-…">) and this fallback share one set.
+    var NOTE_ICONS = {
+      bergamot: '<circle cx="12" cy="13.5" r="6.5"/><path d="M12 7v13M5.5 13.5h13M7.4 8.9l9.2 9.2M16.6 8.9l-9.2 9.2"/><path d="M12 7c.4-2.2 1.9-3.6 4.2-4-.2 2.3-1.8 3.7-4.2 4z"/>',
+      saffron: '<path d="M12 21v-7"/><path d="M12 14c-3.6-.6-5.6-3.4-5.2-7.6 2.6.7 4.4 2.6 5.2 5.2.8-2.6 2.6-4.5 5.2-5.2.4 4.2-1.6 7-5.2 7.6z"/><path d="M12 11.5V5M10.2 11.8 8.6 4.8M13.8 11.8l1.6-7"/>',
+      pepper: '<circle cx="8.5" cy="9" r="3"/><circle cx="15.5" cy="9.5" r="3"/><circle cx="12" cy="15.5" r="3"/><path d="M8 8.2l.9.6M15 8.7l.9.6M11.5 14.7l.9.6"/>',
+      rose: '<path d="M12 4.5c3.1 0 5 2 5 4.5 0 3.2-3 5.4-5 5.4S7 12.2 7 9c0-2.5 1.9-4.5 5-4.5z"/><path d="M10.1 8.2c.7-1.1 3.1-1.2 3.8.2.6 1.2-.5 2.4-1.8 2.3"/><path d="M12 14.4V21M12 18.2c-2.4-.2-3.9-1.5-4.4-3.2 2.2 0 3.7 1 4.4 3.2z"/>',
+      jasmine: '<circle cx="12" cy="12" r="1.8"/><path d="M12 10.2c-1.6-2.2-1.6-4.6 0-6.7 1.6 2.1 1.6 4.5 0 6.7zM13.7 11.4c1.6-2.2 3.9-3 6.4-2.1-.8 2.5-2.7 4-5.4 4zM13.1 13.5c2.6.8 4.1 2.8 4 5.4-2.6.1-4.6-1.4-5.4-4zM10.9 13.5c-.8 2.6-2.8 4.1-5.4 4-.1-2.6 1.4-4.6 4-5.4zM10.3 11.4C7.6 11.4 5.7 9.9 4.9 7.4c2.5-.9 4.8-.1 6.4 2.1z"/>',
+      oud: '<path d="M5 17.5c1.8-6.2 6-10.3 14-11.5-1 7.2-5.2 11.3-11.6 13.2z"/><path d="M8.2 16.4c2.2-3.2 5-5.8 8.6-7.8M10.4 18c1.6-1.8 3.2-3.1 5.2-4.2"/>',
+      musk: '<path d="M12 3.5c3.2 4.2 5.5 7.4 5.5 10.4a5.5 5.5 0 0 1-11 0c0-3 2.3-6.2 5.5-10.4z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.4"/>',
+      amber: '<path d="M5 12.8c0-3.4 3-5.8 7-5.8s7 2.2 7 5.4-2.6 5.3-7 5.3-7-1.6-7-4.9z"/><path d="M9 11.2c.8-1 2-1.6 3.4-1.6"/><path d="M3 20.6c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0"/>',
+      sandalwood: '<path d="M4 9.5l11-4 5 3.2v6.8l-11 4-5-3.2z"/><path d="M4 9.5l5 3.2 11-4M9 12.7v6.8"/><ellipse cx="6.5" cy="14.6" rx="1.3" ry="2.1"/>',
+      iris: '<path d="M12 21v-8"/><path d="M12 13c-1.8-1.4-2.4-4.4 0-8.5 2.4 4.1 1.8 7.1 0 8.5zM12 12.5c-2-.2-5.4.4-7 3 3 1.2 5.6.3 7-3zM12 12.5c2-.2 5.4.4 7 3-3 1.2-5.6.3-7-3z"/>',
+      cardamom: '<path d="M12 3.5c3 2.4 4.4 5.4 4.4 8.6S15 18.2 12 20.5c-3-2.3-4.4-5.2-4.4-8.4S9 5.9 12 3.5z"/><path d="M12 6.5v11M9.4 9.5c1.6.6 3.6.6 5.2 0M9.4 14.6c1.6.6 3.6.6 5.2 0"/>',
+      leaf: '<path d="M5 19c0-8 5-13.5 14-14-.5 9-6 14-14 14z"/><path d="M5 19c3.5-4.5 6.5-7.5 10-10"/>'
+    };
+    var noteKey = function (name) {
+      var n = name.toLowerCase();
+      if (n.indexOf('pepper') > -1) return 'pepper';
+      if (n.indexOf('oud') > -1 || n.indexOf('agar') > -1) return 'oud';
+      if (n.indexOf('rose') > -1) return 'rose';
+      if (n.indexOf('iris') > -1 || n.indexOf('orris') > -1) return 'iris';
+      if (n.indexOf('musk') > -1) return 'musk';
+      if (n.indexOf('sandal') > -1) return 'sandalwood';
+      if (n.indexOf('amber') > -1) return 'amber';
+      if (n.indexOf('bergamot') > -1 || n.indexOf('citrus') > -1 || n.indexOf('mandarin') > -1 || n.indexOf('lemon') > -1) return 'bergamot';
+      if (n.indexOf('saffron') > -1) return 'saffron';
+      if (n.indexOf('jasmin') > -1) return 'jasmine';
+      if (n.indexOf('cardamom') > -1) return 'cardamom';
+      return 'leaf';
+    };
+    (function injectNoteSprite() {
+      if (document.getElementById('hoa-note-icons')) return;
+      var sym = Object.keys(NOTE_ICONS).map(function (k) {
+        return '<symbol id="hoa-ni-' + k + '" viewBox="0 0 24 24">' + NOTE_ICONS[k] + '</symbol>';
+      }).join('');
+      document.body.insertAdjacentHTML('beforeend', '<svg id="hoa-note-icons" width="0" height="0" style="position:absolute" aria-hidden="true">' + sym + '</svg>');
+    })();
+    var noteIcon = function (key) {
+      return '<span class="hoa-rvp__note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><use href="#hoa-ni-' + key + '"/></svg></span>';
+    };
+
+    // Offer in the panel (window.HOA, assets/hoa-commerce.js). User, 2026-10-06: only the welcome
+    // offer (no tiers / shipping), as a coupon ticket, and the price shown AFTER the offer the way the
+    // product page sets a sale price out.
+    var fillOffers = function (body, handle) {
+      var H = window.HOA;
+      if (!H || !H.ready || body.querySelector('[data-rvp-offers]')) return;
+      var p = H.product(handle);
+      if (!p) return;
+      var money = H.money;
+      var welcome = H.coupon && H.coupon.primary();
+      var pct = welcome && welcome.type === 'percent' ? +welcome.value : 0;
+      // The price after the offer, set out like the product page's price block:
+      // the price you pay, the MRP struck through, "You save", "% off", taxes.
+      var mrp = p.regularPrice;
+      var final = pct ? Math.round(p.price * (100 - pct) / 100) : p.price;
+      var save = mrp - final;
+      var off = mrp ? Math.round(save / mrp * 100) : 0;
+      var priceEl = body.querySelector('.hoa-rvp__price');
+      if (priceEl) {
+        priceEl.className = 'hoa-rvp__price hoa-rvp__price--offer';
+        priceEl.innerHTML =
+          '<span class="hoa-rvp__amount">' + money(final) + '</span>' +
+          (save > 0 ? '<s class="hoa-rvp__mrp"><span class="hoa-sr">MRP </span>' + money(mrp) + '</s>' : '') +
+          '<span class="hoa-rvp__price-note">' +
+            (save > 0 ? '<span class="hoa-rvp__savings">You save ' + money(save) + '</span><span class="hoa-rvp__pct">' + off + '% off</span>' : '') +
+            '<span class="hoa-rvp__tax">Inclusive of all taxes</span>' +
+          '</span>' +
+          (pct ? '<span class="hoa-rvp__with">Price with code <b>' + esc(welcome.code) + '</b> on your first order</span>' : '');
+      }
+      if (!welcome) return;
+      // The welcome offer as a coupon ticket: a dark stub with the discount, a perforated
+      // tear line with notches, and the code to tap (copies it and applies it to the bag).
+      var big = pct ? '<b>' + pct + '%</b><small>OFF</small>' : '<b>' + esc(welcome.code) + '</b>';
+      var html =
+        '<section class="hoa-rvp__offers" data-rvp-offers aria-label="' + esc(welcome.label) + '">' +
+          '<div class="hoa-rvp__ticket">' +
+            '<span class="hoa-rvp__stub" aria-hidden="true">' + big + '</span>' +
+            '<span class="hoa-rvp__ticket-body">' +
+              '<span class="hoa-rvp__ticket-label">' + esc(welcome.label) + '</span>' +
+              '<span class="hoa-rvp__ticket-title">' + (pct ? 'Extra ' + pct + '% off your first order' : esc(welcome.description)) + '</span>' +
+              '<button type="button" class="hoa-rvp__code" data-rvp-code="' + esc(welcome.code) + '" aria-label="Copy and apply code ' + esc(welcome.code) + '">' +
+                '<span class="hoa-rvp__code-text">' + esc(welcome.code) + '</span><em data-rvp-code-act>Tap to copy</em>' +
+              '</button>' +
+            '</span>' +
+          '</div>' +
+        '</section>';
+      var anchor = priceEl || body.querySelector('.hoa-rvp__name');
+      if (anchor) anchor.insertAdjacentHTML('afterend', html); else body.insertAdjacentHTML('afterbegin', html);
+    };
+
+    var fillPanel = function (panel) {
+      var body = panel.querySelector('[data-rvp-handle]');
+      if (!body) return;
+      var handle = body.getAttribute('data-rvp-handle');
+      fillOffers(body, handle);
+      var products = typeof AGHA_PRODUCTS !== 'undefined' ? AGHA_PRODUCTS : null;
+      var p = products && products[handle];
+      var story = window.AGHA_STORIES && window.AGHA_STORIES[handle];
+      if (!body.querySelector('.hoa-rvp__desc') && ((story && story.length) || (p && p.description))) {
+        var paras = story && story.length ? story : [p.description];
+        body.insertAdjacentHTML('beforeend',
+          '<div class="hoa-rvp__desc"><h4>Description</h4><div class="hoa-rvp__text hoa-rvp__text--story" data-rvp-text>' +
+          paras.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</div>' +
+          '<button type="button" class="hoa-rvp__more-text" data-rvp-more hidden>Read more</button></div>');
+      }
+      var mock = window.AGHA_DEV_NOTES && window.AGHA_DEV_NOTES[handle];
+      var real = p && p.notes;
+      var tiers = [
+        ['Top', real && real.top ? real.top.split(',') : mock && mock.topNotes],
+        ['Heart', real && real.heart ? real.heart.split(',') : mock && mock.heartNotes],
+        ['Base', real && real.base ? real.base.split(',') : mock && mock.baseNotes]
+      ].filter(function (t) { return t[1] && t[1].length; });
+      if (!body.querySelector('[data-rvp-notes]') && tiers.length) {
+        body.insertAdjacentHTML('beforeend', '<div class="hoa-rvp__notes" data-rvp-notes><h4>Fragrance notes</h4>' +
+          tiers.map(function (t) {
+            return '<div class="hoa-rvp__tier"><span class="hoa-rvp__tier-label">' + t[0] + '</span><ul class="hoa-rvp__note-list" role="list">' +
+              t[1].map(function (x) {
+                x = x.trim();
+                return '<li class="hoa-rvp__note">' + noteIcon(noteKey(x)) + '<span>' + esc(x) + '</span></li>';
+              }).join('') + '</ul></div>';
+          }).join('') + '</div>');
+      }
+    };
 
     var setMuted = function (m) {
       v.muted = m;
@@ -435,6 +600,9 @@
       if (tpl) shop.appendChild(tpl.content.cloneNode(true));
       else if (strip) shop.innerHTML = strip.innerHTML;
       shop.scrollTop = 0;
+      hidePhoto(false);
+      fillPanel(shop);
+      markShots();
       syncBagCount();
       var text = shop.querySelector('[data-rvp-text]');
       var more = shop.querySelector('[data-rvp-more]');
@@ -463,6 +631,22 @@
     soundBtn.addEventListener('click', function () { setMuted(!v.muted); if (video.paused) play(); });
     dlg.addEventListener('click', function (e) {
       if (e.target === dlg || e.target.closest('[data-rv-close]')) { dlg.close(); return; }
+      var shot = e.target.closest('.hoa-rvp__shot');
+      if (shot && shop.contains(shot)) {
+        if (shot.classList.contains('is-current')) hidePhoto(true); else showPhoto(shot);
+        return;
+      }
+      if (e.target.closest('[data-rv-photo-back]')) { hidePhoto(true); return; }
+      var codeBtn = e.target.closest('[data-rvp-code]');
+      if (codeBtn) {
+        var code = codeBtn.getAttribute('data-rvp-code');
+        var act = codeBtn.querySelector('[data-rvp-code-act]');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).catch(function () {});
+        if (window.HOA && window.HOA.coupon && window.HOA.coupon.apply) window.HOA.coupon.apply(code);
+        codeBtn.classList.add('is-copied');
+        if (act) act.textContent = 'Copied · applied';
+        return;
+      }
       var more = e.target.closest('[data-rvp-more]');
       if (more) {
         var box = more.closest('.hoa-rvp__desc');
@@ -481,6 +665,9 @@
       if (step) v.show(v.index + Number(step.dataset.rvStep));
     });
     dlg.addEventListener('keydown', function (e) {
+      var kshot = e.target.closest && e.target.closest('.hoa-rvp__shot');
+      if (kshot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); kshot.click(); return; }
+      if (e.key === 'Escape' && !photo.hidden) { e.preventDefault(); hidePhoto(true); return; }
       if (e.key === 'ArrowRight') { e.preventDefault(); v.show(v.index + 1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); v.show(v.index - 1); }
     });
@@ -494,6 +681,7 @@
       if (Math.abs(dx) > 50 && v.list.length > 1) v.show(v.index + (dx < 0 ? 1 : -1));
     });
     dlg.addEventListener('close', function () {
+      hidePhoto(false);
       video.pause();
       video.innerHTML = '';
       video.removeAttribute('poster');

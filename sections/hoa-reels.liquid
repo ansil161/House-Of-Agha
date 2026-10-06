@@ -283,7 +283,7 @@
                 {%- endfor -%}
               {%- endif -%}
             </div>
-            <div class="hoa-rvp__body">
+            <div class="hoa-rvp__body" data-rvp-handle="{{ r_handle }}">
               <h3 class="hoa-rvp__name">{{ shop_name }}</h3>
               <p class="hoa-rvp__price"><b>{{ shop_now }}</b>{% if shop_was != blank %}<s><span class="hoa-sr">MRP </span>{{ shop_was }}</s>{% endif %}</p>
               {%- assign shop_desc = '' -%}
@@ -294,6 +294,43 @@
                   <p class="hoa-rvp__text" data-rvp-text>{{ shop_desc }}</p>
                   <button type="button" class="hoa-rvp__more-text" data-rvp-more hidden>Read more</button>
                 </div>
+              {%- endif -%}
+              {%- comment -%}
+                Fragrance notes as small line icons (the SVG sprite #hoa-ni-* injected by assets/hoa-reels.js),
+                from the product's custom.top_notes / heart_notes / base_notes metafields.
+                Without them the preview fills this from window.AGHA_DEV_NOTES (assets/hoa-reels.js).
+              {%- endcomment -%}
+              {%- if sp != blank and sp.id != blank -%}
+                {%- assign n_top = sp.metafields.custom.top_notes.value | default: '' -%}
+                {%- assign n_heart = sp.metafields.custom.heart_notes.value | default: '' -%}
+                {%- assign n_base = sp.metafields.custom.base_notes.value | default: '' -%}
+                {%- if n_top != blank or n_heart != blank or n_base != blank -%}
+                  <div class="hoa-rvp__notes" data-rvp-notes>
+                    <h4>Fragrance notes</h4>
+                    {%- for tier in (1..3) -%}
+                      {%- case tier -%}
+                        {%- when 1 -%}{%- assign t_label = 'Top' -%}{%- assign t_list = n_top -%}
+                        {%- when 2 -%}{%- assign t_label = 'Heart' -%}{%- assign t_list = n_heart -%}
+                        {%- else -%}{%- assign t_label = 'Base' -%}{%- assign t_list = n_base -%}
+                      {%- endcase -%}
+                      {%- if t_list != blank -%}
+                        <div class="hoa-rvp__tier">
+                          <span class="hoa-rvp__tier-label">{{ t_label }}</span>
+                          <ul class="hoa-rvp__note-list" role="list">
+                            {%- assign t_items = t_list | split: ',' -%}
+                            {%- for it in t_items -%}
+                              {%- assign it_name = it | strip -%}
+                              {%- assign it_l = it_name | downcase -%}
+                              {%- assign it_key = 'leaf' -%}
+                              {%- if it_l contains 'pepper' -%}{%- assign it_key = 'pepper' -%}{%- elsif it_l contains 'oud' or it_l contains 'agar' -%}{%- assign it_key = 'oud' -%}{%- elsif it_l contains 'rose' -%}{%- assign it_key = 'rose' -%}{%- elsif it_l contains 'iris' or it_l contains 'orris' -%}{%- assign it_key = 'iris' -%}{%- elsif it_l contains 'musk' -%}{%- assign it_key = 'musk' -%}{%- elsif it_l contains 'sandal' -%}{%- assign it_key = 'sandalwood' -%}{%- elsif it_l contains 'amber' -%}{%- assign it_key = 'amber' -%}{%- elsif it_l contains 'bergamot' or it_l contains 'citrus' or it_l contains 'mandarin' or it_l contains 'lemon' -%}{%- assign it_key = 'bergamot' -%}{%- elsif it_l contains 'saffron' -%}{%- assign it_key = 'saffron' -%}{%- elsif it_l contains 'jasmin' -%}{%- assign it_key = 'jasmine' -%}{%- elsif it_l contains 'cardamom' -%}{%- assign it_key = 'cardamom' -%}{%- endif -%}
+                              <li class="hoa-rvp__note"><span class="hoa-rvp__note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><use href="#hoa-ni-{{ it_key }}"/></svg></span><span>{{ it_name }}</span></li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
               {%- endif -%}
             </div>
             <div class="hoa-rvp__foot">

@@ -1938,6 +1938,208 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-rvp__foot { padding-inline: 14px; }
 }
 
+/* Viewer panel, 2026-10-06 (user: "smaller product images, use the empty space for the
+   description and the notes as small icons"): the photos become a row of small thumbnails
+   (about 2.6 visible, still swipeable) and the space beneath holds the description and the notes. */
+.hoa-reelview .hoa-rvp__gallery { flex: none; grid-auto-columns: 36%; gap: 8px; padding: 18px 22px 6px; scroll-padding-inline: 22px; }
+.hoa-reelview .hoa-rvp__body, .hoa-reelview .hoa-rvp__foot { flex-shrink: 0; }
+.hoa-reelview .hoa-rvp__gallery:has(> :only-child) { grid-auto-columns: 46%; }
+.hoa-reelview .hoa-rvp__shot { border-radius: 10px; box-shadow: 0 0 0 1px var(--hoa-line); }
+.hoa-reelview .hoa-rvp__body { padding-top: 12px; }
+.hoa-reelview .hoa-rvp__desc { margin-top: 14px; padding-top: 14px; }
+.hoa-rvp__notes { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--hoa-line); }
+.hoa-rvp__notes h4 { margin: 0 0 12px; font-family: var(--hoa-sans); font-size: 0.86rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.hoa-rvp__tier { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: start; gap: 10px; }
+.hoa-rvp__tier + .hoa-rvp__tier { margin-top: 12px; }
+.hoa-rvp__tier-label {
+  padding-top: 12px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hoa-mute);
+}
+.hoa-rvp__note-list { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 0; padding: 0; list-style: none; }
+.hoa-rvp__note { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 66px; text-align: center; }
+.hoa-rvp__note-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #F6F1E8;
+  box-shadow: inset 0 0 0 1px rgba(160, 132, 84, 0.35);
+  color: #8A6A35;
+}
+.hoa-rvp__note-icon svg { width: 20px; height: 20px; }
+.hoa-rvp__note span { font-size: 0.68rem; line-height: 1.2; color: var(--hoa-ink-2, #4a443d); overflow-wrap: normal; }
+@media (max-width: 640px) {
+  .hoa-reelview .hoa-rvp__gallery { grid-auto-columns: 34%; padding: 12px 14px 6px; scroll-padding-inline: 14px; }
+  .hoa-rvp__tier { grid-template-columns: 46px minmax(0, 1fr); }
+  .hoa-rvp__note { width: 60px; }
+  .hoa-rvp__note-icon { width: 34px; height: 34px; }
+  .hoa-rvp__note-icon svg { width: 18px; height: 18px; }
+}
+
+/* Thumbnails are buttons: the photo opens large over the film (assets/hoa-reels.js) */
+.hoa-reelview .hoa-rvp__shot { cursor: zoom-in; transition: box-shadow 0.25s, transform 0.25s; }
+.hoa-reelview .hoa-rvp__shot:hover { transform: translateY(-2px); }
+.hoa-reelview .hoa-rvp__shot:focus-visible { outline: 2px solid var(--hoa-ink); outline-offset: 2px; }
+.hoa-reelview .hoa-rvp__shot.is-current { box-shadow: 0 0 0 2px var(--hoa-ink); cursor: zoom-out; }
+.hoa-reelview__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: #0d0b09;
+  animation: hoa-rv-photo-in 0.35s ease both;
+}
+.hoa-reelview__photo[hidden] { display: none; }
+.hoa-reelview__photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.hoa-reelview__photo-back {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #141210;
+  font: 600 0.82rem/1 var(--hoa-sans);
+  cursor: pointer;
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.6);
+}
+.hoa-reelview__photo-back svg { width: 14px; height: 14px; }
+.hoa-reelview.is-photo .hoa-reelview__toggle,
+.hoa-reelview.is-photo .hoa-reelview__sound { visibility: hidden; }
+@keyframes hoa-rv-photo-in { from { opacity: 0; transform: scale(1.02); } }
+@media (prefers-reduced-motion: reduce) { .hoa-reelview__photo { animation: none; } }
+
+/* Offer in the panel (user, 2026-10-06). 1 · the price after the offer, set out like the product
+   page's sale price: the price you pay large and bold, MRP struck, a gold "You save" tag, "% off",
+   taxes, and which code gives that price. 2 · the welcome offer as a coupon ticket. */
+.hoa-rvp__price--offer { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; row-gap: 8px; margin: 8px 0 0; }
+.hoa-rvp__amount { font-family: var(--hoa-sans); font-size: 2rem; font-weight: 700; letter-spacing: -0.035em; line-height: 1; color: var(--hoa-ink); }
+.hoa-rvp__mrp { font-size: 1rem; color: #817C75; text-decoration-thickness: 1px; }
+.hoa-rvp__price-note { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 0.74rem; }
+.hoa-rvp__savings {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background: #8C6B2E;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hoa-rvp__pct { color: #8C6B2E; font-size: 0.78rem; font-weight: 700; }
+.hoa-rvp__tax { color: #817C75; }
+.hoa-rvp__pct + .hoa-rvp__tax::before { content: "\00B7"; margin-right: 10px; color: #DCCFBF; }
+.hoa-rvp__with { flex-basis: 100%; font-size: 0.72rem; color: #2F6B47; }
+.hoa-rvp__price .hoa-rvp__with b { font-size: inherit; font-weight: 700; letter-spacing: 0.04em; }
+.hoa-rvp__price .hoa-rvp__mrp { font-size: 1rem; color: #817C75; }
+
+.hoa-rvp__offers { margin-top: 16px; }
+.hoa-rvp__ticket {
+  --stub: 92px;
+  --notch: 9px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--stub) minmax(0, 1fr);
+  min-height: 112px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #F3DC9F 0%, #DDB566 45%, #C2913F 100%);
+  color: #1d150d;
+  filter: drop-shadow(0 12px 18px rgba(120, 86, 30, 0.28));
+  /* notches cut top and bottom where the stub tears off */
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at var(--stub) 0, transparent 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--notch) at var(--stub) 100%, transparent 98%, #000) bottom / 100% 51% no-repeat;
+          mask:
+    radial-gradient(circle var(--notch) at var(--stub) 0, transparent 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--notch) at var(--stub) 100%, transparent 98%, #000) bottom / 100% 51% no-repeat;
+}
+/* the stub: espresso, the discount in gold */
+.hoa-rvp__stub {
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  border-radius: 12px 0 0 12px;
+  background: linear-gradient(160deg, #2a1f15, #120d09);
+  color: #F1D898;
+  text-align: center;
+  line-height: 1;
+}
+.hoa-rvp__stub b { font: 700 1.9rem/0.9 var(--hoa-sans); letter-spacing: -0.04em; }
+.hoa-rvp__stub small { font: 700 0.66rem/1 var(--hoa-sans); letter-spacing: 0.32em; padding-left: 0.32em; }
+.hoa-rvp__ticket-body {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 12px 14px 12px 18px;
+  border-left: 2px dashed rgba(29, 21, 13, 0.45); /* the perforation */
+}
+/* a fine pattern on the ticket face, like printed security paper */
+.hoa-rvp__ticket-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 9px);
+  pointer-events: none;
+}
+.hoa-rvp__ticket-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(29, 21, 13, 0.7); }
+.hoa-rvp__ticket-title { font-size: 0.98rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+.hoa-rvp__code {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+  padding: 7px 8px 7px 12px;
+  border: 1.5px dashed #1d150d;
+  border-radius: 8px;
+  background: rgba(255, 250, 238, 0.65);
+  color: #1d150d;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.hoa-rvp__code:hover { background: #FFFAEE; transform: translateY(-1px); }
+.hoa-rvp__code:focus-visible { outline: 2px solid #1d150d; outline-offset: 2px; }
+.hoa-rvp__code-text { font: 700 0.86rem/1 var(--hoa-sans); letter-spacing: 0.12em; }
+.hoa-rvp__code em {
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #1d150d;
+  color: #F1D898;
+  font: 600 0.6rem/1 var(--hoa-sans);
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.hoa-rvp__code.is-copied { border-style: solid; border-color: #2F6B47; background: #FFFAEE; }
+.hoa-rvp__code.is-copied em { background: #2F6B47; color: #fff; }
+@media (max-width: 640px) {
+  .hoa-rvp__ticket { --stub: 78px; min-height: 104px; }
+  .hoa-rvp__stub b { font-size: 1.6rem; }
+  .hoa-rvp__amount { font-size: 1.7rem; }
+}
+
+/* The real store description (several paragraphs): about seven lines, then "Read more" */
+.hoa-rvp__text--story { display: block; max-height: 9.6em; overflow: hidden; -webkit-line-clamp: unset; -webkit-mask: linear-gradient(180deg, #000 70%, transparent); mask: linear-gradient(180deg, #000 70%, transparent); }
+.hoa-rvp__desc.is-open .hoa-rvp__text--story { -webkit-mask: none; mask: none; }
+.hoa-rvp__text--story p { margin: 0 0 0.6em; }
+.hoa-rvp__text--story p:last-child { margin-bottom: 0; }
+.hoa-rvp__desc.is-open .hoa-rvp__text--story { max-height: none; }
+
 .hoa-reels__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
 @media (max-width: 1100px) { .hoa-reels__track { --reel-count: 3.2; } }
@@ -2051,20 +2253,21 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   background: #000000; color: var(--ft-ink);
   border-top: 0; font-family: var(--hoa-sans);
 }
-/* Hyderabad touch: the Qutub Shahi arcade frieze (snippets/hoa-qutub-pattern.liquid) runs along
-   the top edge of the footer, and the bottom edge too from 1024px. Grey, not white: it should
-   read as carved into the black (2026-10-06, replaced the white diamond jaali). On narrower
-   screens it is shorter and top-only, so the legal line needs no extra room. */
-.hoa-footer__frieze {
-  position: absolute; left: 10px; right: 10px; top: 10px;
-  --qutub-h: 16px;
-  color: var(--ft-pattern, #3A3A3A);
+/* Background: the sharp twelve-point double-outline star from the client's Deccani sheet,
+   tiled in a staggered lattice (assets/hoa-footer-star.svg, 80×80) in thin gold lines over the
+   whole footer. It fades out at the top and bottom edges so it reads as a carved ground, not a
+   print. Replaced the edge friezes 2026-10-06. Content sits above it (.hoa-wrap z-index). */
+.hoa-footer { overflow: hidden; isolation: isolate; }
+.hoa-footer::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: #B8955F; opacity: 0.32;
+  -webkit-mask: url("hoa-footer-star.svg") 50% 0 / 132px 132px repeat, linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: url("hoa-footer-star.svg") 50% 0 / 132px 132px repeat, linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  mask-composite: intersect;
 }
-.hoa-footer .hoa-footer__frieze--bottom { top: auto; bottom: 10px; display: none; }
-@media (min-width: 1024px) {
-  .hoa-footer { padding-bottom: 34px; }
-  .hoa-footer__frieze { --qutub-h: 22px; }
-  .hoa-footer .hoa-footer__frieze--bottom { display: block; }
+@media (max-width: 749px) {
+  .hoa-footer::before { -webkit-mask-size: 104px 104px, auto; mask-size: 104px 104px, auto; }
 }
 .hoa-footer a { color: inherit; text-decoration: none; }
 .hoa-footer a:focus-visible, .hoa-footer button:focus-visible { outline: 1px solid var(--ft-ink); outline-offset: 3px; }
