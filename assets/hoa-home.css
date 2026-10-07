@@ -2720,56 +2720,77 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 .hs-wm { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.12em 0.08em 0.2em; margin: -0.12em -0.08em -0.2em; }
 .hs-w { display: inline-block; }
 /* ==========================================================================
-   HERO CREST (2026-10-07): the client's 3D Agha crest (assets/agha-crest.glb,
-   assets/hoa-crest.js), top right of the hero, opposite the eyebrow and above
-   "of Agha" (the seal the bottle wears on its label). It sits in the content frame
-   so it lines up with the title's right edge. Absolutely placed: no layout space.
-   The canvas never takes pointer events; a round button over the logo does
-   (hand cursor, click/tap/Enter to spin, drag to turn it by hand).
+   3D LOGO (2026-10-07, assets/hoa-crest.js, loaded by sections/hoa-hero.liquid)
+   The client's gold Agha logo lifts off the logo printed on the hero bottle and rests
+   beside it. It is drawn on this fixed, transparent layer so it can be carried anywhere
+   on the screen: above the page, below the header (1000) and the preloader; while it is
+   held, above the header too. Only the round button over the logo takes the pointer.
    ========================================================================== */
-.hoa-hero__crest {
-  --crest: clamp(104px, 10.5vw, 168px);
-  position: absolute;
-  z-index: 2;
-  top: calc(var(--hoa-header-h) + 6px);
-  right: var(--hoa-gutter);
-  width: var(--crest);
-  aspect-ratio: 1;
+.hoa-logo3d {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
   pointer-events: none;
-  opacity: 0;
-  transform: translateY(10px) scale(0.94);
-  transition: opacity 1.4s var(--hoa-ease, ease), transform 1.6s var(--hoa-ease, ease);
 }
-.hoa-hero__crest.is-ready { opacity: 1; transform: none; }
-.hoa-hero__crest.is-failed { display: none; }
-.hoa-hero__crest canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* a soft dark shadow so the gold sits in the photo's light rather than on top of it */
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.45));
-}
-.hoa-hero__crest-hit {
+.hoa-logo3d.is-dragging { z-index: 1001; }
+.hoa-logo3d[hidden] { display: none; }
+.hoa-logo3d__canvas { display: block; width: 100%; height: 100%; }
+.hoa-logo3d__hit {
   position: absolute;
-  inset: 9%;
+  left: 0;
+  top: 0;
   margin: 0;
   padding: 0;
   border: 0;
   border-radius: 50%;
   background: transparent;
-  cursor: pointer;
-  touch-action: pan-y;        /* horizontal drags turn the logo, vertical swipes still scroll */
+  cursor: grab;
+  touch-action: none;           /* a drag that starts on the logo carries the logo */
+  user-select: none;
+  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  pointer-events: none;
+  pointer-events: auto;
+  will-change: transform;
 }
-.hoa-hero__crest.is-ready .hoa-hero__crest-hit { pointer-events: auto; }
-.hoa-hero__crest.is-dragging .hoa-hero__crest-hit { cursor: grabbing; }
-.hoa-hero__crest-hit:focus-visible { outline: 1px solid rgba(246, 241, 231, 0.7); outline-offset: 4px; }
+.hoa-logo3d.is-dragging .hoa-logo3d__hit { cursor: grabbing; }
+.hoa-logo3d__hit:focus-visible { outline: 1px solid rgba(246, 241, 231, 0.6); outline-offset: 6px; }
+/* "Drag to rotate" hint under the 3D logo: a small glass pill with a hand that sways,
+   shown once the logo has landed beside the bottle, hidden while it is carried. */
+.hoa-logo3d__hint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(246, 241, 231, 0.16);
+  background: rgba(12, 10, 8, 0.38);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: rgba(246, 241, 231, 0.86);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.hoa-logo3d__hint.is-shown { opacity: 1; }
+.hoa-logo3d__hand { display: inline-flex; color: #d8b98a; }
+.hoa-logo3d__hand svg { width: 15px; height: 15px; animation: hoa-logo3d-hand 2.4s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes hoa-logo3d-hand {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-10deg); }
+  75% { transform: translateX(3px) rotate(10deg); }
+}
 @media (max-width: 767px) {
-  /* phones: the eyebrow runs full width, so the logo drops into the pocket right of
-     "House", between the eyebrow and the right-aligned "of Agha" */
-  .hoa-hero__crest { --crest: clamp(68px, 19.5vw, 84px); top: calc(var(--hoa-header-h) + 46px); }
+  .hoa-logo3d__hint { font-size: 9.5px; padding: 5px 10px 5px 8px; gap: 6px; }
+  .hoa-logo3d__hand svg { width: 13px; height: 13px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hoa-hero__crest { transition: none; transform: none; }
+  .hoa-logo3d__hand svg { animation: none; }
 }

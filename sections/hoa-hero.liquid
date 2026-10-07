@@ -76,16 +76,23 @@
   </div>
   <div class="hoa-hero__veil" aria-hidden="true"></div>
 
+  {%- comment -%}
+    3D logo (assets/hoa-crest.js): the client's gold Agha logo lifts off the logo printed on the
+    first slide's lifted bottle, rests beside it, and can be dragged anywhere and turned. It is
+    drawn on a fixed layer the script adds; this element only carries the model URL.
+  {%- endcomment -%}
+  {%- if s.show_logo3d -%}
+    {%- liquid
+      assign logo3d_src = s.logo3d_model_url | strip
+      if logo3d_src == blank
+        assign logo3d_src = 'agha-crest.glb' | asset_url
+      endif
+    -%}
+    <div hidden data-hoa-logo3d data-src="{{ logo3d_src }}" data-hint="{{ s.logo3d_hint | default: 'Drag to rotate' | escape }}" data-label="House of Agha logo. Drag it anywhere."></div>
+    <script src="{{ 'hoa-crest.js' | asset_url }}" defer></script>
+  {%- endif -%}
+
   <div class="hoa-hero__content">
-    {%- if s.show_crest -%}
-      {%- comment -%} The House seal: the client's 3D Agha crest, top right, opposite the eyebrow (assets/hoa-crest.js) {%- endcomment -%}
-      {%- assign crest_src = s.crest_model_url | default: 'agha-crest.glb' -%}
-      {%- unless crest_src contains '/' -%}{%- assign crest_src = crest_src | asset_url -%}{%- endunless -%}
-      <div class="hoa-hero__crest" data-hoa-crest data-src="{{ crest_src }}">
-        <canvas aria-hidden="true"></canvas>
-        <button type="button" class="hoa-hero__crest-hit" data-hoa-crest-hit aria-label="Spin the House of Agha crest"></button>
-      </div>
-    {%- endif -%}
     <p class="hoa-eyebrow hoa-hero__eyebrow" data-hoa-hero-fade>{{ s.eyebrow }}</p>
 
     <h1 class="hoa-hero__title">
@@ -110,8 +117,9 @@
   "limit": 1,
   "max_blocks": 5,
   "settings": [
-    { "type": "checkbox", "id": "show_crest", "label": "3D Agha crest", "default": true, "info": "The gold Agha crest, top right. It sways slowly and tilts toward the cursor." },
-    { "type": "text", "id": "crest_model_url", "label": "Crest model (.glb) URL", "info": "Leave empty to use agha-crest.glb from theme assets. If the theme upload rejects .glb, upload it under Content > Files and paste its URL here." },
+    { "type": "checkbox", "id": "show_logo3d", "label": "3D Agha logo", "default": true, "info": "Lifts off the logo on the first slide's bottle (needs 'Lift the bottle' on) and rests beside it. Visitors can drag it anywhere; it springs back." },
+    { "type": "text", "id": "logo3d_hint", "label": "3D logo hint", "default": "Drag to rotate", "info": "Shown under the logo, with a hand icon." },
+    { "type": "text", "id": "logo3d_model_url", "label": "3D logo model (.glb) URL", "info": "Leave empty to use agha-crest.glb from the theme's assets. If the theme upload refuses .glb files, upload it under Content > Files, copy its URL and paste it here." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Eau de Parfum · Seven fragrances" },
     { "type": "text", "id": "word_one", "label": "Headline, left word", "default": "House" },
     { "type": "text", "id": "word_two", "label": "Headline, right word (serif)", "default": "of Agha" },
