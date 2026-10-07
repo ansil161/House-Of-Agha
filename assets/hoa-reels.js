@@ -749,15 +749,25 @@
     gsap.registerPlugin(ScrollTrigger);
     var cards = root.querySelectorAll('[data-hoa-reel]');
     if (!cards.length) return null;
+    // Scroll story (2026-10-07), a different entrance per reels section:
+    //   first on the page (product films): the cards start bunched to the left, small, and
+    //   fan out into their places; later ones (Instagram): they rise in an alternating wave.
+    var all = Array.prototype.slice.call(document.querySelectorAll('[data-hoa-reels]:not(.hoa-reels--product)'));
+    var fan = all.indexOf(root) === 0;
+    cards = Array.prototype.slice.call(cards);
     return gsap.context(function () {
-      gsap.set(cards, { autoAlpha: 0, y: 44 });
-      ScrollTrigger.batch(cards, {
-        start: 'top 92%',
-        once: true,
-        onEnter: function (batch) {
-          gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.09, overwrite: true });
-        }
-      });
+      var tl = gsap.timeline({ paused: true });
+      if (fan) {
+        tl.fromTo(cards, {
+          autoAlpha: 0, scale: 0.9,
+          x: function (i, el) { return -(el.offsetLeft - cards[0].offsetLeft) * 0.55; }
+        }, { autoAlpha: 1, scale: 1, x: 0, duration: 1.5, ease: 'expo.out', stagger: 0.07, clearProps: 'transform' });
+      } else {
+        tl.fromTo(cards, { autoAlpha: 0, y: function (i) { return i % 2 ? 120 : 64; } },
+          { autoAlpha: 1, y: 0, duration: 1.3, ease: 'expo.out', stagger: 0.08, clearProps: 'transform' });
+      }
+      gsap.set(cards, { autoAlpha: 0 });
+      ScrollTrigger.create({ trigger: root.querySelector('[data-hoa-reels-track]') || root, start: 'top 85%', once: true, onEnter: function () { tl.play(); } });
     }, root);
   }
 

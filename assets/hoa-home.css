@@ -2695,3 +2695,9 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 @media (prefers-reduced-motion: reduce) {
   .hero-mandala { animation: none; }
 }
+
+/* Scroll story (assets/hoa-story.js, 2026-10-07): masked heading words. The mask is padded
+   (and pulled back with negative margins) so ascenders, descenders and italic overhangs are
+   never clipped while the words rise. */
+.hs-wm { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.12em 0.08em 0.2em; margin: -0.12em -0.08em -0.2em; }
+.hs-w { display: inline-block; }

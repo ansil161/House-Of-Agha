@@ -38,11 +38,13 @@
     <link rel="preload" as="image" href="{{ 'hoa-oud-fury-portrait-sm.webp' | asset_url }}" media="(max-width: 767px)" fetchpriority="high">
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
     <script src="{{ 'hoa-home.js' | asset_url }}" defer></script>
+    <script src="{{ 'hoa-story.js' | asset_url }}" defer></script>
   {%- endif -%}
   {%- if template.name == 'page' and template.suffix == 'the-house' -%}
     {{ 'hoa-about.css' | asset_url | stylesheet_tag }}
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
     <script src="{{ 'hoa-about.js' | asset_url }}" defer></script>
+    <script src="{{ 'hoa-story.js' | asset_url }}" defer></script>
   {%- endif -%}
   {%- if template.name == 'product' -%}
     {%- comment -%} the product cards in "You may also like" are the shop's cards {%- endcomment -%}

@@ -749,13 +749,14 @@
       });
     });
 
-    // Product reveal: a restrained stagger as the grid enters.
+    // Product reveal (scroll story, 2026-10-07): the cards assemble, rising from slightly
+    // smaller and lower, a short beat apart, as the grid enters.
     if (hasGsap() && !reduceMotion) {
       ScrollTrigger.batch(cards, {
         start: 'top 90%',
         once: true,
         onEnter: function (batch) {
-          gsap.fromTo(batch, { autoAlpha: 0, y: 36 }, { autoAlpha: 1, y: 0, duration: 1.1, stagger: 0.08, ease: 'expo.out' });
+          gsap.fromTo(batch, { autoAlpha: 0, y: 64, scale: 0.92, transformOrigin: '50% 100%' }, { autoAlpha: 1, y: 0, scale: 1, duration: 1.3, stagger: 0.07, ease: 'expo.out', clearProps: 'transform' });
         }
       });
     }
