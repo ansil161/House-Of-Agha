@@ -117,6 +117,12 @@
     var interval = parseInt(hero.dataset.interval, 10) || 7000;
     var current = 0;
     var visible = true;
+    // Static hero (section setting, on by default): first slide only, no timer, no entrance,
+    // no scroll drift. The scroll-driven film below it (sections/hoa-sequence.liquid) carries the motion.
+    if (hero.hasAttribute('data-hoa-hero-static')) {
+      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === 0); });
+      return;
+    }
 
     function show(i) {
       if (!slides.length) return;
@@ -461,7 +467,8 @@
   /* fully reversible on scroll up.                                      */
   /* ------------------------------------------------------------------ */
   function heroLiftActive() {
-    return hasGsap() && !reduceMotion && !!document.querySelector('[data-hoa-hero] [data-hoa-hero-bottle]') &&
+    return hasGsap() && !reduceMotion && !document.querySelector('[data-hoa-hero-static]') &&
+      !!document.querySelector('[data-hoa-hero] [data-hoa-hero-bottle]') &&
       !!document.querySelector('[data-hoa-cf] [data-hoa-cf-card][data-index="0"]');
   }
 

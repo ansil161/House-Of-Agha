@@ -1,0 +1,45 @@
+{% comment %}
+  01b — HOUSE OF AGHA · SCROLL FILM
+  The house film (Agha Blue falls into line with the other six) played by the scroll, frame by
+  frame: a tall track with a sticky full-viewport stage; the page position inside the track picks
+  the frame, so scrolling down plays it forward and scrolling up plays it back. No autoplay, no
+  controls. Sits directly under the static hero (sections/hoa-hero.liquid, "Static hero" on).
+
+  Frames: assets/hoa-seq-001…217.webp (1600w, desktop) and hoa-seq-m-001…217.webp (960w, phones),
+  cut from the supplied film with ffmpeg (24 fps, every frame kept). Drawn into a <canvas> by
+  assets/hoa-sequence.js, which loads them coarse-to-fine once the section is near.
+  Frame 1 is a real <img> so the stage is never empty (and is what shows without JS).
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign count = s.frame_count | default: 217
+-%}
+<section class="hoa-seq" id="hoa-seq" data-hoa-seq
+  data-count="{{ count }}"
+  data-src="{{ 'hoa-seq-001.webp' | asset_url }}"
+  data-src-mobile="{{ 'hoa-seq-m-001.webp' | asset_url }}"
+  style="--seq-length: {{ s.length }}vh; --seq-length-m: {{ s.length_mobile }}vh;">
+  <div class="hoa-seq__stage">
+    <img class="hoa-seq__poster" src="{{ 'hoa-seq-001.webp' | asset_url }}" width="1600" height="900" alt="" decoding="async" loading="lazy" data-hoa-seq-poster>
+    <canvas class="hoa-seq__canvas" role="img" aria-label="{{ s.alt | escape }}" data-hoa-seq-canvas></canvas>
+  </div>
+</section>
+<script src="{{ 'hoa-sequence.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "HOA Scroll film",
+  "tag": "div",
+  "class": "hoa-seq-section",
+  "limit": 1,
+  "settings": [
+    { "type": "paragraph", "content": "Plays the house film frame by frame as the page scrolls (assets/hoa-seq-*.webp)." },
+    { "type": "range", "id": "length", "label": "Scroll length, desktop", "min": 150, "max": 500, "step": 25, "unit": "vh", "default": 325 },
+    { "type": "range", "id": "length_mobile", "label": "Scroll length, phones", "min": 150, "max": 400, "step": 25, "unit": "vh", "default": 250 },
+    { "type": "number", "id": "frame_count", "label": "Frame count", "default": 217 },
+    { "type": "text", "id": "alt", "label": "Description (screen readers)", "default": "Agha Blue falls through warm light and takes its place in line with the six other House of Agha Eaux de Parfum." }
+  ],
+  "presets": [{ "name": "HOA Scroll film" }]
+}
+{% endschema %}

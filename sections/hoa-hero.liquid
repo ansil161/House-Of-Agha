@@ -18,7 +18,7 @@
 {% endcomment %}
 
 {%- assign s = section.settings -%}
-<section class="hoa-hero" id="hoa-hero" data-hoa-hero data-interval="{{ s.interval | times: 1000 }}" aria-roledescription="carousel" aria-label="{{ s.word_one }} {{ s.word_two }}">
+<section class="hoa-hero{% if s.static %} hoa-hero--static{% endif %}" id="hoa-hero" data-hoa-hero{% if s.static %} data-hoa-hero-static{% endif %} data-interval="{{ s.interval | times: 1000 }}" aria-roledescription="carousel" aria-label="{{ s.word_one }} {{ s.word_two }}">
   <div class="hoa-hero__media" data-hoa-hero-media>
     {%- for block in section.blocks -%}
       {%- liquid
@@ -107,6 +107,7 @@
     { "type": "textarea", "id": "lede", "label": "Short line", "default": "Seven fragrances, each one a world of its own." },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore the fragrances" },
     { "type": "url", "id": "cta_url", "label": "Button link (defaults to the fragrances section)" },
+    { "type": "checkbox", "id": "static", "label": "Static hero (no motion)", "default": true, "info": "First slide only: no crossfade, entrance, scroll drift or bottle journey. Use with the HOA Scroll Film section below it." },
     { "type": "range", "id": "interval", "label": "Seconds per slide", "min": 4, "max": 12, "step": 1, "default": 7 }
   ],
   "blocks": [

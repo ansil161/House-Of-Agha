@@ -39,6 +39,12 @@
         "slide_agha_blue",
         "slide_dark_paradise"
       ],
+      "settings": {
+        "static": true
+      }
+    },
+    "scroll_film": {
+      "type": "hoa-sequence",
       "settings": {}
     },
     "the_house": {
@@ -555,6 +561,7 @@
   },
   "order": [
     "hero",
+    "scroll_film",
     "bridge",
     "signature",
     "the_house",

@@ -2534,3 +2534,45 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 /* Home: World of Agha runs straight into the Instagram reels with only a small breath between them */
 .hoa-world-section:has(+ .hoa-reels-section) .hoa-world { padding-bottom: clamp(28px, 3vw, 44px); }
 .hoa-world-section + .hoa-reels-section .hoa-reels { padding-top: clamp(28px, 3vw, 44px); }
+
+/* ==========================================================================
+   01 — HERO, static (section setting "Static hero", on): no Ken Burns either
+   01b — SCROLL FILM (sections/hoa-sequence.liquid + assets/hoa-sequence.js)
+   A tall track; the stage sticks for the length of it while the scroll picks the frame.
+   ========================================================================== */
+.hoa-hero--static .hoa-hero__slide { transition: none; }
+.hoa-hero--static .hoa-hero__slide img,
+.hoa-hero--static .hoa-hero__slide.is-active img { transform: none; transition: none; will-change: auto; }
+
+/* theme.css sets overflow-x: hidden on html AND body, which turns body into its own scroll
+   container and silently disables position: sticky (the stage would scroll away).
+   clip stops sideways scroll without that side effect (same fix as hoa-about.css / pdp.css). */
+html:has(.hoa-seq),
+html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
+.hoa-seq {
+  position: relative;
+  height: var(--seq-length, 325vh);
+  background: #a49890; /* the film's own wall tone, so nothing flashes before frame 1 paints */
+}
+.hoa-seq__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.hoa-seq__poster,
+.hoa-seq__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.hoa-seq__poster { object-fit: cover; }
+.hoa-seq.is-ready .hoa-seq__poster { visibility: hidden; }
+@media (max-width: 767px) {
+  .hoa-seq { height: var(--seq-length-m, 250vh); }
+  /* portrait: show the whole frame width, like the canvas does */
+  .hoa-seq__poster { object-fit: contain; }
+}
