@@ -128,6 +128,7 @@
   <script src="assets/hero-scroll.js" defer></script>
   <script src="assets/hoa-home.js" defer></script>
   <script src="assets/hoa-story.js" defer></script>
+  <script src="assets/hoa-crest.js" defer></script>
   <script src="assets/hoa-smart.js" defer></script>
   <script src="assets/hoa-coupon.js" defer></script>
   <link rel="stylesheet" href="assets/hoa-card.css">
@@ -381,8 +382,10 @@ setTimeout(still,4000);
         </figure></div>
   <div class="hoa-hero__veil" aria-hidden="true"></div>
 
-  <div class="hoa-hero__content">
-    <p class="hoa-eyebrow hoa-hero__eyebrow" data-hoa-hero-fade>Eau de Parfum · Seven fragrances</p>
+  <div class="hoa-hero__content"><div class="hoa-hero__crest" data-hoa-crest data-src="assets/agha-crest.glb">
+        <canvas aria-hidden="true"></canvas>
+        <button type="button" class="hoa-hero__crest-hit" data-hoa-crest-hit aria-label="Spin the House of Agha crest"></button>
+      </div><p class="hoa-eyebrow hoa-hero__eyebrow" data-hoa-hero-fade>Eau de Parfum · Seven fragrances</p>
 
     <h1 class="hoa-hero__title">
       <span class="hoa-hero__word"><span data-hoa-hero-word>House</span></span>

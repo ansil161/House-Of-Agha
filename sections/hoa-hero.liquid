@@ -77,6 +77,15 @@
   <div class="hoa-hero__veil" aria-hidden="true"></div>
 
   <div class="hoa-hero__content">
+    {%- if s.show_crest -%}
+      {%- comment -%} The House seal: the client's 3D Agha crest, top right, opposite the eyebrow (assets/hoa-crest.js) {%- endcomment -%}
+      {%- assign crest_src = s.crest_model_url | default: 'agha-crest.glb' -%}
+      {%- unless crest_src contains '/' -%}{%- assign crest_src = crest_src | asset_url -%}{%- endunless -%}
+      <div class="hoa-hero__crest" data-hoa-crest data-src="{{ crest_src }}">
+        <canvas aria-hidden="true"></canvas>
+        <button type="button" class="hoa-hero__crest-hit" data-hoa-crest-hit aria-label="Spin the House of Agha crest"></button>
+      </div>
+    {%- endif -%}
     <p class="hoa-eyebrow hoa-hero__eyebrow" data-hoa-hero-fade>{{ s.eyebrow }}</p>
 
     <h1 class="hoa-hero__title">
@@ -101,6 +110,8 @@
   "limit": 1,
   "max_blocks": 5,
   "settings": [
+    { "type": "checkbox", "id": "show_crest", "label": "3D Agha crest", "default": true, "info": "The gold Agha crest, top right. It sways slowly and tilts toward the cursor." },
+    { "type": "text", "id": "crest_model_url", "label": "Crest model (.glb) URL", "info": "Leave empty to use agha-crest.glb from theme assets. If the theme upload rejects .glb, upload it under Content > Files and paste its URL here." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Eau de Parfum · Seven fragrances" },
     { "type": "text", "id": "word_one", "label": "Headline, left word", "default": "House" },
     { "type": "text", "id": "word_two", "label": "Headline, right word (serif)", "default": "of Agha" },

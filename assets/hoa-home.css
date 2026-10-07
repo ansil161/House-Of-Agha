@@ -2719,3 +2719,57 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
    never clipped while the words rise. */
 .hs-wm { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.12em 0.08em 0.2em; margin: -0.12em -0.08em -0.2em; }
 .hs-w { display: inline-block; }
+/* ==========================================================================
+   HERO CREST (2026-10-07): the client's 3D Agha crest (assets/agha-crest.glb,
+   assets/hoa-crest.js), top right of the hero, opposite the eyebrow and above
+   "of Agha" (the seal the bottle wears on its label). It sits in the content frame
+   so it lines up with the title's right edge. Absolutely placed: no layout space.
+   The canvas never takes pointer events; a round button over the logo does
+   (hand cursor, click/tap/Enter to spin, drag to turn it by hand).
+   ========================================================================== */
+.hoa-hero__crest {
+  --crest: clamp(104px, 10.5vw, 168px);
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--hoa-header-h) + 6px);
+  right: var(--hoa-gutter);
+  width: var(--crest);
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  transition: opacity 1.4s var(--hoa-ease, ease), transform 1.6s var(--hoa-ease, ease);
+}
+.hoa-hero__crest.is-ready { opacity: 1; transform: none; }
+.hoa-hero__crest.is-failed { display: none; }
+.hoa-hero__crest canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* a soft dark shadow so the gold sits in the photo's light rather than on top of it */
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.45));
+}
+.hoa-hero__crest-hit {
+  position: absolute;
+  inset: 9%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;        /* horizontal drags turn the logo, vertical swipes still scroll */
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: none;
+}
+.hoa-hero__crest.is-ready .hoa-hero__crest-hit { pointer-events: auto; }
+.hoa-hero__crest.is-dragging .hoa-hero__crest-hit { cursor: grabbing; }
+.hoa-hero__crest-hit:focus-visible { outline: 1px solid rgba(246, 241, 231, 0.7); outline-offset: 4px; }
+@media (max-width: 767px) {
+  /* phones: the eyebrow runs full width, so the logo drops into the pocket right of
+     "House", between the eyebrow and the right-aligned "of Agha" */
+  .hoa-hero__crest { --crest: clamp(68px, 19.5vw, 84px); top: calc(var(--hoa-header-h) + 46px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-hero__crest { transition: none; transform: none; }
+}
