@@ -35,7 +35,14 @@
     <header class="hoa-collection__head">
       <div>
         <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
-        <p class="hoa-offer-note hoa-collection__note" data-hoa-reveal>{{ catalog.settings.messages.tiers }}</p>
+        {%- comment -%} The offer line doubles as the section heading (2026-10-07): sans phrase, last two words in the serif italic {%- endcomment -%}
+        {%- assign tier_words = catalog.settings.messages.tiers | strip | split: ' ' -%}
+        {%- if tier_words.size > 2 -%}
+          {%- assign tier_cut = tier_words.size | minus: 2 -%}
+          <h2 class="hoa-h2 hoa-collection__title" data-hoa-reveal>{% for w in tier_words limit: tier_cut %}{{ w }} {% endfor %}<em>{{ tier_words[tier_cut] }} {{ tier_words.last }}.</em></h2>
+        {%- elsif tier_words.size > 0 -%}
+          <h2 class="hoa-h2 hoa-collection__title" data-hoa-reveal><em>{{ catalog.settings.messages.tiers }}</em></h2>
+        {%- endif -%}
         {%- if s.show_tabs -%}
         <div class="hoa-tabs" role="tablist" aria-label="Filter by scent family" data-hoa-reveal>
           <button class="hoa-tab" role="tab" type="button" aria-selected="true" data-hoa-filter="all">{{ s.all_tab }}</button>

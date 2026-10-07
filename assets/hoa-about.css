@@ -671,7 +671,7 @@ body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.9
    A sand panel framed like a manuscript page (inset gold hairline, arcade friezes)
    holds the Charminar line drawing; the story and three notes sit on the page beside it.
    ========================================================================== */
-.hoa-ab-hyd { padding: 0 0 var(--ab-space); }
+.hoa-ab-hyd { padding: clamp(24px, 4vw, 56px) 0 var(--ab-space); }   /* top space: the Golconda line art that used to sit here was removed 2026-10-07 */
 .hoa-ab-hyd__card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
@@ -1593,6 +1593,16 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 }
 .hoa-bd-tile--1 .hoa-bd-tile__title,
 .hoa-bd-tile--6 .hoa-bd-tile__title { font-size: clamp(1.6rem, 2.4vw, 2.3rem); }
+/* The sentence's last word (legacy, passion, purpose…) in Citadel Script (user, 2026-10-07);
+   Pinyon Script stands in until the licensed webfont is added. Scripts sit small, so it is enlarged. */
+.hoa-bd-tile__script {
+  font-family: 'Citadel Script', 'Pinyon Script', 'Snell Roundhand', cursive;
+  font-variation-settings: normal;
+  font-weight: 400;
+  font-size: 1.45em;
+  line-height: 0.9;
+  letter-spacing: 0;
+}
 
 .hoa-bd-tile__lines {
   display: grid;
@@ -1742,10 +1752,16 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
   -webkit-mask-image: url("hoa-qutub-star12.svg"), url("hoa-qutub-star12.svg");
           mask-image: url("hoa-qutub-star12.svg"), url("hoa-qutub-star12.svg");
 }
+/* 2026-10-07 (user): the single star row runs along the TOP of the card (was the bottom) */
 .hoa-about .hoa-ab-cta::before {
-  -webkit-mask: url("hoa-qutub-star8.svg") space no-repeat center bottom / 26px 26px;
-          mask: url("hoa-qutub-star8.svg") space no-repeat center bottom / 26px 26px;
+  -webkit-mask: url("hoa-qutub-star8.svg") space no-repeat center top / 26px 26px;
+          mask: url("hoa-qutub-star8.svg") space no-repeat center top / 26px 26px;
 }
+/* the star row ends 50px down (24px inset + 26px); the photo arch and copy start clear of it */
+.hoa-about .hoa-ab-cta { padding-top: 70px; }
+@media (max-width: 640px) { .hoa-about .hoa-ab-cta { padding-top: 58px; } }
+/* 2026-10-07 (user): no star12 tile pattern around the closing photo's arch */
+.hoa-about .hoa-ab-cta__media::before { content: none; }
 .hoa-about .hoa-ab-cta__orn .hoa-qutub--arch { width: 18px; height: 21px; }
 @media (max-width: 640px) {
   .hoa-about .hoa-ab-rule--cross .hoa-qutub--cross { height: 20px; --qutub-tile: 20px; }
@@ -1926,7 +1942,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-ab-motif--philo {
   position: absolute;
   z-index: -1;
-  top: clamp(-30px, -1vw, 0px);
+  top: clamp(16px, 2.4vw, 40px);  /* inside the section: it clips overflow, so a negative top cut the ring */
   right: max(var(--hoa-gutter, 24px), calc((100vw - 1320px) / 2));
   width: clamp(220px, 25vw, 360px);
   opacity: 0.7;
@@ -1944,7 +1960,7 @@ body.hoa-about { --ab-r: 6px; --ab-r-in: 4px; }
 .hoa-ab-cta__copy { position: relative; z-index: 1; }
 @media (max-width: 899px) {
   .hoa-ab-motif--lede { display: none; }
-  .hoa-ab-motif--philo { width: 150px; top: -10px; opacity: 0.45; }
+  .hoa-ab-motif--philo { width: 150px; top: 12px; opacity: 0.45; }
   .hoa-ab-motif--cta { width: 90%; left: -30%; bottom: auto; top: -14%; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -2064,7 +2080,7 @@ body.hoa-about {
 .hoa-hc__canvas {
   --p: calc(min(100cqw, 1680px) / 1536);
   --v: max(calc(0.8 * var(--p)), min(var(--p), calc((100svh - var(--hoa-header-h, 76px)) / 990)));
-  --H: calc(990 * var(--v));
+  --H: calc(1150 * var(--v));   /* 2026-10-07: was 990; +160 so the Qutub Shahi miniature can fill the column width */
   --u: var(--v);
   position: relative;
   width: min(100cqw, 1680px);
@@ -2077,7 +2093,7 @@ body.hoa-about {
   position: absolute;
   left: calc(87 * var(--p));
   top: calc(44 * var(--v));
-  height: calc(812 * var(--v));
+  height: calc(1006 * var(--v));   /* 2026-10-07: was 812; room for the full-width miniature, clear of the foot label (1072v) */
   width: calc(500 * var(--p));
   display: flex;
   flex-direction: column;
@@ -2142,12 +2158,12 @@ body.hoa-about {
   display: flex;
   align-items: flex-end;
   gap: calc(18 * var(--v));
-  margin: calc(30 * var(--v)) 0 0;
+  margin: calc(24 * var(--v)) 0 0;
 }
 .hoa-hc__mini-frame {
   position: relative;
   height: 100%;
-  max-height: calc(430 * var(--v));
+  max-height: calc(560 * var(--v));   /* 2026-10-07 (user: bigger): was 430v */
   min-height: 96px;
   aspect-ratio: 654 / 820;
   padding: calc(5 * var(--v));
@@ -2234,7 +2250,7 @@ body.hoa-about {
 .hoa-hc__stage {
   position: absolute;
   left: calc(974 * var(--p) - 497 * var(--u));
-  top: calc(837 * var(--v) - 537 * var(--u));
+  top: calc(957 * var(--v) - 537 * var(--u));   /* 2026-10-07: was 837v; follows the taller canvas so the cards stay near the foot row */
   width: calc(1002 * var(--u));
   height: calc(560 * var(--u));
 }
@@ -2391,20 +2407,6 @@ body.hoa-about {
   line-height: 1.42;
   opacity: 0.92;
 }
-.hoa-hc-card__arrow {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: max(19px, calc(23 * var(--u)));
-  height: max(19px, calc(23 * var(--u)));
-  margin-top: calc(26 * var(--u));
-  border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
-  border-radius: 50%;
-  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-}
-.hoa-hc-card__arrow svg { width: 58%; height: 58%; stroke-width: 1.2; }
-.hoa-hc-card--arrow-foot .hoa-hc-card__arrow { position: absolute; left: calc(22 * var(--u)); bottom: calc(30 * var(--u)); margin: 0; }
-
 @media (hover: hover) and (pointer: fine) {
   .hoa-hc-card:hover {
     transform: rotateY(var(--ry, 0deg)) translateY(-8px);
@@ -2413,17 +2415,15 @@ body.hoa-about {
       0 1px 3px rgba(52, 36, 22, 0.1);
   }
   .hoa-hc-card:hover .hoa-hc-card__media img { transform: scale(1.045); }
-  .hoa-hc-card:hover .hoa-hc-card__arrow { background: #F4EDE2; border-color: #F4EDE2; color: #2A231C; }
-  .hoa-hc-card--light:hover .hoa-hc-card__arrow { background: var(--hc-ink); border-color: var(--hc-ink); color: #F4EDE2; }
 }
 .hoa-hc-card:focus-visible { outline: 1px solid var(--hc-ink); outline-offset: 4px; }
 
 /* Foot: OUR HERITAGE, a long hairline, the closing line, on the copy's left edge */
-.hoa-hc__foot-label { position: absolute; left: calc(87 * var(--p)); top: calc(912 * var(--v)); }
+.hoa-hc__foot-label { position: absolute; left: calc(87 * var(--p)); top: calc(1072 * var(--v)); }
 .hoa-hc__foot-line {
   position: absolute;
   left: calc(235 * var(--p));
-  top: calc(917 * var(--v));
+  top: calc(1077 * var(--v));
   width: calc(687 * var(--p));
   height: 1px;
   background: var(--hc-hair);
@@ -2432,7 +2432,7 @@ body.hoa-about {
 .hoa-hc__foot-text {
   position: absolute;
   left: calc(964 * var(--p));
-  top: calc(893 * var(--v));
+  top: calc(1053 * var(--v));
   width: calc(380 * var(--p));
   margin: 0;
   font-size: max(11px, calc(12.6 * var(--v)));
@@ -2459,7 +2459,7 @@ body.hoa-about {
   .hoa-hc__text { max-width: 560px; font-size: 16px; }
   .hoa-hc__text-2 { max-width: 460px; font-size: 13.5px; }
   .hoa-hc__mini { flex: none; margin-top: 32px; }
-  .hoa-hc__mini-frame { height: 340px; max-height: none; padding: 5px; }
+  .hoa-hc__mini-frame { height: 440px; max-height: none; padding: 5px; }
   .hoa-hc__mini-cap { font-size: 14px; max-width: 170px; }
   .hoa-hc__lede { width: auto; max-width: 440px; margin-top: 36px; padding-left: 22px; font-size: 17px; }
   .hoa-hc__lede-mark { height: 100%; top: 4px; }
@@ -2476,7 +2476,7 @@ body.hoa-about {
   .hoa-hc__title { font-size: clamp(2.5rem, 11.6vw, 3.3rem); line-height: 0.98; }
   .hoa-hc__text { font-size: 15.5px; line-height: 1.7; }
   .hoa-hc__rule--2 { margin-top: 32px; }
-  .hoa-hc__mini-frame { height: 280px; }
+  .hoa-hc__mini-frame { height: 360px; }
   .hoa-hc__lede { font-size: 16.5px; }
   .hoa-hc__stage { --u: 1.08px; width: auto; height: auto; margin-top: 36px; }
   .hoa-hc__stage > * { top: auto; }
@@ -2516,7 +2516,7 @@ body.hoa-about {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hoa-hc-card, .hoa-hc-card__media img, .hoa-hc-card__arrow { transition: none; }
+  .hoa-hc-card, .hoa-hc-card__media img { transition: none; }
 }
 
 /* Highlighted names in About copy (user, 2026-10-07): Muhammad Quli Qutub Shah, Charminar in 1591,
@@ -2530,4 +2530,50 @@ body.hoa-about {
   letter-spacing: -0.005em;
   color: inherit;
   text-decoration: none;
+}
+
+/* Qutub Shahi miniature, full size (2026-10-07, user: "use the space fully for the photo").
+   The painting already has its own floral border, so the round-top crop frame is dropped:
+   the whole picture is shown uncropped (contain), as big as the left column allows,
+   width first, and the caption sits underneath. */
+.hoa-hc__mini {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: calc(10 * var(--v));
+}
+.hoa-hc__mini-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  min-height: 160px;
+  aspect-ratio: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.hoa-hc__mini-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+}
+.hoa-hc__mini-img img {
+  position: absolute;
+  inset: 0;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: none;
+  box-shadow: none;
+}
+.hoa-hc__mini-cap { margin: 0; max-width: none; }
+@media (max-width: 1199px) {
+  .hoa-hc__mini-frame { flex: none; height: auto; aspect-ratio: 654 / 686; max-width: 640px; }
+  .hoa-hc__mini-img img { position: static; }
+}
+@media (max-width: 699px) {
+  .hoa-hc__mini-frame { height: auto; max-width: none; }
 }

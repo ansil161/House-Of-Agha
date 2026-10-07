@@ -430,6 +430,32 @@
       shop.querySelectorAll('.hoa-rvp__shot').forEach(function (f) { f.classList.remove('is-current'); f.setAttribute('aria-pressed', 'false'); });
       if (resume && photoWasPlaying) play();
     };
+    // Auto-scrolling photo row (2026-10-07): steps one thumbnail every 2.6 s, wraps to the start
+    // at the end. Holds while the pointer is over it, a finger is on it, focus is inside it or a
+    // photo is open large; never runs with reduced motion or when there is nothing to scroll.
+    var galTimer = null;
+    var galHold = false;
+    var stopGallery = function () { if (galTimer) { clearInterval(galTimer); galTimer = null; } };
+    var startGallery = function () {
+      stopGallery();
+      if (reduceMotion) return;
+      var gal = shop.querySelector('[data-rvp-gallery]');
+      if (!gal) return;
+      galHold = false;
+      ['pointerenter', 'touchstart', 'focusin'].forEach(function (t) { gal.addEventListener(t, function () { galHold = true; }, { passive: true }); });
+      gal.addEventListener('pointerleave', function () { galHold = false; });
+      gal.addEventListener('focusout', function () { galHold = false; });
+      gal.addEventListener('touchend', function () { setTimeout(function () { galHold = false; }, 4000); }, { passive: true });
+      galTimer = setInterval(function () {
+        if (galHold || !photo.hidden || !dlg.open || document.hidden) return;
+        var max = gal.scrollWidth - gal.clientWidth;
+        if (max < 4) return;
+        var first = gal.querySelector('.hoa-rvp__shot');
+        var step = first ? first.getBoundingClientRect().width + 8 : gal.clientWidth * 0.5;
+        var next = gal.scrollLeft >= max - 4 ? 0 : Math.min(max, gal.scrollLeft + step);
+        gal.scrollTo({ left: next, behavior: 'smooth' });
+      }, 2600);
+    };
     var toggle = dlg.querySelector('[data-rv-toggle]');
     var v = { dlg: dlg, list: [], index: 0, root: null, opener: null, muted: false };
 
@@ -603,6 +629,7 @@
       hidePhoto(false);
       fillPanel(shop);
       markShots();
+      startGallery();
       syncBagCount();
       var text = shop.querySelector('[data-rvp-text]');
       var more = shop.querySelector('[data-rvp-more]');
@@ -681,6 +708,7 @@
       if (Math.abs(dx) > 50 && v.list.length > 1) v.show(v.index + (dx < 0 ? 1 : -1));
     });
     dlg.addEventListener('close', function () {
+      stopGallery();
       hidePhoto(false);
       video.pause();
       video.innerHTML = '';

@@ -94,20 +94,21 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   letter-spacing: -0.005em;
 }
 /* Mixed headings (user, 2026-10-07): modern sans for the phrase, the last word(s) in the
-   elegant serif italic. Discover, World, Reels/films and Testimonials only. */
-.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices) .hoa-h2 {
+   elegant serif italic. Discover, World, Reels/films, Testimonials and Collection only. */
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices, .hoa-collection) .hoa-h2 {
   font-family: var(--hoa-sans);
   font-weight: 500;
   letter-spacing: -0.045em;
   line-height: 1.02;
 }
-.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices) .hoa-h2 em {
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices, .hoa-collection) .hoa-h2 em {
   font-family: var(--font-didot-italic);
   font-style: italic;
   font-weight: 400;
   font-size: 1.08em;           /* hairline italic reads small next to the sans, so lift it slightly */
   letter-spacing: -0.01em;
   padding-right: 0.04em;       /* keep the italic overhang off the next character / edge */
+  color: #6B5232;              /* same brown as "carry close" in The House statement (user, 2026-10-07) */
 }
 .hoa-lede {
   font-size: clamp(1rem, 1.15vw, 1.12rem);
@@ -562,6 +563,12 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 @media (max-width: 767px) {
   .hoa-bridge { height: clamp(160px, 26vh, 280px); }
 }
+/* Scroll film → Signature (user, 2026-10-07: "only a small space"). With the scroll film in
+   place the hero is static and no bottle travels, so the bridge is only a small beat, and the
+   carousel's own top padding is trimmed to match. */
+.hoa-seq-section + .hoa-bridge-section .hoa-bridge { height: clamp(12px, 1.6vw, 24px); }
+.hoa-seq-section + .hoa-bridge-section .hoa-bridge__beam { display: none; }
+.hoa-seq-section + .hoa-bridge-section + .hoa-frag-section .hoa-cf { padding-top: clamp(28px, 3vw, 48px); }
 
 /* ==========================================================================
    02 — THE HOUSE (2026-10-06 editorial split)
@@ -2002,6 +2009,11 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reelview .hoa-rvp__shot:hover { transform: translateY(-2px); }
 .hoa-reelview .hoa-rvp__shot:focus-visible { outline: 2px solid var(--hoa-ink); outline-offset: 2px; }
 .hoa-reelview .hoa-rvp__shot.is-current { box-shadow: 0 0 0 2px var(--hoa-ink); cursor: zoom-out; }
+/* 2026-10-07 (user): thumbnails a little larger (36% → 44%, phones 34% → 40%), more photos per
+   product, and the row drifts on its own (assets/hoa-reels.js, autoGallery); it pauses on hover,
+   touch, focus or while a photo is open. */
+.hoa-reelview .hoa-rvp__gallery { grid-auto-columns: 44%; scroll-snap-type: x proximity; }
+@media (max-width: 640px) { .hoa-reelview .hoa-rvp__gallery { grid-auto-columns: 40%; } }
 .hoa-reelview__photo {
   position: absolute;
   inset: 0;
@@ -2491,45 +2503,12 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-voices::before { opacity: 0.14; }
 }
 
-/* Follow @aghaperfumes: water button. The pill holds a little water that waves at its foot;
-   on hover/focus the water rises and fills it, the label turns ivory. transform-only motion. */
-.hoa-reels__follow {
-  position: relative; isolation: isolate; overflow: hidden;
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 52px; padding: 0 28px; border-radius: 999px;
-  border: 1px solid var(--hoa-ink); color: var(--hoa-ink); background: transparent;
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);   /* keeps the clip round in Safari */
-  transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hoa-reels__follow:active { transform: scale(0.98); }
-.hoa-reels__follow:focus-visible { outline: 2px solid var(--hoa-brass); outline-offset: 3px; }
-.hoa-reels__follow-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 10px; }
-.hoa-reels__follow-label svg { width: 18px; height: 18px; flex: none; }
-.hoa-reels__water {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 100%; z-index: 0; pointer-events: none;
-  transform: translateY(64%);   /* resting level: a shallow pool along the foot, crest visible */
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hoa-reels__water::after {   /* the body of water under the wave crest */
-  content: ''; position: absolute; left: 0; right: 0; top: 10px; bottom: -2px; background: var(--hoa-ink);
-}
-.hoa-reels__wave {
-  position: absolute; left: 0; top: 0; width: 200%; height: 12px; fill: var(--hoa-ink);
-  animation: hoa-wave 3.2s linear infinite;
-}
-.hoa-reels__wave--back { opacity: 0.3; top: -4px; animation-duration: 5s; animation-direction: reverse; }
-@keyframes hoa-wave { to { transform: translateX(-50%); } }
-.hoa-reels__follow:hover, .hoa-reels__follow:focus-visible { color: var(--hoa-ivory, #F6F1E7); }
-.hoa-reels__follow:hover .hoa-reels__water,
-.hoa-reels__follow:focus-visible .hoa-reels__water { transform: translateY(-12px); }
-@media (hover: none) {
-  .hoa-reels__water { transform: translateY(56%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hoa-reels__wave { animation: none; }
-  .hoa-reels__water { transition: none; }
-}
+/* Follow @aghaperfumes: the house .hoa-btn (2026-10-07; the water pill is gone), with the
+   Instagram glyph in the icon circle. The glyph slides out/in on hover like the arrow does. */
+.hoa-reels__follow-icon svg { width: 16px; height: 16px; }
+.hoa-btn:hover .hoa-reels__follow-icon svg:first-child { transform: translate(0, -150%); }
+.hoa-reels__follow-icon svg + svg { transform: translate(0, 150%); }
+
 
 /* Home: World of Agha runs straight into the Instagram reels with only a small breath between them */
 .hoa-world-section:has(+ .hoa-reels-section) .hoa-world { padding-bottom: clamp(28px, 3vw, 44px); }

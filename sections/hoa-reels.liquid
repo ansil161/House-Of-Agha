@@ -271,7 +271,7 @@
           <template data-hoa-reel-panel>
             <div class="hoa-rvp__gallery" data-rvp-gallery>
               {%- if sp != blank and sp.id != blank and sp.images.size > 0 -%}
-                {%- for im in sp.images limit: 6 -%}
+                {%- for im in sp.images limit: 10 -%}
                   <figure class="hoa-rvp__shot"><img src="{{ im | image_url: width: 800 }}" alt="{{ im.alt | default: shop_name | escape }}" width="{{ im.width }}" height="{{ im.height }}" decoding="async"></figure>
                 {%- endfor -%}
               {%- else -%}
@@ -279,6 +279,9 @@
                   {%- if c.handle == r_handle -%}
                     <figure class="hoa-rvp__shot"><img src="{{ c.imageMain }}" alt="{{ c.name | escape }}" width="1200" height="1500" decoding="async"></figure>
                     <figure class="hoa-rvp__shot"><img src="{{ c.imageMood }}" alt="{{ c.name | escape }} campaign photograph" width="1200" height="1500" decoding="async"></figure>
+                    {%- for g in c.gallery -%}
+                      <figure class="hoa-rvp__shot"><img src="{{ g }}" alt="{{ c.name | escape }} photograph {{ forloop.index | plus: 2 }}" width="1200" height="1500" decoding="async"></figure>
+                    {%- endfor -%}
                   {%- endif -%}
                 {%- endfor -%}
               {%- endif -%}
@@ -364,13 +367,10 @@
       </div>
       <div class="hoa-reels__nav" data-hoa-reveal>
         {%- unless single -%}
-          {%- comment -%} Water button: a wave idles at the foot of the pill and rises to fill it on hover (hoa-home.css) {%- endcomment -%}
-          <a class="hoa-reels__follow" href="{{ ig_url }}" target="_blank" rel="noopener">
-            <span class="hoa-reels__water" aria-hidden="true">
-              <svg class="hoa-reels__wave hoa-reels__wave--back" viewBox="0 0 240 24" preserveAspectRatio="none"><path d="M0 12 C20 4 40 4 60 12 S100 20 120 12 S160 4 180 12 S220 20 240 12 V24 H0Z"/></svg>
-              <svg class="hoa-reels__wave" viewBox="0 0 240 24" preserveAspectRatio="none"><path d="M0 12 C20 4 40 4 60 12 S100 20 120 12 S160 4 180 12 S220 20 240 12 V24 H0Z"/></svg>
-            </span>
-            <span class="hoa-reels__follow-label">{{ ig_glyph }}{{ s.follow_label | default: 'Follow' }} @{{ ig_handle }}</span>
+          {%- comment -%} The house button (.hoa-btn, same as every other CTA), the Instagram glyph in its icon circle (2026-10-07; replaced the water pill) {%- endcomment -%}
+          <a class="hoa-btn hoa-reels__follow" href="{{ ig_url }}" target="_blank" rel="noopener">
+            <span>{{ s.follow_label | default: 'Follow' }} @{{ ig_handle }}</span>
+            <span class="hoa-btn__icon hoa-reels__follow-icon" aria-hidden="true">{{ ig_glyph }}{{ ig_glyph }}</span>
           </a>
         {%- endunless -%}
         <div class="hoa-reels__arrows">

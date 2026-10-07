@@ -12,6 +12,10 @@
   Styles: the "PHILOSOPHY · DECCAN ORNAMENT" block in assets/hoa-about.css. Motion: assets/hoa-about.js.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
+{%- comment -%} The LAST WORD of each tile sentence (legacy, passion…) in Citadel Script (user, 2026-10-07). Citadel Script is a licensed
+  Monotype face: it is used where installed / once its webfont is added to the theme; until then the
+  closest free formal script, Pinyon Script (Google Fonts), stands in. {%- endcomment -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap">
 <section class="hoa-ab-philo hoa-bd" id="philosophy" aria-labelledby="hoa-bd-title">
   {%- render 'hoa-ab-motif', variant: 'star8', class: 'hoa-ab-motif--philo' -%}
   <div class="hoa-wrap">
@@ -30,11 +34,7 @@
           {%- when 6 -%}{%- assign img_sizes = '(min-width: 1024px) 50vw, 100vw' -%}
           {%- else -%}{%- assign img_sizes = '(min-width: 1024px) 30vw, (min-width: 641px) 50vw, 100vw' -%}
         {%- endcase -%}
-        {%- if n == 4 -%}
-          <div class="hoa-bd__divider" aria-hidden="true" data-hoa-bd-divider>
-            <svg viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M6 12l2.2-2.2L10.4 12l-2.2 2.2zM109.6 12l2.2-2.2L114 12l-2.2 2.2z"/><path pathLength="1" d="M47.6 12c-3.4 0-4.8-4-8.6-4-3.4 0-4.6 2.8-3.4 4.6 1 1.4 3.2 1 3.6-.6M72.4 12c3.4 0 4.8-4 8.6-4 3.4 0 4.6 2.8 3.4 4.6-1 1.4-3.2 1-3.6-.6"/><path pathLength="1" d="M60 6.4c-1.4 1.8-1.4 4 0 5.6 1.4-1.6 1.4-3.8 0-5.6zM60 17.6c1.4-1.8 1.4-4 0-5.6-1.4 1.6-1.4 3.8 0 5.6zM54.4 12c1.8-1.4 4-1.4 5.6 0-1.6 1.4-3.8 1.4-5.6 0zM65.6 12c-1.8 1.4-4 1.4-5.6 0 1.6-1.4 3.8-1.4 5.6 0z"/><path pathLength="1" d="M14 12h20M86 12h20" stroke-opacity=".6"/><circle cx="60" cy="12" r="1.1" fill="#C6A15B" stroke="none"/></svg>
-          </div>
-        {%- endif -%}
+        {%- comment -%} the ornamental divider between the two rows was removed (user, 2026-10-07) {%- endcomment -%}
         {%- assign framed = false -%}
         {%- if n == 1 or n == 4 or n == 6 -%}{%- assign framed = true -%}{%- endif -%}
         <article class="hoa-bd-tile hoa-bd-tile--{{ n }}" data-hoa-bd-tile {{ block.shopify_attributes }}>
@@ -62,7 +62,12 @@
                 <span class="hoa-bd-tile__rule"></span>
                 {%- if b.word != blank -%}<span class="hoa-bd-tile__word">{{ b.word }}</span>{%- endif -%}
               </span>
-              <h3 class="hoa-bd-tile__title"><span class="hoa-bd-tile__n hoa-sr">{{ n }}. </span>{{ b.title }}</h3>
+              {%- liquid
+                assign words = b.title | split: ' '
+                assign last_word = words | last
+                assign lead_size = words.size | minus: 1
+              -%}
+              <h3 class="hoa-bd-tile__title"><span class="hoa-bd-tile__n hoa-sr">{{ n }}. </span>{% for w in words limit: lead_size %}{{ w }} {% endfor %}<span class="hoa-bd-tile__script">{{ last_word }}</span></h3>
             </figcaption>
           </figure>
           </div>

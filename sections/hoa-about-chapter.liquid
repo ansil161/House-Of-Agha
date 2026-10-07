@@ -97,7 +97,6 @@
                 <span class="hoa-hc-card__no">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
                 <span class="hoa-hc-card__title">{{ b.title }}</span>
                 {%- if b.text != blank -%}<span class="hoa-hc-card__text">{{ b.text | newline_to_br }}</span>{%- endif -%}
-                <span class="hoa-hc-card__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12h10M13 8l4 4-4 4"/></svg></span>
               </span>
             </{{ tag }}>
           </li>
