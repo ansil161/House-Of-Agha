@@ -57,7 +57,7 @@
   .hoa-offer-marquee { overflow-x: auto; }
   .hoa-offer-marquee__track { animation: none; }
 }
-.hoa-collection__note { margin: 6px 0 18px; }
+.hoa-collection__note { margin: 6px 0 18px; font-size: clamp(0.88rem, 0.8rem + 0.3vw, 1rem); }
 
 /* ---------------------------------------------------------------- product page */
 .pdp-chip--best { color: #8a6a37; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }

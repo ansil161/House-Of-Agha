@@ -1992,15 +1992,12 @@ body.hoa-about {
 .hoa-about .hoa-ab-name__extra-img,
 .hoa-about .hoa-ab-name__photo-img { background: var(--ab-grad-light); }
 
-/* Philosophy: the band falls from beige under the heading into dark brown under the
-   tiles; the tile wall is dark brown warming to mid brown */
+/* Philosophy (2026-10-07, user): no dark brown wall any more. The tiles sit straight on the
+   warm beige ground of the page, so the section reads as part of the page, not a box. */
 .hoa-about .hoa-bd {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ab-g-beige) 45%, #fff) 0%, var(--ab-g-beige) 22%, color-mix(in srgb, var(--ab-g-beige) 55%, var(--ab-g-brown)) 62%, var(--ab-g-brown) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ab-g-beige) 35%, #fff) 0%, color-mix(in srgb, var(--ab-g-beige) 70%, #fff) 100%);
 }
-.hoa-about .hoa-bd__grid {
-  background: var(--ab-grad-dark);
-  box-shadow: 0 0 0 1px rgba(214, 188, 136, 0.28);
-}
+.hoa-about .hoa-bd__grid { background: none; box-shadow: none; }
 
 /* Closing card */
 .hoa-about .hoa-ab-cta { background: var(--ab-grad-dark); }
@@ -2017,9 +2014,22 @@ body.hoa-about {
   border-color: transparent;
   background: linear-gradient(120deg, #FFFFFF 0%, var(--ab-g-beige) 100%);
 }
-/* the tile notes sit on the dark brown wall now: beige type */
-.hoa-about .hoa-bd-tile__lines li { color: color-mix(in srgb, var(--ab-g-beige) 86%, var(--ab-g-brown)); }
-.hoa-about .hoa-bd-tile__lines { border-color: rgba(232, 220, 203, 0.18); }
+/* tile notes: dark ink on beige, a gold hairline above */
+.hoa-about .hoa-bd-tile__lines li { color: var(--bd-ink); }
+.hoa-about .hoa-bd-tile__lines { border-color: rgba(198, 161, 91, 0.38); }
+
+/* Editorial hang (2026-10-07): a mix of large and small plates, each row on its own rhythm.
+   Row 1: 01 large portrait (6) · 02 dropped (3) · 03 raised (3)
+   Row 2: 04 square (4) · 05 dropped small (3) · 06 wide landscape (5)  */
+@media (min-width: 1024px) {
+  .hoa-about .hoa-bd__grid { column-gap: clamp(24px, 2.8vw, 48px); row-gap: clamp(56px, 5.6vw, 96px); }
+  .hoa-about .hoa-bd-tile--1 { grid-column: 1 / span 6; margin-top: 0; }
+  .hoa-about .hoa-bd-tile--2 { grid-column: 7 / span 3; margin-top: clamp(96px, 11vw, 200px); }
+  .hoa-about .hoa-bd-tile--3 { grid-column: 10 / span 3; margin-top: clamp(24px, 3vw, 48px); }
+  .hoa-about .hoa-bd-tile--4 { grid-column: 1 / span 4; margin-top: 0; }
+  .hoa-about .hoa-bd-tile--5 { grid-column: 5 / span 3; margin-top: clamp(72px, 8vw, 140px); }
+  .hoa-about .hoa-bd-tile--6 { grid-column: 8 / span 5; margin-top: clamp(24px, 3vw, 48px); }
+}
 
 /* ==========================================================================
    HERITAGE CARD COLLECTION (sections/hoa-about-chapter.liquid, 2026-10-06)
@@ -2505,4 +2515,17 @@ body.hoa-about {
 
 @media (prefers-reduced-motion: reduce) {
   .hoa-hc-card, .hoa-hc-card__media img, .hoa-hc-card__arrow { transition: none; }
+}
+
+/* Highlighted names in About copy (user, 2026-10-07): Muhammad Quli Qutub Shah, Charminar in 1591,
+   Qutub Shahi culture. Serif bold italic in the text's own colour, no underline (user, 2026-10-07). */
+.hoa-ab-hl {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 650;
+  font-variation-settings: 'opsz' 24;
+  font-size: 1.06em;
+  letter-spacing: -0.005em;
+  color: inherit;
+  text-decoration: none;
 }

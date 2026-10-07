@@ -176,8 +176,8 @@
         "col_gift"
       ],
       "settings": {
-        "heading": "Three ways",
-        "heading_serif": "into the House.",
+        "heading": "Three ways into the",
+        "heading_serif": "House.",
         "text": "Perfume, attar or a gift set. Start with what you want to wear, or the person you are buying for."
       }
     },
@@ -332,8 +332,8 @@
       ],
       "settings": {
         "eyebrow": "",
-        "heading": "Follow us",
-        "heading_serif": "on Instagram.",
+        "heading": "Follow us on",
+        "heading_serif": "Instagram.",
         "subtext": "<p>Wear it, share it, let it linger. Show us how House of Agha becomes part of your story by tagging <a href=\"https://www.instagram.com/aghaperfumes/\" target=\"_blank\">@aghaperfumes</a>, and your moment may take its place here.</p>",
         "elfsight_app_id": ""
       }
@@ -547,8 +547,8 @@
       ],
       "settings": {
         "eyebrow": "Product film",
-        "heading": "See it",
-        "heading_serif": "in motion.",
+        "heading": "See it in",
+        "heading_serif": "motion.",
         "only_current_product": true
       }
     }

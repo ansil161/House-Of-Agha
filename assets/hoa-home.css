@@ -93,6 +93,22 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   font-weight: 400;
   letter-spacing: -0.005em;
 }
+/* Mixed headings (user, 2026-10-07): modern sans for the phrase, the last word(s) in the
+   elegant serif italic. Discover, World, Reels/films and Testimonials only. */
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices) .hoa-h2 {
+  font-family: var(--hoa-sans);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices) .hoa-h2 em {
+  font-family: var(--font-didot-italic);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.08em;           /* hairline italic reads small next to the sans, so lift it slightly */
+  letter-spacing: -0.01em;
+  padding-right: 0.04em;       /* keep the italic overhang off the next character / edge */
+}
 .hoa-lede {
   font-size: clamp(1rem, 1.15vw, 1.12rem);
   line-height: 1.65;
@@ -1042,7 +1058,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   gap: 24px;
   margin-bottom: clamp(28px, 3.4vw, 48px);
 }
-.hoa-collection__head .hoa-eyebrow { margin-bottom: 18px; }
+.hoa-collection__head .hoa-eyebrow { margin-bottom: 18px; font-size: clamp(0.9rem, 0.8rem + 0.35vw, 1.05rem); }
 .hoa-tabs { display: flex; flex-wrap: wrap; gap: 0.1em 0.55em; }
 .hoa-tab {
   background: none;
