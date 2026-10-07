@@ -76,7 +76,9 @@
         "card_oudh"
       ],
       "settings": {
-        "text_2": ""
+        "text_2": "",
+        "scroll_label": "",
+        "lede": ""
       }
     },
     "hyderabad": {

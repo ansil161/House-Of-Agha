@@ -48,11 +48,14 @@
       {%- endif -%}
     </div>
 
+    {%- comment -%} Off on About since 2026-10-07 (both settings blank): no label, line or story text. {%- endcomment -%}
+    {%- if s.scroll_label != blank or s.lede != blank -%}
     <p class="hoa-hc__lede" data-hoa-hc-in>
       <span class="hoa-hc__lede-mark" aria-hidden="true"></span>
       {%- if s.scroll_label != blank -%}<span class="hoa-hc__scroll">{{ s.scroll_label }}</span>{%- endif -%}
       {%- if s.lede != blank -%}<span class="hoa-hc__lede-text">{{ s.lede | newline_to_br }}</span>{%- endif -%}
     </p>
+    {%- endif -%}
 
     <div class="hoa-hc__stage">
       {%- comment -%} Orbit, traced from the reference (stage px = reference px - 478 / - 300): a small loop

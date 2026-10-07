@@ -2096,12 +2096,13 @@ body.hoa-about {
 }
 .hoa-hc__title {
   margin: calc(34 * var(--v)) 0 0;
-  font-family: var(--ab-serif, 'Fraunces', Georgia, serif);
+  /* Didot (user, 2026-10-07), as the home headings: single 400 weight, hairlines */
+  font-family: var(--font-didot);
   font-size: calc(90 * var(--v));
-  font-weight: 300;
-  font-variation-settings: "opsz" 120, "SOFT" 0, "WONK" 0;
-  line-height: 1;
-  letter-spacing: -0.014em;
+  font-weight: 400;
+  font-variation-settings: normal;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
   text-transform: none;
   white-space: nowrap;
   color: var(--hc-ink);
