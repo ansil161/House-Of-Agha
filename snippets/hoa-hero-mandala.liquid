@@ -1,0 +1,45 @@
+{%- comment -%}
+  Rotating Islamic geometric mandala (2026-10-07). Built for the home hero, moved the same day
+  to The House section (sections/hoa-manifesto.liquid). Pass class: for placement.
+  Thin gold outlines only (no fills), 8-fold: one petal group (#hm-petal) and one in-between
+  group (#hm-mid) drawn pointing up, then repeated every 45° with rotate(), so the figure is
+  exactly symmetric. Strokes keep their width at any size (vector-effect in hoa-home.css).
+  Placement, colour, opacity and the 90 s spin: "MANDALA" block at the end of assets/hoa-home.css.
+{%- endcomment -%}
+<div class="hoa-mandala {{ class }}" aria-hidden="true">
+  <svg class="hero-mandala" viewBox="-500 -500 1000 1000" fill="none" stroke="#d8b98a" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" focusable="false" aria-hidden="true">
+    <defs>
+      <g id="hm-petal">
+        <path d="M0 0Q30-60 0-120Q-30-60 0 0Z"/>
+        <path d="M0-120L44-210L0-300L-44-210Z"/>
+        <path d="M0-142L18-162V-258L0-278L-18-258V-162Z"/>
+        <path d="M0-300Q70-370 0-462Q-70-370 0-300Z"/>
+        <path d="M0-322Q34-366 0-430Q-34-366 0-322Z"/>
+        <path d="M0-462L8-474L0-490L-8-474Z"/>
+      </g>
+      <g id="hm-mid" transform="rotate(22.5)">
+        <path d="M0-150L22-182L0-214L-22-182Z"/>
+        <path d="M0-300L28-345L0-400L-28-345Z"/>
+        <path d="M0-318L10-334V-362L0-380L-10-362V-334Z"/>
+        <path d="M0-400L6-418L0-440L-6-418Z"/>
+      </g>
+    </defs>
+    <circle r="490"/>
+    <circle r="478"/>
+    <circle r="400" stroke-opacity=".7"/>
+    <circle r="300"/>
+    <circle r="214" stroke-opacity=".6"/>
+    <circle r="120"/>
+    <circle r="36"/>
+    <path d="M0-300L212-212L300 0L212 212L0 300L-212 212L-300 0L-212-212Z" stroke-opacity=".75"/>
+    <path d="M0-300L300 0L0 300L-300 0Z"/>
+    <path d="M0-300L300 0L0 300L-300 0Z" transform="rotate(45)"/>
+    <path d="M0-120L120 0L0 120L-120 0Z"/>
+    <path d="M0-120L120 0L0 120L-120 0Z" transform="rotate(45)"/>
+    {%- for i in (0..7) -%}
+      {%- assign a = i | times: 45 -%}
+      <use href="#hm-petal" transform="rotate({{ a }})"/>
+      <use href="#hm-mid" transform="rotate({{ a }})"/>
+    {%- endfor -%}
+  </svg>
+</div>

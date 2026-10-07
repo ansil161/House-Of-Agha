@@ -95,13 +95,13 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 /* Mixed headings (user, 2026-10-07): modern sans for the phrase, the last word(s) in the
    elegant serif italic. Discover, World, Reels/films, Testimonials and Collection only. */
-.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices, .hoa-collection) .hoa-h2 {
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-collection) .hoa-h2 {
   font-family: var(--hoa-sans);
   font-weight: 500;
   letter-spacing: -0.045em;
   line-height: 1.02;
 }
-.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-voices, .hoa-collection) .hoa-h2 em {
+.hoa-home :is(.hoa-families, .hoa-world, .hoa-reels, .hoa-collection) .hoa-h2 em {
   font-family: var(--font-didot-italic);
   font-style: italic;
   font-weight: 400;
@@ -627,6 +627,8 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   color: var(--hoa-ink);
   text-wrap: balance;
 }
+/* Statement words in Times New Roman (user, 2026-10-07); the italic "place" / "carry close" keep their serif + brown */
+.hoa-manifesto__text { font-family: 'Times New Roman', Times, 'Liberation Serif', serif; letter-spacing: -0.015em; }
 .hoa-manifesto__text em { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.02em; color: #6B5232; }
 .hoa-word { transition: opacity 0.4s var(--hoa-ease); }
 .hoa-js .hoa-manifesto__text .hoa-word { opacity: 0.16; }
@@ -659,6 +661,15 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 .hoa-manifesto__note { display: grid; gap: 8px; align-content: start; }
 .hoa-manifesto__num { font: 500 0.66rem/1 var(--hoa-sans); letter-spacing: 0.18em; color: var(--hoa-mute); font-variant-numeric: tabular-nums; }
+/* principle icons (replaced the 01/02/03 numbers, 2026-10-07): thin brass line in a hairline ring */
+.hoa-manifesto__icon {
+  display: grid; place-items: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(156, 124, 64, 0.35);
+  color: #9C7C40;
+}
+.hoa-manifesto__icon svg { width: 20px; height: 20px; }
 .hoa-manifesto__note-title { font-family: var(--hoa-serif); font-size: clamp(1.1rem, 1.3vw, 1.3rem); line-height: 1.2; letter-spacing: -0.01em; color: var(--hoa-ink); }
 .hoa-manifesto__note-text { font-size: 0.86rem; line-height: 1.55; color: var(--hoa-ink-2); max-width: 26ch; }
 .hoa-js .hoa-manifesto__notes .hoa-manifesto__note { opacity: 0; transform: translate3d(0, 18px, 0); }
@@ -723,6 +734,8 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-manifesto__notes { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; border-top: 0; margin-top: 48px; }
   .hoa-manifesto__note { grid-template-columns: 40px minmax(0, 1fr); column-gap: 8px; padding: 18px 0; border-top: 1px solid var(--hm-line); }
   .hoa-manifesto__num { grid-row: 1 / 3; padding-top: 5px; }
+  .hoa-manifesto__icon { grid-row: 1 / 3; width: 34px; height: 34px; }
+  .hoa-manifesto__icon svg { width: 18px; height: 18px; }
   .hoa-manifesto__note-text { max-width: none; }
   .hoa-manifesto__media { gap: 8px; }
 }
@@ -1249,94 +1262,189 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-menu-open body { overflow: hidden; }
 
 /* ==========================================================================
-   TESTIMONIALS — continuous marquee of boxed quotes
-   Two identical groups in one track; the track slides left by one group (50%) on a
-   linear infinite loop, so it never stops or jumps. Speed is set by
-   assets/hoa-testimonials.js (--vc-dur); the CSS default covers no-JS.
+   TESTIMONIALS (redesigned 2026-10-07 to the client's reference)
+   Beige band. Left column: big two-line serif heading with round white arrows on its
+   right, then a row of white rounded quote cards that glides on its own (JS, transform, seamless loop) and is
+   cut by the column edge. Right column: a tall rounded photo with a frosted glass rating
+   panel. Arrows: assets/hoa-testimonials.js.
    ========================================================================== */
 .hoa-voices {
-  --vc-gap: clamp(12px, 1.4vw, 20px);
+  --vc-bg: #F6EBE1;        /* beige band */
+  --vc-card: #FFFFFF;      /* white cards */
+  --vc-brown: #5E3B2C;     /* heading */
+  --vc-text: #7A5646;      /* quote + names */
+  --vc-star: #9A6A3E;
+  --vc-gap: clamp(14px, 1.6vw, 22px);
   position: relative;
   padding: var(--hoa-section) 0;
-  background: var(--hoa-paper);
-  color: var(--hoa-ink);
-  border-top: 1px solid var(--hoa-line);
+  background: var(--vc-bg);
+  color: var(--vc-text);
   overflow: hidden;
 }
-.hoa-voices__head {
+.hoa-voices__grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  align-items: end;
-  gap: clamp(24px, 5vw, 96px);
-  margin-bottom: clamp(36px, 4.5vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.47fr);
+  gap: clamp(32px, 4.4vw, 64px);
+  align-items: stretch;
 }
-.hoa-voices__title { margin-top: 18px; }
-.hoa-voices__side { display: flex; flex-direction: column; align-items: flex-end; gap: 22px; justify-self: end; max-width: 380px; }
-.hoa-voices__lede { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--hoa-ink-2); text-align: right; }
-.hoa-voices__marquee {
-  overflow: hidden;
-  padding: 6px 0 28px;
-  /* soft fade at both edges so boxes slide in and out instead of being cut */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-}
-.hoa-voices__track {
+.hoa-voices__main { min-width: 0; display: flex; flex-direction: column; }
+.hoa-voices__head {
   display: flex;
-  width: max-content;
-  animation: hoa-voices-marquee var(--vc-dur, 70s) linear infinite;
-  will-change: transform;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(36px, 4.4vw, 64px);
 }
-.hoa-voices.is-paused .hoa-voices__track { animation-play-state: paused; }
-/* each group carries its own trailing gap, so -50% lands exactly on the copy */
-.hoa-voices__group { display: flex; gap: var(--vc-gap); margin: 0; padding: 0 var(--vc-gap) 0 0; list-style: none; }
-@keyframes hoa-voices-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
-.hoa-voice {
-  flex: 0 0 clamp(300px, 27vw, 420px);
+.hoa-voices__title {
   margin: 0;
+  max-width: 11ch;
+  font-family: var(--hoa-serif);
+  font-variation-settings: "opsz" 96, "SOFT" 0, "WONK" 0;
+  font-weight: 400;
+  font-size: clamp(2.8rem, 5.6vw, 5.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--vc-brown);
 }
+.hoa-voices__title em { font-style: italic; color: #6B5232; }
+.hoa-voices__arrows { display: flex; gap: 10px; flex: none; margin-bottom: clamp(10px, 1.6vw, 26px); }
+.hoa-voices__arrow {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: var(--vc-brown);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.hoa-voices__arrow svg { width: 20px; height: 20px; }
+.hoa-voices__arrow:hover:not(:disabled) { background: var(--vc-brown); color: #FFFFFF; }
+.hoa-voices__arrow:active:not(:disabled) { transform: scale(0.95); }
+.hoa-voices__arrow:focus-visible { outline: 2px solid var(--vc-brown); outline-offset: 3px; }
+.hoa-voices__arrow:disabled { opacity: 0.45; cursor: default; }
+
+/* the row: a clipped viewport; the track holds the cards twice and is moved by JS
+   (transform only); each group carries its own trailing gap so one copy = one loop */
+.hoa-voices__viewport {
+  margin: auto 0 0;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.hoa-voices__viewport.is-dragging { cursor: grabbing; }
+.hoa-voices__track { display: flex; width: max-content; will-change: transform; }
+.hoa-voices__group { display: flex; gap: var(--vc-gap); margin: 0; padding: 0 var(--vc-gap) 0 0; list-style: none; }
+.hoa-voice { flex: 0 0 clamp(290px, 29vw, 408px); margin: 0; }
 .hoa-voice__card {
   margin: 0;
   height: 100%;
-  min-height: clamp(300px, 26vw, 360px);
+  min-height: clamp(240px, 19vw, 262px);
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  padding: clamp(24px, 2.2vw, 36px);
-  background: #FFFDF9;
-  border: 1px solid rgba(20, 18, 16, 0.1);
-  border-radius: var(--hoa-radius);
-  box-shadow: 0 1px 0 rgba(20, 18, 16, 0.03), 0 24px 48px -32px rgba(20, 18, 16, 0.22);
+  padding: clamp(24px, 2.2vw, 30px);
+  background: var(--vc-card);
+  border-radius: 30px;
 }
-.hoa-voice__top { display: flex; justify-content: space-between; align-items: flex-start; }
-.hoa-voice__rating { display: flex; gap: 3px; margin: 0; font-size: 0.8rem; line-height: 1; color: var(--hoa-brass); }
+.hoa-voice__rating { display: flex; gap: 2px; margin: 0 0 10px; font-size: 0.86rem; line-height: 1; color: var(--vc-star); }
 .hoa-voice__rating .is-off { opacity: 0.25; }
-.hoa-voice__mark { font-family: var(--hoa-serif); font-size: 3.6rem; line-height: 0.6; color: var(--hoa-ink); opacity: 0.14; }
 .hoa-voice__quote { margin: 0; flex: 1; }
-.hoa-voice__quote p { margin: 0; font-size: clamp(1.02rem, 1.15vw, 1.18rem); line-height: 1.55; letter-spacing: -0.005em; color: var(--hoa-ink); }
-.hoa-voice__who { display: flex; align-items: center; gap: 12px; padding-top: 18px; border-top: 1px solid var(--hoa-line); }
-.hoa-voice__avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.hoa-voice__quote p { margin: 0; max-width: 32ch; font-family: var(--hoa-sans); font-size: clamp(0.95rem, 1.05vw, 1.02rem); line-height: 1.45; color: var(--vc-text); }
+.hoa-voice__who { display: flex; align-items: center; gap: 12px; margin-top: 24px; }
+.hoa-voice__avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .hoa-voice__avatar--mono {
   display: grid;
   place-items: center;
-  background: var(--hoa-paper-2);
-  border: 1px solid var(--hoa-line);
+  background: #EFE2D6;
   font-family: var(--hoa-serif);
   font-style: italic;
-  font-size: 0.9rem;
-  color: var(--hoa-ink);
+  font-size: 0.92rem;
+  color: var(--vc-brown);
 }
-.hoa-voice__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.hoa-voice__name { font-style: normal; font-size: 0.9rem; font-weight: 500; }
-.hoa-voice__detail { font-size: 0.76rem; color: var(--hoa-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hoa-voice__meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.hoa-voice__name { font-style: normal; font-size: 0.9rem; font-weight: 600; color: var(--vc-text); }
+.hoa-voice__detail { font-size: 0.86rem; color: var(--vc-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Phones: stacked header, narrower boxes */
-@media (max-width: 767px) {
-  .hoa-voices__head { grid-template-columns: 1fr; gap: 18px; }
-  .hoa-voices__side { justify-self: start; align-items: flex-start; }
-  .hoa-voices__lede { text-align: left; }
-  .hoa-voice { flex-basis: min(78vw, 320px); }
-  .hoa-voice__card { min-height: 0; border-radius: 18px; padding: 22px; }
-  .hoa-voice__quote p { font-size: 1rem; }
+/* right: tall rounded photo slides + frosted rating panel */
+.hoa-voices__visual {
+  position: relative;
+  min-height: clamp(420px, 36vw, 500px);
+  border-radius: 34px;
+  overflow: hidden;
+  background: #8A5A3C;
+  isolation: isolate;
+}
+/* photo slides: crossfade every 3 s (assets/hoa-testimonials.js), each with its own rating panel */
+.hoa-voices__slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 1s;
+}
+.hoa-voices__slide.is-active { opacity: 1; visibility: visible; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s; }
+.hoa-voices__slide .hoa-voices__photo img { transform: scale(1.04); transition: transform 4s ease-out; }
+.hoa-voices__slide.is-active .hoa-voices__photo img { transform: scale(1); }
+.hoa-voices__photo { position: absolute; inset: 0; z-index: -1; }
+.hoa-voices__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+.hoa-voices__score {
+  position: absolute;
+  left: clamp(14px, 1.5vw, 20px);
+  right: clamp(14px, 1.5vw, 20px);
+  bottom: clamp(14px, 1.5vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(26px, 2.6vw, 36px) 20px clamp(24px, 2.4vw, 32px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(120, 78, 50, 0.32);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+          backdrop-filter: blur(16px) saturate(1.1);
+  color: #FFFFFF;
+  text-align: center;
+}
+.hoa-voices__score p { margin: 0; }
+.hoa-voices__score-num { font-family: var(--hoa-serif); font-weight: 400; font-size: clamp(2.6rem, 3.6vw, 3.4rem); line-height: 1; letter-spacing: -0.01em; }
+.hoa-voices__score-stars { margin-top: 12px !important; font-size: 0.8rem; letter-spacing: 1px; line-height: 1; }
+.hoa-voices__score-count { margin-top: 4px !important; font-size: 0.74rem; opacity: 0.85; }
+.hoa-voices__score-label { margin-top: 8px !important; font-family: var(--hoa-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
+.hoa-voices__faces { display: flex; margin: 22px 0 0; padding: 0 0 0 8px; list-style: none; }
+.hoa-voices__faces li {
+  width: 40px;
+  height: 40px;
+  margin-left: -8px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  overflow: hidden;
+  background: #EFE2D6;
+}
+.hoa-voices__faces img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hoa-voices__faces span { display: grid; place-items: center; width: 100%; height: 100%; font-family: var(--hoa-serif); font-style: italic; font-size: 0.9rem; color: var(--vc-brown); }
+
+/* Tablet and phones: heading + arrows, the card row, then the photo */
+@media (prefers-reduced-motion: reduce) {
+  .hoa-voices__slide, .hoa-voices__slide .hoa-voices__photo img { transition: none; }
+}
+@media (max-width: 1023px) {
+  .hoa-voices__grid { grid-template-columns: 1fr; }
+  .hoa-voices__visual { min-height: 0; aspect-ratio: 4 / 4.4; max-width: 560px; width: 100%; }
+}
+@media (max-width: 640px) {
+  .hoa-voices__head { margin-bottom: 28px; }
+  .hoa-voices__title { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+  .hoa-voices__arrow { width: 42px; height: 42px; }
+  .hoa-voices__arrows { margin-bottom: 4px; }
+  .hoa-voice { flex-basis: min(82vw, 340px); }
+  .hoa-voice__card { border-radius: 24px; min-height: 230px; }
+  .hoa-voices__visual { border-radius: 26px; aspect-ratio: 4 / 4.8; }
 }
 
 /* ==========================================================================
@@ -2384,8 +2492,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 
 /* Beige bands (V2 --beige): The House, Discover your scent, In their words */
 .hoa-manifesto,
-.hoa-families,
-.hoa-voices { background: #ECE4D8; }
+.hoa-families { background: #ECE4D8; }
 
 /* ==========================================================================
    QUTUB SHAHI PATTERN (2026-10-06) · snippets/hoa-qutub-pattern.liquid
@@ -2464,11 +2571,9 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
    Faint, gold, fading out before the content. */
 .hoa-families { position: relative; }
 .hoa-manifesto,
-.hoa-families,
-.hoa-voices { isolation: isolate; }
+.hoa-families { isolation: isolate; }
 .hoa-manifesto::before,
-.hoa-families::before,
-.hoa-voices::before {
+.hoa-families::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -2492,15 +2597,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
-.hoa-voices::before {
-  opacity: 0.2;
-  -webkit-mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 16%, transparent 84%, #000);
-          mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 16%, transparent 84%, #000);
-  -webkit-mask-composite: source-in;
-          mask-composite: intersect;
-}
 @media (max-width: 640px) {
-  .hoa-voices::before { opacity: 0.14; }
 }
 
 /* Follow @aghaperfumes: the house .hoa-btn (2026-10-07; the water pill is gone), with the
@@ -2554,4 +2651,47 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   .hoa-seq { height: var(--seq-length-m, 250vh); }
   /* portrait: show the whole frame width, like the canvas does */
   .hoa-seq__poster { object-fit: contain; }
+}
+
+
+/* ==========================================================================
+   MANDALA (2026-10-07): a faint 8-fold geometric mandala turning slowly
+   (snippets/hoa-hero-mandala.liquid). Built for the hero, moved the same day to The House
+   (user). Large, behind the statement on the left, bleeding off the left edge so only part
+   of the circle shows; the copy and photos stay above it. Pure CSS: one turn every 90 s.
+   ========================================================================== */
+.hoa-manifesto { isolation: isolate; }
+.hoa-manifesto__grid { position: relative; z-index: 1; }
+.hoa-mandala {
+  position: absolute;
+  z-index: 0;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+.hoa-manifesto__mandala {
+  --mandala: clamp(900px, 70vw, 1100px);
+  width: var(--mandala);
+  left: calc(var(--mandala) * -0.42);
+  top: 50%;
+  margin-top: calc(var(--mandala) * -0.5);
+  opacity: 0.26;
+}
+.hoa-manifesto__mandala .hero-mandala { stroke: #9C7C40; }
+.hoa-manifesto::before { content: none; }   /* the girih lattice is off here: only the mandala (user, 2026-10-07) */   /* brass: the hero's pale gold vanishes on paper */
+.hero-mandala {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: center center;
+  animation: mandala-spin 90s linear infinite;
+  will-change: transform;
+}
+.hero-mandala :is(path, circle) { vector-effect: non-scaling-stroke; }
+@keyframes mandala-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@media (max-width: 767px) {
+  .hoa-manifesto__mandala { --mandala: min(120vw, 1100px); left: auto; right: calc(var(--mandala) * -0.45); top: 0; margin-top: calc(var(--mandala) * -0.25); opacity: 0.2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-mandala { animation: none; }
 }

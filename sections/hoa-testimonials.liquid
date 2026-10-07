@@ -1,84 +1,166 @@
 {% comment %}
-  HOUSE OF AGHA — TESTIMONIALS (continuous marquee)
-
-  Header: eyebrow + statement heading on the left, intro line on the right.
-  Below: the boxed testimonials glide right-to-left without stopping and loop seamlessly.
-  No arrows, no dots, no clicking (client brief). The group of boxes is printed twice
-  and the track moves by one group width (CSS keyframes in assets/hoa-home.css);
-  assets/hoa-testimonials.js only sets a constant speed and pauses it off-screen.
-  Data: "testimonial" blocks, edited in the Theme Editor or templates/index.json.
-  Statement: wrap a line in *asterisks* to set it in the serif italic.
+  HOUSE OF AGHA — TESTIMONIALS (redesigned 2026-10-07 to the client's reference)
+  Beige band. Left: a large two-line serif heading with round prev/next arrows on its right,
+  then a row of white rounded quote cards (stars, quote, avatar + name + detail) that glides
+  on its own, continuously and seamlessly (the cards are printed twice; the second copy is
+  aria-hidden), and is cut by the column edge. Right: tall rounded photo slides that change
+  every 3 seconds, each with its own frosted glass rating panel (score, stars, label, avatars).
+  Motion + arrows: assets/hoa-testimonials.js. Styles: "TESTIMONIALS" in hoa-home.css.
+  Data: "testimonial" blocks (quotes) and "slide" blocks (photo + fragrance), in the Theme
+  Editor or templates/index.json. A slide's score is its fragrance's rating in the shared
+  catalogue (snippets/hoa-catalog-data.liquid) unless the slide sets its own. Reviewers
+  without a photo show their initials.
 {% endcomment %}
 
+{%- capture voices_catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
 {%- liquid
   assign s = section.settings
-  assign lines = s.statement | newline_to_br | split: '<br />'
+  assign voices_catalog = voices_catalog_json | parse_json
+  assign heading = s.statement | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip
+  assign parts = heading | split: '*'
   assign cards = section.blocks | where: 'type', 'testimonial'
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign total = 0
+  for block in cards
+    assign r = block.settings.rating | default: 5
+    assign total = total | plus: r
+  endfor
+  assign avg_score = ''
+  if cards.size > 0
+    assign avg10 = total | times: 10 | divided_by: cards.size
+    assign whole = avg10 | divided_by: 10
+    assign tenth = avg10 | modulo: 10
+    assign avg_score = whole | append: '.' | append: tenth
+  endif
 -%}
-<section class="hoa-voices" id="testimonials" data-hoa-voices aria-labelledby="voices-{{ section.id }}-title">
-  <div class="hoa-wrap">
-    <header class="hoa-voices__head">
-      <div>
-        <p class="hoa-eyebrow" data-hoa-reveal>{{ s.eyebrow }}</p>
-        <h2 class="hoa-h2 hoa-voices__title" id="voices-{{ section.id }}-title" data-hoa-reveal>
-          {%- for line in lines -%}
-            {%- assign l = line | strip -%}
-            {%- if l == blank -%}{%- continue -%}{%- endif -%}
-            {%- if l contains '*' -%}<em>{{ l | remove: '*' }}</em>{%- else -%}{{ l }}{%- endif -%}
-            {%- unless forloop.last %} {% endunless -%}
+<section class="hoa-voices" id="testimonials" data-hoa-voices data-interval="{{ s.interval | default: 3 | times: 1000 }}" data-speed="{{ s.speed | default: 30 }}" aria-labelledby="voices-{{ section.id }}-title">
+  <div class="hoa-wrap hoa-voices__grid">
+    <div class="hoa-voices__main">
+      <header class="hoa-voices__head">
+        <h2 class="hoa-voices__title" id="voices-{{ section.id }}-title" data-hoa-reveal>
+          {%- for part in parts -%}
+            {%- assign odd = forloop.index0 | modulo: 2 -%}
+            {%- if odd == 1 %}<em>{{ part }}</em>{% else %}{{ part }}{% endif -%}
           {%- endfor -%}
         </h2>
-      </div>
-      <div class="hoa-voices__side" data-hoa-reveal>
-        {%- if s.intro != blank -%}<p class="hoa-voices__lede">{{ s.intro }}</p>{%- endif -%}
-      </div>
-    </header>
-  </div>
+        <div class="hoa-voices__arrows" data-hoa-reveal>
+          <button type="button" class="hoa-voices__arrow" data-hoa-voices-prev aria-label="Previous testimonial" aria-controls="voices-{{ section.id }}-track">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="hoa-voices__arrow" data-hoa-voices-next aria-label="Next testimonial" aria-controls="voices-{{ section.id }}-track">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </header>
 
-  {%- comment -%} The group is printed twice; the track slides by exactly one group, so the loop has no seam. {%- endcomment -%}
-  <div class="hoa-voices__marquee" data-hoa-voices-marquee>
-    <div class="hoa-voices__track" data-hoa-voices-track>
-      {%- for pass in (1..2) -%}
-      <ul class="hoa-voices__group" role="list"{% if pass == 2 %} aria-hidden="true"{% endif %}>
-        {%- for block in cards -%}
-        {%- liquid
-          assign b = block.settings
-          assign initials = ''
-          assign name_parts = b.name | split: ' '
-          for part in name_parts limit: 2
-            assign first_letter = part | slice: 0
-            assign initials = initials | append: first_letter
-          endfor
-          assign rating = b.rating | default: 5
-        -%}
-        <li class="hoa-voice" data-hoa-voice{% if pass == 1 %} {{ block.shopify_attributes }}{% endif %}>
-          <figure class="hoa-voice__card">
-            <div class="hoa-voice__top">
-              {%- if b.show_rating -%}
-                <p class="hoa-voice__rating" aria-label="Rated {{ rating }} out of 5">
-                  {%- for i in (1..5) -%}<span{% if i > rating %} class="is-off"{% endif %} aria-hidden="true">★</span>{%- endfor -%}
-                </p>
-              {%- endif -%}
-              <span class="hoa-voice__mark" aria-hidden="true">&ldquo;</span>
-            </div>
-            <blockquote class="hoa-voice__quote"><p>{{ b.quote }}</p></blockquote>
-            <figcaption class="hoa-voice__who">
-              {%- if b.avatar != blank -%}
-                {{ b.avatar | image_url: width: 96 | image_tag: loading: 'lazy', class: 'hoa-voice__avatar', alt: '' }}
-              {%- else -%}
-                <span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">{{ initials | upcase }}</span>
-              {%- endif -%}
-              <span class="hoa-voice__meta">
-                <cite class="hoa-voice__name">{{ b.name }}</cite>
-                <span class="hoa-voice__detail">{{ b.location }}{% if b.location != blank and b.fragrance != blank %} · {% endif %}{% if b.fragrance != blank %}wears {{ b.fragrance }}{% endif %}</span>
-              </span>
-            </figcaption>
-          </figure>
-        </li>
-      {%- endfor -%}
-      </ul>
-      {%- endfor -%}
+      {%- comment -%} The cards are printed twice; the row glides left by exactly one copy and wraps, so the loop has no seam. {%- endcomment -%}
+      <div class="hoa-voices__viewport" id="voices-{{ section.id }}-track" data-hoa-voices-viewport>
+        <div class="hoa-voices__track" data-hoa-voices-track>
+          {%- for pass in (1..2) -%}
+          <ul class="hoa-voices__group" role="list"{% if pass == 2 %} aria-hidden="true"{% else %} aria-label="Testimonials"{% endif %}>
+            {%- for block in cards -%}
+            {%- liquid
+              assign b = block.settings
+              assign initials = ''
+              assign name_parts = b.name | split: ' '
+              for part in name_parts limit: 2
+                assign first_letter = part | slice: 0
+                assign initials = initials | append: first_letter
+              endfor
+              assign rating = b.rating | default: 5
+            -%}
+            <li class="hoa-voice"{% if pass == 1 %} {{ block.shopify_attributes }}{% endif %}>
+              <figure class="hoa-voice__card">
+                {%- if b.show_rating -%}
+                  <p class="hoa-voice__rating" aria-label="Rated {{ rating }} out of 5">
+                    {%- for i in (1..5) -%}<span{% if i > rating %} class="is-off"{% endif %} aria-hidden="true">★</span>{%- endfor -%}
+                  </p>
+                {%- endif -%}
+                <blockquote class="hoa-voice__quote"><p>{{ b.quote }}</p></blockquote>
+                <figcaption class="hoa-voice__who">
+                  {%- if b.avatar != blank -%}
+                    {{ b.avatar | image_url: width: 96 | image_tag: loading: 'lazy', class: 'hoa-voice__avatar', alt: '' }}
+                  {%- else -%}
+                    <span class="hoa-voice__avatar hoa-voice__avatar--mono" aria-hidden="true">{{ initials | upcase }}</span>
+                  {%- endif -%}
+                  <span class="hoa-voice__meta">
+                    <cite class="hoa-voice__name">{{ b.name }}</cite>
+                    <span class="hoa-voice__detail">{{ b.location }}{% if b.location != blank and b.fragrance != blank %} · {% endif %}{% if b.fragrance != blank %}wears {{ b.fragrance }}{% endif %}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            </li>
+            {%- endfor -%}
+          </ul>
+          {%- endfor -%}
+        </div>
+      </div>
     </div>
+
+    {%- capture faces -%}
+      <ul class="hoa-voices__faces" role="list" aria-hidden="true">
+        {%- for block in cards limit: 4 -%}
+          {%- assign b = block.settings -%}
+          {%- assign fi = b.name | slice: 0 -%}
+          <li>
+            {%- if b.avatar != blank -%}{{ b.avatar | image_url: width: 80 | image_tag: loading: 'lazy', alt: '' }}{%- else -%}<span>{{ fi | upcase }}</span>{%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endcapture -%}
+
+    <aside class="hoa-voices__visual" data-hoa-reveal aria-label="{{ s.score_label | escape }}">
+      {%- if slides.size > 0 -%}
+        {%- for block in slides -%}
+          {%- liquid
+            assign b = block.settings
+            assign slide_score = b.score
+            assign slide_reviews = ''
+            if slide_score == blank
+              for c in voices_catalog.products
+                if c.handle == b.fragrance_handle
+                  assign slide_score = c.rating | append: ''
+                  assign slide_reviews = c.reviewCount
+                endif
+              endfor
+            endif
+            if slide_score == blank
+              assign slide_score = avg_score
+            endif
+            assign slide_label = b.label | default: s.score_label
+          -%}
+          <figure class="hoa-voices__slide{% if forloop.first %} is-active{% endif %}" data-hoa-voices-slide {{ block.shopify_attributes }}{% unless forloop.first %} aria-hidden="true"{% endunless %}>
+            <div class="hoa-voices__photo">
+              {%- assign img_load = 'lazy' -%}
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1500, alt: b.alt, sizes: '(min-width: 1024px) 30vw, 100vw', loading: img_load -%}
+            </div>
+            {%- if slide_score != blank -%}
+              <figcaption class="hoa-voices__score">
+                <p class="hoa-voices__score-num">{{ slide_score }}</p>
+                <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
+                <p class="hoa-voices__score-label">{{ slide_label }}</p>
+                {%- if slide_reviews != blank -%}<p class="hoa-voices__score-count">{{ slide_reviews }} reviews</p>{%- endif -%}
+                {{ faces }}
+              </figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      {%- else -%}
+        <figure class="hoa-voices__slide is-active">
+          <div class="hoa-voices__photo">
+            {%- render 'hoa-img', name: 'hoa-world-portrait', w: 1200, h: 2150, alt: 'A man holding Oud Fury by House of Agha in warm light', sizes: '(min-width: 1024px) 30vw, 100vw' -%}
+          </div>
+          {%- if avg_score != blank -%}
+            <figcaption class="hoa-voices__score">
+              <p class="hoa-voices__score-num">{{ avg_score }}</p>
+              <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
+              <p class="hoa-voices__score-label">{{ s.score_label }}</p>
+              {{ faces }}
+            </figcaption>
+          {%- endif -%}
+        </figure>
+      {%- endif -%}
+    </aside>
   </div>
 </section>
 
@@ -89,11 +171,12 @@
   "name": "HOA Testimonials",
   "tag": "div",
   "class": "hoa-voices-section",
-  "max_blocks": 7,
+  "max_blocks": 16,
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "In their words" },
-    { "type": "textarea", "id": "intro", "label": "Intro line", "default": "Notes from the people who wear the House, in their own words." },
-    { "type": "textarea", "id": "statement", "label": "Statement (one line per row)", "info": "Three short lines read best. Wrap a line in *asterisks* for the serif italic.", "default": "Loved by\nthose who\n*wear it.*" }
+    { "type": "textarea", "id": "statement", "label": "Heading (rows join into one line)", "info": "Wrap words in *asterisks* for the serif italic.", "default": "Loved by those who *wear it.*" },
+    { "type": "text", "id": "score_label", "label": "Rating label (default)", "default": "Customer rating" },
+    { "type": "range", "id": "interval", "label": "Photo change (seconds)", "min": 2, "max": 10, "step": 1, "default": 3 },
+    { "type": "range", "id": "speed", "label": "Quote glide speed (px per second)", "min": 10, "max": 80, "step": 5, "default": 30 }
   ],
   "blocks": [
     {
@@ -107,6 +190,18 @@
         { "type": "image_picker", "id": "avatar", "label": "Photo (optional; initials are used otherwise)" },
         { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
         { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    },
+    {
+      "type": "slide",
+      "name": "Photo slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo (4:5 portrait)" },
+        { "type": "text", "id": "asset", "label": "Fallback theme asset" },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "fragrance_handle", "label": "Fragrance handle", "info": "e.g. sea-smoke. The rating comes from this fragrance." },
+        { "type": "text", "id": "score", "label": "Rating score (optional override)" },
+        { "type": "text", "id": "label", "label": "Rating label", "info": "e.g. Sea Smoke rating" }
       ]
     }
   ],

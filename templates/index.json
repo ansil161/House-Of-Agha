@@ -423,6 +423,42 @@
             "rating": 5,
             "show_rating": true
           }
+        },
+        "slide_sea_smoke_1": {
+          "type": "slide",
+          "settings": {
+            "asset": "hoa-voices-sea-smoke-1",
+            "alt": "A man on the beach holding Sea Smoke by House of Agha",
+            "fragrance_handle": "sea-smoke",
+            "label": "Sea Smoke rating"
+          }
+        },
+        "slide_maha_1": {
+          "type": "slide",
+          "settings": {
+            "asset": "hoa-voices-maha-1",
+            "alt": "A woman in red velvet holding Maha by House of Agha to her cheek",
+            "fragrance_handle": "maha",
+            "label": "Maha rating"
+          }
+        },
+        "slide_sea_smoke_2": {
+          "type": "slide",
+          "settings": {
+            "asset": "hoa-voices-sea-smoke-2",
+            "alt": "Sea Smoke by House of Agha held above the shoreline",
+            "fragrance_handle": "sea-smoke",
+            "label": "Sea Smoke rating"
+          }
+        },
+        "slide_maha_2": {
+          "type": "slide",
+          "settings": {
+            "asset": "hoa-voices-maha-2",
+            "alt": "A woman in a red gown holding Maha by House of Agha",
+            "fragrance_handle": "maha",
+            "label": "Maha rating"
+          }
         }
       },
       "block_order": [
@@ -432,7 +468,11 @@
         "voice_4",
         "voice_5",
         "voice_6",
-        "voice_7"
+        "voice_7",
+        "slide_sea_smoke_1",
+        "slide_maha_1",
+        "slide_sea_smoke_2",
+        "slide_maha_2"
       ],
       "settings": {}
     },

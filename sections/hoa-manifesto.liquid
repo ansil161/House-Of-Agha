@@ -13,6 +13,7 @@
   assign parts = statement | split: '*'
 -%}
 <section class="hoa-manifesto" id="the-house" data-hoa-manifesto>
+  {%- if s.show_mandala -%}{%- render 'hoa-hero-mandala', class: 'hoa-manifesto__mandala' -%}{%- endif -%}
   <div class="hoa-wrap hoa-manifesto__grid">
     <div class="hoa-manifesto__copy">
       <div class="hoa-manifesto__meta" data-hoa-reveal>
@@ -38,7 +39,16 @@
           {%- capture key_b %}note_{{ i }}_text{% endcapture -%}
           {%- if s[key_t] != blank -%}
             <li class="hoa-manifesto__note">
-              <span class="hoa-manifesto__num">0{{ i }}</span>
+              {%- comment -%} Icons instead of numbers (2026-10-07): 1 compass rose (one world), 2 sunburst (its own light), 3 drop (worn close) {%- endcomment -%}
+              <span class="hoa-manifesto__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                  {%- case i -%}
+                    {%- when 1 -%}<circle cx="12" cy="12" r="9.2"/><path d="M12 4.6l1.9 5.5L19.4 12l-5.5 1.9L12 19.4l-1.9-5.5L4.6 12l5.5-1.9z"/><circle cx="12" cy="12" r="1"/>
+                    {%- when 2 -%}<circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"/>
+                    {%- else -%}<path d="M12 3.2c3.4 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.6-6.6 6-10.8z"/><path d="M9.2 14.4a2.9 2.9 0 0 0 2.4 2.7"/>
+                  {%- endcase -%}
+                </svg>
+              </span>
               <span class="hoa-manifesto__note-title">{{ s[key_t] }}</span>
               {%- if s[key_b] != blank %}<span class="hoa-manifesto__note-text">{{ s[key_b] }}</span>{% endif -%}
             </li>
@@ -72,6 +82,7 @@
   "tag": "div",
   "class": "hoa-manifesto-section",
   "settings": [
+    { "type": "checkbox", "id": "show_mandala", "label": "Rotating mandala", "default": true, "info": "A faint brass geometric mandala turning slowly behind the statement (90 s per turn; still for reduced-motion visitors)." },
     { "type": "text", "id": "eyebrow", "label": "Tag", "default": "The House" },
     { "type": "textarea", "id": "statement", "label": "Statement", "info": "Wrap words in *asterisks* to set them in serif italic.", "default": "Every Agha fragrance begins as a *place*: a smoke-lit room, an ice cave, a garden after rain. It ends as something you *carry close*." },
     { "type": "textarea", "id": "body", "label": "Supporting line", "default": "House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light." },

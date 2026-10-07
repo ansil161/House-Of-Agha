@@ -282,6 +282,11 @@
                     {%- for g in c.gallery -%}
                       <figure class="hoa-rvp__shot"><img src="{{ g }}" alt="{{ c.name | escape }} photograph {{ forloop.index | plus: 2 }}" width="1200" height="1500" decoding="async"></figure>
                     {%- endfor -%}
+                    {%- comment -%} More photos for this viewer only (catalog "photos", 2026-10-07); the row auto-scrolls (assets/hoa-reels.js) {%- endcomment -%}
+                    {%- assign shot_base = c.gallery.size | plus: 2 -%}
+                    {%- for g in c.photos -%}
+                      <figure class="hoa-rvp__shot"><img src="{{ g }}" alt="{{ c.name | escape }} photograph {{ forloop.index | plus: shot_base }}" width="1200" height="1500" loading="lazy" decoding="async"></figure>
+                    {%- endfor -%}
                   {%- endif -%}
                 {%- endfor -%}
               {%- endif -%}
