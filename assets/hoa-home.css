@@ -1371,6 +1371,24 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-voice__name { font-style: normal; font-size: 0.9rem; font-weight: 600; color: var(--vc-text); }
 .hoa-voice__detail { font-size: 0.86rem; color: var(--vc-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* Deccani square-knot lattice behind the band (brought back 2026-10-07, user): faint gold,
+   strongest at the left and right edges, clear behind the heading, cards and photo */
+.hoa-voices { isolation: isolate; }
+.hoa-voices::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #A8842F;
+  opacity: 0.22;
+  pointer-events: none;
+  -webkit-mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 18%, transparent 82%, #000);
+          mask: url("hoa-qutub-knot.svg") repeat center / 48px 48px, linear-gradient(90deg, #000, transparent 18%, transparent 82%, #000);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+@media (max-width: 640px) { .hoa-voices::before { opacity: 0.14; } }
+
 /* right: tall rounded photo slides + frosted rating panel */
 .hoa-voices__visual {
   position: relative;
