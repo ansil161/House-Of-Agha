@@ -2722,9 +2722,9 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 /* ==========================================================================
    3D LOGO (2026-10-07, assets/hoa-crest.js, loaded by sections/hoa-hero.liquid)
    The client's gold Agha logo lifts off the logo printed on the hero bottle and rests
-   beside it. It is drawn on this fixed, transparent layer so it can be carried anywhere
-   on the screen: above the page, below the header (1000) and the preloader; while it is
-   held, above the header too. Only the round button over the logo takes the pointer.
+   centred on it, turning on its own; dragging turns it in place. It is drawn on this fixed,
+   transparent layer: above the page, below the header (1000) and the preloader. Only
+   the round button over the logo takes the pointer.
    ========================================================================== */
 .hoa-logo3d {
   position: fixed;
@@ -2732,7 +2732,6 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   z-index: 60;
   pointer-events: none;
 }
-.hoa-logo3d.is-dragging { z-index: 1001; }
 .hoa-logo3d[hidden] { display: none; }
 .hoa-logo3d__canvas { display: block; width: 100%; height: 100%; }
 .hoa-logo3d__hit {
@@ -2745,7 +2744,7 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   border-radius: 50%;
   background: transparent;
   cursor: grab;
-  touch-action: none;           /* a drag that starts on the logo carries the logo */
+  touch-action: none;           /* a drag that starts on the logo turns the logo */
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -2755,7 +2754,7 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 .hoa-logo3d.is-dragging .hoa-logo3d__hit { cursor: grabbing; }
 .hoa-logo3d__hit:focus-visible { outline: 1px solid rgba(246, 241, 231, 0.6); outline-offset: 6px; }
 /* "Drag to rotate" hint under the 3D logo: a small glass pill with a hand that sways,
-   shown once the logo has landed beside the bottle, hidden while it is carried. */
+   beside the logo once it has landed on the bottle, until the visitor's first drag. */
 .hoa-logo3d__hint {
   position: absolute;
   left: 0;

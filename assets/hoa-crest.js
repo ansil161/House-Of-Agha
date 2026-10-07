@@ -4,29 +4,25 @@
    fixed, transparent layer over the page (sections/hoa-hero.liquid loads this).
 
    1. Open: it appears exactly over the logo printed on the Oud Fury label in the
-      hero photo, then lifts off and glides out to rest beside the bottle, larger,
+      hero photo, then lifts off and comes forward to rest centred on the bottle, larger,
       floating gently. It scrolls away with the hero.
-   2. Hover: leans toward the cursor (tracked across the page, relative to the
-      logo's centre), limited to ±MAX_YAW / ±MAX_PITCH: never edge-on, never its
-      back. Cursor out of the window -> faces front.
-   3. Drag: pick it up and carry it anywhere on the screen; it turns with the
-      movement in every direction (DRAG_SPEED rad per px). Pointer capture, grab /
-      grabbing cursor, above the header while held. On touch, a drag that starts on
-      the logo moves the logo (the page doesn't scroll under it).
-   4. Release: position and rotation spring back home beside the bottle
-      (STIFFNESS / DAMPING, angles wrapped into (-π, π] first: shortest way, never
-      unwinding whole turns); hover takes over again.
-   5. Idle: when nobody is interacting (mouse still for IDLE_AFTER ms, mouse out
-      of the window, or a touch device at rest) it turns slowly on its own
-      (SPIN_SECONDS per turn). Moving the mouse or hovering the logo hands it back
-      to the cursor, decelerating the shortest way round instead of snapping.
+   2. Hover (mouse over the logo): it stops spinning, comes round to face front
+      the short way, and leans toward the cursor, limited to ±MAX_YAW / ±MAX_PITCH.
+   3. Drag: turns it in place, in any direction (DRAG_SPEED rad per px); it does
+      not move. Pointer capture, grab / grabbing cursor. On touch, a drag that
+      starts on the logo turns the logo (the page doesn't scroll under it).
+   4. Release: a flick keeps it turning, sideways and/or top over bottom (up to
+      MAX_FLING rad/s), and it eases into the idle spin.
+   5. Idle: whenever nobody is holding or hovering it, it turns slowly on its own,
+      left to right (SPIN_SECONDS per turn) and top over bottom
+      (SPIN_SECONDS_VERTICAL per turn) at once, so it tumbles through new angles.
    6. A small "Drag to rotate" hint with a hand icon sits under it at rest, only
       until the visitor's first drag; after that it never shows again (remembered
       in localStorage, so not on later visits either).
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
-   Reduced motion: no lift animation, no float, no hover tilt; drag works with a
-   quick return. three.js (not otherwise in the theme) loads from jsdelivr after
+   Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
+   settles back to front. three.js (not otherwise in the theme) loads from jsdelivr after
    the page's own load; rendering stops while the hero is out of view.
    ========================================================================== */
 
@@ -36,18 +32,20 @@ var HOA_CREST_CONFIG = {
   MAX_YAW: 25,                // degrees, hover left/right
   MAX_PITCH: 15,              // degrees, hover up/down
   DRAG_SPEED: 0.01,           // radians of turn per pixel dragged
-  STIFFNESS: 90,              // release spring (position + rotation)
-  DAMPING: 14,
   HOVER_STIFFNESS: 42,        // hover follow spring (softer, so it trails the cursor)
   HOVER_DAMPING: 12.5,
   INTRO_DELAY: 450,           // ms after the page shows
   INTRO_MS: 2000,             // lift-off duration
-  IDLE_AFTER: 2000,           // ms without interaction before it starts turning on its own
-  SPIN_SECONDS: 12,           // one full turn while idle
-  // resting place beside the bottle, in units of the printed logo's height
+  MAX_FLING: 9,               // rad/s: the fastest a released flick keeps it turning
+  SPIN_SECONDS: 12,           // idle: one full turn left to right
+  SPIN_SECONDS_VERTICAL: 18,  // idle: one full turn top over bottom (different, so it never repeats one loop)
+  // resting place, in units of the printed logo's height. side: 'center' (on the bottle),
+  // 'left' or 'right' (beside it, gap apart); line: true = on the headline's line ("House ·
+  // logo · of Agha"), else rise: up from the printed logo (negative = down); lineShift: nudge
+  // along that line's height (+ = down); hint: "Drag to rotate" 'left' / 'right' / 'above' / 'below'
   HOME: {
-    desktop: { side: 'left', scale: 2.8, gap: 0.4, rise: 1.54 },   // shoulder height, clear of "House"
-    phone:   { side: 'left', scale: 1.8, gap: 0.25, rise: -2.1 }   // below the stacked title
+    desktop: { side: 'center', scale: 2.6, gap: 0, line: true, lineShift: 0, hint: 'above' }, // between "House" and "of Agha"
+    phone:   { side: 'center', scale: 1.8, gap: 0, rise: -2.3, hint: 'left' }    // words stack over the bottle: on the lower body
   },
   // where the logo is printed on the bottle photos (fractions of the bottle image)
   LABEL: {
@@ -73,8 +71,6 @@ var HOA_CREST_CONFIG = {
   var TAU = Math.PI * 2;
   var MAX_YAW = C.MAX_YAW * DEG;
   var MAX_PITCH = C.MAX_PITCH * DEG;
-  var K_RETURN = reduceMotion ? 320 : C.STIFFNESS;
-  var D_RETURN = reduceMotion ? 2 * Math.sqrt(320) : C.DAMPING;
   var STEP = 1 / 240;
 
   /* ---------- the layer ---------- */
@@ -180,15 +176,12 @@ var HOA_CREST_CONFIG = {
 
     /* ---------- state ---------- */
     var yaw = { x: 0, v: 0 }, pitch = { x: 0, v: 0 };     // rotation
-    var offX = { x: 0, v: 0 }, offY = { x: 0, v: 0 };     // carried away from home, px
-    var grab = { x: 0, v: 0 };                            // 0..1, picked-up swell
-    var mode = 'hover';                                   // 'hover' | 'drag' | 'return'
-    var pointer = null;
-    var drag = null;
-    var lastActive = performance.now();                   // last mouse move / drag
+    var grab = { x: 0, v: 0 };                            // 0..1, held: a touch closer
+    var pointer = null;                                   // mouse position while over the logo
     var overLogo = false;
-    var idle = false, spinVel = 0;                        // turning on its own
-    var hintW = 0;
+    var drag = null;
+    var spinning = false, spinVel = 0, spinVelV = 0;      // turning on its own: sideways, top over bottom
+    var hintW = 0, hintH = 0;
     var HINT_KEY = 'agha-logo3d-dragged';
     var hintDone = false;
     try { hintDone = localStorage.getItem(HINT_KEY) === '1'; } catch (_) {}
@@ -230,60 +223,71 @@ var HOA_CREST_CONFIG = {
       var L = phone ? C.LABEL.phone : C.LABEL.desktop;
       return { x: left + L.cx * dw, y: top + L.cy * dh, s: L.h * dh, left: left, right: left + dw, home: phone ? C.HOME.phone : C.HOME.desktop };
     }
+    // the headline's words ("House", "of Agha"): their line's vertical centre
+    var words = hero.querySelectorAll('[data-hoa-hero-word]');
+    function lineY() {
+      if (!words.length) return null;
+      var r = words[0].getBoundingClientRect();
+      return r.height ? r.top + r.height / 2 : null;
+    }
     function homePose(L) {
       var H = L.home, s = L.s * H.scale, gap = L.s * H.gap;
+      var ly = H.line ? lineY() : null;
       return {
-        x: H.side === 'left' ? L.left - gap - s / 2 : L.right + gap + s / 2,
-        y: L.y - L.s * H.rise,
-        s: s
+        x: H.side === 'center' ? L.x : H.side === 'left' ? L.left - gap - s / 2 : L.right + gap + s / 2,
+        y: ly !== null ? ly + (H.lineShift || 0) * s : L.y - L.s * (H.rise || 0),
+        s: s,
+        hint: H.hint || 'below'
       };
     }
 
-    /* ---------- hover ---------- */
-    window.addEventListener('pointermove', function (e) {
-      if (e.pointerType !== 'mouse') return;
-      pointer = { x: e.clientX, y: e.clientY };
-      lastActive = performance.now();
-      wake();
-    }, { passive: true });
+    /* ---------- hover: over the logo it stops and leans toward the cursor ---------- */
     hit.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { overLogo = true; wake(); } });
-    hit.addEventListener('pointerleave', function () { overLogo = false; });
-    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget) { pointer = null; wake(); } });
-    window.addEventListener('blur', function () { pointer = null; wake(); });
+    hit.addEventListener('pointerleave', function () { overLogo = false; pointer = null; wake(); });
+    hit.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'mouse') { overLogo = true; pointer = { x: e.clientX, y: e.clientY }; }
+    });
 
     function hoverTarget() {
       if (reduceMotion || !pointer || !pose) return [0, 0];
-      var nx = (pointer.x - pose.x) / (vw / 2);
-      var ny = (pointer.y - pose.y) / (vh / 2);
+      var nx = (pointer.x - pose.x) / (pose.s / 2);
+      var ny = (pointer.y - pose.y) / (pose.s / 2);
       return [clamp(nx, 1) * MAX_YAW, clamp(ny, 1) * MAX_PITCH];
     }
 
-    /* ---------- drag: carry it anywhere, turning as it moves ---------- */
+    /* ---------- drag: turn it in place, any direction ---------- */
     hit.addEventListener('pointerdown', function (e) {
       if (e.button > 0) return;
       e.preventDefault();
-      drag = { id: e.pointerId, x: e.clientX, y: e.clientY };
-      mode = 'drag';
-      yaw.v = pitch.v = offX.v = offY.v = 0;
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), vel: 0, velV: 0, moved: false };
+      if (spinning) { yaw.x = wrap(yaw.x); pitch.x = wrap(pitch.x); spinning = false; }
+      spinVel = spinVelV = 0;
+      yaw.v = pitch.v = 0;
       layer.classList.add('is-dragging');
       try { hit.setPointerCapture(e.pointerId); } catch (_) {}
       wake();
     });
     hit.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.id) return;
+      var now = performance.now();
       var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       if (dx || dy) drag.moved = true;
-      offX.x += dx;
-      offY.x += dy;
       yaw.x += dx * C.DRAG_SPEED;
       pitch.x += dy * C.DRAG_SPEED;
+      var dt = Math.max(8, now - drag.t) / 1000;
+      drag.vel = drag.vel * 0.6 + (dx * C.DRAG_SPEED / dt) * 0.4;     // smoothed flick speed, sideways
+      drag.velV = drag.velV * 0.6 + (dy * C.DRAG_SPEED / dt) * 0.4;   // and top over bottom
       drag.x = e.clientX;
       drag.y = e.clientY;
+      drag.t = now;
       wake();
     });
     function release(e) {
       if (!drag || e.pointerId !== drag.id) return;
       var dragged = drag.moved;
+      // a flick keeps turning; it then slows (or speeds) into the idle spin
+      var fresh = performance.now() - drag.t < 120;
+      var fling = fresh ? drag.vel : 0, flingV = fresh ? drag.velV : 0;
       drag = null;
       layer.classList.remove('is-dragging');
       // first real drag: the hint has done its job, never show it again
@@ -291,11 +295,10 @@ var HOA_CREST_CONFIG = {
         hintDone = true;
         try { localStorage.setItem(HINT_KEY, '1'); } catch (_) {}
       }
-      yaw.x = wrap(yaw.x);              // shortest way home, never unwinding whole turns
+      yaw.x = wrap(yaw.x);
       pitch.x = wrap(pitch.x);
-      yaw.v = pitch.v = offX.v = offY.v = 0;
-      mode = 'return';
-      lastActive = performance.now();
+      yaw.v = clamp(fling, C.MAX_FLING);
+      pitch.v = clamp(flingV, C.MAX_FLING);
       wake();
     }
     hit.addEventListener('pointerup', release);
@@ -307,7 +310,6 @@ var HOA_CREST_CONFIG = {
       s.v += (-k * (s.x - target) - d * s.v) * h;   // semi-implicit Euler
       s.x += s.v * h;
     }
-    function atRest(s, target, eps) { return Math.abs(s.x - target) < eps && Math.abs(s.v) < eps; }
 
     function frame(now) {
       raf = 0;
@@ -315,58 +317,55 @@ var HOA_CREST_CONFIG = {
       acc += Math.max(0, Math.min(0.1, (now - last) / 1000));
       last = now;
 
-      // idle: nobody steering it (mouse still / gone, or touch at rest) -> it turns on its own
+      // spins whenever nobody is holding or hovering it (once it has landed)
       var landed = introStart === 0 || (introStart > 0 && now - introStart > C.INTRO_MS);
-      var nowIdle = !reduceMotion && mode === 'hover' && !overLogo && landed &&
-        (!pointer || now - lastActive > C.IDLE_AFTER);
-      if (nowIdle !== idle) {
-        if (nowIdle) { spinVel = yaw.v; }                         // carry on from how it was moving
-        else { yaw.x = wrap(yaw.x); yaw.v = spinVel; spinVel = 0; } // back to the cursor, the short way
-        idle = nowIdle;
+      var nowSpin = !reduceMotion && landed && !drag && !overLogo;
+      if (nowSpin !== spinning) {
+        if (nowSpin) { spinVel = yaw.v; spinVelV = pitch.v; }        // carry on from how it was moving
+        else {                                                      // hovered: come round, the short way
+          yaw.x = wrap(yaw.x); pitch.x = wrap(pitch.x);
+          yaw.v = spinVel; pitch.v = spinVelV; spinVel = spinVelV = 0;
+        }
+        spinning = nowSpin;
       }
 
-      var t = mode === 'hover' ? hoverTarget() : [0, 0];
-      var k = mode === 'hover' ? C.HOVER_STIFFNESS : K_RETURN;
-      var d = mode === 'hover' ? C.HOVER_DAMPING : D_RETURN;
-      // coming back from a spin (still outside the hover range): a slower, critically damped turn
-      if (mode === 'hover' && !idle && Math.abs(yaw.x) > MAX_YAW + 0.05) { k = 16; d = 8; }
+      var t = hoverTarget();
+      // coming round from a spin or a drag (outside the hover range): a slower, critically damped turn
+      var far = Math.abs(yaw.x) > MAX_YAW + 0.05 || Math.abs(pitch.x) > MAX_PITCH + 0.05;
+      var k = far ? 16 : C.HOVER_STIFFNESS;
+      var d = far ? 8 : C.HOVER_DAMPING;
       while (acc >= STEP) {
-        if (idle) {
-          spinVel += (TAU / C.SPIN_SECONDS - spinVel) * (1 - Math.exp(-1.2 * STEP));   // eases up to speed
-          yaw.x += spinVel * STEP;
-          if (yaw.x > Math.PI) yaw.x -= TAU;
-          spring(pitch, 0, k, d, STEP);
-          spring(offX, 0, K_RETURN, D_RETURN, STEP);
-          spring(offY, 0, K_RETURN, D_RETURN, STEP);
-        } else if (mode !== 'drag') {
+        if (spinning) {
+          var ramp = 1 - Math.exp(-1.2 * STEP);                                  // eases to the idle speeds
+          spinVel += (TAU / C.SPIN_SECONDS - spinVel) * ramp;
+          spinVelV += (TAU / C.SPIN_SECONDS_VERTICAL - spinVelV) * ramp;
+          yaw.x = wrap(yaw.x + spinVel * STEP);
+          pitch.x = wrap(pitch.x + spinVelV * STEP);
+        } else if (!drag) {
           spring(yaw, t[0], k, d, STEP);
           spring(pitch, t[1], k, d, STEP);
-          spring(offX, 0, K_RETURN, D_RETURN, STEP);
-          spring(offY, 0, K_RETURN, D_RETURN, STEP);
         }
         spring(grab, drag ? 1 : 0, 160, 2 * Math.sqrt(160), STEP);
         acc -= STEP;
       }
-      // hover limits; after a spin it first eases back inside them, then stays there
-      if (mode === 'hover' && !idle) {
+      // hover limits, once it is inside them
+      if (!spinning && !drag) {
         if (Math.abs(yaw.x) <= MAX_YAW + 1e-3) yaw.x = clamp(yaw.x, MAX_YAW);
         if (Math.abs(pitch.x) <= MAX_PITCH + 1e-3) pitch.x = clamp(pitch.x, MAX_PITCH);
       }
-      if (mode === 'return' && atRest(yaw, 0, 1e-3) && atRest(pitch, 0, 1e-3) && atRest(offX, 0, 0.3) && atRest(offY, 0, 0.3)) mode = 'hover';
 
-      /* where: printed label -> beside the bottle (lift-off), plus wherever it is carried */
+      /* where: printed label -> its resting place on the bottle (lift-off); it stays there */
       if (introStart < 0 && revealedAt && now - revealedAt > C.INTRO_DELAY) introStart = now;
       var i = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01((now - introStart) / C.INTRO_MS);
       var lift = ease(i);
       var alpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
       var L = label();
       var Hm = homePose(L);
-      var bob = reduceMotion || drag ? 0 : Math.sin((now - t0) / 1000 * 1.1) * Hm.s * 0.03 * lift;
-      var swell = 1 + 0.08 * grab.x;                                             // picked up: a touch closer
+      var bob = reduceMotion ? 0 : Math.sin((now - t0) / 1000 * 1.1) * Hm.s * 0.03 * lift;
       pose = {
-        x: mix(L.x, Hm.x, lift) + offX.x,
-        y: mix(L.y, Hm.y, lift) + bob + offY.x,
-        s: mix(L.s, Hm.s, lift) * swell
+        x: mix(L.x, Hm.x, lift),
+        y: mix(L.y, Hm.y, lift) + bob,
+        s: mix(L.s, Hm.s, lift) * (1 + 0.06 * grab.x)                            // held: a touch closer
       };
       var tip = -Math.sin(Math.PI * lift) * 0.2;                                 // tips up as it comes forward
 
@@ -383,22 +382,29 @@ var HOA_CREST_CONFIG = {
       hit.style.transform = 'translate(' + (pose.x - side / 2) + 'px,' + (pose.y - side / 2) + 'px)';
       hit.style.visibility = alpha > 0.5 ? 'visible' : 'hidden';
 
-      // the hint: under the logo once it has landed, hidden while it is carried
-      var showHint = !hintDone && i >= 1 && !drag && mode === 'hover' && Math.abs(offX.x) < 2 && Math.abs(offY.x) < 2;
+      // the hint: under the logo once it has landed, until the first drag
+      var showHint = !hintDone && i >= 1 && !drag;
       hint.classList.toggle('is-shown', showHint);
       if (showHint || hint.style.transform === '') {
-        if (!hintW) hintW = hint.offsetWidth;
-        var hx = Math.max(10 + hintW / 2, Math.min(vw - 10 - hintW / 2, pose.x));   // stays on screen
-        hint.style.transform = 'translate(' + hx + 'px,' + (pose.y - bob + pose.s * 0.52 + 12) + 'px) translateX(-50%)';
+        if (!hintW) { hintW = hint.offsetWidth; hintH = hint.offsetHeight; }
+        var hx, hy, ly = pose.y - bob;                                            // the hint doesn't bob
+        if (Hm.hint === 'below') { hx = pose.x; hy = ly + pose.s * 0.52 + 12; }
+        else if (Hm.hint === 'above') { hx = pose.x; hy = ly - pose.s * 0.52 - 12 - hintH; }
+        else {
+          hx = pose.x + (Hm.hint === 'left' ? -1 : 1) * (pose.s * 0.52 + 14 + hintW / 2);
+          hy = ly - hintH / 2;
+        }
+        hx = Math.max(10 + hintW / 2, Math.min(vw - 10 - hintW / 2, hx));       // stays on screen
+        hint.style.transform = 'translate(' + hx + 'px,' + hy + 'px) translateX(-50%)';
       }
 
-      // hero gone and the logo back home: stop
-      if (!visible && !drag && mode === 'hover') { pause(); return; }
+      // hero out of view and nobody holding it: stop
+      if (!visible && !drag) { pause(); return; }
       raf = requestAnimationFrame(frame);
     }
 
     function wake() {
-      if (running || !dims || document.hidden || !(visible || drag || mode === 'return')) return;
+      if (running || !dims || document.hidden || !(visible || drag)) return;
       running = true;
       layer.hidden = false;
       last = performance.now();
@@ -406,7 +412,7 @@ var HOA_CREST_CONFIG = {
       raf = requestAnimationFrame(frame);
     }
     function pause() {
-      if (drag || mode === 'return') return;   // finish carrying it home first
+      if (drag) return;
       running = false;
       if (raf) cancelAnimationFrame(raf);
       raf = 0;

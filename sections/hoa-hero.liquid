@@ -78,7 +78,7 @@
 
   {%- comment -%}
     3D logo (assets/hoa-crest.js): the client's gold Agha logo lifts off the logo printed on the
-    first slide's lifted bottle, rests beside it, and can be dragged anywhere and turned. It is
+    first slide's lifted bottle and rests centred on it, turning on its own; dragging turns it. It is
     drawn on a fixed layer the script adds; this element only carries the model URL.
   {%- endcomment -%}
   {%- if s.show_logo3d -%}
@@ -117,7 +117,7 @@
   "limit": 1,
   "max_blocks": 5,
   "settings": [
-    { "type": "checkbox", "id": "show_logo3d", "label": "3D Agha logo", "default": true, "info": "Lifts off the logo on the first slide's bottle (needs 'Lift the bottle' on) and rests beside it. Visitors can drag it anywhere; it springs back." },
+    { "type": "checkbox", "id": "show_logo3d", "label": "3D Agha logo", "default": true, "info": "Lifts off the logo on the first slide's bottle (needs 'Lift the bottle' on) and rests centred on it, turning slowly. Visitors can drag to turn it." },
     { "type": "text", "id": "logo3d_hint", "label": "3D logo hint", "default": "Drag to rotate", "info": "Shown under the logo, with a hand icon." },
     { "type": "text", "id": "logo3d_model_url", "label": "3D logo model (.glb) URL", "info": "Leave empty to use agha-crest.glb from the theme's assets. If the theme upload refuses .glb files, upload it under Content > Files, copy its URL and paste it here." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Eau de Parfum · Seven fragrances" },
