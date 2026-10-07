@@ -49,7 +49,9 @@
     },
     "the_house": {
       "type": "hoa-manifesto",
-      "settings": {}
+      "settings": {
+        "show_mandala": false
+      }
     },
     "signature": {
       "type": "hoa-fragrances",

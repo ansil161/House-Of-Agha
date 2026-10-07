@@ -5,7 +5,7 @@
 
    1. Open: it appears exactly over the logo printed on the Oud Fury label in the
       hero photo, then lifts off and comes forward to rest centred on the bottle, larger,
-      floating gently. It scrolls away with the hero.
+      floating gently; from there it travels down the homepage (7).
    2. Hover (mouse over the logo): it stops spinning, comes round to face front
       the short way, and leans toward the cursor, limited to ±MAX_YAW / ±MAX_PITCH.
    3. Drag: turns it in place, in any direction (DRAG_SPEED rad per px); it does
@@ -19,11 +19,17 @@
    6. A small "Drag to rotate" hint with a hand icon sits under it at rest, only
       until the visitor's first drag; after that it never shows again (remembered
       in localStorage, so not on later visits either).
+   7. The journey: the same logo travels down the homepage. Each stop is pinned to its
+      content (it scrolls with it); between stops it glides to the next spot and size,
+      fading out across product/film stretches and back in at the next stop (JOURNEY
+      below). Rendering stops while it is hidden. Desktop: hero -> "Seven fragrances"
+      headline -> The House photo seal -> World headline -> gone. Phones: hero -> The
+      House seal -> gone.
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
    Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
    settles back to front. three.js (not otherwise in the theme) loads from jsdelivr after
-   the page's own load; rendering stops while the hero is out of view.
+   the page's own load; rendering stops while the journey has it hidden.
    ========================================================================== */
 
 /* ----------------------------- CONFIG ----------------------------------- */
@@ -52,6 +58,16 @@ var HOA_CREST_CONFIG = {
     desktop: { cx: 0.4969, cy: 0.4285, h: 0.1085 },   // hoa-hero-oud-fury-bottle.webp
     phone:   { cx: 0.4948, cy: 0.4305, h: 0.1116 }    // hoa-oud-fury-portrait-bottle.webp
   },
+  // the homepage journey: where the logo holds still (as fractions of the viewport
+  // height: it arrives when its spot is at `in`, leaves when it reaches `out`)
+  JOURNEY: {
+    WIDE: 1024,               // px: below this only the hero and The House stops (layouts stack)
+    HERO_HOLD: 0.25,          // hero: holds until the page has scrolled this much of a viewport
+    FADE: 0.35,               // share of each hidden stretch spent fading out / back in...
+    FADE_VH: 0.5,             // ...but never longer than this much scroll (x viewport): long stretches stay dark
+    END_FADE: 0.3,            // after the last stop it fades out over this much scroll (x viewport)
+    SMOOTH: 170               // spring stiffness on the travelling position (inertia)
+  },
   THREE_URL: 'https://cdn.jsdelivr.net/npm/three@0.169.0/'
 };
 /* ------------------------------------------------------------------------ */
@@ -63,7 +79,6 @@ var HOA_CREST_CONFIG = {
   var bottle = document.querySelector('[data-hoa-hero-bottle] img');
   var modelUrl = C.MODEL_URL || (anchor && anchor.getAttribute('data-src'));
   if (!anchor || !bottle || !modelUrl || !window.IntersectionObserver) return;
-  var hero = bottle.closest('section') || anchor.parentElement;
 
   var html = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -187,7 +202,9 @@ var HOA_CREST_CONFIG = {
     try { hintDone = localStorage.getItem(HINT_KEY) === '1'; } catch (_) {}
     var introStart = -1;                                  // ms; -1 = not yet, 0 = skipped
     var pose = null;                                      // { x, y, s }: centre + logo height, px
-    var visible = false;
+    var J = C.JOURNEY;
+    var px = { x: 0, v: 0 }, py = { x: 0, v: 0 }, ps = { x: 0, v: 0 };   // travelling position, smoothed
+    var snap = true;                                      // next frame: jump straight to the target
     var running = false, raf = 0, last = 0, acc = 0, t0 = performance.now();
 
     new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(modelUrl, function (gltf) {
@@ -203,11 +220,8 @@ var HOA_CREST_CONFIG = {
 
       size();
       window.addEventListener('resize', size);
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        visible ? wake() : pause();
-      }).observe(hero);
       window.addEventListener('scroll', wake, { passive: true });
+      wake();
       document.addEventListener('visibilitychange', function () { document.hidden ? pause() : wake(); });
     }, undefined, fail);
 
@@ -224,7 +238,7 @@ var HOA_CREST_CONFIG = {
       return { x: left + L.cx * dw, y: top + L.cy * dh, s: L.h * dh, left: left, right: left + dw, home: phone ? C.HOME.phone : C.HOME.desktop };
     }
     // the headline's words ("House", "of Agha"): their line's vertical centre
-    var words = hero.querySelectorAll('[data-hoa-hero-word]');
+    var words = document.querySelectorAll('[data-hoa-hero-word]');
     function lineY() {
       if (!words.length) return null;
       var r = words[0].getBoundingClientRect();
@@ -239,6 +253,92 @@ var HOA_CREST_CONFIG = {
         s: s,
         hint: H.hint || 'below'
       };
+    }
+
+    /* ---------- the journey: the other stops down the homepage ---------- */
+    // each returns { x, y, s } in viewport px, pinned to its content, or null when it doesn't fit
+    function textBox(el) {
+      var rg = document.createRange();
+      rg.selectNodeContents(el);
+      return rg.getBoundingClientRect();
+    }
+    function clampN(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    var sigHead = document.querySelector('.hoa-frag-section h2');
+    var houseShell = document.querySelector('.hoa-manifesto__plate--main .hoa-manifesto__shell');
+    var worldHead = document.querySelector('.hoa-world-section h2');
+    var worldLede = document.querySelector('.hoa-world-section .hoa-lede');
+    var STOPS = [
+      { // "Seven fragrances. Seven worlds."  ◉   right of the headline, on its line
+        wide: true, inAt: 0.72, outAt: 0.24,
+        pose: function () {
+          if (!sigHead) return null;
+          var t = textBox(sigHead), h = sigHead.getBoundingClientRect();
+          var s = clampN(vw * 0.072, 84, 118);
+          if (h.right - t.right < s + 48) return null;
+          return { x: (t.right + h.right) / 2, y: t.top + t.height / 2, s: s };
+        }
+      },
+      { // The House: a seal on the main photo's lower edge (desktop: right of centre;
+        // stacked layout: on the gap between the two photos)
+        wide: false, inAt: 0.8, outAt: 0.25,
+        pose: function () {
+          if (!houseShell) return null;
+          var r = houseShell.getBoundingClientRect();
+          if (!r.width) return null;
+          if (vw > 960) {
+            var s = clampN(vw * 0.1, 110, 150);
+            return { x: r.right - r.width * 0.11 - s / 2, y: r.bottom, s: s };
+          }
+          var sp = clampN(vw * 0.2, 76, 120);
+          return { x: r.right + (vw < 768 ? 4 : 6), y: r.bottom - sp * 0.08, s: sp };
+        }
+      },
+      { // World: between "Beyond the bottle. Into the day." and its intro line, then it is gone
+        wide: true, inAt: 0.75, outAt: 0.25,
+        pose: function () {
+          if (!worldHead || !worldLede) return null;
+          var t = textBox(worldHead), l = worldLede.getBoundingClientRect();
+          var s = clampN(vw * 0.075, 84, 120);
+          if (l.left - t.right < s + 40) return null;
+          return { x: (t.right + l.left) / 2, y: t.top + t.height / 2, s: s };
+        }
+      }
+    ];
+
+    // where it should be for this scroll position: { x, y, s, a (0..1), hero (0..1) }
+    function journey(heroPose) {
+      var sy = window.scrollY, list = [{ pose: heroPose, a: 0, b: vh * J.HERO_HOLD, hero: true }];
+      var wide = vw >= J.WIDE;
+      for (var n = 0; n < STOPS.length; n++) {
+        var st = STOPS[n];
+        if (st.wide && !wide) continue;
+        var p = st.pose();
+        if (!p) continue;
+        var doc = p.y + sy;                                 // the spot's place on the page
+        list.push({ pose: p, a: doc - st.inAt * vh, b: doc - st.outAt * vh });
+      }
+      for (var m = 1; m < list.length; m++) {               // never let two holds overlap
+        if (list[m].a < list[m - 1].b + 1) list[m - 1].b = list[m].a - 1;
+      }
+      var k, A, B, t;
+      for (k = 0; k < list.length; k++) {
+        A = list[k];
+        if (sy <= A.b) {                                     // holding at stop k
+          if (sy >= A.a || k === 0) return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: 1, hero: A.hero ? 1 : 0 };
+          B = A; A = list[k - 1];                            // between stop k-1 and k
+          t = clamp01((sy - A.b) / Math.max(1, B.a - A.b));
+          var e = ease(t);
+          var f = Math.min(J.FADE, J.FADE_VH * vh / Math.max(1, B.a - A.b));
+          var a = t < f ? 1 - t / f : t > 1 - f ? (t - (1 - f)) / f : 0;   // out, hidden, back in
+          return {
+            x: mix(A.pose.x, B.pose.x, e), y: mix(A.pose.y, B.pose.y, e), s: mix(A.pose.s, B.pose.s, e),
+            a: a, hero: A.hero ? 1 - e : 0
+          };
+        }
+      }
+      A = list[list.length - 1];                             // past the last stop: fade out for good
+      t = clamp01((sy - A.b) / (vh * J.END_FADE));
+      return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: 1 - t, hero: A.hero ? 1 : 0 };
     }
 
     /* ---------- hover: over the logo it stops and leans toward the cursor ---------- */
@@ -314,7 +414,8 @@ var HOA_CREST_CONFIG = {
     function frame(now) {
       raf = 0;
       if (!running) return;
-      acc += Math.max(0, Math.min(0.1, (now - last) / 1000));
+      var frameDt = Math.max(0, Math.min(0.1, (now - last) / 1000));
+      acc += frameDt;
       last = now;
 
       // spins whenever nobody is holding or hovering it (once it has landed)
@@ -354,19 +455,31 @@ var HOA_CREST_CONFIG = {
         if (Math.abs(pitch.x) <= MAX_PITCH + 1e-3) pitch.x = clamp(pitch.x, MAX_PITCH);
       }
 
-      /* where: printed label -> its resting place on the bottle (lift-off); it stays there */
+      /* where: printed label -> its resting place on the bottle (lift-off), then the journey */
       if (introStart < 0 && revealedAt && now - revealedAt > C.INTRO_DELAY) introStart = now;
       var i = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01((now - introStart) / C.INTRO_MS);
       var lift = ease(i);
-      var alpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
+      var introAlpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
       var L = label();
       var Hm = homePose(L);
       var bob = reduceMotion ? 0 : Math.sin((now - t0) / 1000 * 1.1) * Hm.s * 0.03 * lift;
-      pose = {
+      var at = journey({
         x: mix(L.x, Hm.x, lift),
-        y: mix(L.y, Hm.y, lift) + bob,
-        s: mix(L.s, Hm.s, lift) * (1 + 0.06 * grab.x)                            // held: a touch closer
-      };
+        y: mix(L.y, Hm.y, lift),
+        s: mix(L.s, Hm.s, lift)
+      });
+      // travel with a little inertia (springs); while it lifts off the label, exactly on track
+      if (snap || i < 1) {
+        px.x = at.x; py.x = at.y; ps.x = at.s; px.v = py.v = ps.v = 0;
+        snap = false;
+      } else {
+        var kk = J.SMOOTH, dd = 2 * Math.sqrt(J.SMOOTH), h = Math.min(0.05, frameDt);
+        for (var q = 0; q < 4; q++) {
+          spring(px, at.x, kk, dd, h / 4); spring(py, at.y, kk, dd, h / 4); spring(ps, at.s, kk, dd, h / 4);
+        }
+      }
+      pose = { x: px.x, y: py.x + bob, s: ps.x * (1 + 0.06 * grab.x) };         // held: a touch closer
+      var alpha = at.a * (at.hero > 0.5 ? introAlpha : 1);
       var tip = -Math.sin(Math.PI * lift) * 0.2;                                 // tips up as it comes forward
 
       /* place it */
@@ -383,7 +496,7 @@ var HOA_CREST_CONFIG = {
       hit.style.visibility = alpha > 0.5 ? 'visible' : 'hidden';
 
       // the hint: under the logo once it has landed, until the first drag
-      var showHint = !hintDone && i >= 1 && !drag;
+      var showHint = !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
       hint.classList.toggle('is-shown', showHint);
       if (showHint || hint.style.transform === '') {
         if (!hintW) { hintW = hint.offsetWidth; hintH = hint.offsetHeight; }
@@ -398,13 +511,14 @@ var HOA_CREST_CONFIG = {
         hint.style.transform = 'translate(' + hx + 'px,' + hy + 'px) translateX(-50%)';
       }
 
-      // hero out of view and nobody holding it: stop
-      if (!visible && !drag) { pause(); return; }
+      // hidden by the journey (and nobody holding it): stop until the next scroll
+      if (at.a <= 0 && !drag) { pause(); return; }
       raf = requestAnimationFrame(frame);
     }
 
     function wake() {
-      if (running || !dims || document.hidden || !(visible || drag)) return;
+      if (running || !dims || document.hidden) return;
+      if (layer.hidden) snap = true;           // was hidden: appear where it belongs, no fly-in
       running = true;
       layer.hidden = false;
       last = performance.now();
