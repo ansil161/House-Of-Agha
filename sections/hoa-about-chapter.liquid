@@ -31,15 +31,15 @@
       {%- if s.text != blank -%}<p class="hoa-hc__text" data-hoa-hc-in>{{ s.text | newline_to_br }}</p>{%- endif -%}
       <span class="hoa-hc__rule hoa-hc__rule--2" aria-hidden="true" data-hoa-hc-rule></span>
       {%- if s.text_2 != blank -%}<p class="hoa-hc__text-2" data-hoa-hc-in>{{ s.text_2 | newline_to_br }}</p>{%- endif -%}
-      {%- comment -%} The Qutub Shahi miniature, small, at the foot of the left column (client, 2026-10-06) {%- endcomment -%}
+      {%- comment -%} The Qutub Shahi miniature at the foot of the left column (client, 2026-10-06); enlarged into the second paragraph's space 2026-10-07 {%- endcomment -%}
       {%- if s.mini_asset != blank or s.mini_image != blank -%}
         <figure class="hoa-hc__mini" data-hoa-hc-in>
           <span class="hoa-hc__mini-frame">
             <span class="hoa-hc__mini-img">
               {%- if s.mini_image != blank -%}
-                {{ s.mini_image | image_url: width: 500 | image_tag: widths: '300, 500', sizes: '180px', loading: 'lazy', alt: s.mini_alt }}
+                {{ s.mini_image | image_url: width: 500 | image_tag: widths: '300, 500', sizes: '360px', loading: 'lazy', alt: s.mini_alt }}
               {%- else -%}
-                <img src="{{ s.mini_asset | append: '-sm.webp' | asset_url }}" srcset="{{ s.mini_asset | append: '-sm.webp' | asset_url }} 400w, {{ s.mini_asset | append: '.webp' | asset_url }} 654w" sizes="180px" width="654" height="686" alt="{{ s.mini_alt | escape }}" loading="lazy" decoding="async">
+                <img src="{{ s.mini_asset | append: '-sm.webp' | asset_url }}" srcset="{{ s.mini_asset | append: '-sm.webp' | asset_url }} 400w, {{ s.mini_asset | append: '.webp' | asset_url }} 654w" sizes="360px" width="654" height="686" alt="{{ s.mini_alt | escape }}" loading="lazy" decoding="async">
               {%- endif -%}
             </span>
           </span>

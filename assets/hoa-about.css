@@ -2131,8 +2131,9 @@ body.hoa-about {
   color: var(--hc-mute);
 }
 
-/* The Qutub Shahi miniature, at the foot of the left column: a small round-top
-   window with a hairline, its caption beside it. It takes whatever height the
+/* The Qutub Shahi miniature, at the foot of the left column: a round-top
+   window with a hairline, its caption beside it. On About the second paragraph is
+   off (2026-10-07), so the miniature grows into that space (max-height 430v). It takes whatever height the
    column has left, so the copy above never gets pushed into the foot row. */
 .hoa-hc__mini {
   flex: 1 1 auto;
@@ -2145,7 +2146,7 @@ body.hoa-about {
 .hoa-hc__mini-frame {
   position: relative;
   height: 100%;
-  max-height: calc(190 * var(--v));
+  max-height: calc(430 * var(--v));
   min-height: 96px;
   aspect-ratio: 654 / 820;
   padding: calc(5 * var(--v));
@@ -2457,7 +2458,7 @@ body.hoa-about {
   .hoa-hc__text { max-width: 560px; font-size: 16px; }
   .hoa-hc__text-2 { max-width: 460px; font-size: 13.5px; }
   .hoa-hc__mini { flex: none; margin-top: 32px; }
-  .hoa-hc__mini-frame { height: 200px; max-height: none; padding: 5px; }
+  .hoa-hc__mini-frame { height: 340px; max-height: none; padding: 5px; }
   .hoa-hc__mini-cap { font-size: 14px; max-width: 170px; }
   .hoa-hc__lede { width: auto; max-width: 440px; margin-top: 36px; padding-left: 22px; font-size: 17px; }
   .hoa-hc__lede-mark { height: 100%; top: 4px; }
@@ -2474,7 +2475,7 @@ body.hoa-about {
   .hoa-hc__title { font-size: clamp(2.5rem, 11.6vw, 3.3rem); line-height: 0.98; }
   .hoa-hc__text { font-size: 15.5px; line-height: 1.7; }
   .hoa-hc__rule--2 { margin-top: 32px; }
-  .hoa-hc__mini-frame { height: 170px; }
+  .hoa-hc__mini-frame { height: 280px; }
   .hoa-hc__lede { font-size: 16.5px; }
   .hoa-hc__stage { --u: 1.08px; width: auto; height: auto; margin-top: 36px; }
   .hoa-hc__stage > * { top: auto; }
