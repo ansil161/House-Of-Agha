@@ -1337,16 +1337,16 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  /* soft fade at both edges so cards dissolve instead of being cut (user, 2026-10-07) */
-  --vc-fade: clamp(40px, 7vw, 110px);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--vc-fade), #000 calc(100% - var(--vc-fade)), transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0, #000 var(--vc-fade), #000 calc(100% - var(--vc-fade)), transparent 100%);
+  /* NO edge fade (2026-10-08, two user screenshots): any fade washed out a card's text.
+     Instead the cards are sized from the viewport (container query) so that at rest it
+     holds exactly 2 whole cards (1 on phones) — nothing is ever cut or faded. */
+  container-type: inline-size;
 }
-@media (max-width: 640px) { .hoa-voices__viewport { --vc-fade: 28px; } }
 .hoa-voices__viewport.is-dragging { cursor: grabbing; }
 .hoa-voices__track { display: flex; width: max-content; will-change: transform; }
 .hoa-voices__group { display: flex; gap: var(--vc-gap); margin: 0; padding: 0 var(--vc-gap) 0 0; list-style: none; }
-.hoa-voice { flex: 0 0 clamp(290px, 29vw, 408px); margin: 0; }
+.hoa-voice { flex: 0 0 calc((100cqw - var(--vc-gap)) / 2); margin: 0; }
+@media (max-width: 640px) { .hoa-voice { flex-basis: 100cqw; } }
 .hoa-voice__card {
   margin: 0;
   height: 100%;
@@ -1465,7 +1465,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-voices__title { font-size: clamp(2.4rem, 11vw, 3.2rem); }
   .hoa-voices__arrow { width: 42px; height: 42px; }
   .hoa-voices__arrows { margin-bottom: 4px; }
-  .hoa-voice { flex-basis: min(82vw, 340px); }
   .hoa-voice__card { border-radius: 24px; min-height: 230px; }
   .hoa-voices__visual { border-radius: 26px; aspect-ratio: 4 / 4.8; }
 }

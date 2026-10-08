@@ -2,12 +2,15 @@
    HOUSE OF AGHA — TESTIMONIALS (isolated module)
    sections/hoa-testimonials.liquid (redesigned 2026-10-07)
 
-   1. Quote row: glides left on its own, continuously and very smoothly (one rAF loop,
-      transform only, sub-pixel). The cards are printed twice, so when the row has moved
-      by one copy it wraps back without a seam. The arrows glide it one card back or
-      forward (eased), then the drift carries on. Pointer / touch drag moves it by hand.
-      The drift holds while the pointer is over the row, while it has focus, and while the
-      section is off screen or the tab is hidden. No drift with reduced motion.
+   1. Quote row: a step carousel. Cards REST with one card flush to the left edge (fully
+      readable, no half-faded text), then glide one card on every data-dwell ms (eased,
+      transform only). The cards are printed twice, so when the row has moved by one copy
+      it wraps back without a seam. The arrows glide one card back or forward; a pointer /
+      touch drag moves it by hand and snaps to the nearest card on release. Auto-advance
+      holds while the pointer is over the row, while it has focus, and while the section is
+      off screen or the tab is hidden. No auto-advance with reduced motion.
+      (2026-10-08: replaced the continuous drift — a card was always sliding through the
+      left-edge fade, so its stars and first words washed out.)
    2. Photo slides: crossfade every data-interval ms (3 s), each with its own rating panel.
       Same holds (off screen, hidden tab); no auto-advance with reduced motion.
    Per-instance state in a WeakMap; torn down on shopify:section:unload.
@@ -31,7 +34,7 @@
     var slides = Array.prototype.slice.call(section.querySelectorAll('[data-hoa-voices-slide]'));
     if (!viewport || !track || !group) return;
 
-    var SPEED = parseFloat(section.getAttribute('data-speed')) || 30;   // px per second
+    var DWELL = parseInt(section.getAttribute('data-dwell'), 10) || 4500; // rest per card, ms
     var INTERVAL = parseInt(section.getAttribute('data-interval'), 10) || 3000;
 
     var offset = 0;          // px the row has moved left
@@ -42,11 +45,12 @@
     var drag = null;
     var nudge = null;        // { from, to, t0, dur }
     var last = 0;
+    var idle = 0;            // ms the row has rested since the last move
     var raf = 0;
 
     function measure() {
-      var gap = parseFloat(getComputedStyle(group).columnGap) || 0;
-      loopW = group.getBoundingClientRect().width + gap;
+      // each group carries its own trailing gap (padding), so one copy = the group's width
+      loopW = group.getBoundingClientRect().width;
     }
     function wrap(x) { return loopW ? ((x % loopW) + loopW) % loopW : x; }
     function paint() { track.style.transform = 'translate3d(' + (-offset).toFixed(2) + 'px,0,0)'; }
@@ -66,14 +70,25 @@
         offset = wrap(nudge.from + (nudge.to - nudge.from) * easeInOut(p));
         if (p >= 1) nudge = null;
       } else if (!drag && !hover && !focus && !reduceMotion) {
-        offset = wrap(offset + SPEED * dt / 1000);
+        idle += dt;
+        if (idle >= DWELL) go(1);
       }
       paint();
     }
 
-    function go(dir) {
+    function glideTo(to) {
       // from/to stay unwrapped; frame() wraps the painted value, so the glide never jumps
-      nudge = { from: offset, to: offset + dir * cardStep(), t0: performance.now(), dur: reduceMotion ? 1 : 650 };
+      idle = 0;
+      nudge = { from: offset, to: to, t0: performance.now(), dur: reduceMotion ? 1 : 900 };
+    }
+    function go(dir) {
+      var step = cardStep();
+      var base = nudge ? nudge.to : offset;
+      glideTo(Math.round(base / step) * step + dir * step);
+    }
+    function snap() {
+      var step = cardStep();
+      glideTo(Math.round(offset / step) * step);
     }
     var onPrev = function () { go(-1); };
     var onNext = function () { go(1); };
@@ -93,11 +108,13 @@
     var onUp = function (e) {
       if (!drag || (e.pointerId != null && e.pointerId !== drag.id)) return;
       viewport.classList.remove('is-dragging');
+      var moved = drag.moved;
       drag = null;
       last = 0;
+      if (moved) snap();
     };
     var onEnter = function (e) { if (e.pointerType === 'mouse') hover = true; };
-    var onLeave = function () { hover = false; last = 0; };
+    var onLeave = function () { hover = false; last = 0; idle = 0; };
     var onFocusIn = function () { focus = true; };
     var onFocusOut = function () { focus = false; };
 
@@ -130,7 +147,13 @@
       last = 0;
     }, { rootMargin: '100px 0px' }) : null;
     if (io) io.observe(section);
-    var ro = 'ResizeObserver' in window ? new ResizeObserver(function () { measure(); offset = wrap(offset); paint(); }) : null;
+    var ro = 'ResizeObserver' in window ? new ResizeObserver(function () {
+      measure();
+      var step = cardStep();
+      nudge = null;
+      offset = wrap(Math.round(offset / step) * step);
+      paint();
+    }) : null;
     if (ro) ro.observe(group);
 
     if (prev) prev.addEventListener('click', onPrev);

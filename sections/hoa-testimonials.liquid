@@ -33,7 +33,7 @@
     assign avg_score = whole | append: '.' | append: tenth
   endif
 -%}
-<section class="hoa-voices" id="testimonials" data-hoa-voices data-interval="{{ s.interval | default: 3 | times: 1000 }}" data-speed="{{ s.speed | default: 30 }}" aria-labelledby="voices-{{ section.id }}-title">
+<section class="hoa-voices" id="testimonials" data-hoa-voices data-interval="{{ s.interval | default: 3 | times: 1000 }}" data-dwell="{{ s.dwell | default: 4.5 | times: 1000 }}" aria-labelledby="voices-{{ section.id }}-title">
   <div class="hoa-wrap hoa-voices__grid">
     <div class="hoa-voices__main">
       <header class="hoa-voices__head">
@@ -176,7 +176,7 @@
     { "type": "textarea", "id": "statement", "label": "Heading (rows join into one line)", "info": "Wrap words in *asterisks* for the serif italic.", "default": "Loved by those who *wear it.*" },
     { "type": "text", "id": "score_label", "label": "Rating label (default)", "default": "Customer rating" },
     { "type": "range", "id": "interval", "label": "Photo change (seconds)", "min": 2, "max": 10, "step": 1, "default": 3 },
-    { "type": "range", "id": "speed", "label": "Quote glide speed (px per second)", "min": 10, "max": 80, "step": 5, "default": 30 }
+    { "type": "range", "id": "dwell", "label": "Quote change (seconds)", "min": 3, "max": 10, "step": 0.5, "default": 4.5 }
   ],
   "blocks": [
     {
