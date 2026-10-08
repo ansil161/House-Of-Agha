@@ -315,19 +315,6 @@ async function renderTemplate(name, templateGlobals) {
     console.log('catalog on checkout.html');
   }
 
-  // V1 / V2 version switch (assets/version-switch.js) — preview-only floating pill, on every page
-  // including checkout. V2 loads the same file from /v2/_src/partials/head.html.
-  {
-    const switchRe = /[ \t]*<script src="\/?assets\/version-switch\.js" defer><\/script>\n/;
-    const pages = fs.readdirSync(THEME).filter((f) => f.endsWith('.html'));
-    for (const f of pages) {
-      const file = path.join(THEME, f);
-      const html = fs.readFileSync(file, 'utf8').replace(switchRe, '');
-      fs.writeFileSync(file, html.replace('</head>', () => '  <script src="assets/version-switch.js" defer></script>\n</head>'));
-    }
-    console.log('version switch on', pages.length, 'pages');
-  }
-
   // The homepage opening intro (preloader) was removed from the theme on 2026-09-28; strip any copy
   // an earlier build left in index.html.
   {
