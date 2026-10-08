@@ -1337,7 +1337,12 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  /* soft fade at both edges so cards dissolve instead of being cut (user, 2026-10-07) */
+  --vc-fade: clamp(40px, 7vw, 110px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--vc-fade), #000 calc(100% - var(--vc-fade)), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 var(--vc-fade), #000 calc(100% - var(--vc-fade)), transparent 100%);
 }
+@media (max-width: 640px) { .hoa-voices__viewport { --vc-fade: 28px; } }
 .hoa-voices__viewport.is-dragging { cursor: grabbing; }
 .hoa-voices__track { display: flex; width: max-content; will-change: transform; }
 .hoa-voices__group { display: flex; gap: var(--vc-gap); margin: 0; padding: 0 var(--vc-gap) 0 0; list-style: none; }
@@ -2695,7 +2700,28 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   opacity: 0.26;
 }
 .hoa-manifesto__mandala .hero-mandala { stroke: #9C7C40; }
-.hoa-manifesto::before { content: none; }   /* the girih lattice is off here: only the mandala (user, 2026-10-07) */   /* brass: the hero's pale gold vanishes on paper */
+/* The House = Qutub Shahi tomb jaali (2026-10-08, user: a Hyderabad pattern that no other home
+   section uses, clearly visible). Six-point stars and hexagons in double strapwork with a rosette
+   in every hexagon (assets/hoa-qutub-jaali.svg, tools/gen-qutub-jaali.py, tile 30 x 51.96).
+   Brass, full strength around the photographs and the edges, eased back behind the copy. */
+.hoa-manifesto::before {
+  content: "";
+  background: #A8842F;
+  opacity: 0.34;
+  -webkit-mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 60px 103.92px, linear-gradient(90deg, rgba(0,0,0,.55) 0, rgba(0,0,0,.28) 22%, rgba(0,0,0,.28) 50%, #000 66%);
+          mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 60px 103.92px, linear-gradient(90deg, rgba(0,0,0,.55) 0, rgba(0,0,0,.28) 22%, rgba(0,0,0,.28) 50%, #000 66%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+@media (max-width: 960px) {
+  .hoa-manifesto::before {
+    opacity: 0.26;
+    -webkit-mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 48px 83.14px, linear-gradient(180deg, #000, rgba(0,0,0,.35) 30%, rgba(0,0,0,.35) 55%, #000 80%);
+            mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 48px 83.14px, linear-gradient(180deg, #000, rgba(0,0,0,.35) 30%, rgba(0,0,0,.35) 55%, #000 80%);
+    -webkit-mask-composite: source-in;
+            mask-composite: intersect;
+  }
+}
 .hero-mandala {
   display: block;
   width: 100%;
