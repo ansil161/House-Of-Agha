@@ -1,0 +1,66 @@
+{% comment %}
+  Campaign diptych: full-bleed, edge to edge, no heading. Each "panel" block is one
+  campaign photo with its fragrance name and a link to the product. Each panel spans
+  the full width, one after another. Styles live in assets/hoa-home.css
+  (search "Campaign diptych").
+{% endcomment %}
+{%- assign panels = section.blocks | where: 'type', 'panel' -%}
+{%- if panels.size > 0 -%}
+<section class="hoa-campaign" id="campaign">
+  {%- for block in panels limit: 3 -%}
+    {%- assign b = block.settings -%}
+    <a class="hoa-campaign__panel{% if b.fit == 'frame' %} hoa-campaign__panel--frame{% endif %}" href="{{ b.url | default: '#' }}" style="--focus: {{ b.focus | default: '50% 30%' }}" {{ block.shopify_attributes }}>
+      {%- if b.fit == 'frame' -%}
+        {%- comment -%} Tall photo: blurred copy fills the width, the photo itself sits whole-height on the right. {%- endcomment -%}
+        <span class="hoa-campaign__backdrop" aria-hidden="true">
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: '50vw' -%}
+        </span>
+        <span class="hoa-campaign__frame">
+          {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 750px) 60vw, 100vw' -%}
+        </span>
+      {%- else -%}
+        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '100vw' -%}
+      {%- endif -%}
+      <span class="hoa-campaign__cap">
+        {%- if b.kicker != blank -%}<span class="hoa-campaign__kicker">{{ b.kicker }}</span>{%- endif -%}
+        <span class="hoa-campaign__name">{{ b.name }}</span>
+        <span class="hoa-campaign__cta">Discover <span aria-hidden="true">&rarr;</span></span>
+      </span>
+    </a>
+  {%- endfor -%}
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "HOA Campaign",
+  "tag": "div",
+  "class": "hoa-campaign-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset", "label": "Theme asset base name" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 1600 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 2000 },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "kicker", "label": "Kicker", "default": "Eau de Parfum" },
+        { "type": "text", "id": "name", "label": "Fragrance name" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "text", "id": "focus", "label": "Image focus (CSS object-position)", "default": "50% 30%" },
+        {
+          "type": "select", "id": "fit", "label": "Fit", "default": "cover",
+          "options": [
+            { "value": "cover", "label": "Fill the panel" },
+            { "value": "frame", "label": "Tall photo: show on the right over a blurred copy" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [{ "name": "HOA Campaign" }]
+}
+{% endschema %}

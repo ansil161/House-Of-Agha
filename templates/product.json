@@ -633,10 +633,10 @@
           "type": "photo",
           "settings": {
             "products": "oud-of-dark-paradise",
-            "asset": "hoa-hero-dark-paradise",
-            "alt": "Oud of Dark Paradise on dark stone in a shaft of light",
-            "w": 2000,
-            "h": 1125,
+            "asset": "hoa-pgal-dark-paradise-lava",
+            "alt": "Oud of Dark Paradise on black rock among rivers of lava",
+            "w": 1600,
+            "h": 1600,
             "focus": "50% 50%"
           }
         },
@@ -644,10 +644,20 @@
           "type": "photo",
           "settings": {
             "products": "oud-of-dark-paradise",
-            "asset": "hoa-alt-dark-paradise",
-            "alt": "Oud of Dark Paradise in smoke on a rock",
+            "asset": "hoa-pgal-dark-paradise-panther",
+            "alt": "Oud of Dark Paradise before a black panther in the dark",
+            "w": 1600,
+            "h": 1600
+          }
+        },
+        "photo_27b": {
+          "type": "photo",
+          "settings": {
+            "products": "oud-of-dark-paradise",
+            "asset": "hoa-pgal-dark-paradise-chains",
+            "alt": "Oud of Dark Paradise wrapped in black chain",
             "w": 1080,
-            "h": 1350
+            "h": 1440
           }
         },
         "photo_28": {
@@ -720,6 +730,7 @@
         "photo_25",
         "photo_26",
         "photo_27",
+        "photo_27b",
         "photo_28",
         "photo_29",
         "photo_30",

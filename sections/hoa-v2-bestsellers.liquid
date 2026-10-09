@@ -1,0 +1,101 @@
+{%- comment -%}
+  Home V2 · 06 Best sellers — the site's own product card (snippets/hoa-shop-card.liquid, hoa-card.css)
+  so prices, offers, wishlist, quick add and the hover image carousel all keep working.
+  Products: "Collection" setting, else collections['best-sellers'], else the catalog's
+  "Signature Collection" bundle ("Our three best sellers").
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- liquid
+  assign s = section.settings
+  assign catalog = catalog_json | parse_json
+  assign source = s.collection
+  if source == blank
+    assign source = collections['best-sellers']
+  endif
+  assign use_shopify = false
+  if source != blank and source.products_count > 0
+    assign use_shopify = true
+  endif
+  assign members = ''
+  for bd in catalog.bundles
+    if bd.id == 'signature'
+      assign members = bd.members | join: ','
+    endif
+  endfor
+  assign member_list = members | split: ','
+-%}
+<section class="v2-best v2-pad" id="best-sellers">
+  <div class="v2-wrap">
+    <header class="v2-head">
+      <p class="v2-eyebrow" data-v2-reveal><span>06</span>{{ s.eyebrow }}</p>
+      <h2 class="v2-h2" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      <a class="v2-link v2-head__link" href="{{ s.all_url | default: routes.all_products_collection_url }}" data-v2-reveal><span>{{ s.all_label }}</span><span class="v2-link__arrow" aria-hidden="true">&rarr;</span></a>
+    </header>
+
+    <div class="v2-best__grid" data-v2-stagger>
+      {%- if use_shopify -%}
+        {%- for product in source.products limit: s.limit -%}
+          {%- liquid
+            assign fam = product.metafields.custom.family.value | default: product.type
+            assign variant = product.selected_or_first_available_variant
+            assign mood = product.media[1].preview_image
+            assign sale_rupees = product.price | divided_by: 100
+            assign sale_txt = product.price | money
+            assign regular_rupees = ''
+            assign regular_txt = ''
+            if product.compare_at_price > product.price
+              assign regular_rupees = product.compare_at_price | divided_by: 100
+              assign regular_txt = product.compare_at_price | money
+            endif
+            assign thumb = product.featured_media.preview_image | image_url: width: 240
+          -%}
+          {%- capture img_main -%}{%- if product.featured_media -%}{{ product.featured_media.preview_image | image_url: width: 900 | image_tag: widths: '300, 600, 900', sizes: '(min-width: 961px) 30vw, 50vw', loading: 'lazy', alt: product.title }}{%- endif -%}{%- endcapture -%}
+          {%- capture img_mood -%}{%- if mood -%}{{ mood | image_url: width: 900 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}{%- endcapture -%}
+          {%- render 'hoa-shop-card', index: forloop.index0, handle: product.handle, url: product.url, name: product.title, family: fam, gift: false, img_main: img_main, img_mood: img_mood, media: product.media, thumb: thumb, available: product.available, sale_price: sale_rupees, regular_price: regular_rupees, sale_text: sale_txt, regular_text: regular_txt, rating: product.metafields.reviews.rating.value.rating, review_count: product.metafields.reviews.rating_count.value, best_seller: true, kind: s.product_label, shopify_product: product, variant_id: variant.id -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for h in member_list -%}
+          {%- for p in catalog.products -%}
+            {%- if p.handle == h -%}
+              {%- liquid
+                assign p_asset = 'hoa-product-' | append: p.asset
+                assign m_asset = 'hoa-alt-' | append: p.asset
+                assign p_alt = p.name | append: ' Eau de Parfum bottle'
+                assign thumb_file = p_asset | append: '-sm.webp'
+                assign thumb = thumb_file | asset_url
+                assign purl = '/products/' | append: p.handle
+                assign sale_v = p.salePrice | default: p.regularPrice
+                assign is_available = true
+                if p.inventory == 0
+                  assign is_available = false
+                endif
+              -%}
+              {%- capture img_main -%}{%- render 'hoa-img', name: p_asset, w: 1200, h: 1500, alt: p_alt, sizes: '(min-width: 961px) 30vw, 50vw' -%}{%- endcapture -%}
+              {%- capture img_mood -%}{%- render 'hoa-img', name: m_asset, w: 1080, h: 1350, alt: '', sizes: '(min-width: 961px) 30vw, 50vw' -%}{%- endcapture -%}
+              {%- render 'hoa-shop-card', index: 0, handle: p.handle, url: purl, name: p.name, family: p.family, wearer: p.wearer, gift: false, img_main: img_main, img_mood: img_mood, gallery: p.gallery, thumb: thumb, available: is_available, sale_price: sale_v, regular_price: p.regularPrice, rating: p.rating, review_count: p.reviewCount, best_seller: true, is_new_flag: false, kind: s.product_label, product_id: p.handle -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Best sellers",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Best sellers" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The most" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "worn." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 3, "max": 6, "step": 1, "default": 3 },
+    { "type": "text", "id": "product_label", "label": "Product label", "default": "Eau de Parfum" },
+    { "type": "text", "id": "all_label", "label": "Link label", "default": "Shop all" },
+    { "type": "url", "id": "all_url", "label": "Link" }
+  ],
+  "presets": [{ "name": "V2 · Best sellers" }]
+}
+{% endschema %}

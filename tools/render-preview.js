@@ -166,7 +166,9 @@ async function renderTemplate(name, templateGlobals) {
   // checkout.html is a standalone preview page (no site header, footer or popups, like Shopify's checkout);
   // only its catalog block is refreshed, further down.
   const STANDALONE = ['checkout.html'];
-  const inner = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && f !== 'index.html' && !STANDALONE.includes(f));
+  // home-v2.html is a second home page, written from the finished index.html at the end of the build.
+  const HOME_V2 = 'home-v2.html';
+  const inner = fs.readdirSync(THEME).filter((f) => f.endsWith('.html') && f !== 'index.html' && f !== HOME_V2 && !STANDALONE.includes(f));
   for (const f of inner) {
     const file = path.join(THEME, f);
     let html = fs.readFileSync(file, 'utf8');
@@ -418,6 +420,24 @@ async function renderTemplate(name, templateGlobals) {
       fs.writeFileSync(file, html);
     }
     console.log('preloader on', all.length, 'pages');
+  }
+
+  // Home V2 (templates/index.v2.json → home-v2.html): the finished index.html with its <main> swapped
+  // for the V2 template's sections, plus the preview-only V1 / V2 pill (assets/version-switch.js) on
+  // both home pages. Inner pages have no V2.
+  {
+    const switchTag = '  <script src="assets/version-switch.js" defer></script>\n';
+    const switchRe = /[ \t]*<script src="\/?assets\/version-switch\.js" defer><\/script>\n/g;
+    const indexPath = path.join(THEME, 'index.html');
+    const v1 = fs.readFileSync(indexPath, 'utf8').replace(switchRe, '').replace('</head>', () => switchTag + '</head>');
+    fs.writeFileSync(indexPath, v1);
+    const v2 = await renderTemplate('index.v2', {});
+    const ms = v1.indexOf('<main id="main-content">');
+    const me = v1.indexOf('</main>');
+    const body = ('<main id="main-content">\n    <!-- Generated from templates/index.v2.json. Edit the Liquid sections, not this block. -->' + v2.main + '\n  ')
+      .replace(/href="(\/[^"]*)"/g, (m, url) => `href="${toPreview(url)}"`);
+    fs.writeFileSync(path.join(THEME, HOME_V2), v1.slice(0, ms) + body + v1.slice(me));
+    console.log('home V2:', v2.tpl.order.length, 'sections → ' + HOME_V2);
   }
 
   // Redirect stubs so Shopify URLs typed or bookmarked (/collections/all, /pages/…, /products/…)

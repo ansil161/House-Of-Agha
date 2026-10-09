@@ -1,0 +1,88 @@
+{%- comment -%}
+  Home V2 · 07 Discovery collection — the sampling set presented like a fragrance flight:
+  the box photograph, then the three vials as a numbered tasting list, the price and one add button.
+  Data: the "Discovery set" product when picked, else the catalog's discovery-set bundle
+  (added to the bag by assets/hoa-commerce.js through data-hoa-quick-add).
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- liquid
+  assign s = section.settings
+  assign catalog = catalog_json | parse_json
+  assign set = nil
+  for bd in catalog.bundles
+    if bd.id == 'discovery-set'
+      assign set = bd
+    endif
+  endfor
+  assign disc = s.product
+-%}
+<section class="v2-disc v2-pad" id="discovery">
+  <div class="v2-wrap v2-disc__grid">
+    <figure class="v2-disc__photo" data-v2-reveal>
+      <div class="v2-disc__photo-inner" data-v2-drift>
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: s.image_alt, sizes: '(min-width: 961px) 55vw, 100vw' }}
+        {%- else -%}
+          <img src="{{ 'discovery_box.jpg' | asset_url }}" alt="{{ s.image_alt | escape }}" width="1200" height="896" loading="lazy" decoding="async">
+        {%- endif -%}
+      </div>
+    </figure>
+
+    <div class="v2-disc__copy">
+      <p class="v2-eyebrow" data-v2-reveal><span>07</span>{{ s.eyebrow }}</p>
+      <h2 class="v2-h2" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      <p class="v2-disc__tag" data-v2-reveal>{% if disc != blank %}{{ disc.title }}{% else %}{{ set.name }} · {{ set.tagline }}{% endif %}</p>
+
+      {%- if set -%}
+        <ol class="v2-disc__flight" role="list" data-v2-stagger>
+          {%- assign fn = 0 -%}
+          {%- for h in set.members -%}
+            {%- for p in catalog.products -%}
+              {%- if p.handle == h -%}
+                {%- assign fn = fn | plus: 1 -%}
+                <li><span class="v2-disc__n">0{{ fn }}</span><a href="/products/{{ p.handle }}">{{ p.name }}</a><span class="v2-disc__fam">{{ p.family }}</span></li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+
+      <div class="v2-disc__buy" data-v2-reveal>
+        <p class="v2-disc__price">
+          {%- if disc != blank -%}
+            {{ disc.price | money }}{% if disc.compare_at_price > disc.price %} <s>{{ disc.compare_at_price | money }}</s>{% endif %}
+          {%- else -%}
+            {%- assign now_n = set.salePrice | default: set.regularPrice -%}
+            {%- capture now_t -%}{%- render 'hoa-v2-inr', n: now_n -%}{%- endcapture -%}
+            {{ now_t }}{% if set.salePrice and set.salePrice < set.regularPrice %}{%- capture was_t -%}{%- render 'hoa-v2-inr', n: set.regularPrice -%}{%- endcapture -%} <s><span class="v2-sr">Was </span>{{ was_t }}</s>{% endif %}
+          {%- endif -%}
+        </p>
+        {%- if disc != blank -%}
+          <a class="v2-btn" href="{{ disc.url }}"><span>{{ s.cta_label }}</span><span aria-hidden="true">&rarr;</span></a>
+        {%- else -%}
+          <button type="button" class="v2-btn" data-hoa-quick-add="{{ set.handle }}"><span>{{ s.cta_label }}</span><span aria-hidden="true">&rarr;</span></button>
+        {%- endif -%}
+      </div>
+      <p class="v2-disc__note" data-v2-reveal>{{ s.note }}</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Discovery set",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Discovery collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Wear three before" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "you choose one." },
+    { "type": "product", "id": "product", "label": "Discovery set product" },
+    { "type": "image_picker", "id": "image", "label": "Photograph" },
+    { "type": "text", "id": "image_alt", "label": "Alt text", "default": "The AGHA Discovery Collection box, open, with its vials in a row" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Add the set" },
+    { "type": "textarea", "id": "note", "label": "Note", "default": "Live with each one for a few days, on your own skin, before choosing your full bottle." }
+  ],
+  "presets": [{ "name": "V2 · Discovery set" }]
+}
+{% endschema %}

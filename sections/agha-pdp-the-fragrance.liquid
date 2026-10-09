@@ -12,6 +12,8 @@
     Claims .............. custom.claims (list of single-line text, or comma-separated text),
                           plus any product tag written as "claim:Vegan", "claim:Paraben free" …
     Family .............. custom.family, else product.type
+  Layout (2026-10-09): the three acts sit on an arc ABOVE the bottle, one act at a time, the
+  notes sliding along the arc (Top -> Heart -> Base); the claims sit in one row UNDER it.
   A note block without data is left out. A claim is shown only as an icon and its own
   wording — no description line is invented under it. The section renders nothing when
   the product has no notes and no claims.
@@ -125,17 +127,18 @@
     </header>
 
     <div class="pdp-tf__stage">
-      <ol class="pdp-tf__col pdp-tf__col--left">
+      {%- comment -%} The three acts on an arc above the bottle: one act at a time, its notes slide along the arc (assets/pdp.js) {%- endcomment -%}
+      <ol class="pdp-tf__col pdp-tf__col--left pdp-tf__arc" data-pdp-tf-arc>
         {%- for b in left_blocks -%}
           {%- assign parts = b | split: '¦' -%}
-          <li class="pdp-tf__block" data-pdp-tf-block data-side="left">
+          <li class="pdp-tf__block" data-pdp-tf-block data-pdp-tf-act data-side="left" data-state="{% if forloop.first %}active{% else %}next{% endif %}">
             {%- if parts[2] != blank -%}
-              <span class="pdp-tf__block-title">{{ parts[1] }}</span>
-              <span class="pdp-tf__notes">
-                {%- assign note_names = parts[2] | split: ',' -%}
+              <span class="pdp-tf__act-label"><span class="pdp-tf__block-title">{{ parts[1] }}</span></span>
+              {%- assign note_names = parts[2] | split: ',' -%}
+              <span class="pdp-tf__notes" style="--n:{{ note_names.size }};">
                 {%- for note in note_names -%}
                   {%- assign note_name = note | strip -%}
-                  <span class="pdp-tf__note">
+                  <span class="pdp-tf__note" style="--i:{{ forloop.index0 }};">
                     <img class="pdp-tf__note-img" src="{% render 'agha-note-image', name: note_name %}" alt="" width="64" height="64" loading="lazy" onerror="this.style.visibility='hidden'">
                     <span class="pdp-tf__note-name">{{ note_name }}</span>
                   </span>

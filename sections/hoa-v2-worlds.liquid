@@ -1,0 +1,124 @@
+{%- comment -%}
+  Home V2 · Two worlds — an editorial diptych. Two full-bleed campaign photographs meet with no seam,
+  each one a fragrance world (block "world"): a small label up top, the campaign line at the foot,
+  the fragrances of that world and one quiet link.
+  Desktop with a fine pointer: the panel you point at widens to ~56% while the other gives way
+  (pure CSS, flex-grow); each photo is sized to the widest state, so the panels only reveal more of it
+  and nothing reflows. Entrance + slow drift: assets/hoa-v2.js (initWorlds). Readable without JS.
+  Fragrance names and links come from Shopify (all_products[handle]), else the shared catalog.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- liquid
+  assign s = section.settings
+  assign catalog = catalog_json | parse_json
+-%}
+<section class="v2-worlds" data-v2-worlds aria-labelledby="v2-worlds-title-{{ section.id }}">
+  <h2 class="v2-sr" id="v2-worlds-title-{{ section.id }}">{{ s.heading }}</h2>
+  <div class="v2-worlds__split">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign handles = b.handles | split: ','
+        assign first_url = ''
+        capture picks
+          for h in handles
+            assign hh = h | strip
+            if hh == blank
+              continue
+            endif
+            assign p_name = ''
+            assign p_url = '/products/' | append: hh
+            assign sp = all_products[hh]
+            if sp != blank and sp.id
+              assign p_name = sp.title
+              assign p_url = sp.url
+            else
+              for c in catalog.products
+                if c.handle == hh
+                  assign p_name = c.name
+                endif
+              endfor
+            endif
+            if p_name == blank
+              continue
+            endif
+            if first_url == blank
+              assign first_url = p_url
+            endif
+            echo '<li><a href="' | append: p_url | append: '">' | append: p_name | append: '</a></li>'
+          endfor
+        endcapture
+        assign cta_url = b.cta_url | default: first_url | default: routes.all_products_collection_url
+        assign panel_id = 'v2-world-' | append: block.id
+      -%}
+      <article class="v2-world v2-world--{{ b.tone | default: 'light' }}" data-v2-world aria-labelledby="{{ panel_id }}" {{ block.shopify_attributes }}>
+        <div class="v2-world__media">
+          <div class="v2-world__zoom">
+            <div class="v2-world__img" data-v2-world-img style="--v2-world-pos: {{ b.focal | default: 'center' }}; --v2-world-pos-m: {{ b.focal_mobile | default: b.focal | default: 'center' }}">
+              {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 1025px) 56vw, 100vw' -%}
+            </div>
+          </div>
+        </div>
+
+        <a class="v2-world__hit" href="{{ cta_url }}" tabindex="-1" aria-hidden="true"></a>
+
+        <p class="v2-world__tag" data-v2-world-step>
+          <span class="v2-world__n">{{ forloop.index | prepend: '0' }}</span>
+          <span>{{ b.label }}</span>
+        </p>
+        {%- if b.caption != blank -%}<p class="v2-world__caption" data-v2-world-step>{{ b.caption }}</p>{%- endif -%}
+
+        <div class="v2-world__copy">
+          <h3 class="v2-world__title" id="{{ panel_id }}" data-v2-world-step>{{ b.title }} <em>{{ b.title_serif }}</em></h3>
+          {%- if b.notes != blank -%}<p class="v2-world__notes" data-v2-world-step>{{ b.notes }}</p>{%- endif -%}
+          {%- if picks != blank -%}
+            <ul class="v2-world__picks" role="list" aria-label="{{ b.title | append: ' ' | append: b.title_serif | escape }}" data-v2-world-step>{{ picks }}</ul>
+          {%- endif -%}
+          <a class="v2-world__cta" href="{{ cta_url }}" data-v2-world-step>
+            <span>{{ b.cta_label }}</span><span class="v2-world__arrow" aria-hidden="true"></span>
+          </a>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Two worlds",
+  "class": "v2-section",
+  "max_blocks": 2,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading (screen readers only)", "default": "Two worlds of fragrance" }
+  ],
+  "blocks": [
+    {
+      "type": "world",
+      "name": "World",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Oud / Intense" },
+        { "type": "text", "id": "title", "label": "Title", "default": "The Oud" },
+        { "type": "text", "id": "title_serif", "label": "Title (serif italic)", "default": "collection" },
+        { "type": "text", "id": "notes", "label": "Mood line", "default": "Deep · Warm · Magnetic" },
+        { "type": "text", "id": "handles", "label": "Fragrances (product handles, comma separated)", "info": "Listed in the panel. The first one is the link target when no link is set." },
+        { "type": "text", "id": "cta_label", "label": "Link label", "default": "Explore Oud" },
+        { "type": "url", "id": "cta_url", "label": "Link", "info": "e.g. an Oud collection. Empty: the first fragrance above." },
+        { "type": "text", "id": "caption", "label": "Photo caption", "info": "Small, top right, e.g. Pictured: Oud of Dark Paradise" },
+        { "type": "select", "id": "tone", "label": "Text colour", "default": "light", "options": [
+          { "value": "light", "label": "Ivory (dark photo)" },
+          { "value": "dark", "label": "Ink (light photo)" }
+        ] },
+        { "type": "image_picker", "id": "image", "label": "Photograph" },
+        { "type": "text", "id": "asset", "label": "Theme asset (fallback)" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 1200 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 1607 },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "focal", "label": "Focal point (CSS object-position)", "default": "center", "info": "Keep the subject away from the copy (lower left), e.g. 0% 50% puts the left of the photo in view." },
+        { "type": "text", "id": "focal_mobile", "label": "Focal point on phones" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Two worlds" }]
+}
+{% endschema %}

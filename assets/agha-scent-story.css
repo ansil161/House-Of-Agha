@@ -1,0 +1,240 @@
+/* ==========================================================================
+   HOUSE OF AGHA — SCENT STORY (sections/agha-scent-story.liquid)
+   Warm ivory editorial "sticky story": sticky text stack left, pairs of portrait cards right.
+   Only transform / opacity / filter animate. Pre-states live under .ss--js (set by
+   assets/agha-scent-story.js), so without JS everything is simply visible.
+   ========================================================================== */
+
+.ss {
+  --ss-ink: var(--v2-ink, #1a1a1a);
+  --ss-mute: #6b6b6b;
+  --ss-card: #F1EFEA;
+  --ss-serif: 'Cormorant Garamond', 'Didot', Georgia, serif;
+  --ss-sans: var(--v2-modern, 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --ss-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  background: var(--ss-bg, #FAF7F2);
+  color: var(--ss-ink);
+  padding: clamp(96px, 10vw, 160px) 0 clamp(96px, 11vw, 176px);
+}
+/* body overflow-x:hidden breaks position:sticky; clip does not */
+html:has(.ss) body { overflow-x: clip; }
+
+.ss__wrap {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: clamp(48px, 7vw, 120px);
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--v2-gutter, clamp(16px, 4vw, 64px));
+}
+
+/* ---------- Left: sticky text stack ---------- */
+.ss__aside { position: relative; }
+/* A full-height sticky box centres the stack on screen (equivalent to top:50% + translateY(-50%),
+   without the stack starting half its height above the column). */
+.ss__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.ss__stack { display: grid; width: 100%; }
+.ss__stack > .ss__text { grid-area: 1 / 1; }
+
+.ss__tag {
+  display: inline-block;
+  margin: 0 0 22px;
+  padding: 6px 13px;
+  border: 1px solid rgba(26, 26, 26, 0.22);
+  border-radius: 999px;
+  font: 500 11px/1 var(--ss-sans);
+  letter-spacing: 0.04em;
+  color: var(--ss-ink);
+}
+.ss__heading {
+  margin: 0 0 16px;
+  font-family: var(--ss-serif);
+  font-weight: 500;
+  font-size: clamp(32px, 3vw, 40px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--ss-ink);
+}
+.ss__body {
+  max-width: 300px;
+  margin: 0;
+  font: 400 14px/1.6 var(--ss-sans);
+  color: var(--ss-mute);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* swap: the leaving block blurs up and out, the arriving one sharpens up from below */
+.ss--js .ss__stack > .ss__text {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+.ss--js .ss__stack > .ss__text.is-leaving { transform: translateY(-12px); }
+.ss--js .ss__stack > .ss__text.is-active {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 0.22s; /* arrives just after the old one has started to leave */
+}
+.ss__text--inline { display: none; }
+
+/* ---------- Right: rows of two portrait cards ---------- */
+.ss__rows { display: flex; flex-direction: column; gap: 120px; padding: 12vh 0; }
+.ss__pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 1.6vw, 24px); }
+
+.ss-card {
+  margin: 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--ss-card);
+}
+.ss-card__cap {
+  margin: 2px 0 12px;
+  text-align: center;
+  font: 500 12px/1.3 var(--ss-sans);
+  color: var(--ss-ink);
+}
+.ss-card__media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #E6E2DA;
+  transform: translateZ(0); /* keeps the radius clipping the scaled image in Safari */
+}
+.ss-card__media img,
+.ss-card__media svg {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.ss-card__media svg { fill: rgba(26, 26, 26, 0.18); }
+
+/* card reveal: rise + fade, second card 100ms later, photo settles from 1.06 */
+.ss--js [data-ss-card] {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s var(--ss-ease), transform 0.9s var(--ss-ease);
+}
+.ss--js [data-ss-card] img {
+  transform: scale(1.06);
+  transition: transform 1.4s var(--ss-ease);
+}
+.ss--js [data-ss-card]:nth-child(2),
+.ss--js [data-ss-card]:nth-child(2) img { transition-delay: 0.1s; }
+.ss--js .is-in [data-ss-card] { opacity: 1; transform: none; }
+.ss--js .is-in [data-ss-card] img { transform: none; }
+
+/* ---------- Closing line ---------- */
+.ss__close {
+  max-width: 1280px;
+  margin: clamp(120px, 14vw, 200px) auto 0;
+  padding: 0 var(--v2-gutter, clamp(16px, 4vw, 64px));
+  text-align: center;
+}
+.ss__close-title {
+  margin: 0 0 clamp(32px, 4vw, 48px);
+  font-family: var(--ss-serif);
+  font-weight: 400;
+  font-size: clamp(44px, 6.4vw, 96px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ss-ink);
+}
+.ss__line { display: block; }
+.ss__line > span { display: inline-block; }
+.ss__line:last-child > span { font-style: italic; }
+
+.ss__btn {
+  display: inline-flex; align-items: center; gap: 14px;
+  min-height: 52px; padding: 0 30px;
+  border: 1px solid var(--ss-ink); border-radius: 999px;
+  background: var(--ss-ink); color: var(--ss-bg, #FAF7F2);
+  font: 500 11px/1 var(--v2-sans, var(--ss-sans));
+  letter-spacing: 0.2em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.4s var(--ss-ease), color 0.4s var(--ss-ease);
+}
+.ss__btn span { display: inline-block; transition: transform 0.5s var(--ss-ease); }
+.ss__btn:hover, .ss__btn:focus-visible { background: transparent; color: var(--ss-ink); }
+.ss__btn:hover span, .ss__btn:focus-visible span { transform: translateX(5px); }
+.ss__btn:focus-visible { outline: 1px solid var(--ss-ink); outline-offset: 4px; }
+
+.ss--js .ss__line > span,
+.ss--js .ss__btn {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(0.4em);
+  transition: opacity 1s var(--ss-ease), filter 1s var(--ss-ease), transform 1s var(--ss-ease),
+              background-color 0.4s var(--ss-ease), color 0.4s var(--ss-ease);
+  transition-delay: calc(var(--i, 0) * 0.14s), calc(var(--i, 0) * 0.14s), calc(var(--i, 0) * 0.14s), 0s, 0s;
+}
+.ss--js .ss__btn { transform: translateY(16px); }
+.ss--js .ss__close.is-in .ss__line > span,
+.ss--js .ss__close.is-in .ss__btn { opacity: 1; filter: blur(0); transform: none; }
+
+/* ---------- Dot cursor (fine pointers only, inside the section) ---------- */
+.ss-cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .ss-cursor {
+    display: block;
+    position: fixed; left: 0; top: 0; z-index: 60;
+    width: 10px; height: 10px; margin: -5px 0 0 -5px;
+    border-radius: 50%;
+    background: var(--ss-ink);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    will-change: transform;
+  }
+  .ss-cursor.is-on { opacity: 1; }
+}
+
+/* ---------- Phone: no sticky, text above its own pair ---------- */
+@media (max-width: 767px) {
+  .ss { padding: 80px 0 96px; }
+  .ss__wrap { grid-template-columns: 1fr; gap: 0; }
+  .ss__aside { display: none; }
+  .ss__rows { gap: 72px; padding: 0; }
+  .ss__text--inline { display: block; margin-bottom: 24px; }
+  .ss__heading { font-size: 32px; }
+  .ss__body { max-width: 34ch; }
+  .ss__pair { gap: 4%; }
+  .ss-card { padding: 9px; border-radius: 14px; }
+  .ss-card__cap { font-size: 11px; margin-bottom: 9px; }
+  .ss-card__media { border-radius: 8px; }
+  .ss--js .ss__text--inline {
+    opacity: 0; filter: blur(8px); transform: translateY(12px);
+    transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  }
+  .ss--js .is-in .ss__text--inline { opacity: 1; filter: blur(0); transform: none; }
+  .ss__close { margin-top: 96px; }
+}
+
+/* ---------- Reduced motion: fades only ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ss--js .ss__stack > .ss__text,
+  .ss--js .ss__stack > .ss__text.is-leaving,
+  .ss--js [data-ss-card],
+  .ss--js [data-ss-card] img,
+  .ss--js .ss__text--inline,
+  .ss--js .ss__line > span,
+  .ss--js .ss__btn { filter: none; transform: none; }
+  .ss-cursor { display: none; }
+}

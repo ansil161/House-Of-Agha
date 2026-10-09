@@ -1,0 +1,21 @@
+{%- comment -%}
+  Whole rupees → "₹1,499" (same formatting as snippets/hoa-shop-card.liquid). Param: n (number).
+  Use with capture; prices under ₹1,00,000 only, which covers the line-up.
+{%- endcomment -%}
+{%- liquid
+  assign _n = n | plus: 0
+  assign _k = _n | divided_by: 1000 | floor
+  assign _kb = _k | times: 1000
+  assign _r = _n | minus: _kb | round
+  assign _rs = _r | append: ''
+  if _r < 10
+    assign _rs = _rs | prepend: '00'
+  elsif _r < 100
+    assign _rs = _rs | prepend: '0'
+  endif
+  if _k > 0
+    echo _k | append: ',' | append: _rs | prepend: '₹'
+  else
+    echo _r | prepend: '₹'
+  endif
+-%}

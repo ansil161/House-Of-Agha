@@ -1,0 +1,60 @@
+{%- comment -%}
+  Home V2 · 05 The art of perfumery — four ingredients as photographed plates, staggered like a
+  printed spread. Copy is the About page's ingredient cards (templates/page.the-house.json).
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- assign s = section.settings -%}
+<section class="v2-craft v2-pad" id="craft">
+  <div class="v2-wrap">
+    <header class="v2-craft__head">
+      <p class="v2-eyebrow" data-v2-reveal><span>05</span>{{ s.eyebrow }}</p>
+      <h2 class="v2-h2" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      <p class="v2-craft__text" data-v2-reveal>{{ s.text }}</p>
+    </header>
+
+    <ol class="v2-craft__plates" role="list">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <li class="v2-craft__plate" data-v2-reveal {{ block.shopify_attributes }}>
+          <figure>
+            <div class="v2-craft__img" data-v2-drift>{%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 961px) 22vw, 45vw' -%}</div>
+            <figcaption>
+              <span class="v2-craft__n">{{ forloop.index | prepend: '0' }}</span>
+              <span class="v2-craft__name">{{ b.title }}</span>
+              <span class="v2-craft__line">{{ b.text }}</span>
+            </figcaption>
+          </figure>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Art of perfumery",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "The art of perfumery" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What goes into" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "the bottle." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Rose, vetiver, ambergris and oudh: the materials the House returns to, again and again." }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Name" },
+        { "type": "text", "id": "text", "label": "Line" },
+        { "type": "image_picker", "id": "image", "label": "Photograph" },
+        { "type": "text", "id": "asset", "label": "Theme asset (fallback)" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 800 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 1200 },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Art of perfumery" }]
+}
+{% endschema %}

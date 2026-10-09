@@ -1,0 +1,178 @@
+/* ==========================================================================
+   HOUSE OF AGHA — TESTIMONIALS (sections/agha-testimonials.liquid)
+   Bento grid: white quote cards + one full-bleed photo card on warm ivory.
+   Only transform / translate / opacity animate. Pre-states live under .at--js (set by
+   assets/agha-testimonials.js), so without JS every card is simply visible.
+   ========================================================================== */
+
+.at {
+  --at-ink: #1a1a1a;
+  --at-text: #5c5c5c;
+  --at-mute: #8a857e;
+  --at-gold: #C9A24B;
+  --at-serif: 'Cormorant Garamond', 'Playfair Display', 'Didot', Georgia, serif;
+  --at-sans: var(--v2-modern, 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --at-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  background: var(--at-bg, #F2F0EC);
+  color: var(--at-ink);
+  padding: 100px 0;
+}
+.at__wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--v2-gutter, clamp(16px, 4vw, 64px));
+}
+
+/* ---------- Head ---------- */
+.at__head { text-align: center; margin: 0 auto 56px; max-width: 640px; }
+.at__tag {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 6px 13px;
+  border: 1px solid rgba(26, 26, 26, 0.22);
+  border-radius: 999px;
+  font: 500 11px/1 var(--at-sans);
+  letter-spacing: 0.04em;
+  color: var(--at-ink);
+}
+.at__title {
+  margin: 0;
+  font-family: var(--at-serif);
+  font-weight: 500;
+  font-size: clamp(32px, 3.4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--at-ink);
+}
+.at__sub {
+  margin: 14px auto 0;
+  max-width: 440px;
+  font: 400 14px/1.6 var(--at-sans);
+  color: var(--at-text);
+  text-wrap: balance;
+}
+
+/* ---------- Grid ---------- */
+.at__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(240px, auto);
+  grid-auto-flow: row dense;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* ---------- Testimonial card ---------- */
+.at-card {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 18px;
+  transition: transform 0.5s var(--at-ease);
+}
+.at-card__top { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.at-card__mark { flex: none; color: var(--at-ink); }
+.at-card__rule { flex: 1; height: 1px; background: rgba(0, 0, 0, 0.09); }
+.at-card__quote { margin: 0 0 28px; }
+.at-card__quote p {
+  margin: 0;
+  font: 400 14.5px/1.6 var(--at-sans);
+  color: var(--at-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.at-card__who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.at-card__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ECE7DE;
+  font: 500 15px/1 var(--at-serif);
+  color: var(--at-ink);
+}
+.at-card__avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.at-card__meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.at-card__name { font: 600 13px/1.25 var(--at-sans); font-style: normal; color: var(--at-ink); }
+.at-card__role { font: 400 12px/1.3 var(--at-sans); color: var(--at-mute); }
+.at-card__stars { display: flex; gap: 2px; margin-left: auto; color: var(--at-gold); }
+.at-card__stars .is-off { color: rgba(201, 162, 75, 0.25); }
+
+/* ---------- Photo card ---------- */
+.at-photo {
+  position: relative;
+  margin: 0;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #E6E2DA;
+  transform: translateZ(0); /* keeps the radius clipping the scaled image in Safari */
+  transition: transform 0.5s var(--at-ease);
+}
+.at-photo--tall { grid-row: span 2; }
+.at-photo__media { position: absolute; inset: 0; }
+.at-photo__media img,
+.at-photo__ph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--at-ease);
+}
+.at-photo__cap {
+  position: absolute;
+  left: 16px; right: 16px; bottom: 16px;
+  font: 500 12px/1.3 var(--at-sans);
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+@media (hover: hover) {
+  .at-card:hover, .at-photo:hover { transform: translateY(-4px); }
+  .at-photo:hover .at-photo__media img { transform: scale(1.04); }
+}
+
+/* ---------- Motion (JS on) ---------- */
+/* Reveal is a keyframe with backwards fill, so after it ends the hover transition owns transform.
+   Column drift uses the separate `translate` property, so the two never fight. */
+.at--js [data-at-card] { opacity: 0; translate: 0 var(--at-y, 0px); }
+.at--js.is-in [data-at-card] { opacity: 1; animation: at-up 0.7s ease var(--d, 0ms) backwards; }
+@keyframes at-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* edge fade: the grid melts into the background where it slides under the header */
+.at--fade .at__grid {
+  -webkit-mask-image: linear-gradient(to bottom, transparent var(--at-cut, -200px), #000 calc(var(--at-cut, -200px) + 140px));
+          mask-image: linear-gradient(to bottom, transparent var(--at-cut, -200px), #000 calc(var(--at-cut, -200px) + 140px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-card, .at-photo, .at-photo__media img { transition: none; }
+  .at-card:hover, .at-photo:hover, .at-photo:hover .at-photo__media img { transform: none; }
+  .at--js [data-at-card] { translate: none; }
+  .at--js.is-in [data-at-card] { animation-name: at-fade; }
+  @keyframes at-fade { from { opacity: 0; } to { opacity: 1; } }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1023px) {
+  .at__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 639px) {
+  .at { padding: 60px 0; }
+  .at__head { margin-bottom: 36px; }
+  .at__grid { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 12px; }
+  .at-photo, .at-photo--tall { grid-row: auto; min-height: 0; aspect-ratio: 4 / 5; }
+}

@@ -7,6 +7,7 @@
   <div class="hoa-header__inner">
     <div class="hoa-header__start">
       <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="{{ routes.root_url }}"{% if template.name == 'index' %} aria-current="page"{% endif %}>Home</a></li>
         <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
         <li><a href="/pages/the-house">The House</a></li>
       </ul>
@@ -47,13 +48,14 @@
     <span>Search fragrances and families</span>
   </button>
   <ul class="hoa-menu__links">
-    <li><a href="{{ routes.all_products_collection_url }}"><span>01</span>Shop <em>all</em></a></li>
-    <li><a href="/pages/the-house"><span>02</span>The House</a></li>
-    <li><a href="/pages/private-access"><span>03</span>Private Access</a></li>
+    <li><a href="{{ routes.root_url }}"><span>01</span>Home</a></li>
+    <li><a href="{{ routes.all_products_collection_url }}"><span>02</span>Shop <em>all</em></a></li>
+    <li><a href="/pages/the-house"><span>03</span>The House</a></li>
+    <li><a href="/pages/private-access"><span>04</span>Private Access</a></li>
     {%- if shop.customer_accounts_enabled -%}
-      <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>04</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
+      <li><a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"><span>05</span>{% if customer %}Account{% else %}Sign <em>in</em>{% endif %}</a></li>
     {%- endif -%}
-    <li><a href="{{ routes.root_url }}pages/wishlist" data-wishlist-open><span>05</span>Wish<em>list</em></a></li>
+    <li><a href="{{ routes.root_url }}pages/wishlist" data-wishlist-open><span>06</span>Wish<em>list</em></a></li>
   </ul>
   <div class="hoa-menu__shop">
     <p class="hoa-menu__label">Shop by</p>

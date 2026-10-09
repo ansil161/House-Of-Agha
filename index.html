@@ -137,6 +137,7 @@
   <script src="assets/agha-wishlist-drawer.js" defer></script>
   <link rel="stylesheet" href="assets/hoa-mobile.css">
   <script src="assets/hoa-mobile.js" defer></script>
+  <script src="assets/version-switch.js" defer></script>
 </head>
 <body class="hoa-home">
   <!-- Preloader · snippets/preloader.liquid (rendered by the preview build) -->
@@ -249,6 +250,7 @@ setTimeout(still,4000);
   <div class="hoa-header__inner">
     <div class="hoa-header__start">
       <ul class="hoa-header__nav hoa-header__nav--left">
+        <li><a href="/" aria-current="page">Home</a></li>
         <li><a href="/shop.html">Shop</a></li>
         <li><a href="/the-house.html">The House</a></li>
       </ul>
@@ -285,9 +287,10 @@ setTimeout(still,4000);
     <span>Search fragrances and families</span>
   </button>
   <ul class="hoa-menu__links">
-    <li><a href="/shop.html"><span>01</span>Shop <em>all</em></a></li>
-    <li><a href="/the-house.html"><span>02</span>The House</a></li>
-    <li><a href="/private-access.html"><span>03</span>Private Access</a></li><li><a href="/account-login.html"><span>04</span>Sign <em>in</em></a></li><li><a href="/pages/wishlist" data-wishlist-open><span>05</span>Wish<em>list</em></a></li>
+    <li><a href="/"><span>01</span>Home</a></li>
+    <li><a href="/shop.html"><span>02</span>Shop <em>all</em></a></li>
+    <li><a href="/the-house.html"><span>03</span>The House</a></li>
+    <li><a href="/private-access.html"><span>04</span>Private Access</a></li><li><a href="/account-login.html"><span>05</span>Sign <em>in</em></a></li><li><a href="/pages/wishlist" data-wishlist-open><span>06</span>Wish<em>list</em></a></li>
   </ul>
   <div class="hoa-menu__shop">
     <p class="hoa-menu__label">Shop by</p>
@@ -558,59 +561,84 @@ setTimeout(still,4000);
 </div>
 
     <!-- the_house · sections/hoa-manifesto.liquid -->
-    <div id="shopify-section-the_house" class="shopify-section hoa-manifesto-section"><section class="hoa-manifesto" id="the-house" data-hoa-manifesto><div class="hoa-wrap hoa-manifesto__grid">
-    <div class="hoa-manifesto__copy">
-      <div class="hoa-manifesto__meta" data-hoa-reveal>
-        <span class="hoa-manifesto__tag">The House</span>
-        <span class="hoa-manifesto__rule" aria-hidden="true"></span>
-      </div>
+    <div id="shopify-section-the_house" class="shopify-section hoa-manifesto-section"><link rel="stylesheet" href="assets/hoa-vessel.css">
 
-      <p class="hoa-manifesto__text" data-hoa-words>Every Agha fragrance begins as a <em>place</em>: a smoke-lit room, an ice cave, a garden after rain. It ends as something you <em>carry close</em>.</p>
-
-      <div class="hoa-manifesto__foot" data-hoa-reveal>
-        <p class="hoa-lede">House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light.</p>
-        <a class="hoa-btn" href="/the-house.html"><span>The story of the House</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+<section class="hoa-manifesto hoa-vessel" id="the-house" data-hoa-manifesto data-hoa-vessel style="--focus: -22; --glow: 0.6">
+  <div class="hoa-vessel__track" data-vessel-track>
+    <div class="hoa-vessel__stage" data-vessel-stage><span class="hoa-vessel__halo" aria-hidden="true"></span><div class="hoa-vessel__layout" data-vessel-layout><div class="hoa-vessel__lead">
+          <div class="hoa-vessel__meta">
+            <span class="hoa-vessel__tag">The House</span>
+            <span class="hoa-vessel__rule" aria-hidden="true"></span>
+          </div>
+          <p class="hoa-vessel__statement" data-vessel-words>Every Agha fragrance begins as a <em>place</em>: a smoke-lit room, <span class="hoa-vessel__phrase">an ice cave</span>, a garden after rain. It ends as something you <em>carry close</em>.</p>
+          <div class="hoa-vessel__foot" style="--i: 0">
+            <p class="hoa-vessel__lede">House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light.</p>
+            <a class="hoa-btn" href="/the-house.html"><span>The story of the House</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 </a>
-      </div>
+          </div>
+        </div>
 
-      <ol class="hoa-manifesto__notes" data-hoa-reveal><li class="hoa-manifesto__note"><span class="hoa-manifesto__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M12 4.6l1.9 5.5L19.4 12l-5.5 1.9L12 19.4l-1.9-5.5L4.6 12l5.5-1.9z"/><circle cx="12" cy="12" r="1"/></svg>
-              </span>
-              <span class="hoa-manifesto__note-title">One world</span><span class="hoa-manifesto__note-text">Each fragrance is composed around a single place.</span></li><li class="hoa-manifesto__note"><span class="hoa-manifesto__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"/></svg>
-              </span>
-              <span class="hoa-manifesto__note-title">Its own light</span><span class="hoa-manifesto__note-text">A bottle, colour and mood made for that world alone.</span></li><li class="hoa-manifesto__note"><span class="hoa-manifesto__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c3.4 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.6-6.6 6-10.8z"/><path d="M9.2 14.4a2.9 2.9 0 0 0 2.4 2.7"/></svg>
-              </span>
-              <span class="hoa-manifesto__note-title">Worn close</span><span class="hoa-manifesto__note-text">Eaux de parfum meant to stay near the skin.</span></li></ol>
-    </div>
+        <div class="hoa-vessel__center">
+          <div class="hoa-vessel__slot" data-vessel-slot aria-hidden="true"></div>
+        </div>
 
-    <div class="hoa-manifesto__media">
-      <div class="hoa-manifesto__plate hoa-manifesto__plate--main" data-hoa-reveal>
-        <figure class="hoa-manifesto__shell" data-hoa-speed="-0.05">
-          <div class="hoa-manifesto__core"><img
-    src="assets/hoa-shamamah-lily.webp"
-    srcset="assets/hoa-shamamah-lily-sm.webp 700w, assets/hoa-shamamah-lily.webp 1086w"
-    sizes="(min-width: 961px) 34vw, 50vw"
-    width="1086" height="1448"
-    alt="Shamamah by House of Agha, held in a dried lily"
-    loading="lazy" decoding="async"></div>
-        </figure>
+        <ol class="hoa-vessel__notes"><li class="hoa-vessel__note" style="--i: 2"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M12 4.6l1.9 5.5L19.4 12l-5.5 1.9L12 19.4l-1.9-5.5L4.6 12l5.5-1.9z"/><circle cx="12" cy="12" r="1"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">One world</span><span class="hoa-vessel__note-text">Each fragrance is composed around a single place.</span></li><li class="hoa-vessel__note" style="--i: 3"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">Its own light</span><span class="hoa-vessel__note-text">A bottle, colour and mood made for that world alone.</span></li><li class="hoa-vessel__note" style="--i: 4"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c3.4 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.6-6.6 6-10.8z"/><path d="M9.2 14.4a2.9 2.9 0 0 0 2.4 2.7"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">Worn close</span><span class="hoa-vessel__note-text">Eaux de parfum meant to stay near the skin.</span></li></ol></div>
+
+      <div class="hoa-vessel__place"><img class="hoa-vessel__reflect" src="assets/hoa-vessel-agha-blue.webp" width="430" height="1104" alt="" aria-hidden="true" loading="lazy" decoding="async"><div class="hoa-vessel__scene"><img
+    src="assets/hoa-hero-agha-blue.webp"
+    srcset="assets/hoa-hero-agha-blue-sm.webp 1000w, assets/hoa-hero-agha-blue.webp 2000w"
+    sizes="100vw"
+    width="2000" height="1117"
+    alt="An ice cave opening onto still blue water"
+    loading="lazy" decoding="async"></div><img class="hoa-vessel__bottle" src="assets/hoa-vessel-agha-blue.webp" width="430" height="1104" alt="Agha Blue" loading="lazy" decoding="async"><div class="hoa-vessel__scene hoa-vessel__ghost" aria-hidden="true"><img
+    src="assets/hoa-hero-agha-blue.webp"
+    srcset="assets/hoa-hero-agha-blue-sm.webp 1000w, assets/hoa-hero-agha-blue.webp 2000w"
+    sizes="100vw"
+    width="2000" height="1117"
+    alt=""
+    loading="lazy" decoding="async"></div><span class="hoa-vessel__caustics" aria-hidden="true"></span>
       </div>
-      <div class="hoa-manifesto__plate hoa-manifesto__plate--sub" data-hoa-reveal>
-        <figure class="hoa-manifesto__shell" data-hoa-speed="0.14">
-          <div class="hoa-manifesto__core"><img
-    src="assets/hoa-ingredients-tobacco.webp"
-    srcset="assets/hoa-ingredients-tobacco-sm.webp 700w, assets/hoa-ingredients-tobacco.webp 969w"
-    sizes="(min-width: 961px) 16vw, 50vw"
-    width="969" height="969"
-    alt="Tobacco Enigma among bergamot, cinnamon, honey and jasmine"
-    loading="lazy" decoding="async"></div>
-        </figure>
-      </div>
-    </div>
+      <span class="hoa-vessel__shadow" aria-hidden="true"></span><div class="hoa-vessel__layout hoa-vessel__layout--glass" aria-hidden="true" inert><div class="hoa-vessel__lead">
+          <div class="hoa-vessel__meta">
+            <span class="hoa-vessel__tag">The House</span>
+            <span class="hoa-vessel__rule" aria-hidden="true"></span>
+          </div>
+          <p class="hoa-vessel__statement" data-vessel-words>Every Agha fragrance begins as a <em>place</em>: a smoke-lit room, <span class="hoa-vessel__phrase">an ice cave</span>, a garden after rain. It ends as something you <em>carry close</em>.</p>
+          <div class="hoa-vessel__foot" style="--i: 0">
+            <p class="hoa-vessel__lede">House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light.</p>
+            <a class="hoa-btn" href="/the-house.html"><span>The story of the House</span><span class="hoa-btn__icon" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 14 14" fill="none"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a>
+          </div>
+        </div>
+
+        <div class="hoa-vessel__center">
+          <div class="hoa-vessel__slot" data-vessel-slot aria-hidden="true"></div>
+        </div>
+
+        <ol class="hoa-vessel__notes"><li class="hoa-vessel__note" style="--i: 2"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M12 4.6l1.9 5.5L19.4 12l-5.5 1.9L12 19.4l-1.9-5.5L4.6 12l5.5-1.9z"/><circle cx="12" cy="12" r="1"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">One world</span><span class="hoa-vessel__note-text">Each fragrance is composed around a single place.</span></li><li class="hoa-vessel__note" style="--i: 3"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">Its own light</span><span class="hoa-vessel__note-text">A bottle, colour and mood made for that world alone.</span></li><li class="hoa-vessel__note" style="--i: 4"><span class="hoa-vessel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2c3.4 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.6-6.6 6-10.8z"/><path d="M9.2 14.4a2.9 2.9 0 0 0 2.4 2.7"/></svg>
+                </span>
+                <span class="hoa-vessel__note-title">Worn close</span><span class="hoa-vessel__note-text">Eaux de parfum meant to stay near the skin.</span></li></ol></div>
+    </div><span class="hoa-vessel__seal" data-vessel-seal aria-hidden="true"></span>
   </div>
 </section>
+
+<script src="assets/hoa-vessel.js" defer></script>
 
 
 </div>
@@ -956,6 +984,35 @@ setTimeout(still,4000);
 </section>
 
 
+</div>
+
+    <!-- campaign · sections/hoa-campaign.liquid -->
+    <div id="shopify-section-campaign" class="shopify-section hoa-campaign-section"><section class="hoa-campaign" id="campaign"><a class="hoa-campaign__panel" href="/product.html?p=maha" style="--focus: 50% 15%" ><img
+    src="assets/hoa-campaign-maha.webp"
+    srcset="assets/hoa-campaign-maha-sm.webp 1000w, assets/hoa-campaign-maha.webp 1600w"
+    sizes="100vw"
+    width="1600" height="1986"
+    alt="A woman in a flowing red gown holds a bottle of Maha Eau de Parfum beneath a rose-pink arch"
+    loading="lazy" decoding="async"><span class="hoa-campaign__cap"><span class="hoa-campaign__kicker">Eau de Parfum</span><span class="hoa-campaign__name">Maha</span>
+        <span class="hoa-campaign__cta">Discover <span aria-hidden="true">&rarr;</span></span>
+      </span>
+    </a><a class="hoa-campaign__panel hoa-campaign__panel--frame" href="/product.html?p=sea-smoke" style="--focus: 50% 0%" ><span class="hoa-campaign__backdrop" aria-hidden="true"><img
+    src="assets/hoa-campaign-sea-smoke.webp"
+    srcset="assets/hoa-campaign-sea-smoke-sm.webp 1000w, assets/hoa-campaign-sea-smoke.webp 1536w"
+    sizes="50vw"
+    width="1536" height="2752"
+    alt=""
+    loading="lazy" decoding="async"></span>
+        <span class="hoa-campaign__frame"><img
+    src="assets/hoa-campaign-sea-smoke.webp"
+    srcset="assets/hoa-campaign-sea-smoke-sm.webp 1000w, assets/hoa-campaign-sea-smoke.webp 1536w"
+    sizes="(min-width: 750px) 60vw, 100vw"
+    width="1536" height="2752"
+    alt="A man on a sunlit beach holds a bottle of Sea Smoke Eau de Parfum"
+    loading="lazy" decoding="async"></span><span class="hoa-campaign__cap"><span class="hoa-campaign__kicker">Eau de Parfum</span><span class="hoa-campaign__name">Sea Smoke</span>
+        <span class="hoa-campaign__cta">Discover <span aria-hidden="true">&rarr;</span></span>
+      </span>
+    </a></section>
 </div>
 
     <!-- product_film · sections/hoa-reels.liquid -->
@@ -1339,7 +1396,10 @@ setTimeout(still,4000);
               </figure>
             </li></ul></div>
       </div>
-    </div><aside class="hoa-voices__visual" data-hoa-reveal aria-label="Customer rating"><figure class="hoa-voices__slide is-active" data-hoa-voices-slide >
+    </div>
+
+
+    <aside class="hoa-voices__visual" data-hoa-reveal aria-label="Customer rating"><figure class="hoa-voices__slide is-active" data-hoa-voices-slide >
             <div class="hoa-voices__photo"><img
     src="assets/hoa-voices-sea-smoke-1.webp"
     srcset="assets/hoa-voices-sea-smoke-1-sm.webp 700w, assets/hoa-voices-sea-smoke-1.webp 1200w"
@@ -1349,8 +1409,7 @@ setTimeout(still,4000);
     loading="lazy" decoding="async"></div><figcaption class="hoa-voices__score">
                 <p class="hoa-voices__score-num">4.5</p>
                 <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
-                <p class="hoa-voices__score-label">Sea Smoke rating</p><p class="hoa-voices__score-count">23 reviews</p><ul class="hoa-voices__faces" role="list" aria-hidden="true"><li><span>A</span></li><li><span>S</span></li><li><span>N</span></li><li><span>R</span></li></ul>
-              </figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
+                <p class="hoa-voices__score-label">Sea Smoke rating</p><p class="hoa-voices__score-count">23 reviews</p></figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
             <div class="hoa-voices__photo"><img
     src="assets/hoa-voices-maha-1.webp"
     srcset="assets/hoa-voices-maha-1-sm.webp 700w, assets/hoa-voices-maha-1.webp 1200w"
@@ -1360,8 +1419,7 @@ setTimeout(still,4000);
     loading="lazy" decoding="async"></div><figcaption class="hoa-voices__score">
                 <p class="hoa-voices__score-num">4.7</p>
                 <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
-                <p class="hoa-voices__score-label">Maha rating</p><p class="hoa-voices__score-count">57 reviews</p><ul class="hoa-voices__faces" role="list" aria-hidden="true"><li><span>A</span></li><li><span>S</span></li><li><span>N</span></li><li><span>R</span></li></ul>
-              </figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
+                <p class="hoa-voices__score-label">Maha rating</p><p class="hoa-voices__score-count">57 reviews</p></figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
             <div class="hoa-voices__photo"><img
     src="assets/hoa-voices-sea-smoke-2.webp"
     srcset="assets/hoa-voices-sea-smoke-2-sm.webp 700w, assets/hoa-voices-sea-smoke-2.webp 1200w"
@@ -1371,8 +1429,7 @@ setTimeout(still,4000);
     loading="lazy" decoding="async"></div><figcaption class="hoa-voices__score">
                 <p class="hoa-voices__score-num">4.5</p>
                 <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
-                <p class="hoa-voices__score-label">Sea Smoke rating</p><p class="hoa-voices__score-count">23 reviews</p><ul class="hoa-voices__faces" role="list" aria-hidden="true"><li><span>A</span></li><li><span>S</span></li><li><span>N</span></li><li><span>R</span></li></ul>
-              </figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
+                <p class="hoa-voices__score-label">Sea Smoke rating</p><p class="hoa-voices__score-count">23 reviews</p></figcaption></figure><figure class="hoa-voices__slide" data-hoa-voices-slide  aria-hidden="true">
             <div class="hoa-voices__photo"><img
     src="assets/hoa-voices-maha-2.webp"
     srcset="assets/hoa-voices-maha-2-sm.webp 700w, assets/hoa-voices-maha-2.webp 1200w"
@@ -1382,8 +1439,7 @@ setTimeout(still,4000);
     loading="lazy" decoding="async"></div><figcaption class="hoa-voices__score">
                 <p class="hoa-voices__score-num">4.7</p>
                 <p class="hoa-voices__score-stars" aria-hidden="true">★★★★★</p>
-                <p class="hoa-voices__score-label">Maha rating</p><p class="hoa-voices__score-count">57 reviews</p><ul class="hoa-voices__faces" role="list" aria-hidden="true"><li><span>A</span></li><li><span>S</span></li><li><span>N</span></li><li><span>R</span></li></ul>
-              </figcaption></figure></aside>
+                <p class="hoa-voices__score-label">Maha rating</p><p class="hoa-voices__score-count">57 reviews</p></figcaption></figure></aside>
   </div>
 </section>
 

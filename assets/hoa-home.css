@@ -570,180 +570,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-seq-section + .hoa-bridge-section .hoa-bridge__beam { display: none; }
 .hoa-seq-section + .hoa-bridge-section + .hoa-frag-section .hoa-cf { padding-top: clamp(28px, 3vw, 48px); }
 
-/* ==========================================================================
-   02 — THE HOUSE (2026-10-06 editorial split)
-   Copy left (tag, statement, lede + CTA, three principles); photographs right in nested
-   frames: an outer translucent shell with a hairline ring holding an inner image core whose
-   radius is the shell's minus its padding, so the curves stay concentric.
-   ========================================================================== */
-.hoa-manifesto {
-  --hm-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --hm-r: clamp(20px, 2vw, 30px);
-  --hm-pad: clamp(6px, 0.6vw, 9px);
-  --hm-line: rgba(20, 18, 16, 0.12);
-  position: relative;
-  padding: var(--hoa-section) 0;
-  overflow: hidden;
-  background: var(--hoa-paper);
-}
-.hoa-manifesto__grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: clamp(24px, 3vw, 48px);
-  align-items: center;
-}
-.hoa-manifesto__copy { grid-column: 1 / 8; position: relative; z-index: 2; padding-right: clamp(0px, 6vw, 96px); }
-.hoa-manifesto__media { grid-column: 8 / 13; position: relative; padding-bottom: clamp(40px, 5vw, 80px); }
-
-/* Tag pill + a hairline that runs out to the photographs */
-.hoa-manifesto__meta { display: flex; align-items: center; gap: 18px; }
-.hoa-manifesto__tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 14px 7px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 0 0 1px var(--hm-line);
-  font: 500 0.66rem/1 var(--hoa-sans);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--hoa-ink);
-}
-.hoa-manifesto__tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--hoa-brass, #A8842F); }
-.hoa-manifesto__rule { flex: 1; height: 1px; background: var(--hm-line); transform-origin: 0 50%; }
-.hoa-js .hoa-manifesto__meta .hoa-manifesto__rule { transform: scaleX(0); transition: transform 1.6s var(--hm-ease) 0.2s; }
-.hoa-js .hoa-manifesto__meta.hoa-is-in .hoa-manifesto__rule { transform: scaleX(1); }
-
-/* Statement: large editorial serif, left aligned, sharpens word by word (hoa-home.js) */
-.hoa-manifesto__text {
-  margin: clamp(32px, 3.6vw, 56px) 0 0;
-  max-width: 19ch;
-  font-family: var(--hoa-serif);
-  font-weight: 400;
-  font-size: clamp(2rem, 3.9vw, 4.2rem);
-  line-height: 1.06;
-  letter-spacing: -0.028em;
-  color: var(--hoa-ink);
-  text-wrap: balance;
-}
-/* Statement words in Times New Roman (user, 2026-10-07); the italic "place" / "carry close" keep their serif + brown */
-.hoa-manifesto__text { font-family: 'Times New Roman', Times, 'Liberation Serif', serif; letter-spacing: -0.015em; }
-.hoa-manifesto__text em { font-family: var(--hoa-serif); font-style: italic; letter-spacing: -0.02em; color: #6B5232; }
-.hoa-word { transition: opacity 0.4s var(--hoa-ease); }
-.hoa-js .hoa-manifesto__text .hoa-word { opacity: 0.16; }
-
-.hoa-manifesto__foot {
-  margin-top: clamp(32px, 3.4vw, 52px);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px 40px;
-  max-width: 640px;
-}
-.hoa-manifesto__foot .hoa-lede { margin: 0; max-width: 36ch; }
-.hoa-manifesto .hoa-btn { transition: background-color 0.5s var(--hm-ease), color 0.5s var(--hm-ease), transform 0.5s var(--hm-ease); }
-.hoa-manifesto .hoa-btn:active { transform: scale(0.98); }
-.hoa-manifesto .hoa-btn__icon { transition: transform 0.6s var(--hm-ease); }
-.hoa-manifesto .hoa-btn:hover .hoa-btn__icon { transform: translate(3px, -1px) scale(1.05); }
-
-/* Three principles on one hairline */
-.hoa-manifesto__notes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 32px);
-  margin: clamp(56px, 6vw, 96px) 0 0;
-  padding: clamp(20px, 2vw, 28px) 0 0;
-  list-style: none;
-  border-top: 1px solid var(--hm-line);
-  max-width: 720px;
-}
-.hoa-manifesto__note { display: grid; gap: 8px; align-content: start; }
-.hoa-manifesto__num { font: 500 0.66rem/1 var(--hoa-sans); letter-spacing: 0.18em; color: var(--hoa-mute); font-variant-numeric: tabular-nums; }
-/* principle icons (replaced the 01/02/03 numbers, 2026-10-07): thin brass line in a hairline ring */
-.hoa-manifesto__icon {
-  display: grid; place-items: center;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(156, 124, 64, 0.35);
-  color: #9C7C40;
-}
-.hoa-manifesto__icon svg { width: 20px; height: 20px; }
-.hoa-manifesto__note-title { font-family: var(--hoa-serif); font-size: clamp(1.1rem, 1.3vw, 1.3rem); line-height: 1.2; letter-spacing: -0.01em; color: var(--hoa-ink); }
-.hoa-manifesto__note-text { font-size: 0.86rem; line-height: 1.55; color: var(--hoa-ink-2); max-width: 26ch; }
-.hoa-js .hoa-manifesto__notes .hoa-manifesto__note { opacity: 0; transform: translate3d(0, 18px, 0); }
-.hoa-js .hoa-manifesto__notes.hoa-is-in .hoa-manifesto__note { opacity: 1; transform: none; transition: opacity 1s var(--hm-ease), transform 1s var(--hm-ease); }
-.hoa-js .hoa-manifesto__notes.hoa-is-in .hoa-manifesto__note:nth-child(2) { transition-delay: 0.12s; }
-.hoa-js .hoa-manifesto__notes.hoa-is-in .hoa-manifesto__note:nth-child(3) { transition-delay: 0.24s; }
-
-/* Photographs: nested frames */
-.hoa-manifesto__plate { position: relative; }
-.hoa-manifesto__plate--main { width: 100%; }
-.hoa-manifesto__plate--sub {
-  position: absolute;
-  z-index: 2;
-  left: clamp(-120px, -7vw, -48px);
-  bottom: 0;
-  width: 46%;
-}
-.hoa-manifesto__shell {
-  margin: 0;
-  padding: var(--hm-pad);
-  border-radius: var(--hm-r);
-  background: rgba(255, 255, 255, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(20, 18, 16, 0.07), 0 30px 60px -30px rgba(60, 40, 20, 0.22);
-}
-.hoa-manifesto__plate--sub .hoa-manifesto__shell { background: rgba(255, 255, 255, 0.7); }
-.hoa-manifesto__core {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
-  border-radius: calc(var(--hm-r) - var(--hm-pad));
-  background: var(--hoa-paper-2);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
-}
-.hoa-manifesto__plate--sub .hoa-manifesto__core { aspect-ratio: 1; }
-.hoa-manifesto__core img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1.8s var(--hm-ease);
-}
-.hoa-js .hoa-manifesto__plate .hoa-manifesto__core img { transform: scale(1.1); }
-.hoa-js .hoa-manifesto__plate.hoa-is-in .hoa-manifesto__core img { transform: scale(1); }
-@media (hover: hover) {
-  .hoa-js .hoa-manifesto__plate.hoa-is-in:hover .hoa-manifesto__core img { transform: scale(1.03); }
-}
-.hoa-manifesto__plate--sub.hoa-is-in { transition-delay: 0.18s; }
-
-@media (max-width: 960px) {
-  .hoa-manifesto__grid { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
-  .hoa-manifesto__copy, .hoa-manifesto__media { grid-column: 1 / -1; padding-right: 0; }
-  .hoa-manifesto__text { max-width: 20ch; }
-  /* photos side by side, both 4:5, no overlap */
-  .hoa-manifesto__media { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 0; }
-  .hoa-manifesto__plate--sub { position: relative; left: auto; bottom: auto; width: auto; }
-  .hoa-manifesto__plate--sub .hoa-manifesto__core { aspect-ratio: 4 / 5; }
-  }
-@media (max-width: 767px) {
-  .hoa-manifesto { --hm-r: 18px; --hm-pad: 5px; }
-  .hoa-manifesto__text { font-size: clamp(1.85rem, 8.4vw, 2.4rem); max-width: none; }
-  .hoa-manifesto__foot { flex-direction: column; align-items: flex-start; }
-  .hoa-manifesto__notes { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; border-top: 0; margin-top: 48px; }
-  .hoa-manifesto__note { grid-template-columns: 40px minmax(0, 1fr); column-gap: 8px; padding: 18px 0; border-top: 1px solid var(--hm-line); }
-  .hoa-manifesto__num { grid-row: 1 / 3; padding-top: 5px; }
-  .hoa-manifesto__icon { grid-row: 1 / 3; width: 34px; height: 34px; }
-  .hoa-manifesto__icon svg { width: 18px; height: 18px; }
-  .hoa-manifesto__note-text { max-width: none; }
-  .hoa-manifesto__media { gap: 8px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hoa-js .hoa-manifesto__plate .hoa-manifesto__core img,
-  .hoa-js .hoa-manifesto__notes .hoa-manifesto__note,
-  .hoa-js .hoa-manifesto__meta .hoa-manifesto__rule { transform: none; opacity: 1; transition: none; }
-}
+/* 02 — THE HOUSE: "The Vessel" (2026-10-09) lives in assets/hoa-vessel.css, loaded by the section. */
 
 /* ==========================================================================
    03 — SIGNATURE FRAGRANCES (full-width showroom carousel)
@@ -759,7 +586,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 }
 /* Signature carousel straight into The House: one small beat between them, not two full section paddings */
 .shopify-section:has(> .hoa-cf):has(+ .shopify-section > .hoa-manifesto) > .hoa-cf { padding-bottom: clamp(28px, 3vw, 48px); }
-.shopify-section:has(> .hoa-cf) + .shopify-section > .hoa-manifesto { padding-top: clamp(28px, 3vw, 48px); }
 .hoa-cf__head { text-align: center; }
 .hoa-cf__head .hoa-h2 {
   margin-top: 18px;
@@ -1255,7 +1081,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-hero__slide img { transform: none !important; }
   .hoa-hero__frame { transition: none !important; transform: translate(-50%, -50%) !important; }
   .hoa-js [data-hoa-reveal] { opacity: 1; transform: none; }
-  .hoa-js .hoa-manifesto__text .hoa-word { opacity: 1; }
 }
 
 /* Lock the page behind the open mobile menu */
@@ -1439,18 +1264,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-voices__score-stars { margin-top: 12px !important; font-size: 0.8rem; letter-spacing: 1px; line-height: 1; }
 .hoa-voices__score-count { margin-top: 4px !important; font-size: 0.74rem; opacity: 0.85; }
 .hoa-voices__score-label { margin-top: 8px !important; font-family: var(--hoa-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
-.hoa-voices__faces { display: flex; margin: 22px 0 0; padding: 0 0 0 8px; list-style: none; }
-.hoa-voices__faces li {
-  width: 40px;
-  height: 40px;
-  margin-left: -8px;
-  border-radius: 50%;
-  border: 2px solid #FFFFFF;
-  overflow: hidden;
-  background: #EFE2D6;
-}
-.hoa-voices__faces img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.hoa-voices__faces span { display: grid; place-items: center; width: 100%; height: 100%; font-family: var(--hoa-serif); font-style: italic; font-size: 0.9rem; color: var(--vc-brown); }
 
 /* Tablet and phones: heading + arrows, the card row, then the photo */
 @media (prefers-reduced-motion: reduce) {
@@ -2411,22 +2224,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   background: #000000; color: var(--ft-ink);
   border-top: 0; font-family: var(--hoa-sans);
 }
-/* Background: the sharp twelve-point double-outline star from the client's Deccani sheet,
-   tiled in a staggered lattice (assets/hoa-footer-star.svg, 80×80) in thin gold lines over the
-   whole footer. It fades out at the top and bottom edges so it reads as a carved ground, not a
-   print. Replaced the edge friezes 2026-10-06. Content sits above it (.hoa-wrap z-index). */
-.hoa-footer { overflow: hidden; isolation: isolate; }
-.hoa-footer::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: #B8955F; opacity: 0.32;
-  -webkit-mask: url("hoa-footer-star.svg") 50% 0 / 132px 132px repeat, linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
-  -webkit-mask-composite: source-in;
-  mask: url("hoa-footer-star.svg") 50% 0 / 132px 132px repeat, linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
-  mask-composite: intersect;
-}
-@media (max-width: 749px) {
-  .hoa-footer::before { -webkit-mask-size: 104px 104px, auto; mask-size: 104px 104px, auto; }
-}
 .hoa-footer a { color: inherit; text-decoration: none; }
 .hoa-footer a:focus-visible, .hoa-footer button:focus-visible { outline: 1px solid var(--ft-ink); outline-offset: 3px; }
 .hoa-footer__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -2588,13 +2385,9 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-reels__head--center .hoa-reels__sub a:hover { opacity: 0.7; }
 .hoa-reels__head--center .hoa-reels__nav { justify-content: center; }
 
-/* Deccani geometry on the three beige home bands (2026-10-06), a different lattice in each:
-   The House = eight-point star girih, Discover = pointed crosses, In their words = square knots.
-   Faint, gold, fading out before the content. */
-.hoa-families { position: relative; }
-.hoa-manifesto,
-.hoa-families { isolation: isolate; }
-.hoa-manifesto::before,
+/* Deccani geometry on the beige Discover band (2026-10-06): pointed crosses, faint gold,
+   fading out before the content. (The House pattern was removed 2026-10-09, user.) */
+.hoa-families { position: relative; isolation: isolate; }
 .hoa-families::before {
   content: "";
   position: absolute;
@@ -2602,13 +2395,6 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   z-index: -1;
   background: #A8842F;
   pointer-events: none;
-  -webkit-mask-composite: source-in;
-          mask-composite: intersect;
-}
-.hoa-manifesto::before {
-  opacity: 0.2;
-  -webkit-mask: url("hoa-qutub-girih.svg") repeat 0 0 / 56px 56px, radial-gradient(ellipse 46% 62% at 0% 100%, #000 20%, transparent 100%);
-          mask: url("hoa-qutub-girih.svg") repeat 0 0 / 56px 56px, radial-gradient(ellipse 46% 62% at 0% 100%, #000 20%, transparent 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
@@ -2682,44 +2468,11 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
    (user). Large, behind the statement on the left, bleeding off the left edge so only part
    of the circle shows; the copy and photos stay above it. Pure CSS: one turn every 90 s.
    ========================================================================== */
-.hoa-manifesto { isolation: isolate; }
-.hoa-manifesto__grid { position: relative; z-index: 1; }
 .hoa-mandala {
   position: absolute;
   z-index: 0;
   aspect-ratio: 1;
   pointer-events: none;
-}
-.hoa-manifesto__mandala {
-  --mandala: clamp(900px, 70vw, 1100px);
-  width: var(--mandala);
-  left: calc(var(--mandala) * -0.42);
-  top: 50%;
-  margin-top: calc(var(--mandala) * -0.5);
-  opacity: 0.26;
-}
-.hoa-manifesto__mandala .hero-mandala { stroke: #9C7C40; }
-/* The House = Qutub Shahi tomb jaali (2026-10-08, user: a Hyderabad pattern that no other home
-   section uses, clearly visible). Six-point stars and hexagons in double strapwork with a rosette
-   in every hexagon (assets/hoa-qutub-jaali.svg, tools/gen-qutub-jaali.py, tile 30 x 51.96).
-   Brass, full strength around the photographs and the edges, eased back behind the copy. */
-.hoa-manifesto::before {
-  content: "";
-  background: #A8842F;
-  opacity: 0.34;
-  -webkit-mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 60px 103.92px, linear-gradient(90deg, rgba(0,0,0,.55) 0, rgba(0,0,0,.28) 22%, rgba(0,0,0,.28) 50%, #000 66%);
-          mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 60px 103.92px, linear-gradient(90deg, rgba(0,0,0,.55) 0, rgba(0,0,0,.28) 22%, rgba(0,0,0,.28) 50%, #000 66%);
-  -webkit-mask-composite: source-in;
-          mask-composite: intersect;
-}
-@media (max-width: 960px) {
-  .hoa-manifesto::before {
-    opacity: 0.26;
-    -webkit-mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 48px 83.14px, linear-gradient(180deg, #000, rgba(0,0,0,.35) 30%, rgba(0,0,0,.35) 55%, #000 80%);
-            mask: url("hoa-qutub-jaali.svg") repeat 50% 0 / 48px 83.14px, linear-gradient(180deg, #000, rgba(0,0,0,.35) 30%, rgba(0,0,0,.35) 55%, #000 80%);
-    -webkit-mask-composite: source-in;
-            mask-composite: intersect;
-  }
 }
 .hero-mandala {
   display: block;
@@ -2732,9 +2485,6 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 }
 .hero-mandala :is(path, circle) { vector-effect: non-scaling-stroke; }
 @keyframes mandala-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@media (max-width: 767px) {
-  .hoa-manifesto__mandala { --mandala: min(120vw, 1100px); left: auto; right: calc(var(--mandala) * -0.45); top: 0; margin-top: calc(var(--mandala) * -0.25); opacity: 0.2; }
-}
 @media (prefers-reduced-motion: reduce) {
   .hero-mandala { animation: none; }
 }
@@ -2817,4 +2567,110 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hoa-logo3d__hand svg { animation: none; }
+}
+
+/* ===== Campaign diptych (sections/hoa-campaign.liquid, 2026-10-09) =====
+   Full-bleed, edge to edge: each campaign photo spans the full width, one after another. */
+.hoa-campaign {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  background: var(--hoa-ink);
+}
+.hoa-campaign__panel {
+  position: relative;
+  display: block;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+}
+.hoa-campaign__panel img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 30%);
+  transform: scale(1.001);
+  transition: transform 1.4s var(--hoa-ease);
+}
+.hoa-campaign__panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: linear-gradient(to top, rgba(10, 8, 6, 0.55), rgba(10, 8, 6, 0));
+  pointer-events: none;
+}
+.hoa-campaign__cap {
+  position: absolute;
+  left: clamp(20px, 3.2vw, 48px);
+  right: clamp(20px, 3.2vw, 48px);
+  bottom: clamp(22px, 3.2vw, 46px);
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+}
+.hoa-campaign__kicker {
+  font-family: var(--hoa-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+.hoa-campaign__name {
+  font-family: var(--font-didot, var(--hoa-serif));
+  font-size: clamp(34px, 4.2vw, 64px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.hoa-campaign__cta {
+  justify-self: start;
+  margin-top: 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  font-family: var(--hoa-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+/* Tall (9:16) photo: a full-width cover crop loses either the face or the bottle, so
+   a blurred copy fills the width and the photo shows its top ~62% at full panel height. */
+.hoa-campaign__backdrop,
+.hoa-campaign__frame { position: absolute; display: block; overflow: hidden; }
+.hoa-campaign__backdrop { inset: 0; }
+.hoa-campaign__panel .hoa-campaign__backdrop img {
+  /* zoom into the photo's left edge (sea + sky only) so no blurred face shows */
+  object-position: 0% 30%;
+  filter: blur(8px) saturate(1.05);
+  transform-origin: 0% 40%;
+  transform: scale(5);
+}
+.hoa-campaign__frame {
+  top: 0;
+  bottom: 0;
+  right: clamp(0px, 9vw, 160px);
+  aspect-ratio: 0.9;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent);
+}
+.hoa-campaign__panel .hoa-campaign__frame img { object-position: var(--focus, 50% 0%); }
+@media (hover: hover) {
+  .hoa-campaign__panel:hover img { transform: scale(1.035); }
+  .hoa-campaign__panel:hover .hoa-campaign__backdrop img { transform: scale(5); }
+}
+.hoa-campaign__panel:focus-visible { outline: 2px solid #fff; outline-offset: -6px; }
+@media (max-width: 749px) {
+  .hoa-campaign__panel { height: auto; min-height: 0; aspect-ratio: 4 / 5; }
+  /* A 4:5 phone panel already fits the face and the bottle, so the frame fills it. */
+  .hoa-campaign__panel--frame .hoa-campaign__backdrop { display: none; }
+  .hoa-campaign__frame { inset: 0; aspect-ratio: auto; -webkit-mask-image: none; mask-image: none; }
+  .hoa-campaign__panel .hoa-campaign__frame img { object-position: 50% 4%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-campaign__panel img { transition: none; }
 }

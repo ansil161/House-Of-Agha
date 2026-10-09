@@ -91,6 +91,8 @@ const AGHA_PRODUCTS = {
     family: "Woody",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-dark-paradise-portrait.webp', '/assets/hoa-hero-dark-paradise.webp', '/assets/hoa-craft-sand.webp', '/assets/hoa-world-hand.webp'],
+    // PDP buy-column slider + thumbnails: one photo per scene, none repeated in the campaign gallery below (user, 2026-10-09)
+    media: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-pdp-dark-paradise-2.webp', '/assets/hoa-pdp-dark-paradise-3.webp', '/assets/hoa-pdp-dark-paradise-4.webp', '/assets/hoa-pdp-dark-paradise-5.webp'],
     description: "Black sand, rising smoke and a room lit only by embers.",
     sizes: { 'Eau de Parfum': 4800 },
     reviews: [{ rating: 5, author: "Rehan S.", location: "London", verified: true, body: "Dark Paradise is my evening scent. Smoky, close to the skin, never loud." }]

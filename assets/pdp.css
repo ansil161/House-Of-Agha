@@ -2469,6 +2469,130 @@ html:has(.pdp) body {
   .pdp-tf__float { animation: none; }
 }
 
+/* --------------------------------------------------------------------------
+   2026-10-09 layout: ONE centred column. The three acts sit on an arc ABOVE the
+   bottle, one at a time: the act's notes slide in along the arc from the left,
+   hold, then slide off to the right as the next act comes in (assets/pdp.js
+   sets data-state active / past / next). The claims sit in one row UNDER it.
+   Each note is placed by turning about the arc's centre (--cy below the top):
+   rotate(a) translateY(-r) rotate(-a), so animating the angle moves it ALONG the arc.
+   -------------------------------------------------------------------------- */
+.pdp-tf__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.pdp-tf__center { order: 0; width: 100%; }
+
+.pdp-tf__arc {
+  --r: 300px;                 /* arc radius (through the note photos' centres) */
+  --cy: 350px;                /* arc centre, from the top of the box */
+  --step: 27deg;              /* angle between neighbouring notes */
+  --swing: 78deg;             /* how far off to either side a waiting / leaving act sits */
+  --img: 72px;
+  position: relative;
+  display: block;
+  width: min(100%, 720px);
+  height: 218px;
+  margin: clamp(8px, 2vw, 24px) auto calc(-1 * clamp(8px, 1.6vw, 24px));   /* the photo's white margin is the gap */
+  z-index: 3;
+  overflow: visible;
+}
+.pdp-tf__arc > .pdp-tf__block {
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: none;
+  margin: 0;
+  justify-self: auto;
+}
+.pdp-tf__arc .pdp-tf__notes { display: block; }
+.pdp-tf__arc .pdp-tf__note {
+  --a: calc((var(--i) - (var(--n) - 1) / 2) * var(--step) + var(--shift, 0deg));
+  position: absolute;
+  left: 50%;
+  top: var(--cy);
+  width: 92px;
+  margin: calc(var(--img) / -2) 0 0 -46px;    /* the photo's centre sits on the arc */
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))) scale(var(--sc, 1));
+  opacity: 1;
+  transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.7s ease;
+  transition-delay: calc((var(--n) - 1 - var(--i)) * 90ms);   /* the leading note moves first */
+}
+.pdp-tf__arc .pdp-tf__note-img { width: var(--img); height: var(--img); box-shadow: 0 0 0 4px #fff, 0 0 0 5px var(--pdp-line); }
+.pdp-tf__arc [data-state='next'] .pdp-tf__note { --shift: calc(-1 * var(--swing)); opacity: 0; transition: none; }
+.pdp-tf__arc [data-state='past'] .pdp-tf__note { --shift: var(--swing); opacity: 0; transition-delay: calc((var(--n) - 1 - var(--i)) * 70ms); }
+
+/* Flowing (pdp.js adds .is-flow): every note of every act rides the arc in one loop; the script
+   sets each note's angle --a and fade --o per frame, so no transitions and no act states here */
+.pdp-tf__arc.is-flow [data-state] .pdp-tf__note {
+  opacity: var(--o, 0);
+  transition: none;
+}
+/* notes of the other acts (coming in / going out) stay quieter than the act named in the label */
+.pdp-tf__arc.is-flow [data-state='next'] .pdp-tf__note { opacity: calc(var(--o, 0) * 0.38); }
+.pdp-tf__arc.is-flow .pdp-tf__note-img { transition: filter 0.6s ease; }
+.pdp-tf__arc.is-flow [data-state='next'] .pdp-tf__note-img { filter: grayscale(0.6); }
+
+/* "Top notes", under the crown of the arc */
+.pdp-tf__act-label {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--cy) - var(--r) + var(--img) / 2 + 58px);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+.pdp-tf__arc [data-state='active'] .pdp-tf__act-label { opacity: 1; transform: translate(-50%, 0); transition-delay: 0.35s; }
+.pdp-tf__arc .pdp-tf__block-title { font-family: var(--font-serif); font-size: 1.45rem; font-weight: 500; }
+
+/* the claims: one row under the bottle */
+.pdp-tf__col--right {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(20px, 5vw, 64px);
+  margin-top: clamp(6px, 1.5vw, 20px);
+}
+.pdp-tf__col--right .pdp-tf__block {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: none;
+  margin: 0;
+  justify-self: auto;
+}
+.pdp-tf__col--right .pdp-tf__block-icon { width: 54px; height: 54px; }
+.pdp-tf__col--right .pdp-tf__block-icon svg { width: 26px; height: 26px; }
+.pdp-tf__col--right .pdp-tf__block-title { font-size: 1rem; white-space: nowrap; }
+
+@media (max-width: 1100px) {
+  .pdp-tf__visual { width: min(100%, 480px); }
+}
+@media (max-width: 900px) {
+  .pdp-tf__center { order: 0; }
+  .pdp-tf__arc { gap: 0; justify-items: initial; }
+  .pdp-tf__col--left .pdp-tf__block { transform: none; }
+}
+@media (max-width: 600px) {
+  .pdp-tf__arc { --r: 160px; --cy: 200px; --step: 34deg; --img: 50px; height: 134px; margin-bottom: 18px; }
+  .pdp-tf__arc .pdp-tf__note { width: 76px; margin-left: -38px; }
+  .pdp-tf__arc .pdp-tf__note-name { font-size: 0.7rem; }
+  .pdp-tf__act-label { top: calc(var(--cy) - var(--r) + var(--img) / 2 + 46px); }
+  .pdp-tf__arc .pdp-tf__block-title { font-size: 1.15rem; }
+  .pdp-tf__col--right { gap: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdp-tf__arc .pdp-tf__note,
+  .pdp-tf__act-label { transition: opacity 0.4s ease; transition-delay: 0s; }
+}
+
 /* ==========================================================================
    ADDITIONS — identity, offer, trust, details, experience, reviews, recent, zoom
    ========================================================================== */

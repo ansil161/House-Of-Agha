@@ -1,0 +1,103 @@
+{%- comment -%}
+  Home V2 · Footer: "The Clearing" (2026-10-09, design-taste-frontend skill)
+  A curtain reveal. The footer is pinned under the page (position: fixed inside a clip-path wrapper),
+  so the last section lifts off it like a curtain. Split composition on deep forest green:
+    left   the House Letter (headline, one line, labelled email field), three link groups, base row
+    right  a full-height campaign photograph that settles (scale) as the curtain lifts
+  The reveal only runs when the footer fits the viewport, on wide screens, without reduced motion
+  (assets/hoa-v2-footer.js adds .is-reveal); otherwise it is an ordinary footer in the flow.
+  Replaces the site footer on pages that carry it (the layout's .hoa-footer is hidden in
+  assets/hoa-v2-footer.css), so V1 keeps its own footer.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{{ 'hoa-v2-footer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hoa-v2-footer.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign shop_all = routes.all_products_collection_url
+-%}
+<div class="v2-foot-curtain" data-v2-foot-curtain>
+  <footer class="v2-foot" data-v2-foot>
+    <div class="v2-foot__grid">
+
+      <div class="v2-foot__main">
+        <div class="v2-foot__letter">
+          <h2 class="v2-foot__title">{{ s.title }} <em>{{ s.title_em }}</em></h2>
+          <p class="v2-foot__intro">{{ s.letter_text }}</p>
+
+          {%- form 'customer', class: 'v2-foot__form', id: 'v2-foot-letter' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label class="v2-foot__flabel" for="v2-foot-email">Email address</label>
+            <div class="v2-foot__field">
+              <input class="v2-foot__input" id="v2-foot-email" type="email" name="contact[email]" autocomplete="email" placeholder="name@example.com" required aria-describedby="v2-foot-help">
+              <button type="submit" class="v2-foot__submit">{{ s.button }}</button>
+            </div>
+            <p class="v2-foot__help" id="v2-foot-help">{{ s.help }}</p>
+            {%- if form.posted_successfully? -%}
+              <p class="v2-foot__note" role="status">Thank you. You are on the list.</p>
+            {%- elsif form.errors -%}
+              <p class="v2-foot__note v2-foot__note--error" role="alert">Please enter a valid email address.</p>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+
+        <div class="v2-foot__links">
+          <nav aria-labelledby="v2-foot-shop">
+            <h3 class="v2-foot__head" id="v2-foot-shop">Shop</h3>
+            <ul role="list">
+              <li><a href="{{ shop_all }}">All fragrances</a></li>
+              <li><a href="{{ shop_all }}?for=men">For him</a></li>
+              <li><a href="{{ shop_all }}?for=women">For her</a></li>
+              <li><a href="{{ shop_all }}?gift=1">Gifts</a></li>
+              <li><a href="{{ routes.root_url }}pages/wishlist" data-wishlist-open>Wishlist</a></li>
+            </ul>
+          </nav>
+          <nav aria-labelledby="v2-foot-house">
+            <h3 class="v2-foot__head" id="v2-foot-house">The House</h3>
+            <ul role="list">
+              <li><a href="{{ routes.root_url }}pages/the-house">Our story</a></li>
+              <li><a href="{{ routes.root_url }}pages/private-access">Private access</a></li>
+              <li><a href="{{ routes.account_url }}">Your account</a></li>
+            </ul>
+          </nav>
+          <nav aria-labelledby="v2-foot-care">
+            <h3 class="v2-foot__head" id="v2-foot-care">Client care</h3>
+            <ul role="list">
+              <li><a href="{{ routes.root_url }}pages/shipping-returns">Shipping &amp; returns</a></li>
+              <li><a href="{{ routes.root_url }}pages/contact">Contact</a></li>
+              <li><a href="https://www.instagram.com/aghaperfumes/" target="_blank" rel="noopener">Instagram<span class="v2-sr"> (opens in a new tab)</span></a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="v2-foot__base">
+          <a href="{{ routes.root_url }}" class="v2-foot__logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="" width="500" height="156" loading="lazy"></a>
+          <p class="v2-foot__legal">&copy; {{ 'now' | date: '%Y' }} House of Agha</p>
+          <a href="#" class="v2-foot__top" data-v2-foot-top>Back to top</a>
+        </div>
+      </div>
+
+      <figure class="v2-foot__photo">
+        {%- render 'hoa-img', name: s.photo_asset, image: s.photo, w: 1080, h: 1350, alt: s.photo_alt, sizes: '(min-width: 900px) 46vw, 100vw' -%}
+      </figure>
+    </div>
+  </footer>
+</div>
+
+{% schema %}
+{
+  "name": "V2 · Footer",
+  "class": "v2-section v2-foot-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Headline", "default": "Stay close to" },
+    { "type": "text", "id": "title_em", "label": "Headline (italic)", "default": "the House." },
+    { "type": "textarea", "id": "letter_text", "label": "Letter text", "default": "One letter a month, with new compositions and private releases." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Subscribe" },
+    { "type": "text", "id": "help", "label": "Help text", "default": "No spam. Unsubscribe in one click." },
+    { "type": "image_picker", "id": "photo", "label": "Photograph" },
+    { "type": "text", "id": "photo_asset", "label": "Photograph fallback (theme asset)", "default": "hoa-alt-tobacco-enigma" },
+    { "type": "text", "id": "photo_alt", "label": "Photograph alt text", "default": "Tobacco Enigma resting on moss in a sunlit forest" }
+  ],
+  "presets": [{ "name": "V2 · Footer" }]
+}
+{% endschema %}

@@ -1,0 +1,79 @@
+{%- comment -%}
+  Home V2 · 09 Journal — a minimal preview of three stories.
+  Uses the latest articles of the chosen blog when it has any; otherwise the blocks, which point at
+  the House's own story pages (The House, Hyderabad, the ingredients) rather than invented articles.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- liquid
+  assign s = section.settings
+  assign blog = s.blog
+  if blog == blank
+    assign blog = blogs.news
+  endif
+  assign use_blog = false
+  if blog != blank and blog.articles_count > 0
+    assign use_blog = true
+  endif
+-%}
+<section class="v2-journal v2-pad" id="journal">
+  <div class="v2-wrap">
+    <header class="v2-head">
+      <p class="v2-eyebrow" data-v2-reveal><span>09</span>{{ s.eyebrow }}</p>
+      <h2 class="v2-h2" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      {%- if use_blog -%}<a class="v2-link v2-head__link" href="{{ blog.url }}" data-v2-reveal><span>{{ s.all_label }}</span><span class="v2-link__arrow" aria-hidden="true">&rarr;</span></a>{%- endif -%}
+    </header>
+
+    <ol class="v2-journal__list" role="list" data-v2-stagger>
+      {%- if use_blog -%}
+        {%- for article in blog.articles limit: 3 -%}
+          <li><a class="v2-journal__item" href="{{ article.url }}">
+            <span class="v2-journal__img">{%- if article.image -%}{{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', alt: '', sizes: '(min-width: 961px) 30vw, 90vw' }}{%- endif -%}</span>
+            <span class="v2-journal__kicker">{{ article.published_at | date: '%B %Y' }}</span>
+            <span class="v2-journal__title">{{ article.title }}</span>
+            <span class="v2-journal__more">Read<span aria-hidden="true"> &rarr;</span></span>
+          </a></li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          <li {{ block.shopify_attributes }}><a class="v2-journal__item" href="{{ b.url }}">
+            <span class="v2-journal__img">{%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: '(min-width: 961px) 30vw, 90vw' -%}</span>
+            <span class="v2-journal__kicker">{{ b.kicker }}</span>
+            <span class="v2-journal__title">{{ b.title }}</span>
+            <span class="v2-journal__more">Read<span aria-hidden="true"> &rarr;</span></span>
+          </a></li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Journal",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Journal" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Stories from" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "the House." },
+    { "type": "blog", "id": "blog", "label": "Blog" },
+    { "type": "text", "id": "all_label", "label": "Link label", "default": "All stories" }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story (no blog)",
+      "settings": [
+        { "type": "text", "id": "kicker", "label": "Kicker" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "image_picker", "id": "image", "label": "Photograph" },
+        { "type": "text", "id": "asset", "label": "Theme asset (fallback)" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 1400 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 1837 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Journal" }]
+}
+{% endschema %}

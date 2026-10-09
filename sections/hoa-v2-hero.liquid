@@ -1,0 +1,180 @@
+{%- comment -%}
+  Home V2 · 01 Hero — "The Spectrum".
+  The whole hero takes the colour of one fragrance's glass. Its name is set huge and pale behind the
+  bottle, which stands in front of the letters. A shelf of all the bottles switches fragrance, and the
+  hero cycles through the line-up on its own: the colour field shifts, the name re-sets letter by
+  letter and the next bottle rises in. One block per fragrance (order, colour, product).
+  Motion: assets/hoa-v2.js (initHero). Without JS the first fragrance simply shows.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- liquid
+  assign s = section.settings
+  capture catalog_json
+    render 'hoa-catalog-data'
+  endcapture
+  assign catalog = catalog_json | parse_json
+  assign cta_url = s.cta_url | default: routes.all_products_collection_url
+  assign first_tint = section.blocks.first.settings.tint | default: '#ECE6DA'
+-%}
+{%- comment -%} Arms the entrance pre-state before first paint; failsafe shows the hero if hoa-v2.js never runs. {%- endcomment -%}
+<script>document.documentElement.classList.add('v2-js');setTimeout(function(){var h=document.querySelector('[data-v2-hero]');if(h)h.classList.add('is-in');},9000);</script>
+<section class="v2-hero" data-v2-hero data-header-theme="light" data-interval="{{ s.interval }}" style="--v2-tint: {{ first_tint }}">
+
+  {%- comment -%} Stage: giant names behind, bottles in front. Two wrapper levels per layer: the outer one
+       is moved by scroll (GSAP), the inner one by the pointer, so the two never fight over transform. {%- endcomment -%}
+  <div class="v2-hero__stage" aria-hidden="true">
+    <div class="v2-hero__layer v2-hero__layer--names" data-v2-hero-names>
+      <div class="v2-hero__names" data-v2-hero-tilt="-1">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign name = b.product.title
+            if name == blank
+              assign name = b.handle
+              for c in catalog.products
+                if c.handle == b.handle
+                  assign name = c.name
+                endif
+              endfor
+            endif
+          -%}
+          <p class="v2-hero__name{% if forloop.first %} is-active{% endif %}" data-v2-slide-name>
+            {%- assign chars = name | split: '' -%}
+            {%- for ch in chars -%}
+              <span class="v2-hero__ch" style="--i: {{ forloop.index0 }}">{% if ch == ' ' %}&nbsp;{% else %}{{ ch }}{% endif %}</span>
+            {%- endfor -%}
+          </p>
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="v2-hero__layer v2-hero__layer--bottles" data-v2-hero-bottles>
+      <div class="v2-hero__bottles" data-v2-hero-tilt="1">
+        {%- for block in section.blocks -%}
+          {%- assign cut = 'hoa-bottle-' | append: block.settings.bottle | append: '.webp' -%}
+          <img class="v2-hero__bottle{% if forloop.first %} is-active{% endif %}" data-v2-slide-bottle
+            src="{{ cut | asset_url }}" width="291" height="760" alt=""
+            {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+        {%- endfor -%}
+        <span class="v2-hero__floor"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="v2-hero__ui">
+    <h1 class="v2-hero__title">
+      <span class="v2-hero__mask"><span>{{ s.line_1_a }} <strong>{{ s.line_1_b }}</strong></span></span>
+      <span class="v2-hero__mask"><span>{{ s.line_2_a }} <strong>{{ s.line_2_b }}</strong></span></span>
+    </h1>
+
+    <div class="v2-hero__intro" data-v2-hero-intro>
+      <p class="v2-hero__line">{{ s.line }}</p>
+      <div class="v2-hero__ctas">
+        <a class="v2-hero__btn" href="{{ cta_url }}">{{ s.cta_label }}<span aria-hidden="true">&rarr;</span></a>
+        {%- if s.cta_2_label != blank -%}
+          <a class="v2-link" href="{{ s.cta_2_url | default: '/pages/the-house' }}"><span>{{ s.cta_2_label }}</span></a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="v2-hero__info" aria-live="polite">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          if p != blank
+            assign p_url = p.url
+            assign p_name = p.title
+            assign p_price = p.price | money
+          else
+            assign p_url = '/products/' | append: b.handle
+            assign p_name = b.handle
+            assign p_price = ''
+            for c in catalog.products
+              if c.handle == b.handle
+                assign p_name = c.name
+                assign p_n = c.salePrice | default: c.regularPrice
+                capture p_price
+                  render 'hoa-v2-inr', n: p_n
+                endcapture
+              endif
+            endfor
+          endif
+        -%}
+        <a class="v2-hero__item{% if forloop.first %} is-active{% endif %}" href="{{ p_url }}" data-v2-slide-info{% unless forloop.first %} tabindex="-1" aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
+          <span class="v2-hero__item-name">{{ p_name }}</span>
+          <span class="v2-hero__item-meta">Eau de Parfum{% if p_price != blank %}, {{ p_price }}{% endif %}</span>
+          <span class="v2-hero__item-go">Discover <span aria-hidden="true">&rarr;</span></span>
+        </a>
+      {%- endfor -%}
+    </div>
+
+    <div class="v2-hero__shelf" role="group" aria-label="{{ s.shelf_label | escape }}" data-v2-hero-shelf>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign cut = 'hoa-bottle-' | append: b.bottle | append: '.webp'
+          assign name = b.product.title
+          if name == blank
+            assign name = b.handle
+            for c in catalog.products
+              if c.handle == b.handle
+                assign name = c.name
+              endif
+            endfor
+          endif
+        -%}
+        <button type="button" class="v2-hero__pick{% if forloop.first %} is-active{% endif %}" data-v2-slide-pick="{{ forloop.index0 }}" data-tint="{{ b.tint }}" aria-label="{{ name | escape }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+          <img src="{{ cut | asset_url }}" width="291" height="760" alt="" loading="lazy" decoding="async">
+          <span class="v2-hero__tick" aria-hidden="true"></span>
+        </button>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Hero",
+  "class": "v2-section v2-section--hero",
+  "settings": [
+    { "type": "header", "content": "Headline", "info": "Two lines; the second part of each line is set heavier." },
+    { "type": "text", "id": "line_1_a", "label": "Line 1", "default": "Begins as" },
+    { "type": "text", "id": "line_1_b", "label": "Line 1, heavier", "default": "a place." },
+    { "type": "text", "id": "line_2_a", "label": "Line 2", "default": "Ends" },
+    { "type": "text", "id": "line_2_b", "label": "Line 2, heavier", "default": "close to you." },
+    { "type": "textarea", "id": "line", "label": "Short line", "default": "Seven eaux de parfum from House of Agha, each one a place you can wear." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop the Collection" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    { "type": "text", "id": "cta_2_label", "label": "Second link label", "default": "Our story" },
+    { "type": "url", "id": "cta_2_url", "label": "Second link" },
+    { "type": "header", "content": "Spectrum" },
+    { "type": "range", "id": "interval", "label": "Seconds per fragrance", "min": 3, "max": 10, "step": 1, "default": 5 },
+    { "type": "text", "id": "shelf_label", "label": "Shelf label (screen readers)", "default": "Choose a fragrance" }
+  ],
+  "blocks": [
+    {
+      "type": "fragrance",
+      "name": "Fragrance",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Name, price and link come from here when set." },
+        { "type": "text", "id": "handle", "label": "Handle when no product is picked", "default": "agha-blue" },
+        {
+          "type": "select", "id": "bottle", "label": "Bottle cut-out", "default": "agha-blue",
+          "options": [
+            { "value": "agha-blue", "label": "Agha Blue" },
+            { "value": "oud-fury", "label": "Oud Fury" },
+            { "value": "dark-paradise", "label": "Oud of Dark Paradise" },
+            { "value": "maha", "label": "Maha" },
+            { "value": "sea-smoke", "label": "Sea Smoke" },
+            { "value": "tobacco-enigma", "label": "Tobacco Enigma" },
+            { "value": "shamamah", "label": "Shamamah" }
+          ]
+        },
+        { "type": "color", "id": "tint", "label": "Colour field", "info": "A pale tint of the glass colour.", "default": "#D9E1EE" }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [{ "name": "V2 · Hero" }]
+}
+{% endschema %}

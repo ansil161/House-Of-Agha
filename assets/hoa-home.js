@@ -183,49 +183,6 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 02 The House: word-by-word statement + floating details             */
-  /* ------------------------------------------------------------------ */
-  function splitWords(el) {
-    if (el.dataset.hoaSplit) return el.querySelectorAll('.hoa-word');
-    var walk = function (node) {
-      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
-        if (n.nodeType === 3) {
-          var frag = document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(function (part) {
-            if (!part) return;
-            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-            var span = document.createElement('span');
-            span.className = 'hoa-word';
-            span.textContent = part;
-            frag.appendChild(span);
-          });
-          n.parentNode.replaceChild(frag, n);
-        } else if (n.nodeType === 1) {
-          walk(n);
-        }
-      });
-    };
-    walk(el);
-    el.dataset.hoaSplit = 'true';
-    return el.querySelectorAll('.hoa-word');
-  }
-
-  function initManifesto() {
-    var sec = document.querySelector('[data-hoa-manifesto]');
-    if (!sec) return;
-    var text = sec.querySelector('[data-hoa-words]');
-    if (!text) return;
-    if (!hasGsap() || reduceMotion) return;
-    var words = splitWords(text);
-    gsap.to(words, {
-      opacity: 1,
-      ease: 'none',
-      stagger: 0.08,
-      scrollTrigger: { trigger: text, start: 'top 82%', end: 'bottom 45%', scrub: 0.6 }
-    });
-  }
-
-  /* ------------------------------------------------------------------ */
   /* Parallax helpers: [data-hoa-speed] on desktop, [data-hoa-parallax]  */
   /* ------------------------------------------------------------------ */
   function initParallax(mm) {
@@ -819,7 +776,6 @@
         var mm = gsap.matchMedia();
         initFragrances();
         initHero();
-        initManifesto();
         initParallax(mm);
         initHeroBottleJourney();
       });

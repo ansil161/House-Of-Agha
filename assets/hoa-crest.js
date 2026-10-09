@@ -13,9 +13,9 @@
       starts on the logo turns the logo (the page doesn't scroll under it).
    4. Release: a flick keeps it turning, sideways and/or top over bottom (up to
       MAX_FLING rad/s), and it eases into the idle spin.
-   5. Idle: whenever nobody is holding or hovering it, it turns slowly on its own,
-      left to right (SPIN_SECONDS per turn) and top over bottom
-      (SPIN_SECONDS_VERTICAL per turn) at once, so it tumbles through new angles.
+   5. Idle: whenever nobody is holding or hovering it, it turns slowly left to right
+      on its own (SPIN_SECONDS per turn) and settles upright. SPIN_VERTICAL: true would
+      add a top-over-bottom tumble (SPIN_SECONDS_VERTICAL per turn).
    6. A small "Drag to rotate" hint with a hand icon sits under it at rest, only
       until the visitor's first drag; after that it never shows again (remembered
       in localStorage, so not on later visits either).
@@ -43,7 +43,9 @@ var HOA_CREST_CONFIG = {
   INTRO_DELAY: 450,           // ms after the page shows
   INTRO_MS: 2000,             // lift-off duration
   MAX_FLING: 9,               // rad/s: the fastest a released flick keeps it turning
-  SPIN_SECONDS: 12,           // idle: one full turn left to right
+  IDLE_SPIN: true,            // turns on its own when nobody holds or hovers it
+  SPIN_VERTICAL: false,       // false = left/right only; it stays upright (user, 2026-10-09)
+  SPIN_SECONDS: 12,           // idle (IDLE_SPIN only): one full turn left to right
   SPIN_SECONDS_VERTICAL: 18,  // idle: one full turn top over bottom (different, so it never repeats one loop)
   // resting place, in units of the printed logo's height. side: 'center' (on the bottle),
   // 'left' or 'right' (beside it, gap apart); line: true = on the headline's line ("House ·
@@ -264,7 +266,7 @@ var HOA_CREST_CONFIG = {
     }
     function clampN(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
     var sigHead = document.querySelector('.hoa-frag-section h2');
-    var houseShell = document.querySelector('.hoa-manifesto__plate--main .hoa-manifesto__shell');
+    var houseSeal = document.querySelector('[data-vessel-seal]');
     var worldHead = document.querySelector('.hoa-world-section h2');
     var worldLede = document.querySelector('.hoa-world-section .hoa-lede');
     var STOPS = [
@@ -278,19 +280,16 @@ var HOA_CREST_CONFIG = {
           return { x: (t.right + h.right) / 2, y: t.top + t.height / 2, s: s };
         }
       },
-      { // The House: a seal on the main photo's lower edge (desktop: right of centre;
-        // stacked layout: on the gap between the two photos)
+      { // The House ("The Vessel"): pressed onto the finished bottle's upper body. The seal sits
+        // at the end of the pinned stretch (hoa-vessel.js), so the logo rides up with it and lands
+        // just as the bottle settles, then leaves with the section.
         wide: false, inAt: 0.8, outAt: 0.25,
         pose: function () {
-          if (!houseShell) return null;
-          var r = houseShell.getBoundingClientRect();
-          if (!r.width) return null;
-          if (vw > 960) {
-            var s = clampN(vw * 0.1, 110, 150);
-            return { x: r.right - r.width * 0.11 - s / 2, y: r.bottom, s: s };
-          }
-          var sp = clampN(vw * 0.2, 76, 120);
-          return { x: r.right + (vw < 768 ? 4 : 6), y: r.bottom - sp * 0.08, s: sp };
+          if (!houseSeal) return null;
+          var r = houseSeal.getBoundingClientRect();
+          var s = parseFloat(houseSeal.dataset.size) || 0;
+          if (!s) return null;
+          return { x: r.left, y: r.top, s: s };
         }
       },
       { // World: between "Beyond the bottle. Into the day." and its intro line, then it is gone
@@ -420,7 +419,7 @@ var HOA_CREST_CONFIG = {
 
       // spins whenever nobody is holding or hovering it (once it has landed)
       var landed = introStart === 0 || (introStart > 0 && now - introStart > C.INTRO_MS);
-      var nowSpin = !reduceMotion && landed && !drag && !overLogo;
+      var nowSpin = C.IDLE_SPIN && !reduceMotion && landed && !drag && !overLogo;
       if (nowSpin !== spinning) {
         if (nowSpin) { spinVel = yaw.v; spinVelV = pitch.v; }        // carry on from how it was moving
         else {                                                      // hovered: come round, the short way
@@ -439,9 +438,14 @@ var HOA_CREST_CONFIG = {
         if (spinning) {
           var ramp = 1 - Math.exp(-1.2 * STEP);                                  // eases to the idle speeds
           spinVel += (TAU / C.SPIN_SECONDS - spinVel) * ramp;
-          spinVelV += (TAU / C.SPIN_SECONDS_VERTICAL - spinVelV) * ramp;
           yaw.x = wrap(yaw.x + spinVel * STEP);
-          pitch.x = wrap(pitch.x + spinVelV * STEP);
+          if (C.SPIN_VERTICAL) {
+            spinVelV += (TAU / C.SPIN_SECONDS_VERTICAL - spinVelV) * ramp;
+            pitch.x = wrap(pitch.x + spinVelV * STEP);
+          } else {
+            pitch.v = spinVelV; spinVelV = 0;                                    // upright: settle the tilt
+            spring(pitch, 0, 16, 8, STEP);
+          }
         } else if (!drag) {
           spring(yaw, t[0], k, d, STEP);
           spring(pitch, t[1], k, d, STEP);

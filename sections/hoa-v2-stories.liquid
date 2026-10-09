@@ -1,0 +1,66 @@
+{%- comment -%}
+  Home V2 · 08 Customer stories — one quote at a time, set large like a pull-quote, with an index of
+  the other voices beside it (assets/hoa-v2.js switches them; without JS every quote is listed).
+  A photograph of the fragrance in a customer's hands sits on the left.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- assign s = section.settings -%}
+<section class="v2-voices v2-pad" id="stories" data-v2-voices>
+  <div class="v2-wrap v2-voices__grid">
+    <figure class="v2-voices__photo" data-v2-reveal>
+      <div class="v2-voices__photo-inner" data-v2-drift>
+        {%- render 'hoa-img', name: s.photo_asset, image: s.photo, w: 1200, h: 1490, alt: s.photo_alt, sizes: '(min-width: 961px) 34vw, 100vw' -%}
+      </div>
+    </figure>
+
+    <div class="v2-voices__body">
+      <p class="v2-eyebrow" data-v2-reveal><span>08</span>{{ s.eyebrow }}</p>
+      <div class="v2-voices__quotes">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          <blockquote class="v2-voices__quote{% if forloop.first %} is-active{% endif %}" data-v2-voice="{{ forloop.index0 }}" id="v2-voice-{{ section.id }}-{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <p>&ldquo;{{ b.quote }}&rdquo;</p>
+            <footer>
+              {%- if b.rating > 0 -%}<span class="v2-voices__stars" style="--fill: {{ b.rating | times: 20 }}%" role="img" aria-label="Rated {{ b.rating }} out of 5"></span>{%- endif -%}
+              <cite>{{ b.name }}</cite><span>{{ b.location }}</span><span>wears {{ b.fragrance }}</span>
+            </footer>
+          </blockquote>
+        {%- endfor -%}
+      </div>
+      <ol class="v2-voices__index" role="list" aria-label="More stories">
+        {%- for block in section.blocks -%}
+          <li><button type="button" class="v2-voices__who{% if forloop.first %} is-active{% endif %}" data-v2-voice-btn="{{ forloop.index0 }}" aria-controls="v2-voice-{{ section.id }}-{{ forloop.index0 }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+            <span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{{ block.settings.name }}<em>{{ block.settings.fragrance }}</em>
+          </button></li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Customer stories",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Customer stories" },
+    { "type": "image_picker", "id": "photo", "label": "Photograph" },
+    { "type": "text", "id": "photo_asset", "label": "Theme asset (fallback)", "default": "hoa-voices-maha-1" },
+    { "type": "text", "id": "photo_alt", "label": "Alt text", "default": "A woman in red velvet holding Maha by House of Agha to her cheek" }
+  ],
+  "blocks": [
+    {
+      "type": "voice",
+      "name": "Story",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "location", "label": "City" },
+        { "type": "text", "id": "fragrance", "label": "Fragrance" },
+        { "type": "range", "id": "rating", "label": "Rating", "min": 0, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Customer stories" }]
+}
+{% endschema %}

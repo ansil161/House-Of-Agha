@@ -1,0 +1,153 @@
+{%- comment -%}
+  Home V2 · Scent Story — editorial "sticky story" after the hero.
+  Desktop: the text stack (left) stays centred on screen (CSS sticky) while pairs of portrait cards
+  scroll past on the right; whichever pair crosses the middle of the screen swaps in its text
+  (old block blurs out, new one sharpens in). Closes with a large serif line revealed line by line
+  and a pill button. Phone (<768px): no sticky, each block's text sits above its own pair.
+  Motion: assets/agha-scent-story.js (IntersectionObserver, no libraries). Readable without JS.
+  Card images: the block's image picker, else the theme asset named in the block (hoa-img snippet).
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{{ 'agha-scent-story.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'agha-scent-story.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign btn_url = s.button_url | default: routes.all_products_collection_url
+-%}
+<section class="ss" data-ss{% if s.show_cursor %} data-ss-cursor{% endif %} style="--ss-bg: {{ s.background }}" aria-labelledby="ss-title-{{ section.id }}">
+  <h2 class="v2-sr" id="ss-title-{{ section.id }}">{{ s.title }}</h2>
+
+  <div class="ss__wrap">
+    {%- comment -%} Desktop text stack: every block sits in the same grid cell, so swapping never moves layout. {%- endcomment -%}
+    <div class="ss__aside">
+      <div class="ss__sticky">
+        <div class="ss__stack">
+          {%- for block in section.blocks -%}
+            {%- assign b = block.settings -%}
+            <div class="ss__text{% if forloop.first %} is-active{% endif %}" data-ss-text="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {%- if b.tag != blank -%}<p class="ss__tag">{{ b.tag }}</p>{%- endif -%}
+              <h3 class="ss__heading">{{ b.heading }}</h3>
+              {%- if b.text != blank -%}<p class="ss__body">{{ b.text }}</p>{%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="ss__rows">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div class="ss__row" data-ss-row="{{ forloop.index0 }}">
+          {%- comment -%} Phone copy of the text (display:none on desktop, so it is never read twice). {%- endcomment -%}
+          <div class="ss__text ss__text--inline" data-ss-reveal>
+            {%- if b.tag != blank -%}<p class="ss__tag">{{ b.tag }}</p>{%- endif -%}
+            <h3 class="ss__heading">{{ b.heading }}</h3>
+            {%- if b.text != blank -%}<p class="ss__body">{{ b.text }}</p>{%- endif -%}
+          </div>
+          <div class="ss__pair">
+            {%- for i in (1..2) -%}
+              {%- liquid
+                if i == 1
+                  assign img = b.image_1
+                  assign asset = b.asset_1
+                  assign cap = b.caption_1
+                  assign alt = b.alt_1 | default: b.caption_1
+                else
+                  assign img = b.image_2
+                  assign asset = b.asset_2
+                  assign cap = b.caption_2
+                  assign alt = b.alt_2 | default: b.caption_2
+                endif
+              -%}
+              <figure class="ss-card" data-ss-card>
+                {%- if cap != blank -%}<figcaption class="ss-card__cap">{{ cap }}</figcaption>{%- endif -%}
+                <div class="ss-card__media">
+                  {%- if img != blank or asset != blank -%}
+                    {%- render 'hoa-img', name: asset, image: img, w: 1200, h: 1600, alt: alt, sizes: '(min-width: 768px) 26vw, 46vw' -%}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'ss-card__ph' }}
+                  {%- endif -%}
+                </div>
+              </figure>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="ss__close" data-ss-close>
+    <p class="ss__close-title" role="heading" aria-level="2">
+      {%- for n in (1..3) -%}
+        {%- liquid
+          case n
+            when 1
+              assign line = s.closing_1
+            when 2
+              assign line = s.closing_2
+            when 3
+              assign line = s.closing_3
+          endcase
+        -%}
+        {%- if line != blank -%}<span class="ss__line" style="--i: {{ n | minus: 1 }}"><span>{{ line }}</span></span> {% endif -%}
+      {%- endfor -%}
+    </p>
+    {%- if s.button_label != blank -%}
+      <a class="ss__btn" href="{{ btn_url }}" style="--i: 3">{{ s.button_label }}<span aria-hidden="true">&rarr;</span></a>
+    {%- endif -%}
+  </div>
+
+  {%- if s.show_cursor -%}<span class="ss-cursor" data-ss-dot aria-hidden="true"></span>{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Scent Story",
+  "class": "v2-section v2-section--scent-story",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Section title (screen readers)", "default": "The scent story" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#FAF7F2" },
+    { "type": "header", "content": "Closing" },
+    { "type": "text", "id": "closing_1", "label": "Closing line 1", "default": "Discover the Scent" },
+    { "type": "text", "id": "closing_2", "label": "Closing line 2", "default": "That Tells" },
+    { "type": "text", "id": "closing_3", "label": "Closing line 3", "default": "Your Story" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the Collection" },
+    { "type": "url", "id": "button_url", "label": "Button link", "info": "Defaults to all products." },
+    { "type": "header", "content": "Cursor" },
+    { "type": "checkbox", "id": "show_cursor", "label": "Dot cursor inside this section", "info": "Mouse and trackpad only; hidden on touch screens.", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag", "default": "Notes" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Rooted in Oud" },
+        { "type": "textarea", "id": "text", "label": "Text", "info": "Keep it to about three short lines." },
+        { "type": "header", "content": "Card 1" },
+        { "type": "image_picker", "id": "image_1", "label": "Image", "info": "Portrait, about 3:4." },
+        { "type": "text", "id": "asset_1", "label": "Theme image (fallback)", "info": "Theme asset base name, e.g. hoa-oud-fury-portrait. Used when no image is picked." },
+        { "type": "text", "id": "caption_1", "label": "Caption" },
+        { "type": "text", "id": "alt_1", "label": "Alt text", "info": "Defaults to the caption." },
+        { "type": "header", "content": "Card 2" },
+        { "type": "image_picker", "id": "image_2", "label": "Image", "info": "Portrait, about 3:4." },
+        { "type": "text", "id": "asset_2", "label": "Theme image (fallback)" },
+        { "type": "text", "id": "caption_2", "label": "Caption" },
+        { "type": "text", "id": "alt_2", "label": "Alt text", "info": "Defaults to the caption." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Scent Story",
+      "blocks": [
+        { "type": "story", "settings": { "tag": "Notes", "heading": "Rooted in Oud", "text": "Rich, resinous base notes that settle on the skin and stay, warm and dark long after the first spray.", "asset_1": "hoa-oud-fury-portrait", "caption_1": "Oud Fury", "asset_2": "hoa-dark-paradise-portrait", "caption_2": "Oud of Dark Paradise" } },
+        { "type": "story", "settings": { "tag": "Origin", "heading": "Sourced with Care", "text": "Agarwood, rose and precious materials chosen from the finest sources, one ingredient at a time.", "asset_1": "hoa-hc-oud", "caption_1": "Agarwood", "asset_2": "hoa-hc-rose", "caption_2": "Rose" } },
+        { "type": "story", "settings": { "tag": "Craft", "heading": "Bottled by Hand", "text": "Heavy glass, the gold crest of the House and a finish checked by hand before every bottle leaves us.", "asset_1": "hoa-world-hand", "caption_1": "Gold Crest", "asset_2": "hoa-world-gift", "caption_2": "Hand-finished" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

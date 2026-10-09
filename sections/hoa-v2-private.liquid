@@ -1,0 +1,44 @@
+{%- comment -%}
+  Home V2 · 10 Private access — a written invitation to close the page.
+  Shopify customer form (newsletter tag); in the static preview it posts nowhere.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- assign s = section.settings -%}
+<section class="v2-private" id="private-access">
+  <div class="v2-wrap v2-private__inner">
+    <p class="v2-eyebrow" data-v2-reveal><span>10</span>{{ s.eyebrow }}</p>
+    <h2 class="v2-private__title" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+    <p class="v2-private__text" data-v2-reveal>{{ s.text }}</p>
+
+    {%- form 'customer', class: 'v2-private__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter, private-access">
+      {%- if form.posted_successfully? -%}
+        <p class="v2-private__ok" role="status">{{ s.success }}</p>
+      {%- else -%}
+        <label class="v2-sr" for="v2-private-email-{{ section.id }}">Email address</label>
+        <input id="v2-private-email-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ s.placeholder }}" autocomplete="email" required>
+        <button type="submit" class="v2-link v2-private__submit"><span>{{ s.button }}</span><span class="v2-link__arrow" aria-hidden="true">&rarr;</span></button>
+        {%- if form.errors -%}<p class="v2-private__err" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+    <p class="v2-private__small" data-v2-reveal>{{ s.small }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Private access",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Private access" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You are" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "invited." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "First word of new fragrances, private releases and quiet invitations from the House, sent only when there is something worth saying." },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Your email address" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Request an invitation" },
+    { "type": "text", "id": "success", "label": "Success message", "default": "Thank you. Your invitation is on its way." },
+    { "type": "text", "id": "small", "label": "Small print", "default": "No noise. Unsubscribe at any time." }
+  ],
+  "presets": [{ "name": "V2 · Private access" }]
+}
+{% endschema %}

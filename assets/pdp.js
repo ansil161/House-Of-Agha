@@ -1389,6 +1389,132 @@
   }
 
   /* ------------------------------------------------------------------- Boot */
+  /* The fragrance — the notes on the arc above the bottle move along it left to right, all three
+     acts in one loop (Top -> Heart -> Base -> Top ...), in PUSHES (one every PUSH_EVERY ms): they hold, then the
+     next note comes in from the left and shoves the line on by one place, like a row of beads:
+     the note entering moves first and each one to its right follows PUSH_LAG ms later, all on a
+     slightly springy curve so the line bumps and settles. The note landing at the crown pops a
+     touch larger. Each note's angle (--a), fade (--o) and scale (--sc) are set here; notes fade
+     out at the arc's ends and wrap round unseen. The label under the crown names the act of the
+     note nearest the top. Only runs while the arc is on screen; no new push while the pointer or
+     focus is on it. Reduced motion (or no JS): the acts switch one at a time / the first act stays. */
+  function initFragranceArc() {
+    const PUSH_EVERY = 1000;  // ms: one push every second (user, 2026-10-09)
+    const PUSH_LAG = 40;      // ms: each note to the right starts this much after its neighbour
+    const K = 170, D = 17;    // push spring: a little under-damped, so the line bumps and settles (~0.45 s)
+    const EDGE = 64;          // notes are fully shown within ±EDGE degrees of the crown...
+    const FADE = 16;          // ...and fade out over the next FADE degrees
+    const POP = 0.1;          // the crown note's extra scale
+    const ACT_MS = 3800;      // reduced motion: one act at a time
+    $$('[data-pdp-tf-arc]').forEach((arc) => {
+      const acts = $$('[data-pdp-tf-act]', arc);
+      if (!acts.length) return;
+      const notes = [];
+      acts.forEach((act, a) => $$('.pdp-tf__note', act).forEach((el) => notes.push({ el, act: a, x: 0, v: 0, goal: 0, at: 0 })));
+      if (notes.length < 2) return;
+      const step = parseFloat(getComputedStyle(arc).getPropertyValue('--step')) || 27;
+      const gap = Math.max(step, (2 * (EDGE + FADE) + step) / notes.length);   // the loop is always longer than the arc
+      const loop = gap * notes.length;
+      const flow = !reduceMotion.matches;
+
+      let current = -1;
+      let goal = 0;            // where the line is heading (degrees moved)
+      let nextPush = 0;
+      let raf = 0, last = 0, timer = 0;
+      let inView = false, held = false;
+
+      function setAct(i) {
+        if (i === current) return;
+        current = i;
+        acts.forEach((act, k) => {
+          act.dataset.state = k === i ? 'active' : 'next';
+          act.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+        });
+      }
+      const wrap = (v) => ((v % loop) + loop * 1.5) % loop - loop / 2;   // into [-loop/2, loop/2)
+      // note k sits at angle (its offset) - k*gap; moving left to right means the angle grows
+      const angleOf = (n, k) => wrap(n.x - k * gap);
+
+      function place() {
+        let best = null;
+        notes.forEach((n, k) => {
+          const a = angleOf(n, k);
+          const o = Math.max(0, Math.min(1, (EDGE + FADE - Math.abs(a)) / FADE));
+          const sc = 1 + POP * Math.max(0, 1 - Math.abs(a) / (gap * 0.6));
+          n.el.style.setProperty('--a', a.toFixed(2) + 'deg');
+          n.el.style.setProperty('--o', o.toFixed(3));
+          n.el.style.setProperty('--sc', sc.toFixed(3));
+          if (!best || Math.abs(a) < Math.abs(best.a)) best = { a, act: n.act };
+        });
+        setAct(best.act);
+      }
+      function push(now) {
+        goal += gap;
+        // the leftmost note (the one coming in) moves first, the rest follow left to right
+        const order = notes.map((n, k) => ({ n, a: angleOf(n, k) })).sort((p, q) => p.a - q.a);
+        order.forEach(({ n }, r) => { n.goal = goal; n.at = now + r * PUSH_LAG; });
+        nextPush = now + PUSH_EVERY;
+      }
+      function frame(now) {
+        raf = 0;
+        const dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+        if (!held && now >= nextPush) push(now);
+        const h = dt / 4;
+        notes.forEach((n) => {
+          if (now < n.at) return;               // not pushed yet
+          for (let q = 0; q < 4; q++) {
+            n.v += (-K * (n.x - n.goal) - D * n.v) * h;
+            n.x += n.v * h;
+          }
+          if (Math.abs(n.x - n.goal) < 0.05 && Math.abs(n.v) < 0.5) { n.x = n.goal; n.v = 0; }
+        });
+        if (held) nextPush = now + PUSH_EVERY;          // under the pointer: no new push until it leaves
+        place();
+        if (inView) raf = requestAnimationFrame(frame);
+      }
+      function run() {
+        if (flow) {
+          if (inView && !raf) { last = performance.now(); nextPush = Math.max(nextPush, last + PUSH_EVERY); raf = requestAnimationFrame(frame); }
+        } else {
+          clearInterval(timer);
+          timer = inView && !held ? setInterval(() => setAct((current + 1) % acts.length), ACT_MS) : 0;
+        }
+      }
+
+      if (flow) {
+        arc.classList.add('is-flow');
+        // start with the first act's middle note at the crown
+        const first = notes.filter((n) => n.act === 0).length;
+        goal = ((first - 1) / 2) * gap;
+        notes.forEach((n) => { n.x = n.goal = goal; });
+        place();
+      } else setAct(0);
+
+      const io = 'IntersectionObserver' in window ? new IntersectionObserver(([e]) => { inView = e.isIntersecting; run(); }, { threshold: 0.2 }) : null;
+      if (io) io.observe(arc); else { inView = true; run(); }
+      const hold = () => { held = true; run(); };
+      const free = () => { held = false; run(); };
+      arc.addEventListener('pointerenter', hold);
+      arc.addEventListener('pointerleave', free);
+      arc.addEventListener('focusin', hold);
+      arc.addEventListener('focusout', free);
+
+      cleanups.push(() => {
+        if (raf) cancelAnimationFrame(raf);
+        clearInterval(timer);
+        io?.disconnect();
+        arc.removeEventListener('pointerenter', hold);
+        arc.removeEventListener('pointerleave', free);
+        arc.removeEventListener('focusin', hold);
+        arc.removeEventListener('focusout', free);
+        arc.classList.remove('is-flow');
+        notes.forEach((n) => ['--a', '--o', '--sc'].forEach((v) => n.el.style.removeProperty(v)));
+        acts.forEach((act, i) => { act.dataset.state = i === 0 ? 'active' : 'next'; act.removeAttribute('aria-hidden'); });
+      });
+    });
+  }
+
   function init() {
     const main = $('[data-pdp-main]');
     if (main) {
@@ -1411,6 +1537,7 @@
     initReviewForm();
     initMeters();
     initRecentlyViewed();
+    initFragranceArc();
     initMotion();
   }
 

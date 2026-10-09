@@ -124,53 +124,6 @@
 
   /* ------------------------------------------------------------------ HOME */
 
-  function homeManifesto() {
-    var sec = $('[data-hoa-manifesto]');
-    if (!sec) return;
-
-    // label: the pill fades, its rule draws from the left
-    var meta = claim($('.hoa-manifesto__meta', sec));
-    if (meta) {
-      var tl = gsap.timeline({ scrollTrigger: { trigger: meta, start: 'top 85%', once: true } });
-      tl.from($('.hoa-manifesto__tag', meta), { autoAlpha: 0, x: -14, duration: 0.8, ease: 'power3.out' })
-        .from($('.hoa-manifesto__rule', meta), { scaleX: 0, duration: 1.2, ease: 'power2.inOut' }, 0.15);
-    }
-
-    // supporting line + button follow the statement
-    var foot = claim($('.hoa-manifesto__foot', sec));
-    if (foot) gsap.from(foot.children, { y: 18, autoAlpha: 0, duration: 1, ease: 'power3.out', stagger: 0.12, scrollTrigger: { trigger: foot, start: 'top 88%', once: true } });
-
-    // principles: each slides in from the left, a beat apart
-    var notes = claim($('.hoa-manifesto__notes', sec));
-    if (notes) {
-      var items = $$('.hoa-manifesto__note', notes);
-      gsap.set(items, { transition: 'none' });
-      gsap.fromTo(items, { x: -36, autoAlpha: 0 }, {
-        x: 0, autoAlpha: 1, duration: 1.1, ease: EASE, stagger: 0.13,
-        scrollTrigger: { trigger: notes, start: 'top 88%', once: true }
-      });
-    }
-
-    // the large plate: its window opens and the photo settles, with the scroll
-    var main = claim($('.hoa-manifesto__plate--main', sec));
-    if (main) {
-      var shell = $('.hoa-manifesto__shell', main);
-      var r = radiusOf(shell);
-      var st = { trigger: main, start: 'top 92%', end: 'top 30%', scrub: 0.8 };
-      // ends past the plate's edges: its shell drifts a few % on its own parallax (data-hoa-speed)
-      gsap.fromTo(main, { clipPath: 'inset(14% 12% 14% 12% round ' + r + ')' }, { clipPath: 'inset(-12% -12% -12% -12% round ' + r + ')', ease: 'none', scrollTrigger: st });
-      var img = $('.hoa-manifesto__core img', main);
-      if (img) gsap.fromTo(img, { scale: 1.22 }, { scale: 1, ease: 'none', scrollTrigger: Object.assign({}, st) });
-    }
-    // the small plate trails in after it
-    var sub = claim($('.hoa-manifesto__plate--sub', sec));
-    if (sub) gsap.fromTo(sub, { y: 90, autoAlpha: 0 }, { y: 0, autoAlpha: 1, ease: 'none', scrollTrigger: { trigger: sub, start: 'top 100%', end: 'top 55%', scrub: 0.8 } });
-
-    // the mandala grows into place
-    var mandala = $('.hoa-manifesto__mandala', sec);
-    if (mandala) gsap.fromTo(mandala, { scale: 0.82, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top 90%', end: 'top 20%', scrub: 1 } });
-  }
-
   function homeCollection() {
     var sec = $('[data-hoa-collection]');
     if (!sec) return;
@@ -313,7 +266,6 @@
     gsap.registerPlugin(ScrollTrigger);
     ctx = gsap.context(function () {
       if (isHome) {
-        homeManifesto();
         homeCollection();
         homeDiscover();
         homeVoices();

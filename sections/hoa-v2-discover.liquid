@@ -1,0 +1,115 @@
+{%- comment -%}
+  Home V2 · 04 Discover your scent — one editorial question.
+  "Where would you rather be?" Four photographed places, each tied to a scent family. Choosing one
+  (assets/hoa-v2.js) reveals the fragrances of that family. Families come from the product
+  (custom.family metafield, else type) or the shared catalog; nothing is invented.
+  Without JS every answer is a link to the shop filtered by that family.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
+{%- liquid
+  assign s = section.settings
+  assign catalog = catalog_json | parse_json
+  assign shop_all = routes.all_products_collection_url
+  assign use_shopify = false
+  if collections.all != blank and collections.all.products_count > 0
+    assign use_shopify = true
+  endif
+-%}
+<section class="v2-find v2-pad" id="discover" data-v2-find>
+  <div class="v2-wrap">
+    <div class="v2-find__intro">
+      <p class="v2-eyebrow" data-v2-reveal><span>04</span>{{ s.eyebrow }}</p>
+      <h2 class="v2-h2" data-v2-lines>{{ s.heading }} <em>{{ s.heading_serif }}</em></h2>
+      <p class="v2-find__q" data-v2-reveal>{{ s.question }}</p>
+    </div>
+
+    <ol class="v2-find__places" role="list" data-v2-stagger>
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <li {{ block.shopify_attributes }}>
+          <a class="v2-find__place" href="{{ shop_all }}" data-v2-find-pick="{{ forloop.index0 }}" aria-controls="v2-find-result-{{ section.id }}-{{ forloop.index0 }}">
+            <span class="v2-find__img">{%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: '(min-width: 961px) 22vw, 45vw' -%}</span>
+            <span class="v2-find__label"><span class="v2-find__n">{{ forloop.index | prepend: '0' }}</span>{{ b.title }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    <div class="v2-find__results" aria-live="polite">
+      <p class="v2-find__hint" data-v2-find-hint>{{ s.hint }}</p>
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- assign fam_key = b.family | downcase -%}
+        <div class="v2-find__result" id="v2-find-result-{{ section.id }}-{{ forloop.index0 }}" data-v2-find-result="{{ forloop.index0 }}" hidden>
+          <div class="v2-find__result-copy">
+            <p class="v2-find__result-head"><em>{{ b.title }}</em>{{ b.family }}</p>
+            <p class="v2-find__line">{{ b.line }}</p>
+          </div>
+          <ul class="v2-find__picks" role="list">
+            {%- if use_shopify -%}
+              {%- for product in collections.all.products -%}
+                {%- assign pf = product.metafields.custom.family.value | default: product.type | downcase -%}
+                {%- if pf == fam_key -%}
+                  <li><a href="{{ product.url }}">
+                    <span class="v2-find__pimg">{%- if product.featured_media -%}{{ product.featured_media.preview_image | image_url: width: 500 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+                    <span class="v2-find__pname">{{ product.title }}</span>
+                    <span class="v2-find__pprice">{{ product.price | money }}</span>
+                  </a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for c in catalog.products -%}
+                {%- assign cf = c.family | downcase -%}
+                {%- if cf == fam_key -%}
+                  {%- liquid
+                    assign c_asset = 'hoa-cutout-' | append: c.asset
+                    assign c_n = c.salePrice | default: c.regularPrice
+                    capture c_price
+                      render 'hoa-v2-inr', n: c_n
+                    endcapture
+                  -%}
+                  <li><a href="/products/{{ c.handle }}">
+                    <span class="v2-find__pimg">{%- render 'hoa-img', name: c_asset, w: 1200, h: 1500, alt: '', sizes: '160px' -%}</span>
+                    <span class="v2-find__pname">{{ c.name }}</span>
+                    <span class="v2-find__pprice">{{ c_price }}</span>
+                  </a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Discover",
+  "class": "v2-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Discover your scent" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Start with a" },
+    { "type": "text", "id": "heading_serif", "label": "Heading (serif italic)", "default": "place." },
+    { "type": "text", "id": "question", "label": "Question", "default": "Where would you rather be?" },
+    { "type": "text", "id": "hint", "label": "Hint before a choice", "default": "Choose a place and we will show you the fragrances composed around it." }
+  ],
+  "blocks": [
+    {
+      "type": "place",
+      "name": "Place",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Place" },
+        { "type": "text", "id": "family", "label": "Scent family", "info": "Must match the product family, e.g. Fresh, Woody, Floral, Aromatic." },
+        { "type": "textarea", "id": "line", "label": "Line" },
+        { "type": "image_picker", "id": "image", "label": "Photograph" },
+        { "type": "text", "id": "asset", "label": "Theme asset (fallback)" },
+        { "type": "number", "id": "w", "label": "Asset width", "default": 1086 },
+        { "type": "number", "id": "h", "label": "Asset height", "default": 1448 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Discover" }]
+}
+{% endschema %}

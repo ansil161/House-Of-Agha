@@ -1,0 +1,120 @@
+{%- comment -%}
+  Home V2 · Testimonials — bento grid of white quote cards with one full-bleed photo card.
+  Desktop 3 columns, tablet (<1024px) 2, phone (<640px) 1 (photo keeps 4:5). Blocks keep their
+  editor order, so the photo card's position is simply where its block sits in the list.
+  Motion: assets/agha-testimonials.js (IntersectionObserver fade-up, scroll edge fade, column drift).
+  Readable without JS; reduced motion = fade only.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+{{ 'agha-testimonials.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'agha-testimonials.js' | asset_url }}" defer></script>
+{%- assign s = section.settings -%}
+<section class="at" data-at{% if s.drift %} data-at-drift{% endif %} style="--at-bg: {{ s.background }}" aria-labelledby="at-title-{{ section.id }}">
+  <div class="at__wrap">
+    <header class="at__head">
+      {%- if s.tag != blank -%}<p class="at__tag">{{ s.tag }}</p>{%- endif -%}
+      <h2 class="at__title" id="at-title-{{ section.id }}">{{ s.heading }}</h2>
+      {%- if s.subheading != blank -%}<p class="at__sub">{{ s.subheading }}</p>{%- endif -%}
+    </header>
+
+    <div class="at__grid" data-at-grid>
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- case block.type -%}
+          {%- when 'testimonial' -%}
+            <figure class="at-card" data-at-card style="--d: {{ forloop.index0 | times: 80 }}ms" {{ block.shopify_attributes }}>
+              <div class="at-card__top" aria-hidden="true">
+                <svg class="at-card__mark" viewBox="0 0 24 24" width="22" height="22" focusable="false"><path fill="currentColor" d="M4.6 19.5c-1.1-1.2-1.7-2.6-1.7-4.6 0-3.5 2.5-6.6 6-8.2l.9 1.3c-3.3 1.8-3.9 4.1-4.2 5.5.6-.3 1.5-.5 2.3-.4 2.1.2 3.7 1.9 3.7 4 0 1.1-.4 2.1-1.2 2.8-.8.8-1.8 1.1-2.9 1.1-1.2 0-2.3-.5-2.9-1.5Zm10.4 0c-1.1-1.2-1.7-2.6-1.7-4.6 0-3.5 2.5-6.6 6-8.2l.9 1.3c-3.3 1.8-3.9 4.1-4.2 5.5.6-.3 1.5-.5 2.3-.4 2.1.2 3.7 1.9 3.7 4 0 1.1-.4 2.1-1.2 2.8-.8.8-1.8 1.1-2.9 1.1-1.2 0-2.3-.5-2.9-1.5Z"/></svg>
+                <span class="at-card__rule"></span>
+              </div>
+              <blockquote class="at-card__quote"><p>{{ b.quote }}</p></blockquote>
+              <figcaption class="at-card__who">
+                <span class="at-card__avatar">
+                  {%- if b.avatar != blank -%}
+                    {{ b.avatar | image_url: width: 120 | image_tag: widths: '40, 80, 120', sizes: '40px', loading: 'lazy', alt: '', width: 40, height: 40 }}
+                  {%- else -%}
+                    <span aria-hidden="true">{{ b.name | slice: 0 }}</span>
+                  {%- endif -%}
+                </span>
+                <span class="at-card__meta">
+                  <cite class="at-card__name">{{ b.name }}</cite>
+                  {%- if b.role != blank -%}<span class="at-card__role">{{ b.role }}</span>{%- endif -%}
+                </span>
+                {%- if s.show_stars -%}
+                  <span class="at-card__stars" role="img" aria-label="{{ b.rating }} out of 5 stars">
+                    {%- for i in (1..5) -%}<svg viewBox="0 0 20 20" width="12" height="12" aria-hidden="true" focusable="false"{% if i > b.rating %} class="is-off"{% endif %}><path fill="currentColor" d="m10 1.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg>{%- endfor -%}
+                  </span>
+                {%- endif -%}
+              </figcaption>
+            </figure>
+          {%- when 'image' -%}
+            <figure class="at-photo{% if b.tall %} at-photo--tall{% endif %}" data-at-card style="--d: {{ forloop.index0 | times: 80 }}ms" {{ block.shopify_attributes }}>
+              <div class="at-photo__media">
+                {%- if b.image != blank or b.asset != blank -%}
+                  {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1607, alt: b.alt, sizes: '(min-width: 1024px) 420px, (min-width: 640px) 46vw, 92vw' -%}
+                {%- else -%}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'at-photo__ph' }}
+                {%- endif -%}
+              </div>
+              {%- if b.caption != blank -%}<figcaption class="at-photo__cap">{{ b.caption }}</figcaption>{%- endif -%}
+            </figure>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "v2-section v2-section--testimonials",
+  "settings": [
+    { "type": "text", "id": "tag", "label": "Tag", "default": "Testimonials" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by those who wear Agha" },
+    { "type": "text", "id": "subheading", "label": "Sub-line", "default": "Words from the people who made our fragrances part of their every day." },
+    { "type": "color", "id": "background", "label": "Background", "default": "#F2F0EC" },
+    { "type": "checkbox", "id": "show_stars", "label": "Show star ratings", "default": true },
+    { "type": "checkbox", "id": "drift", "label": "Columns drift on scroll", "info": "Desktop only, off for reduced motion.", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "info": "Shows up to about five lines.", "default": "The oud opens warm and stays all day." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Customer" },
+        { "type": "text", "id": "role", "label": "Role / location" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar", "info": "Optional. Square. Without one, the first letter of the name is shown." },
+        { "type": "range", "id": "rating", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Photo card",
+      "limit": 2,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Portrait works best, about 4:5." },
+        { "type": "text", "id": "asset", "label": "Theme image (fallback)", "info": "Theme asset base name, e.g. hoa-shamamah-portrait. Used when no image is picked.", "default": "hoa-shamamah-portrait" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Shamamah bottle with its gold House of Agha crest beside pieces of agarwood" },
+        { "type": "text", "id": "caption", "label": "Caption", "info": "Optional, shown over the bottom of the photo." },
+        { "type": "checkbox", "id": "tall", "label": "Span two rows", "info": "Desktop and tablet. Makes the photo card twice as tall.", "default": false }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial", "settings": { "quote": "The oud opens warm and stays all day. I've received compliments every single time I wear it.", "name": "Rashid A.", "role": "Dubai" } },
+        { "type": "testimonial", "settings": { "quote": "Elegant packaging and a scent that feels truly luxurious. My new signature.", "name": "Fatima S.", "role": "Kochi" } },
+        { "type": "testimonial", "settings": { "quote": "Long-lasting, rich and never overpowering. Easily on par with the big designer houses.", "name": "Arjun M.", "role": "Bangalore" } },
+        { "type": "testimonial", "settings": { "quote": "I bought it as a gift and ended up ordering one for myself too.", "name": "Sara K.", "role": "Doha" } },
+        { "type": "image", "settings": { "asset": "hoa-shamamah-portrait" } },
+        { "type": "testimonial", "settings": { "quote": "The gold crest bottle looks stunning on my shelf, and the fragrance is even better.", "name": "Imran T.", "role": "Kozhikode" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

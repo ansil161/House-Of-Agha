@@ -1,0 +1,117 @@
+{%- comment -%}
+  Home V2 · The turn: scroll story after the hero.
+  The stage stays on screen (CSS sticky) while you scroll through it: the heading lifts away and the
+  bottle turns in real 3D (rebuilt by assets/hoa-v2.js from assets/hoa-bottle-3d-<bottle>.webp).
+  Each figure is its own scene, one at a time (the previous one fully leaves): the number stands huge
+  behind the bottle, its digits rise as hairline outlines and then a photograph floods up inside them;
+  the label and one line sit along the bottom. Without JS or with reduced motion the scenes simply
+  stack as a static page.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- liquid
+  assign s = section.settings
+  assign cut = 'hoa-bottle-' | append: s.bottle | append: '.webp'
+  assign tex = 'hoa-bottle-3d-' | append: s.bottle | append: '.webp'
+  assign n = section.blocks.size
+-%}
+<section class="v2-turn" data-v2-turn style="--v2-turn-steps: {{ n }}" aria-label="{{ s.heading | append: ' ' | append: s.heading_serif | escape }}">
+  <div class="v2-turn__stage">
+    <div class="v2-wrap v2-turn__head" data-v2-turn-head>
+      <h2 class="v2-turn__title">{{ s.heading }} <strong>{{ s.heading_serif }}</strong></h2>
+    </div>
+
+    <div class="v2-turn__bottle" data-v2-turn-bottle data-bottle="{{ s.bottle }}" data-tex="{{ tex | asset_url }}" style="--mask: url('{{ cut | asset_url }}')">
+      <img class="v2-turn__flat" src="{{ cut | asset_url }}" alt="{{ s.bottle_alt | escape }}" width="291" height="760" loading="lazy" decoding="async">
+      <span class="v2-turn__shade" aria-hidden="true"></span>
+      <span class="v2-turn__floor" aria-hidden="true"></span>
+    </div>
+
+    <ol class="v2-turn__scenes" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign digits = b.number | append: ''
+          assign nd = digits.size
+          if b.photo != blank
+            assign photo = b.photo | image_url: width: 1600
+          elsif b.photo_asset != blank
+            assign photo = b.photo_asset | append: '.webp' | asset_url
+          else
+            assign photo = ''
+          endif
+          capture idx
+            if forloop.index < 10
+              echo '0'
+            endif
+            echo forloop.index
+          endcapture
+          capture total
+            if forloop.length < 10
+              echo '0'
+            endif
+            echo forloop.length
+          endcapture
+        -%}
+        <li class="v2-scene" data-v2-turn-card style="--n: {{ nd }}" {{ block.shopify_attributes }}>
+          {%- comment -%} the figure, huge, behind the bottle: a hairline outline, then the photograph fills it {%- endcomment -%}
+          <p class="v2-big" aria-hidden="true">
+            {%- for layer in (1..2) -%}
+              <span class="v2-big__layer v2-big__layer--{% if layer == 1 %}line{% else %}fill{% endif %}"{% if layer == 2 %} data-v2-big-fill{% endif %}>
+                {%- assign i = 0 -%}
+                {%- for c in (1..nd) -%}<span class="v2-d"><span class="v2-d__c" data-v2-d style="--i: {{ i }}{% if layer == 2 and photo != blank %}; background-image: url('{{ photo }}'){% endif %}">{{ digits | slice: i }}</span></span>{%- assign i = i | plus: 1 -%}{%- endfor -%}
+                {%- if b.suffix != blank -%}<span class="v2-d v2-d--suffix"><span class="v2-d__c" data-v2-d>{{ b.suffix }}</span></span>{%- endif -%}
+              </span>
+            {%- endfor -%}
+          </p>
+          <div class="v2-scene__meta">
+            <span class="v2-scene__rule" data-v2-rule aria-hidden="true"></span>
+            <p class="v2-scene__idx"><span data-v2-turn-sub>{{ idx | strip }} <i>/ {{ total | strip }}</i></span></p>
+            <h3 class="v2-scene__label"><span class="v2-sr">{{ b.number }}{{ b.suffix }} </span><span data-v2-turn-sub>{{ b.label }}</span></h3>
+            {%- if b.text != blank -%}<p class="v2-scene__text"><span data-v2-turn-sub>{{ b.text }}</span></p>{%- endif -%}
+          </div>
+          {%- if b.photo_alt != blank -%}<span class="v2-sr">{{ b.photo_alt }}</span>{%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Bottle turn",
+  "class": "v2-section v2-section--turn",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Made slowly." },
+    { "type": "text", "id": "heading_serif", "label": "Heading (emphasis)", "default": "Worn widely." },
+    {
+      "type": "select", "id": "bottle", "label": "Bottle", "default": "maha",
+      "options": [
+        { "value": "maha", "label": "Maha" },
+        { "value": "oud-fury", "label": "Oud Fury" },
+        { "value": "agha-blue", "label": "Agha Blue" },
+        { "value": "dark-paradise", "label": "Oud of Dark Paradise" },
+        { "value": "sea-smoke", "label": "Sea Smoke" },
+        { "value": "tobacco-enigma", "label": "Tobacco Enigma" },
+        { "value": "shamamah", "label": "Shamamah" }
+      ]
+    },
+    { "type": "text", "id": "bottle_alt", "label": "Bottle alt text", "default": "Maha Eau de Parfum by House of Agha" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Scene",
+      "settings": [
+        { "type": "number", "id": "number", "label": "Number", "default": 50 },
+        { "type": "text", "id": "suffix", "label": "After the number", "default": "+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Years of experience" },
+        { "type": "textarea", "id": "text", "label": "Line" },
+        { "type": "image_picker", "id": "photo", "label": "Photo (fills the number)" },
+        { "type": "text", "id": "photo_asset", "label": "Photo theme asset (fallback)" },
+        { "type": "text", "id": "photo_alt", "label": "Photo alt text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "V2 · Bottle turn" }]
+}
+{% endschema %}

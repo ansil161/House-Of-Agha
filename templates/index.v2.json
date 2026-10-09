@@ -1,0 +1,396 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hoa-v2-hero",
+      "blocks": {
+        "frag_agha_blue": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "agha-blue",
+            "bottle": "agha-blue",
+            "tint": "#D9E1EE"
+          }
+        },
+        "frag_oud_fury": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "oud-fury",
+            "bottle": "oud-fury",
+            "tint": "#EADCC6"
+          }
+        },
+        "frag_maha": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "maha",
+            "bottle": "maha",
+            "tint": "#F1DFD0"
+          }
+        },
+        "frag_sea_smoke": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "sea-smoke",
+            "bottle": "sea-smoke",
+            "tint": "#D3E7E5"
+          }
+        },
+        "frag_oud_of_dark_paradise": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "oud-of-dark-paradise",
+            "bottle": "dark-paradise",
+            "tint": "#DEDAD6"
+          }
+        },
+        "frag_tobacco_enigma": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "tobacco-enigma",
+            "bottle": "tobacco-enigma",
+            "tint": "#E3E5C9"
+          }
+        },
+        "frag_shamamah": {
+          "type": "fragrance",
+          "settings": {
+            "handle": "shamamah",
+            "bottle": "shamamah",
+            "tint": "#ECE5D6"
+          }
+        }
+      },
+      "block_order": [
+        "frag_agha_blue",
+        "frag_oud_fury",
+        "frag_maha",
+        "frag_sea_smoke",
+        "frag_oud_of_dark_paradise",
+        "frag_tobacco_enigma",
+        "frag_shamamah"
+      ],
+      "settings": {}
+    },
+    "scent_story": {
+      "type": "agha-scent-story",
+      "blocks": {
+        "story_notes": {
+          "type": "story",
+          "settings": {
+            "tag": "Notes",
+            "heading": "Rooted in Oud",
+            "text": "Rich, resinous base notes that settle on the skin and stay, warm and dark long after the first spray.",
+            "asset_1": "hoa-oud-fury-portrait",
+            "caption_1": "Oud Fury",
+            "asset_2": "hoa-dark-paradise-portrait",
+            "caption_2": "Oud of Dark Paradise",
+            "alt_1": "Oud Fury bottle among agarwood chips in warm amber light",
+            "alt_2": "Oud of Dark Paradise on dark rock under a shaft of smoky light"
+          }
+        },
+        "story_origin": {
+          "type": "story",
+          "settings": {
+            "tag": "Origin",
+            "heading": "Sourced with Care",
+            "text": "Agarwood, rose and precious materials chosen from the finest sources, one ingredient at a time.",
+            "asset_1": "hoa-hc-oud",
+            "caption_1": "Agarwood",
+            "asset_2": "hoa-hc-rose",
+            "caption_2": "Rose",
+            "alt_1": "Close-up of raw agarwood pieces",
+            "alt_2": "A deep red rose in bloom"
+          }
+        },
+        "story_craft": {
+          "type": "story",
+          "settings": {
+            "tag": "Craft",
+            "heading": "Bottled by Hand",
+            "text": "Heavy glass, the gold crest of the House and a finish checked by hand before every bottle leaves us.",
+            "asset_1": "hoa-world-hand",
+            "caption_1": "Gold Crest",
+            "asset_2": "hoa-world-gift",
+            "caption_2": "Hand-finished",
+            "alt_1": "A hand holding Oud of Dark Paradise, the gold House of Agha crest on the label",
+            "alt_2": "Agha Blue resting in its open blue gift box among white peonies"
+          }
+        }
+      },
+      "block_order": [
+        "story_notes",
+        "story_origin",
+        "story_craft"
+      ],
+      "settings": {}
+    },
+    "product_film": {
+      "type": "hoa-reels",
+      "blocks": {
+        "video_oud_fury_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "oud-fury",
+            "video": "https://videos.pexels.com/video-files/7816005/7816005-sd_540_960_25fps.mp4",
+            "poster_asset": "hoa-oud-fury-portrait",
+            "poster_alt": "Oud Fury"
+          }
+        },
+        "video_agha_blue_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "agha-blue",
+            "video": "https://videos.pexels.com/video-files/6764969/6764969-sd_540_960_25fps.mp4",
+            "poster_asset": "hoa-agha-blue-portrait",
+            "poster_alt": "Agha Blue"
+          }
+        },
+        "video_oud_of_dark_paradise_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "oud-of-dark-paradise",
+            "video": "hoa-reel-oud-of-dark-paradise.mp4",
+            "poster_asset": "hoa-dark-paradise-portrait",
+            "poster_alt": "Oud of Dark Paradise"
+          }
+        },
+        "video_maha_1": {
+          "type": "reel",
+          "settings": {
+            "fallback_handle": "maha",
+            "video": "https://videos.pexels.com/video-files/5848516/5848516-sd_540_960_24fps.mp4",
+            "poster_asset": "hoa-maha-portrait",
+            "poster_alt": "Maha"
+          }
+        }
+      },
+      "block_order": [
+        "video_oud_fury_1",
+        "video_agha_blue_1",
+        "video_oud_of_dark_paradise_1",
+        "video_maha_1"
+      ],
+      "settings": {
+        "eyebrow": "Product film",
+        "heading": "See it in",
+        "heading_serif": "motion.",
+        "only_current_product": true
+      }
+    },
+    "films": {
+      "type": "hoa-reels",
+      "blocks": {
+        "reel_oud_fury": {
+          "type": "reel",
+          "settings": {
+            "video": "hoa-reel-review-ouds.mp4",
+            "poster_asset": "hoa-reel-review-ouds-poster",
+            "poster_alt": "A House of Agha gift box holding the full fragrance range"
+          }
+        },
+        "reel_agha_blue": {
+          "type": "reel",
+          "settings": {
+            "video": "hoa-reel-maha-garden.mp4",
+            "poster_asset": "hoa-reel-maha-garden-poster",
+            "poster_alt": "A woman in a garden holding Maha",
+            "fallback_handle": "maha"
+          }
+        },
+        "reel_dark_paradise": {
+          "type": "reel",
+          "settings": {
+            "video": "hoa-reel-oud-of-dark-paradise.mp4"
+          }
+        },
+        "reel_maha": {
+          "type": "reel",
+          "settings": {
+            "video": "hoa-reel-maha-unboxing.mp4",
+            "poster_asset": "hoa-reel-maha-unboxing-poster",
+            "poster_alt": "Unboxing Maha from its pink gift box"
+          }
+        }
+      },
+      "block_order": [
+        "reel_oud_fury",
+        "reel_agha_blue",
+        "reel_dark_paradise",
+        "reel_maha"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Follow us on",
+        "heading_serif": "Instagram.",
+        "subtext": "<p>Wear it, share it, let it linger. Show us how House of Agha becomes part of your story by tagging <a href=\"https://www.instagram.com/aghaperfumes/\" target=\"_blank\">@aghaperfumes</a>, and your moment may take its place here.</p>",
+        "elfsight_app_id": ""
+      }
+    },
+    "turn": {
+      "type": "hoa-v2-turn",
+      "settings": {
+        "heading": "Made slowly.",
+        "heading_serif": "Worn widely."
+      },
+      "blocks": {
+        "stat_years": {
+          "type": "stat",
+          "settings": {
+            "number": 50,
+            "suffix": "+",
+            "label": "Years of experience",
+            "text": "Half a century of working with fine perfume materials.",
+            "photo_asset": "hoa-philo-legacy",
+            "photo_alt": "Copper stills in an old perfume distillery, in sepia"
+          }
+        },
+        "stat_units": {
+          "type": "stat",
+          "settings": {
+            "number": 200,
+            "suffix": "+",
+            "label": "Units sold",
+            "text": "Bottles already worn and gifted.",
+            "photo_asset": "hoa-reel-maha-unboxing-poster",
+            "photo_alt": "A customer unboxing Maha from its pink gift box"
+          }
+        }
+      },
+      "block_order": [
+        "stat_years",
+        "stat_units"
+      ]
+    },
+    "worlds": {
+      "type": "hoa-v2-worlds",
+      "settings": {
+        "heading": "Two worlds of fragrance"
+      },
+      "blocks": {
+        "world_oud": {
+          "type": "world",
+          "settings": {
+            "label": "Oud / Intense",
+            "title": "The Oud",
+            "title_serif": "collection",
+            "notes": "Deep · Warm · Magnetic",
+            "handles": "oud-of-dark-paradise, oud-fury",
+            "cta_label": "Explore Oud",
+            "caption": "",
+            "tone": "light",
+            "asset": "hoa-hero-dark-paradise",
+            "w": 2000,
+            "h": 1125,
+            "alt": "Oud of Dark Paradise on dark rock under a shaft of smoky light",
+            "focal": "18% 50%",
+            "focal_mobile": "31% 50%"
+          }
+        },
+        "world_fresh": {
+          "type": "world",
+          "settings": {
+            "label": "Fresh / Elevated",
+            "title": "The Fresh",
+            "title_serif": "collection",
+            "notes": "Clean · Modern · Effortless",
+            "handles": "agha-blue, sea-smoke",
+            "cta_label": "Explore Fresh",
+            "caption": "",
+            "tone": "light",
+            "asset": "hoa-hero-agha-blue",
+            "w": 2000,
+            "h": 1117,
+            "alt": "Agha Blue standing in still water inside an ice cave, daylight behind it",
+            "focal": "18% 50%",
+            "focal_mobile": "33% 50%"
+          }
+        }
+      },
+      "block_order": [
+        "world_oud",
+        "world_fresh"
+      ]
+    },
+    "testimonials": {
+      "type": "agha-testimonials",
+      "blocks": {
+        "t_rashida": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The oud opens warm and stays all day. I've received compliments every single time I wear it.",
+            "name": "Rashid A.",
+            "role": "Dubai",
+            "rating": 5
+          }
+        },
+        "t_fatimas": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Elegant packaging and a scent that feels truly luxurious. My new signature.",
+            "name": "Fatima S.",
+            "role": "Kochi",
+            "rating": 5
+          }
+        },
+        "t_arjunm": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Long-lasting, rich and never overpowering. Easily on par with the big designer houses.",
+            "name": "Arjun M.",
+            "role": "Bangalore",
+            "rating": 5
+          }
+        },
+        "t_sarak": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I bought it as a gift and ended up ordering one for myself too.",
+            "name": "Sara K.",
+            "role": "Doha",
+            "rating": 5
+          }
+        },
+        "photo": {
+          "type": "image",
+          "settings": {
+            "asset": "hoa-shamamah-portrait",
+            "alt": "Shamamah bottle with its gold House of Agha crest beside pieces of agarwood",
+            "tall": false
+          }
+        },
+        "t_imrant": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The gold crest bottle looks stunning on my shelf, and the fragrance is even better.",
+            "name": "Imran T.",
+            "role": "Kozhikode",
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "t_rashida",
+        "t_fatimas",
+        "t_arjunm",
+        "t_sarak",
+        "photo",
+        "t_imrant"
+      ],
+      "settings": {}
+    },
+    "footer": {
+      "type": "hoa-v2-footer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "scent_story",
+    "turn",
+    "worlds",
+    "product_film",
+    "films",
+    "testimonials",
+    "footer"
+  ]
+}

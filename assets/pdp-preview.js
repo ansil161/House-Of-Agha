@@ -534,18 +534,22 @@
     if (n.includes('sandal')) return 'sandalwood';
     return n.trim().replace(/[^a-z0-9]+/g, '-');
   };
-  const tfNotesBlock = (title, list) => `
-          <li class="pdp-tf__block" data-pdp-tf-block data-side="left">
-            <span class="pdp-tf__block-title">${esc(title)}</span>
-            <span class="pdp-tf__notes">${list.split(',').map((x) => x.trim()).filter(Boolean).map((x) => `
-              <span class="pdp-tf__note"><img class="pdp-tf__note-img" src="/assets/note-${noteKey(x)}.jpg" alt="" width="64" height="64" loading="lazy" onerror="this.style.visibility='hidden'"><span class="pdp-tf__note-name">${esc(x)}</span></span>`).join('')}
+  // One act of the arc above the bottle (mirrors the Liquid): the first act is shown, the rest wait on the left
+  const tfNotesBlock = (title, list, act) => {
+    const names = list.split(',').map((x) => x.trim()).filter(Boolean);
+    return `
+          <li class="pdp-tf__block" data-pdp-tf-block data-pdp-tf-act data-side="left" data-state="${act ? 'next' : 'active'}">
+            <span class="pdp-tf__act-label"><span class="pdp-tf__block-title">${esc(title)}</span></span>
+            <span class="pdp-tf__notes" style="--n:${names.length};">${names.map((x, i) => `
+              <span class="pdp-tf__note" style="--i:${i};"><img class="pdp-tf__note-img" src="/assets/note-${noteKey(x)}.jpg" alt="" width="64" height="64" loading="lazy" onerror="this.style.visibility='hidden'"><span class="pdp-tf__note-name">${esc(x)}</span></span>`).join('')}
             </span>
           </li>`;
+  };
   const tfLeft = [
     ['leaf', 'Top notes', tfTop],
     ['flower', 'Heart notes', tfHeart],
     ['wood', 'Base notes', tfBase]
-  ].filter(([, , text]) => text).map(([ic, title, text]) => tfNotesBlock(title, text));
+  ].filter(([, , text]) => text).map(([ic, title, text], i) => tfNotesBlock(title, text, i));
 
   const CLAIM_ICON = (label) => {
     const l = label.toLowerCase();
@@ -583,7 +587,7 @@
         <p class="pdp-tf__sub">An olfactory journey in three acts.</p>
       </header>
       <div class="pdp-tf__stage">
-        <ol class="pdp-tf__col pdp-tf__col--left">${tfLeft.join('')}
+        <ol class="pdp-tf__col pdp-tf__col--left pdp-tf__arc" data-pdp-tf-arc>${tfLeft.join('')}
         </ol>
         <div class="pdp-tf__center">
           <div class="pdp-tf__aura" aria-hidden="true"><svg class="pdp-tf__rings" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="298"/><circle cx="300" cy="300" r="250"/><circle cx="300" cy="300" r="200"/></svg><svg class="pdp-tf__wave pdp-tf__wave--inner pdp-tf__wave--left" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M200 20C140 80 160 140 110 190 60 240 90 300 60 360" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg><svg class="pdp-tf__wave pdp-tf__wave--inner pdp-tf__wave--right" viewBox="0 0 220 420" preserveAspectRatio="none"><path d="M20 20C80 80 60 140 110 190 160 240 130 300 160 360" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg><span class="pdp-tf__glyph" style="--x:16%; --y:20%; --s:34px; --r:-20deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3C24 10 24 22 16 29 8 22 8 10 16 3Z"/><path d="M16 8v18"/></svg></span><span class="pdp-tf__glyph" style="--x:82%; --y:16%; --s:32px; --r:30deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27C5 12 14 5 27 5 27 19 19 27 5 27Z"/><path d="M5 27L20 12"/></svg></span><span class="pdp-tf__glyph" style="--x:6%; --y:62%; --s:36px; --r:-10deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 29V6"/><path d="M16 10c-5-1-7-4-7-6M16 10c5-1 7-4 7-6M16 17c-5-1-8-4-8-7M16 17c5-1 8-4 8-7M16 24c-4-1-6-3-6-5M16 24c4-1 6-3 6-5"/></svg></span><span class="pdp-tf__glyph" style="--x:90%; --y:56%; --s:34px; --r:10deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6C12 8 10 16 16 18 22 20 22 26 28 28"/><path d="M4 12C10 13 9 20 15 22" opacity=".6"/></svg></span><span class="pdp-tf__glyph" style="--x:24%; --y:88%; --s:28px; --r:0deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="4"/><circle cx="21" cy="10" r="3"/><circle cx="17" cy="21" r="4.5"/></svg></span><span class="pdp-tf__glyph" style="--x:76%; --y:90%; --s:30px; --r:160deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3C24 10 24 22 16 29 8 22 8 10 16 3Z"/><path d="M16 8v18"/></svg></span><span class="pdp-tf__glyph" style="--x:32%; --y:8%; --s:26px; --r:-40deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27C5 12 14 5 27 5 27 19 19 27 5 27Z"/><path d="M5 27L20 12"/></svg></span><span class="pdp-tf__glyph" style="--x:68%; --y:6%; --s:28px; --r:-20deg;"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6C12 8 10 16 16 18 22 20 22 26 28 28"/><path d="M4 12C10 13 9 20 15 22" opacity=".6"/></svg></span>${tfWaves}${tfParticles}</div>
@@ -930,8 +934,9 @@
       ["hoa-hero-oud-fury", 2000, 1125, "Oud Fury on agarwood in amber light"]
     ],
     'oud-of-dark-paradise': [
-      ["hoa-hero-dark-paradise", 2000, 1125, "Oud of Dark Paradise on dark stone in a shaft of light", "50% 50%"],
-      ["hoa-alt-dark-paradise", 1080, 1350, "Oud of Dark Paradise in smoke on a rock"]
+      ["hoa-pgal-dark-paradise-lava", 1600, 1600, "Oud of Dark Paradise on black rock among rivers of lava", "50% 50%"],
+      ["hoa-pgal-dark-paradise-panther", 1600, 1600, "Oud of Dark Paradise before a black panther in the dark"],
+      ["hoa-pgal-dark-paradise-chains", 1080, 1440, "Oud of Dark Paradise wrapped in black chain"]
     ],
     'tobacco-enigma': [
       ["hoa-tobacco-enigma-portrait", 1200, 1607, "Tobacco Enigma among tobacco leaves", "50% 45%"],

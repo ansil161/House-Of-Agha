@@ -49,9 +49,7 @@
     },
     "the_house": {
       "type": "hoa-manifesto",
-      "settings": {
-        "show_mandala": false
-      }
+      "settings": {}
     },
     "signature": {
       "type": "hoa-fragrances",
@@ -599,6 +597,43 @@
         "heading_serif": "motion.",
         "only_current_product": true
       }
+    },
+    "campaign": {
+      "type": "hoa-campaign",
+      "blocks": {
+        "p_maha": {
+          "type": "panel",
+          "settings": {
+            "asset": "hoa-campaign-maha",
+            "w": 1600,
+            "h": 1986,
+            "alt": "A woman in a flowing red gown holds a bottle of Maha Eau de Parfum beneath a rose-pink arch",
+            "kicker": "Eau de Parfum",
+            "name": "Maha",
+            "url": "/products/maha",
+            "focus": "50% 15%"
+          }
+        },
+        "p_sea_smoke": {
+          "type": "panel",
+          "settings": {
+            "asset": "hoa-campaign-sea-smoke",
+            "w": 1536,
+            "h": 2752,
+            "alt": "A man on a sunlit beach holds a bottle of Sea Smoke Eau de Parfum",
+            "kicker": "Eau de Parfum",
+            "name": "Sea Smoke",
+            "url": "/products/sea-smoke",
+            "focus": "50% 0%",
+            "fit": "frame"
+          }
+        }
+      },
+      "block_order": [
+        "p_maha",
+        "p_sea_smoke"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -609,6 +644,7 @@
     "the_house",
     "collection",
     "discover",
+    "campaign",
     "product_film",
     "testimonials",
     "world",
