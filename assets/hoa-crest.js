@@ -23,8 +23,8 @@
       content (it scrolls with it); between stops it glides to the next spot and size,
       fading out across product/film stretches and back in at the next stop (JOURNEY
       below). Rendering stops while it is hidden. Desktop: hero -> "Seven fragrances"
-      headline -> The House photo seal -> World headline -> gone. Phones: hero -> The
-      House seal -> gone.
+      headline -> collection headline (was The House seal until 2026-10-09) -> World headline
+      -> gone. Phones: hero only.
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
    Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
@@ -63,7 +63,7 @@ var HOA_CREST_CONFIG = {
   // the homepage journey: where the logo holds still (as fractions of the viewport
   // height: it arrives when its spot is at `in`, leaves when it reaches `out`)
   JOURNEY: {
-    WIDE: 1024,               // px: below this only the hero and The House stops (layouts stack)
+    WIDE: 1024,               // px: below this only the hero stop (layouts stack)
     HERO_HOLD: 0.25,          // hero: holds until the page has scrolled this much of a viewport
     FADE: 0.35,               // share of each hidden stretch spent fading out / back in...
     FADE_VH: 0.5,             // ...but never longer than this much scroll (x viewport): long stretches stay dark
@@ -262,7 +262,8 @@ var HOA_CREST_CONFIG = {
     }
     function clampN(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
     var sigHead = document.querySelector('.hoa-frag-section h2');
-    var houseSeal = document.querySelector('[data-vessel-seal]');
+    var collHead = document.querySelector('.hoa-collection__title');
+    var collBtn = document.querySelector('.hoa-collection__head > .hoa-btn');
     var worldHead = document.querySelector('.hoa-world-section h2');
     var worldLede = document.querySelector('.hoa-world-section .hoa-lede');
     var STOPS = [
@@ -276,16 +277,21 @@ var HOA_CREST_CONFIG = {
           return { x: (t.right + h.right) / 2, y: t.top + t.height / 2, s: s };
         }
       },
-      { // The House ("The Vessel"): pressed onto the finished bottle's upper body. The seal sits
-        // at the end of the pinned stretch (hoa-vessel.js), so the logo rides up with it and lands
-        // just as the bottle settles, then leaves with the section.
-        wide: false, inAt: 0.8, outAt: 0.25,
+      { // Collection (user 2026-10-09: "remove it from The House, use it in the collection section"):
+        // on the heading's LAST line ("…fragrances."), centred in the space between its end and the
+        // View-all button (the heading wraps over several lines and fills the width above)
+        wide: true, inAt: 0.75, outAt: 0.25,
         pose: function () {
-          if (!houseSeal) return null;
-          var r = houseSeal.getBoundingClientRect();
-          var s = parseFloat(houseSeal.dataset.size) || 0;
-          if (!s) return null;
-          return { x: r.left, y: r.top, s: s };
+          if (!collHead) return null;
+          var rg = document.createRange();
+          rg.selectNodeContents(collHead);
+          var rs = rg.getClientRects(), last = null;
+          for (var i = rs.length - 1; i >= 0; i--) { if (rs[i].width > 2) { last = rs[i]; break; } }
+          if (!last) return null;
+          var end = collBtn ? collBtn.getBoundingClientRect().left : collHead.getBoundingClientRect().right;
+          var s = clampN(vw * 0.072, 84, 118);
+          if (end - last.right < s + 48) return null;
+          return { x: (last.right + end) / 2, y: last.top + last.height / 2, s: s };
         }
       },
       { // World: between "Beyond the bottle. Into the day." and its intro line, then it is gone
