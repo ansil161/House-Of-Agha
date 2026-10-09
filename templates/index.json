@@ -601,7 +601,7 @@
     "campaign": {
       "type": "hoa-campaign",
       "blocks": {
-        "p_maha": {
+        "p_oud": {
           "type": "panel",
           "settings": {
             "asset": "hoa-campaign-maha",
@@ -610,11 +610,14 @@
             "alt": "A woman in a flowing red gown holds a bottle of Maha Eau de Parfum beneath a rose-pink arch",
             "kicker": "Eau de Parfum",
             "name": "Maha",
+            "text": "Blossom, warm sand and late sun through an open window.",
             "url": "/products/maha",
-            "focus": "50% 15%"
+            "focus": "50% 20%",
+            "panel_bg": "#4a1418",
+            "panel_ink": "#f6e9df"
           }
         },
-        "p_sea_smoke": {
+        "p_fresh": {
           "type": "panel",
           "settings": {
             "asset": "hoa-campaign-sea-smoke",
@@ -623,17 +626,22 @@
             "alt": "A man on a sunlit beach holds a bottle of Sea Smoke Eau de Parfum",
             "kicker": "Eau de Parfum",
             "name": "Sea Smoke",
+            "text": "Clear water, pale stone and salt carried in on the wind.",
             "url": "/products/sea-smoke",
-            "focus": "50% 0%",
-            "fit": "frame"
+            "focus": "50% 6%",
+            "fit": "frame",
+            "panel_bg": "#dfe9e6",
+            "panel_ink": "#14302f"
           }
         }
       },
       "block_order": [
-        "p_maha",
-        "p_sea_smoke"
+        "p_oud",
+        "p_fresh"
       ],
-      "settings": {}
+      "settings": {
+        "layout": "split"
+      }
     }
   },
   "order": [
@@ -644,8 +652,8 @@
     "the_house",
     "collection",
     "discover",
-    "campaign",
     "product_film",
+    "campaign",
     "testimonials",
     "world",
     "films"

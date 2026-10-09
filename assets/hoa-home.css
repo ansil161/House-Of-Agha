@@ -1938,6 +1938,9 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   color: #8A6A35;
 }
 .hoa-rvp__note-icon svg { width: 20px; height: 20px; }
+/* Ingredient photo in place of the line icon (user, 2026-10-09) */
+.hoa-rvp__note-icon--photo { width: 46px; height: 46px; overflow: hidden; background: #F6F1E8; }
+.hoa-rvp__note-icon--photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hoa-rvp__note span { font-size: 0.68rem; line-height: 1.2; color: var(--hoa-ink-2, #4a443d); overflow-wrap: normal; }
 @media (max-width: 640px) {
   .hoa-reelview .hoa-rvp__gallery { grid-auto-columns: 34%; padding: 12px 14px 6px; scroll-padding-inline: 14px; }
@@ -1945,6 +1948,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   .hoa-rvp__note { width: 60px; }
   .hoa-rvp__note-icon { width: 34px; height: 34px; }
   .hoa-rvp__note-icon svg { width: 18px; height: 18px; }
+  .hoa-rvp__note-icon--photo { width: 42px; height: 42px; }
 }
 
 /* Thumbnails are buttons: the photo opens large over the film (assets/hoa-reels.js) */
@@ -2292,6 +2296,33 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 .hoa-footer__bottom p { margin: 0; text-transform: none; letter-spacing: 0; }
 .hoa-footer__logo { display: inline-block; margin: 0 0 clamp(36px, 4vw, 56px); }
 .hoa-footer__logo img { display: block; height: clamp(44px, 4.4vw, 64px); width: auto; filter: invert(1); }
+/* 3D crest + flat wordmark (2026-10-09, assets/hoa-footer-crest.js). The crest box is a touch taller than the
+   lockup so the turning 3D crest reads at the same size as the flat one; pointer-events off = no interaction. */
+.hoa-footer__logo--3d { --fl-h: clamp(44px, 4.4vw, 64px); display: flex; width: fit-content; align-items: center; }
+.hoa-footer__crest {
+  position: relative;
+  flex: none;
+  width: calc(var(--fl-h) * 1.12);
+  height: calc(var(--fl-h) * 1.12);
+  margin: calc(var(--fl-h) * -0.06) calc(var(--fl-h) * -0.04) calc(var(--fl-h) * -0.06) calc(var(--fl-h) * -0.12);
+  pointer-events: none;
+}
+.hoa-footer__logo--3d .hoa-footer__crest-flat {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6%;
+  transition: opacity 0.6s ease;
+}
+.hoa-footer__crest-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 0.6s ease; }
+.hoa-footer__crest.is-3d .hoa-footer__crest-canvas { opacity: 1; }
+.hoa-footer__crest.is-3d .hoa-footer__crest-flat { opacity: 0; }
+.hoa-footer__logo--3d .hoa-footer__word { height: var(--fl-h); }
+@media (prefers-reduced-motion: reduce) {
+  .hoa-footer__crest-flat, .hoa-footer__crest-canvas { transition: none; }
+}
 .hoa-footer__socials { display: flex; align-items: center; gap: 4px; margin: 0 -10px 0 0; padding: 0; list-style: none; }
 .hoa-footer__social { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--ft-ink) !important; transition: opacity 0.3s var(--ft-ease); }
 .hoa-footer__social svg { width: 20px; height: 20px; }
@@ -2570,18 +2601,27 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 }
 
 /* ===== Campaign diptych (sections/hoa-campaign.liquid, 2026-10-09) =====
-   Full-bleed, edge to edge: each campaign photo spans the full width, one after another. */
+   Full-bleed, edge to edge: the campaign photos side by side across the full width. */
 .hoa-campaign {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
   width: 100%;
-  background: var(--hoa-ink);
+  /* 2026-10-09: edge to edge, no black band at the sides and no gap between the photos (user).
+     The pair keeps both photos whole, so on wide screens it is a little taller than one screen. */
 }
+/* 2026-10-09 later (user): EACH photo full width, one under the other, one screen tall (cover crop,
+   aimed with the block focus). This overrides the side-by-side rules below on tablets and up. */
+@media (min-width: 750px) {
+  .hoa-campaign { flex-direction: column; }
+  .hoa-campaign > .hoa-campaign__panel { flex: none; width: 100%; height: 100svh; min-height: 560px; aspect-ratio: auto; }
+}
+/* 2026-10-09: vertical photos side by side, each WHOLE. flex-grow = aspect ratio + the same
+   aspect-ratio on the box = both panels share one height and nothing is cropped. */
 .hoa-campaign__panel {
   position: relative;
   display: block;
-  height: 100svh;
-  min-height: 560px;
+  flex: var(--ar, 0.8) 1 0;
+  min-width: 0;
+  aspect-ratio: var(--ar, 0.8);
   overflow: hidden;
   color: #fff;
   text-decoration: none;
@@ -2627,6 +2667,14 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   line-height: 1;
   letter-spacing: 0.01em;
 }
+.hoa-campaign__tagline {
+  font-family: var(--hoa-sans);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
 .hoa-campaign__cta {
   justify-self: start;
   margin-top: 6px;
@@ -2665,7 +2713,8 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 }
 .hoa-campaign__panel:focus-visible { outline: 2px solid #fff; outline-offset: -6px; }
 @media (max-width: 749px) {
-  .hoa-campaign__panel { height: auto; min-height: 0; aspect-ratio: 4 / 5; }
+  .hoa-campaign { flex-direction: column; padding-inline: 0; }
+  .hoa-campaign__panel { flex: none; height: auto; min-height: 0; aspect-ratio: var(--ar, 0.8); }
   /* A 4:5 phone panel already fits the face and the bottle, so the frame fills it. */
   .hoa-campaign__panel--frame .hoa-campaign__backdrop { display: none; }
   .hoa-campaign__frame { inset: 0; aspect-ratio: auto; -webkit-mask-image: none; mask-image: none; }
@@ -2673,4 +2722,189 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hoa-campaign__panel img { transition: none; }
+}
+
+/* ===== Discover your scent: card design (sections/hoa-families.liquid, 2026-10-09 user) =====
+   The rounded campaign-card look: full photo, 10px corners, warm gradient at the foot, centred
+   white sans name + short line, cream pill with a dark arrow circle. Overrides the block above. */
+.hoa-family { position: relative; isolation: isolate; color: #fff; }
+.hoa-family__media { aspect-ratio: 3 / 4; border-radius: 10px; background: #2a1d14; }
+.hoa-family:hover .hoa-family__media img { transform: scale(1.02); }
+.hoa-family__media::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(24, 14, 8, 0.72) 0%, rgba(24, 14, 8, 0.32) 52%, rgba(24, 14, 8, 0) 100%);
+  pointer-events: none;
+}
+.hoa-family__body {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 2.4vw, 34px);
+  z-index: 2;
+  width: min(86%, 360px);
+  padding: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hoa-family__title {
+  display: block;
+  font-family: var(--hoa-sans);
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+.hoa-family__names {
+  margin-top: 8px;
+  font-family: var(--hoa-sans);
+  font-size: clamp(0.72rem, 0.8vw, 0.82rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 1;
+}
+.hoa-family__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(12px, 1.4vw, 18px);
+  padding: 5px 5px 5px 18px;
+  border-radius: 999px;
+  background: #f4efe6;
+  color: #1c1612;
+  font-family: var(--hoa-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: background-color 0.25s ease;
+}
+.hoa-family__arrow {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #1c1612;
+  color: #f4efe6;
+}
+.hoa-family__arrow svg { width: 15px; height: 15px; transition: transform 0.25s ease; }
+.hoa-family:hover .hoa-family__cta { background: #fff; }
+.hoa-family:hover .hoa-family__arrow svg { transform: translateX(2px); }
+.hoa-family:focus-visible { outline: none; }
+.hoa-family:focus-visible .hoa-family__media { outline: 2px solid var(--hoa-ink); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .hoa-family__arrow svg, .hoa-family__cta { transition: none; }
+}
+
+/* ===== Campaign split (sections/hoa-campaign.liquid, layout "split", 2026-10-09 user) =====
+   One row per fragrance: photo half + solid colour panel half, alternating sides, edge to edge.
+   Colours come from the block (panel_bg / panel_ink). Phones: photo on top, copy under it. */
+.hoa-csplit { display: block; width: 100%; }
+.hoa-csplit__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: min(100svh, 980px);
+}
+.hoa-csplit__row--flip .hoa-csplit__media { order: 2; }
+.hoa-csplit__media {
+  position: relative;
+  display: block;
+  min-height: 560px;
+  overflow: hidden;
+  background: #1c1612;
+}
+.hoa-csplit__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 30%);
+  transition: transform 1.4s var(--hoa-ease);
+}
+.hoa-csplit__row:hover .hoa-csplit__media img { transform: scale(1.03); }
+.hoa-csplit__panel {
+  display: flex;
+  align-items: center;
+  padding: clamp(40px, 7vw, 120px) clamp(28px, 6.5vw, 112px);
+  background: var(--panel, #ECE4D8);
+  color: var(--panel-ink, #1c1612);
+}
+.hoa-csplit__copy { display: flex; flex-direction: column; align-items: flex-start; max-width: 460px; }
+.hoa-csplit__index {
+  font-family: var(--hoa-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  opacity: 0.6;
+}
+.hoa-csplit__kicker {
+  margin: clamp(28px, 4vw, 56px) 0 0;
+  font-family: var(--hoa-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.hoa-csplit__name {
+  margin: 14px 0 0;
+  font-family: var(--font-didot, var(--hoa-serif));
+  font-size: clamp(3rem, 6.4vw, 6.4rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  color: inherit;
+}
+.hoa-csplit__text {
+  margin: clamp(18px, 2vw, 28px) 0 0;
+  max-width: 34ch;
+  font-family: var(--hoa-sans);
+  font-size: clamp(0.95rem, 1.05vw, 1.08rem);
+  line-height: 1.6;
+  opacity: 0.82;
+}
+.hoa-csplit__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(28px, 3.4vw, 44px);
+  padding: 6px 6px 6px 22px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  font-family: var(--hoa-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.hoa-csplit__arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--panel-ink, #1c1612);
+  color: var(--panel, #ECE4D8);
+}
+.hoa-csplit__arrow svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+.hoa-csplit__cta:hover { background: var(--panel-ink, #1c1612); color: var(--panel, #ECE4D8); }
+.hoa-csplit__cta:hover .hoa-csplit__arrow { background: var(--panel, #ECE4D8); color: var(--panel-ink, #1c1612); }
+.hoa-csplit__cta:hover .hoa-csplit__arrow svg { transform: translateX(2px); }
+.hoa-csplit__cta:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 749px) {
+  .hoa-csplit__row { grid-template-columns: 1fr; min-height: 0; }
+  .hoa-csplit__row--flip .hoa-csplit__media { order: 0; }
+  .hoa-csplit__media { min-height: 0; aspect-ratio: 4 / 5; }
+  .hoa-csplit__panel { padding: 40px var(--hoa-gutter) 52px; }
+  .hoa-csplit__kicker { margin-top: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hoa-csplit__media img, .hoa-csplit__cta, .hoa-csplit__arrow svg { transition: none; }
+  .hoa-csplit__row:hover .hoa-csplit__media img { transform: none; }
 }

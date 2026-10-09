@@ -1,25 +1,37 @@
 {%- comment -%}
-  Small picture for one fragrance note. Param: name ("Damask rose", "Assam agarwood" …).
+  Small picture for one fragrance note. Param: name ("Damask rose", "Agarwood (Oud)" …).
   Looks for assets/note-<key>.jpg where <key> is matched by keyword (rose, oud, musk …), else the
   handleized name. Placeholder photos for now (Wikimedia Commons); replace by uploading a file with
   the same name. Outputs the URL only.
+  Optional set: 'sn' → the Scent notes photos (assets/sn-note-<key>.webp) for the keys that have
+  one, else the usual note-<key>.jpg. sn photos: cut from the user's reference poster (saffron,
+  bergamot, lavender, oud, jasmine, neroli, cardamom, sandalwood, amber) + Wikimedia Commons for
+  the live store's other notes (credits in HOA-ASSETS.md). A lime uses the poster's lime
+  ("bergamot") crop; suede uses leather.
+  Keywords follow the live store's spellings (aghaperfumes.com "Perfume notes" blocks).
 {%- endcomment -%}
 {%- assign n = name | downcase -%}
 {%- liquid
-  if n contains 'rose'
-    assign key = 'rose'
-  elsif n contains 'iris'
-    assign key = 'iris'
-  elsif n contains 'pepper'
-    assign key = 'pepper'
-  elsif n contains 'oud' or n contains 'agar'
-    assign key = 'oud'
-  elsif n contains 'musk'
-    assign key = 'musk'
-  elsif n contains 'sandal'
-    assign key = 'sandalwood'
-  else
+  comment
+    needle:key pairs, first match wins (so "pink pepper" → pepper, "agarwood (oud)" → oud)
+  endcomment
+  assign pairs = 'rose:rose,iris:iris,orris:iris,pepper:pepper,oud:oud,agar:oud,musk:musk,sandal:sandalwood,saffron:saffron,bergamot:bergamot,cardamom:cardamom,jasmin:jasmine,amber:amber,lavender:lavender,neroli:neroli,orange blossom:neroli,mandarin:mandarin,lime:lime,lemon:lemon,passion:passion-fruit,patchouli:patchouli,benzoin:benzoin,leather:leather,suede:leather,vanilla:vanilla,cucumber:cucumber,currant:black-currant,basil:basil,sage:sage,frankincense:frankincense,olibanum:frankincense,tobacco:tobacco,oak:oak,nutmeg:nutmeg,tiar:tiare,freesia:freesia,tonka:tonka,cedar:cedarwood,sea weed:seaweed,seaweed:seaweed,honey:honey,cinnamon:cinnamon,wood:woody' | split: ','
+  assign key = ''
+  for pair in pairs
+    assign needle = pair | split: ':' | first
+    if n contains needle
+      assign key = pair | split: ':' | last
+      break
+    endif
+  endfor
+  if key == ''
     assign key = n | handleize
   endif
 -%}
-{{- 'note-' | append: key | append: '.jpg' | asset_url -}}
+{%- assign sn_keys = 'saffron,bergamot,lavender,oud,jasmine,neroli,cardamom,sandalwood,amber,basil,benzoin,black-currant,cinnamon,cucumber,freesia,honey,lemon,mandarin,nutmeg,oak,passion-fruit,patchouli,sage,tiare,tobacco,tonka,vanilla,woody,frankincense,seaweed,leather,cedarwood' | split: ',' -%}
+{%- if set == 'sn' and key == 'lime' -%}{%- assign key = 'bergamot' -%}{%- endif -%}
+{%- if set == 'sn' and sn_keys contains key -%}
+  {{- 'sn-note-' | append: key | append: '.webp' | asset_url -}}
+{%- else -%}
+  {{- 'note-' | append: key | append: '.jpg' | asset_url -}}
+{%- endif -%}

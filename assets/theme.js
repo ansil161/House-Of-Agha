@@ -8,14 +8,16 @@
 // while Shopify is not connected (no custom.top_notes / heart_notes / base_notes metafields yet).
 // Read by the product page (assets/pdp-preview.js) and the reel viewer (assets/hoa-reels.js);
 // real data always wins. Delete once real notes exist.
+// 2026-10-09: notes for the 7 real products now = the live store's "Perfume notes" blocks (aghaperfumes.com),
+// same as snippets/agha-store-notes.liquid. Shamamah's description names none.
 window.AGHA_DEV_NOTES = {
-  'oud-fury': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  'agha-blue': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  maha: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  'oud-of-dark-paradise': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  'sea-smoke': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  'tobacco-enigma': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
-  shamamah: { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'oud-fury': { topNotes: ['Passion Fruit', 'Saffron', 'Rose'], heartNotes: ['Agarwood (Oud)', 'Patchouli', 'Benzoin'], baseNotes: ['Leather', 'Vanilla', 'Amber'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'agha-blue': { topNotes: ['Mandarin Orange', 'Cucumber', 'Black Currant', 'Pink Pepper'], heartNotes: ['Basil', 'Sage', 'Frankincense', 'Amber'], baseNotes: ['Suede', 'Woody', 'Tobacco', 'Musk', 'Agarwood (Oud)', 'Leather', 'Oak', 'Sandalwood', 'Patchouli'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  maha: { topNotes: ['Indian Lime'], heartNotes: ['Tiare Flower', 'Freesia'], baseNotes: ['Tonka Bean', 'Cedarwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'oud-of-dark-paradise': { topNotes: ['Saffron', 'Nutmeg'], heartNotes: ['Agarwood (Oud)'], baseNotes: ['Musk', 'Patchouli'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'sea-smoke': { topNotes: ['Bergamot', 'Lemon'], heartNotes: ['Seaweed', 'Jasmine'], baseNotes: ['Musk', 'Cedarwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  'tobacco-enigma': { topNotes: ['Bergamot', 'Lavender'], heartNotes: ['Honey', 'Cinnamon', 'Jasmine'], baseNotes: ['Tobacco Leaf', 'Vanilla', 'Tonka Bean'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
+  shamamah: { topNotes: [], heartNotes: [], baseNotes: [], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] },
   'oud-royal': { topNotes: ['Bergamot', 'Saffron', 'Pink Pepper'], heartNotes: ['Rose', 'Jasmine', 'Oud'], baseNotes: ['Musk', 'Amber', 'Sandalwood'], claims: ['Long Lasting', 'Premium Fragrance', 'Unisex'] }
 };
 
@@ -82,6 +84,8 @@ const AGHA_PRODUCTS = {
     family: "Fresh",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-hero-agha-blue.webp', '/assets/hoa-craft-ice.webp', '/assets/hoa-world-gift.webp'],
+    // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
+    media: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-pgal-agha-blue-6.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-pgal-agha-blue-5.webp', '/assets/hoa-craft-ice.webp'],
     description: "Ice caves, cold stone and the deep blue of a winter night.",
     sizes: { 'Eau de Parfum': 5200 },
     reviews: [{ rating: 5, author: "Sara K.", location: "Dubai", verified: true, body: "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days." }]
@@ -102,6 +106,8 @@ const AGHA_PRODUCTS = {
     family: "Floral",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-maha.webp', '/assets/hoa-maha-portrait.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
+    // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
+    media: ['/assets/hoa-product-maha.webp', '/assets/hoa-pgal-maha-4.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
     description: "Blossom, warm sand and late sun through an open window.",
     sizes: { 'Eau de Parfum': 4600 },
     compare: { 'Eau de Parfum': 5400 },
@@ -112,6 +118,8 @@ const AGHA_PRODUCTS = {
     family: "Fresh",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-world-poolside.webp'],
+    // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
+    media: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-alt-sea-smoke.webp'],
     description: "Clear water, pale stone and salt carried in on the wind.",
     sizes: { 'Eau de Parfum': 4900 },
     reviews: [{ rating: 5, author: "Meera P.", location: "Bengaluru", verified: true, body: "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear." }]
@@ -121,6 +129,8 @@ const AGHA_PRODUCTS = {
     family: "Aromatic",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-ingredients-tobacco.webp', '/assets/hoa-family-green.webp', '/assets/hoa-craft-moss.webp'],
+    // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
+    media: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-pdp-tobacco-enigma-3.webp', '/assets/hoa-pdp-tobacco-enigma-4.webp', '/assets/hoa-pdp-tobacco-enigma-5.webp'],
     description: "Tobacco leaf, moss and a forest floor after rain.",
     sizes: { 'Eau de Parfum': 5400 },
     reviews: [{ rating: 5, author: "Kabir D.", location: "Delhi", verified: true, body: "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much." }]
@@ -130,6 +140,8 @@ const AGHA_PRODUCTS = {
     family: "Floral",
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-shamamah-portrait.webp', '/assets/hoa-shamamah-lily.webp'],
+    // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
+    media: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-pdp-shamamah-2.webp', '/assets/hoa-pdp-shamamah-3.webp', '/assets/hoa-pdp-shamamah-4.webp', '/assets/hoa-shamamah-lily.webp'],
     description: "Jasmine, gilded columns and the hush of a palace garden.",
     sizes: { 'Eau de Parfum': 4700 },
     reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]

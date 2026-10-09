@@ -60,7 +60,10 @@
   elsif pdp.discount_percent > 0 and pdp.discount_percent < 90
     assign save_pct = pdp.discount_percent
     assign price_share = 100 | minus: save_pct
-    assign compare_price = current_variant.price | times: 100 | divided_by: price_share
+    assign compare_price = current_variant.price | times: 1.0 | divided_by: price_share | ceil | times: 100
+    # MRP rounded up to a clean ₹100 (2026-10-09), e.g. ₹3,600 → ₹4,000 (prices are in paise)
+    assign compare_price = compare_price | divided_by: 10000.0 | ceil | times: 10000
+    assign save_pct = compare_price | minus: current_variant.price | times: 100.0 | divided_by: compare_price | round
   endif
   assign on_sale = false
   if compare_price > current_variant.price
@@ -332,16 +335,15 @@
         {%- endif -%}
 
         {%- comment -%}
-          Price: the selling price is the largest figure in the column; the MRP sits beside it, small and
-          struck; the saving is a solid pill on its own line so it reads as a gain, not a footnote.
+          Price (user reference, 2026-10-09): "₹3,600 ~₹4,000~ [Save ₹400]" on one line, the saving a solid
+          green pill; "MRP. (Incl. of all tax)" small and grey underneath.
         {%- endcomment -%}
         <div class="pdp-price" data-pdp-hero-item>
           <span class="pdp-price__amount" data-pdp-price>{{ current_variant.price | money }}</span>
           <s class="pdp-price__compare" data-pdp-compare{% unless on_sale %} hidden{% endunless %}><span class="pdp-sr">MRP </span>{{ compare_price | money }}</s>
+          <span class="pdp-savings" data-pdp-savings{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}Save {{ save_amount | money }}{% endif %}</span>
           <span class="pdp-price__note">
-            <span class="pdp-savings" data-pdp-savings{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}You save {{ save_amount | money }}{% endif %}</span>
-            <span class="pdp-price__save" data-pdp-save{% unless on_sale %} hidden{% endunless %}>{% if on_sale %}{{ save_pct }}% off{% endif %}</span>
-            {%- if cart.taxes_included or pdp.use_mock %}<span class="pdp-price__tax">Inclusive of all taxes</span>{% endif -%}
+            {%- if cart.taxes_included or pdp.use_mock %}<span class="pdp-price__tax">MRP. (Incl. of all tax)</span>{% endif -%}
           </span>
           {%- if sale_message != blank -%}
             <span class="pdp-price__offer" data-pdp-offer{% unless on_sale %} hidden{% endunless %}>{{ sale_message }}</span>

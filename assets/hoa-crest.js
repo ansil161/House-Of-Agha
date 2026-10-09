@@ -152,22 +152,19 @@ var HOA_CREST_CONFIG = {
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.9;
+    // Neutral rendering, as a standard glTF viewer (user 2026-10-09: "the exact 3D file, no effect from our side,
+    // the exact metallic gold"): Khronos PBR Neutral tone mapping keeps the file's base colour true, exposure 1.
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1;
     renderer.setClearColor(0x000000, 0);
 
     var scene = new THREE.Scene();
     var pmrem = new THREE.PMREMGenerator(renderer);
+    // The file's own look (user 2026-10-09: "exact 3D file glazing, not added from our side"): the GLB stores only its
+    // material (metal 1, roughness 0.22, its gold) and no lights, so the glaze comes from reflecting a viewer's studio.
+    // This is the standard neutral glTF-viewer studio (three.js RoomEnvironment), unmodified: no added strips or lights.
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     pmrem.dispose();
-
-    var key = new THREE.DirectionalLight(0xfff0d6, 2.2);   // warm key, upper left front
-    key.position.set(-3, 3.5, 4);
-    scene.add(key);
-    var rim = new THREE.DirectionalLight(0xff8a2a, 2.6);   // orange rim, behind right
-    rim.position.set(3.5, 1.5, -3);
-    scene.add(rim);
-    scene.add(new THREE.AmbientLight(0xffe2bd, 0.35));     // soft fill
 
     // a long lens: little perspective skew away from the screen centre
     var FOV = 18, DIST = 20;
@@ -215,8 +212,7 @@ var HOA_CREST_CONFIG = {
       dims = box.getSize(new THREE.Vector3());
       model.position.sub(box.getCenter(new THREE.Vector3()));
       fit.add(model);
-      model.traverse(function (o) { if (o.isMesh && o.material) o.material.envMapIntensity = 0.6; });
-
+      
       // landed below the hero (reload, anchor): no lift-off, it is simply there
       if (reduceMotion || window.scrollY > window.innerHeight * 0.5) introStart = 0;
 

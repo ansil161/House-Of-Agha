@@ -1,15 +1,51 @@
 {% comment %}
   Campaign diptych: full-bleed, edge to edge, no heading. Each "panel" block is one
-  campaign photo with its fragrance name and a link to the product. Each panel spans
-  the full width, one after another. Styles live in assets/hoa-home.css
-  (search "Campaign diptych").
+  campaign photo with its name, an optional tagline and a link. 2026-10-09: the photos
+  stand VERTICAL, side by side, each whole at its own aspect ratio (--ar), same height,
+  across the full width (no black bands); phones stack them. Styles live in assets/hoa-home.css
+  (search "Campaign diptych"). The rounded-card design that briefly replaced this now lives in
+  the Discover section (hoa-families).
 {% endcomment %}
 {%- assign panels = section.blocks | where: 'type', 'panel' -%}
-{%- if panels.size > 0 -%}
-<section class="hoa-campaign" id="campaign">
+{%- if panels.size > 0 and section.settings.layout == 'split' -%}
+{%- comment -%}
+  Split (2026-10-09, user): one row per panel, photo on one half and a solid colour panel with the
+  copy on the other; rows alternate sides (photo left, then right). Phones: photo, then the copy.
+  Styles: assets/hoa-home.css (search "Campaign split").
+{%- endcomment -%}
+<section class="hoa-csplit" id="campaign">
   {%- for block in panels limit: 3 -%}
     {%- assign b = block.settings -%}
-    <a class="hoa-campaign__panel{% if b.fit == 'frame' %} hoa-campaign__panel--frame{% endif %}" href="{{ b.url | default: '#' }}" style="--focus: {{ b.focus | default: '50% 30%' }}" {{ block.shopify_attributes }}>
+    {%- assign flip = forloop.index | modulo: 2 -%}
+    <article class="hoa-csplit__row{% if flip == 0 %} hoa-csplit__row--flip{% endif %}" style="--focus: {{ b.focus | default: '50% 30%' }}; --panel: {{ b.panel_bg | default: '#ECE4D8' }}; --panel-ink: {{ b.panel_ink | default: '#1c1612' }}" {{ block.shopify_attributes }}>
+      <a class="hoa-csplit__media" href="{{ b.url | default: '#' }}" tabindex="-1" aria-hidden="true">
+        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: '', sizes: '(min-width: 750px) 50vw, 100vw' -%}
+      </a>
+      <div class="hoa-csplit__panel">
+        <div class="hoa-csplit__copy">
+          <span class="hoa-csplit__index" data-hoa-reveal>{{ forloop.index | prepend: '0' | slice: -2, 2 }} / {{ panels.size | at_most: 3 | prepend: '0' | slice: -2, 2 }}</span>
+          {%- if b.kicker != blank -%}<p class="hoa-csplit__kicker" data-hoa-reveal>{{ b.kicker }}</p>{%- endif -%}
+          <h3 class="hoa-csplit__name" data-hoa-reveal>{{ b.name }}</h3>
+          {%- if b.text != blank -%}<p class="hoa-csplit__text" data-hoa-reveal>{{ b.text }}</p>{%- endif -%}
+          <a class="hoa-csplit__cta" href="{{ b.url | default: '#' }}" data-hoa-reveal>
+            <span>Discover {{ b.name }}</span>
+            <span class="hoa-csplit__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </article>
+  {%- endfor -%}
+</section>
+{%- elsif panels.size > 0 -%}
+{%- assign ar_sum = 0.0 -%}
+{%- for block in panels limit: 3 -%}
+  {%- if block.settings.image != blank -%}{%- assign ar_sum = ar_sum | plus: block.settings.image.aspect_ratio -%}{%- else -%}{%- assign one_ar = block.settings.w | times: 1.0 | divided_by: block.settings.h -%}{%- assign ar_sum = ar_sum | plus: one_ar -%}{%- endif -%}
+{%- endfor -%}
+<section class="hoa-campaign" id="campaign" style="--ar-sum: {{ ar_sum | round: 4 }}">
+  {%- for block in panels limit: 3 -%}
+    {%- assign b = block.settings -%}
+    {%- if b.image != blank -%}{%- assign p_ar = b.image.aspect_ratio -%}{%- else -%}{%- assign p_ar = b.w | times: 1.0 | divided_by: b.h -%}{%- endif -%}
+    <a class="hoa-campaign__panel{% if b.fit == 'frame' %} hoa-campaign__panel--frame{% endif %}" href="{{ b.url | default: '#' }}" style="--focus: {{ b.focus | default: '50% 30%' }}; --ar: {{ p_ar | round: 4 }}" {{ block.shopify_attributes }}>
       {%- if b.fit == 'frame' -%}
         {%- comment -%} Tall photo: blurred copy fills the width, the photo itself sits whole-height on the right. {%- endcomment -%}
         <span class="hoa-campaign__backdrop" aria-hidden="true">
@@ -19,11 +55,12 @@
           {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 750px) 60vw, 100vw' -%}
         </span>
       {%- else -%}
-        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '100vw' -%}
+        {%- render 'hoa-img', name: b.asset, image: b.image, w: b.w, h: b.h, alt: b.alt, sizes: '(min-width: 750px) 60vw, 100vw' -%}
       {%- endif -%}
       <span class="hoa-campaign__cap">
         {%- if b.kicker != blank -%}<span class="hoa-campaign__kicker">{{ b.kicker }}</span>{%- endif -%}
         <span class="hoa-campaign__name">{{ b.name }}</span>
+        {%- if b.tagline != blank -%}<span class="hoa-campaign__tagline">{{ b.tagline }}</span>{%- endif -%}
         <span class="hoa-campaign__cta">Discover <span aria-hidden="true">&rarr;</span></span>
       </span>
     </a>
@@ -36,7 +73,15 @@
   "name": "HOA Campaign",
   "tag": "div",
   "class": "hoa-campaign-section",
-  "settings": [],
+  "settings": [
+    {
+      "type": "select", "id": "layout", "label": "Layout", "default": "split",
+      "options": [
+        { "value": "split", "label": "Split: photo half + colour panel half, alternating" },
+        { "value": "diptych", "label": "Full-width photos" }
+      ]
+    }
+  ],
   "blocks": [
     {
       "type": "panel",
@@ -47,8 +92,12 @@
         { "type": "number", "id": "w", "label": "Asset width", "default": 1600 },
         { "type": "number", "id": "h", "label": "Asset height", "default": 2000 },
         { "type": "text", "id": "alt", "label": "Alt text" },
-        { "type": "text", "id": "kicker", "label": "Kicker", "default": "Eau de Parfum" },
-        { "type": "text", "id": "name", "label": "Fragrance name" },
+        { "type": "text", "id": "kicker", "label": "Kicker" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "tagline", "label": "Tagline (under the name)" },
+        { "type": "textarea", "id": "text", "label": "Split layout: short line" },
+        { "type": "color", "id": "panel_bg", "label": "Split layout: panel colour", "default": "#ECE4D8" },
+        { "type": "color", "id": "panel_ink", "label": "Split layout: panel text colour", "default": "#1c1612" },
         { "type": "url", "id": "url", "label": "Link" },
         { "type": "text", "id": "focus", "label": "Image focus (CSS object-position)", "default": "50% 30%" },
         {

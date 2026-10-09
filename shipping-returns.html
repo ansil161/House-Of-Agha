@@ -433,8 +433,11 @@ setTimeout(still,4000);
   <div class="hoa-wrap">
 
     <div class="hoa-footer__split">
-      <section class="hoa-footer__letter" aria-labelledby="hoa-footer-letter-title">
-        <a href="/" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="assets/agha-logo.avif" alt="House of Agha" width="500" height="156" loading="lazy"></a>
+      <section class="hoa-footer__letter" aria-labelledby="hoa-footer-letter-title"><a href="/" class="footer-logo hoa-footer__logo hoa-footer__logo--3d" aria-label="House of Agha, home">
+          <span class="hoa-footer__crest" data-hoa-footer-crest data-src="assets/agha-crest.glb"><img class="hoa-footer__crest-flat" src="assets/agha-logo-crest.webp" alt="" width="137" height="156" loading="lazy"></span>
+          <img class="hoa-footer__word" src="assets/agha-logo-word.webp" alt="House of Agha" width="316" height="156" loading="lazy">
+        </a>
+        <script src="assets/hoa-footer-crest.js" defer></script>
         <p class="hoa-footer__eyebrow">The House Letter</p>
         <h2 class="hoa-footer__display" id="hoa-footer-letter-title">Made to linger.<br><span>Written to you once a month.</span></h2><form method="post" action="/" accept-charset="UTF-8" class="hoa-footer__form" novalidate><input type="hidden" name="form_type" value="customer"><input type="hidden" name="contact[tags]" value="newsletter">
           <label class="hoa-footer__field" for="hoa-footer-email">

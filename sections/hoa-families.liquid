@@ -27,11 +27,15 @@
         <a class="hoa-family" href="{{ b.url | default: routes.all_products_collection_url }}" data-hoa-reveal style="transition-delay: {{ forloop.index0 | times: 90 }}ms" {{ block.shopify_attributes }}>
           <span class="hoa-family__media">
             {%- render 'hoa-img', name: b.asset, image: b.image, w: 1200, h: 1600, alt: b_alt, sizes: '(min-width: 961px) 33vw, 76vw' -%}
-            <span class="hoa-family__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
           </span>
+          {%- comment -%} 2026-10-09 card design (user): copy + cream pill sit centred over the photo's foot. {%- endcomment -%}
           <span class="hoa-family__body">
-            <span class="hoa-family__title">{{ b.title }}<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 11L11 3M11 3H4.5M11 3V9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="hoa-family__title">{{ b.title }}</span>
             {%- if b.names != blank -%}<span class="hoa-family__names">{{ b.names }}</span>{%- endif -%}
+            <span class="hoa-family__cta">
+              <span>{{ b.cta | default: 'Discover' }}</span>
+              <span class="hoa-family__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
           </span>
         </a>
       {%- endfor -%}
@@ -60,6 +64,7 @@
       "settings": [
         { "type": "text", "id": "title", "label": "Collection" },
         { "type": "text", "id": "names", "label": "Short line" },
+        { "type": "text", "id": "cta", "label": "Button label", "default": "Discover" },
         { "type": "url", "id": "url", "label": "Link" },
         { "type": "image_picker", "id": "image", "label": "Image (3:4)" },
         { "type": "text", "id": "asset", "label": "Theme asset (when no image is picked)" },

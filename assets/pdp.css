@@ -5386,3 +5386,57 @@ html:has(.pdp) body {
 @media (min-width: 769px) and (prefers-reduced-motion: reduce) {
   .pdp-tiles__btn img, .pdp-tiles__btn:hover img { transform: none; transition: none; }
 }
+
+/* ===== Price row, user reference 2026-10-09 =====
+   "₹3,600 ~₹4,000~ [Save ₹400]" on one line: bold black price, grey struck MRP, solid green
+   pill; "MRP. (Incl. of all tax)" small and grey on the line below. Last in the file on purpose:
+   it overrides the older console / refine price layers above. */
+body .pdp-console .pdp-price,
+body .pdp-info .pdp-price { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; row-gap: 6px; }
+body .pdp-console .pdp-price__amount,
+body .pdp-info .pdp-price__amount {
+  font-family: var(--font-sans);
+  font-size: clamp(1.9rem, 2.4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+body .pdp-console .pdp-price__compare,
+body .pdp-info .pdp-price__compare {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+  font-weight: 400;
+  color: #8a8a8a;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+body .pdp-console .pdp-savings,
+body .pdp-info .pdp-savings {
+  display: inline-flex;
+  align-items: center;
+  height: auto;
+  margin: 0;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: #1f9d3a;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}
+body .pdp-console .pdp-savings[hidden],
+body .pdp-info .pdp-savings[hidden] { display: none; }
+body .pdp-console .pdp-price__note,
+body .pdp-info .pdp-price__note { flex-basis: 100%; margin: 0; font-size: 0.82rem; }
+body .pdp-console .pdp-price__tax,
+body .pdp-info .pdp-price__tax { color: #9a9a9a; }
+body .pdp-console .pdp-price__tax::before,
+body .pdp-info .pdp-price__tax::before { content: none; }
+@media (max-width: 749px) {
+  body .pdp-hero .pdp-savings { padding: 4px 10px; font-size: 0.85rem; }
+}

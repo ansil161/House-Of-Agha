@@ -67,7 +67,13 @@
   endif
   assign description_html = product.description | default: mock.description_html
 
-  # Notes, normalised to "A, B, C"
+  # Notes, normalised to "A, B, C". Empty metafield → the live-store notes for this handle
+  # (snippets/agha-store-notes) → mock.
+  capture store_notes_json
+    render 'agha-store-notes'
+  endcapture
+  assign store_notes = store_notes_json | parse_json
+  assign store_note = store_notes[product.handle]
   assign note_keys = 'top_notes,heart_notes,base_notes' | split: ','
   for k in note_keys
     assign fld = mf[k]
@@ -88,6 +94,8 @@
           endif
         endfor
       endif
+    elsif store_note[k] != blank
+      assign joined = store_note[k]
     else
       assign joined = mock[k]
     endif

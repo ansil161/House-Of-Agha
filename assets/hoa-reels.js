@@ -502,7 +502,10 @@
       }).join('');
       document.body.insertAdjacentHTML('beforeend', '<svg id="hoa-note-icons" width="0" height="0" style="position:absolute" aria-hidden="true">' + sym + '</svg>');
     })();
-    var noteIcon = function (key) {
+    // Notes show the ingredient photo (assets/note-<key>.jpg, user 2026-10-09); "leaf" has no photo
+    // and keeps its line icon. base = the theme's asset folder (data-rvp-note-base on the panel).
+    var noteIcon = function (key, base) {
+      if (key !== 'leaf') return '<span class="hoa-rvp__note-icon hoa-rvp__note-icon--photo" aria-hidden="true"><img src="' + esc((base || '/assets/') + 'note-' + key + '.jpg') + '" alt="" width="64" height="64" loading="lazy" decoding="async"></span>';
       return '<span class="hoa-rvp__note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><use href="#hoa-ni-' + key + '"/></svg></span>';
     };
 
@@ -584,7 +587,7 @@
             return '<div class="hoa-rvp__tier"><span class="hoa-rvp__tier-label">' + t[0] + '</span><ul class="hoa-rvp__note-list" role="list">' +
               t[1].map(function (x) {
                 x = x.trim();
-                return '<li class="hoa-rvp__note">' + noteIcon(noteKey(x)) + '<span>' + esc(x) + '</span></li>';
+                return '<li class="hoa-rvp__note">' + noteIcon(noteKey(x), body.getAttribute('data-rvp-note-base')) + '<span>' + esc(x) + '</span></li>';
               }).join('') + '</ul></div>';
           }).join('') + '</div>');
       }

@@ -54,13 +54,17 @@
   const IMG_ICONS = { 'free-shipping': 1, badge: 1 };
   const icon = (name) => IMG_ICONS[name] ? `<span class="pdp-img-icon" style="--pdp-icon: url('/assets/hoa-icon-${name}.png')" aria-hidden="true"></span>` : `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
 
+  // Demo saving, preview only (user, 2026-10-09: "₹3,600 ~₹4,000~ Save ₹400"): a 10% MRP, rounded up to ₹100,
+  // when the catalog has no real compare price. Same rule as mock mode in sections/agha-pdp-main.liquid.
+  const MOCK_DISCOUNT = 10;
+  const mockMrp = (rupees) => Math.ceil(rupees * 100 / (100 - MOCK_DISCOUNT) / 100) * 100;
   // Mirrors Shopify's product.variants JSON (prices in minor units)
   const variants = Object.entries(product.sizes).map(([size, price], i) => ({
     id: 1000 + i,
     title: size,
     options: [size],
     price: price == null ? null : price * 100,
-    compare_at_price: product.compare && product.compare[size] ? product.compare[size] * 100 : null,
+    compare_at_price: product.compare && product.compare[size] ? product.compare[size] * 100 : (price == null ? null : mockMrp(price) * 100),
     available: !(product.soldOut || []).includes(size)   // sold-out sizes, from the catalog (live store)
   }));
   const current = variants.find((v) => v.title === '50 ML' && v.available) || variants.find((v) => v.available) || variants[0];
@@ -119,7 +123,7 @@
 
   /* ---------------------------------------------------------------- 01 Hero */
   const hero = `
-  <section class="pdp pdp-hero" data-pdp-main data-money-format="₹{{amount_no_decimals}}" data-product-title="${esc(niceTitle)}" data-product-handle="${handle}">
+  <section class="pdp pdp-hero" data-pdp-main data-mock-discount="${MOCK_DISCOUNT}" data-money-format="₹{{amount_no_decimals}}" data-product-title="${esc(niceTitle)}" data-product-handle="${handle}">
     <div class="container">
       <nav class="pdp-breadcrumb" aria-label="Breadcrumb" data-pdp-hero-item>
         <a href="/index.html">Home</a><span aria-hidden="true">/</span>
@@ -180,10 +184,9 @@
           <div class="pdp-price" data-pdp-hero-item>
             <span class="pdp-price__amount" data-pdp-price>${money(current.price == null ? null : current.price / 100)}</span>
             <s class="pdp-price__compare" data-pdp-compare${onSale ? '' : ' hidden'}><span class="pdp-sr">MRP </span>${onSale ? money(current.compare_at_price / 100) : ''}</s>
+            <span class="pdp-savings" data-pdp-savings${onSale ? '' : ' hidden'}>${onSale ? 'Save ' + money((current.compare_at_price - current.price) / 100) : ''}</span>
             <span class="pdp-price__note">
-              <span class="pdp-savings" data-pdp-savings${onSale ? '' : ' hidden'}>${onSale ? 'You save ' + money((current.compare_at_price - current.price) / 100) : ''}</span>
-              <span class="pdp-price__save" data-pdp-save${onSale ? '' : ' hidden'}>${onSale ? Math.round(((current.compare_at_price - current.price) * 100) / current.compare_at_price) + '% off' : ''}</span>
-              <span class="pdp-price__tax">Inclusive of all taxes</span>
+              <span class="pdp-price__tax">MRP. (Incl. of all tax)</span>
             </span>
           </div>
 
@@ -524,15 +527,13 @@
               ${text ? `<span class="pdp-tf__block-text">${esc(text)}</span>` : ''}
             </span>
           </li>`;
+  // Mirrors snippets/agha-note-image.liquid: needle:key pairs, first match wins
+  const NOTE_PAIRS = 'rose:rose,iris:iris,orris:iris,pepper:pepper,oud:oud,agar:oud,musk:musk,sandal:sandalwood,saffron:saffron,bergamot:bergamot,cardamom:cardamom,jasmin:jasmine,amber:amber,lavender:lavender,neroli:neroli,orange blossom:neroli,mandarin:mandarin,lime:lime,lemon:lemon,passion:passion-fruit,patchouli:patchouli,benzoin:benzoin,leather:leather,suede:leather,vanilla:vanilla,cucumber:cucumber,currant:black-currant,basil:basil,sage:sage,frankincense:frankincense,olibanum:frankincense,tobacco:tobacco,oak:oak,nutmeg:nutmeg,tiar:tiare,freesia:freesia,tonka:tonka,cedar:cedarwood,sea weed:seaweed,seaweed:seaweed,honey:honey,cinnamon:cinnamon,wood:woody'
+    .split(',').map((p) => p.split(':'));
   const noteKey = (name) => {
     const n = name.toLowerCase();
-    if (n.includes('rose')) return 'rose';
-    if (n.includes('iris')) return 'iris';
-    if (n.includes('pepper')) return 'pepper';
-    if (n.includes('oud') || n.includes('agar')) return 'oud';
-    if (n.includes('musk')) return 'musk';
-    if (n.includes('sandal')) return 'sandalwood';
-    return n.trim().replace(/[^a-z0-9]+/g, '-');
+    const hit = NOTE_PAIRS.find(([needle]) => n.includes(needle));
+    return hit ? hit[1] : n.trim().replace(/[^a-z0-9]+/g, '-');
   };
   // One act of the arc above the bottle (mirrors the Liquid): the first act is shown, the rest wait on the left
   const tfNotesBlock = (title, list, act) => {
@@ -871,7 +872,14 @@
   // Viewer panel (mirrors the <template data-hoa-reel-panel> in sections/hoa-reels.liquid)
   function reelPanelHtml(h, s) {
     const p = AGHA_PRODUCTS[h] || {};
-    const shots = (p.images || []).slice(0, 6);
+    // Same hand-picked four as sections/hoa-reels.liquid: different, vertical, people first (user, 2026-10-09)
+    const REEL_SHOTS = {
+      'oud-fury': ['hoa-closing-oud-fury', 'hoa-alt-oud-fury', 'hoa-pdp-oud-fury-1', 'hoa-pgal-oud-fury-2'],
+      'agha-blue': ['hoa-pgal-agha-blue-3', 'hoa-alt-agha-blue', 'hoa-pgal-agha-blue-2', 'hoa-agha-blue-portrait'],
+      'oud-of-dark-paradise': ['hoa-alt-dark-paradise', 'hoa-pdp-dark-paradise-2', 'hoa-pdp-dark-paradise-4', 'hoa-pdp-dark-paradise-5'],
+      'maha': ['hoa-pgal-maha-3', 'hoa-pgal-maha-2', 'hoa-alt-maha', 'hoa-maha-portrait']
+    };
+    const shots = REEL_SHOTS[h] ? REEL_SHOTS[h].map((n) => `/assets/${n}-sm.webp`) : (p.images || []).slice(0, 4);
     return `
             <template data-hoa-reel-panel>
               <div class="hoa-rvp__gallery" data-rvp-gallery>${shots.map((src) => `<figure class="hoa-rvp__shot"><img src="${src}" alt="${esc(s.name)}" decoding="async"></figure>`).join('')}</div>
@@ -934,14 +942,14 @@
     'shamamah': [
       ["hoa-pgal-shamamah-hero", 1638, 2048, "Shamamah on old wood with moss, sandalwood and lavender", "50% 22%"],
       ["hoa-pgal-shamamah-2", 1000, 1250, "Shamamah on green satin"],
-      ["hoa-pgal-shamamah-3", 1000, 1250, "Shamamah lying on green satin"]
+      ["hoa-pgal-shamamah-garden", 1000, 1333, "Shamamah on a stone ledge in a palace garden"]
     ],
     'oud-fury': [
-      ["hoa-pgal-oud-fury-hero", 1792, 2400, "Oud Fury by a palace window at dusk", "50% 60%"],
       ["hoa-pgal-oud-fury-2", 1200, 1500, "A hand raises Oud Fury on a crystal stand with smoking agarwood"],
       ["hoa-alt-oud-fury", 1080, 1350, "Oud Fury among pieces of agarwood"],
       ["hoa-oud-fury-smoke", 2000, 1125, "Oud Fury in smoke and embers"],
-      ["hoa-hero-oud-fury", 2000, 1125, "Oud Fury on agarwood in amber light"]
+      ["hoa-hero-oud-fury", 2000, 1125, "Oud Fury on agarwood in amber light"],
+      ["hoa-pgal-oud-fury-hero", 1792, 2400, "Oud Fury by a palace window at dusk", "50% 60%"]
     ],
     'oud-of-dark-paradise': [
       ["hoa-pgal-dark-paradise-lava", 1600, 1600, "Oud of Dark Paradise on black rock among rivers of lava", "50% 50%"],
@@ -949,7 +957,7 @@
       ["hoa-pgal-dark-paradise-chains", 1080, 1440, "Oud of Dark Paradise wrapped in black chain"]
     ],
     'tobacco-enigma': [
-      ["hoa-tobacco-enigma-portrait", 1200, 1607, "Tobacco Enigma among tobacco leaves", "50% 45%"],
+      ["hoa-pgal-tobacco-enigma-tree", 1000, 1000, "Tobacco Enigma hanging from a tree in the forest", "50% 45%"],
       ["hoa-alt-tobacco-enigma", 1080, 1350, "Tobacco Enigma on moss in a forest"],
       ["hoa-ingredients-tobacco", 969, 969, "Tobacco Enigma with its ingredients"],
       ["hoa-shop-rec-tobacco-enigma", 1086, 1448, "Tobacco Enigma on stone"]
@@ -977,55 +985,58 @@
     <div class="hoa-bnf__viewport" data-hoa-bnf-viewport><ul class="hoa-bnf__track" data-hoa-bnf-track role="list">${bnfItems}</ul></div>
   </section>`;
 
-  /* ------------------------------------------ Fragrance notes (light cards) */
+  /* ------------------------------------------ Scent notes (cards tucked behind the bottle) */
   // Mirrors sections/fragrance-notes.liquid with the product.json defaults (notes_cards).
-  // The product's own notes replace a card's caption, like the Liquid's metafield step.
+  // The product's own notes replace a card's fallback list, like the Liquid's pdp data step.
   // The section's style and script blocks are read from the .liquid file itself (below).
-  const FNL_ICONS = {
-    top: '<path d="M5 19c8 0 14-6 14-14C11 5 5 11 5 19z"/><path d="M5 19l7-7"/>',
-    heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
-    base: '<path d="M12 3c3 3.5 5 6.4 5 9.5a5 5 0 0 1-10 0C7 9.4 9 6.5 12 3z"/><path d="M5 21h14"/>',
-    none: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'
+  // Note photos cut from the reference poster (mirrors the snippet's set: 'sn')
+  const SN_PHOTOS = 'saffron,bergamot,lavender,oud,jasmine,neroli,cardamom,sandalwood,amber,basil,benzoin,black-currant,cinnamon,cucumber,freesia,honey,lemon,mandarin,nutmeg,oak,passion-fruit,patchouli,sage,tiare,tobacco,tonka,vanilla,woody,frankincense,seaweed,leather,cedarwood'.split(',');
+  const snKey = (x) => { const k = noteKey(x) === 'lime' ? 'bergamot' : noteKey(x); return SN_PHOTOS.includes(k) ? k : ''; };
+  // Per-product still life (mirrors pile_keys in the Liquid); others show the poster's set
+  const SN_PILE_KEYS = ['oud-fury', 'agha-blue', 'dark-paradise', 'maha', 'sea-smoke', 'tobacco-enigma'];
+  const snPile = (side, dflt) => {
+    const k = handle.replace('oud-of-', '');
+    return SN_PILE_KEYS.includes(k) ? `/assets/sn-pile-${k}-${side}.webp` : `/assets/${dflt}`;
   };
-  const fnlRots = [5, -6, -4, 6];
-  const fnlData = [
-    { style: 'white', label: 'Top notes', title: 'Top', caption: notes.top || 'Bergamot, Pink Pepper', glow: '#ffe08a', src: 'top' },
-    { style: 'black', label: 'Heart notes', title: 'Heart', caption: notes.heart || 'Rose, Jasmine', glow: '#ffc2d1', src: 'heart' },
-    { style: 'accent', label: 'Base notes', title: 'Base', caption: notes.base || 'Oud, Amber, Musk', glow: '#f2c48d', src: 'base' },
-    { style: 'grey', label: 'On skin', title: '12h', caption: 'Longevity', glow: '#d6deea', src: 'none' }
+  const snData = [
+    { label: 'Top notes', list: tfTop, bg: '#ffffff', ink: '#2b2620', rot: -6 },
+    { label: 'Heart notes', list: tfHeart, bg: '#b9c7a5', ink: '#2c3a24', rot: 7 },
+    { label: 'Base notes', list: tfBase, bg: '#ead08a', ink: '#3d2f17', rot: -9 }
   ];
-  const fnlChips = (txt) => txt.split(',').map((x) => x.trim()).filter(Boolean).map((x) => `<li data-fnl-chip>${esc(x)}</li>`).join('');
-  const fnlBand = fnlData.map((c) => `${esc(c.title)} <i>✦</i> `).join('');
-  const fnlPins = fnlData.map((c, i) => `
-      <span class="fnl-pin fnl-pin--${i % 2 ? 'left' : 'right'}" data-fnl-pin data-slot="${i + 1}" aria-hidden="true"><i class="fnl-pin__line" data-fnl-line></i><i class="fnl-pin__dot" data-fnl-dot></i></span>`).join('');
-  const fnlCards = fnlData.map((c, i) => `
-        <li class="fnl-card fnl-card--${c.style}" data-fnl-card data-slot="${i + 1}" data-rot="${fnlRots[i]}" data-glow="${c.glow}" style="--rot: ${fnlRots[i]}deg;">
-          <div class="fnl-card__in" data-fnl-in>
-            <div class="fnl-card__body">
-              <span class="fnl-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${FNL_ICONS[c.src]}</svg></span>
-              <p class="fnl-card__label">${c.label}</p>
-              <h3 class="fnl-card__title">${esc(c.title)}</h3>
-              <ul class="fnl-card__chips" role="list">${fnlChips(c.caption)}</ul>
+  // The notes depend on the product; a card without notes is left out, none at all = no section
+  const snCards = snData.map((c, i) => !c.list ? '' : `
+          <li class="sn-card" data-slot="${i + 1}" style="--rot: ${c.rot}deg; --d: ${(0.25 + i * 0.16).toFixed(2)}s; --c-bg: ${c.bg}; --c-ink: ${c.ink};">
+            <div class="sn-card__in">
+              <div class="sn-card__body">
+                <h3 class="sn-card__label">${c.label}</h3>
+                <ul class="sn-card__notes" role="list">${c.list.split(',').map((x) => x.trim()).filter(Boolean).slice(0, 3).map((x) => `
+                  <li class="sn-note"><span class="sn-note__pic" aria-hidden="true">${esc(x[0])}<img src="${snKey(x) ? `/assets/sn-note-${snKey(x)}.webp` : `/assets/note-${noteKey(x)}.jpg`}" alt="" width="120" height="120" loading="lazy" onerror="this.remove()"></span><span class="sn-note__name">${esc(x)}</span></li>`).join('')}
+                </ul>
+              </div>
             </div>
-          </div>
-        </li>`).join('');
-  const notesCards = `
-  <div class="shopify-section fnl-section">
-  <section class="fnl" id="fnl-preview" style="--fnl-bg: #f4f4f2; --fnl-accent: #c9a96a; --fnl-accent-ink: #111111;" data-fnl aria-labelledby="fnl-preview-title">
-    <header class="fnl__head">
-      <p class="fnl__eyebrow">Scent profile</p>
-      <h2 class="fnl__title" id="fnl-preview-title">What's inside</h2>
-    </header>
-    <div class="fnl__stage" data-fnl-stage style="--fnl-aura: ${fnlData[0].glow};">
-      <div class="fnl__band" data-fnl-band aria-hidden="true">${`<span>${fnlBand}</span>`.repeat(4)}</div>
-      <div class="fnl__aura" aria-hidden="true"></div>
-      <div class="fnl__bottle" data-fnl-bottle>
-        <div class="fnl__spritz" data-fnl-spritz aria-hidden="true">${'<i></i>'.repeat(22)}</div>
-        <div class="fnl__float"><img class="fnl__img" src="/assets/hoa-bottle-${handle}.webp" width="289" height="760" loading="lazy" decoding="async" alt="${esc(niceTitle)} bottle"></div>
-        <div class="fnl__shadow" aria-hidden="true"></div>
-      </div>${fnlPins}
-      <ul class="fnl__cards" role="list">${fnlCards}
-      </ul>
+          </li>`).join('');
+  const notesCards = !snData.some((c) => c.list) ? '' : `
+  <div class="shopify-section sn-section">
+  <section class="sn" id="sn-preview" style="--sn-bg: #f6f4ee;" data-sn aria-labelledby="sn-preview-title">
+    <div class="sn__inner">
+      <div class="sn__top">
+        <p class="sn__tagline">A fragrance crafted from nature's finest elements</p>
+        <p class="sn__brand">House of Agha</p>
+        <p class="sn__product">${esc(niceTitle)}<em>Eau de Parfum</em></p>
+      </div>
+      <header class="sn__head">
+        <h2 class="sn__title" id="sn-preview-title">Scent <span>notes</span></h2>
+        <p class="sn__sub">A bold blend of rare ingredients, crafted to leave a lasting impression.</p>
+      </header>
+      <div class="sn__stage">
+        <div class="sn__bottle">
+          <img class="sn__img" src="/assets/hoa-bottle-${handle.replace('oud-of-', '')}.webp" width="289" height="760" loading="lazy" decoding="async" alt="${esc(niceTitle)} bottle">
+          <span class="sn__shadow" aria-hidden="true"></span>
+        </div>
+        <img class="sn__pile sn__pile--oud" src="${snPile('right', 'sn-pile-oud.webp')}" width="556" height="354" loading="lazy" decoding="async" alt="">
+        <ul class="sn__cards" role="list">${snCards}
+        </ul>
+      </div>
     </div>
   </section>
   </div>`;
@@ -1047,7 +1058,7 @@
   window.AghaPDP?.init();
   if (window.HOA_BNF) window.HOA_BNF.init();
   else { const b = document.createElement('script'); b.src = '/assets/hoa-benefits.js'; document.body.appendChild(b); }
-  // Fragrance notes (light cards): reuse the section file's own <style> and <script>
+  // Scent notes: reuse the section file's own <style> and <script>
   fetch('/sections/fragrance-notes.liquid').then((r) => r.text()).then((src) => {
     // Only the top-level blocks (tag at the start of a line), not words in a comment
     const css = src.match(/^<style>\r?\n([\s\S]*?)^<\/style>/m);

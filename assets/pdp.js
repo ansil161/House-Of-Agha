@@ -452,7 +452,9 @@
         savePct = Math.round(((comparePrice - variant.price) * 100) / comparePrice);
       } else if (variant && mockPct > 0 && mockPct < 90) {
         savePct = mockPct;
-        comparePrice = Math.floor((variant.price * 100) / (100 - mockPct));
+        // MRP rounded up to a clean ₹100 (minor units), same as the Liquid
+        comparePrice = Math.ceil((variant.price * 100) / (100 - mockPct) / 10000) * 10000;
+        savePct = Math.round(((comparePrice - variant.price) * 100) / comparePrice);
       }
       const saleOn = Boolean(variant && comparePrice > variant.price);
       const save = $('[data-pdp-save]', main);
@@ -460,10 +462,10 @@
         save.hidden = !saleOn;
         if (saleOn) save.textContent = `${savePct}% off`;
       }
-      // "You save ₹X": only when the selected variant really has a compare-at price
+      // "Save ₹X" pill: only when the selected variant really has a compare-at price
       $$('[data-pdp-savings]', main).forEach((el) => {
         el.hidden = !saleOn;
-        if (saleOn) el.textContent = `You save ${formatMoney(comparePrice - variant.price, moneyFormat)}`;
+        if (saleOn) el.textContent = `Save ${formatMoney(comparePrice - variant.price, moneyFormat)}`;
       });
       $$('[data-pdp-offer]', main).forEach((el) => { el.hidden = !saleOn; });
 

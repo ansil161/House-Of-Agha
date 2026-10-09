@@ -14,7 +14,16 @@
 
     <div class="hoa-footer__split">
       <section class="hoa-footer__letter" aria-labelledby="hoa-footer-letter-title">
-        <a href="{{ routes.root_url }}" class="footer-logo hoa-footer__logo" aria-label="House of Agha, home"><img src="{{ 'agha-logo.avif' | asset_url }}" alt="House of Agha" width="500" height="156" loading="lazy"></a>
+        {%- comment -%}
+          3D logo (2026-10-09): the crest half of the lockup is the client's 3D crest turning slowly on its own,
+          no interaction (assets/hoa-footer-crest.js); the flat crest shows until it loads. Wordmark unchanged.
+          Footer only: every other logo on the site stays the flat image.
+        {%- endcomment -%}
+        <a href="{{ routes.root_url }}" class="footer-logo hoa-footer__logo hoa-footer__logo--3d" aria-label="House of Agha, home">
+          <span class="hoa-footer__crest" data-hoa-footer-crest data-src="{{ 'agha-crest.glb' | asset_url }}"><img class="hoa-footer__crest-flat" src="{{ 'agha-logo-crest.webp' | asset_url }}" alt="" width="137" height="156" loading="lazy"></span>
+          <img class="hoa-footer__word" src="{{ 'agha-logo-word.webp' | asset_url }}" alt="House of Agha" width="316" height="156" loading="lazy">
+        </a>
+        <script src="{{ 'hoa-footer-crest.js' | asset_url }}" defer></script>
         <p class="hoa-footer__eyebrow">The House Letter</p>
         <h2 class="hoa-footer__display" id="hoa-footer-letter-title">Made to linger.<br><span>Written to you once a month.</span></h2>
         {%- form 'customer', class: 'hoa-footer__form' -%}

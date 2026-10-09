@@ -374,18 +374,18 @@
     "notes_cards": {
       "type": "fragrance-notes",
       "blocks": {
-        "card_top": { "type": "note_card", "settings": { "card_style": "white", "label": "Top notes", "title": "Top", "caption": "Bergamot, Pink Pepper", "glow": "#ffe08a", "notes_source": "top" } },
-        "card_heart": { "type": "note_card", "settings": { "card_style": "black", "label": "Heart notes", "title": "Heart", "caption": "Rose, Jasmine", "glow": "#ffc2d1", "notes_source": "heart" } },
-        "card_base": { "type": "note_card", "settings": { "card_style": "accent", "label": "Base notes", "title": "Base", "caption": "Oud, Amber, Musk", "glow": "#f2c48d", "notes_source": "base" } },
-        "card_wear": { "type": "note_card", "settings": { "card_style": "grey", "label": "On skin", "title": "12h", "caption": "Longevity", "glow": "#d6deea", "notes_source": "none" } }
+        "card_top": { "type": "note_card", "settings": { "label": "Top notes", "notes_source": "top", "caption": "Saffron, Bergamot, Lavender", "card_color": "#ffffff", "text_color": "#2b2620" } },
+        "card_heart": { "type": "note_card", "settings": { "label": "Heart notes", "notes_source": "heart", "caption": "Oud, Jasmine, Neroli", "card_color": "#b9c7a5", "text_color": "#2c3a24" } },
+        "card_base": { "type": "note_card", "settings": { "label": "Base notes", "notes_source": "base", "caption": "Cardamom, Sandalwood, Amber", "card_color": "#ead08a", "text_color": "#3d2f17" } }
       },
-      "block_order": ["card_top", "card_heart", "card_base", "card_wear"],
+      "block_order": ["card_top", "card_heart", "card_base"],
       "settings": {
-        "eyebrow": "Scent profile",
-        "heading": "What's inside",
-        "background": "#f4f4f2",
-        "accent": "#c9a96a",
-        "accent_text": "#111111"
+        "tagline": "A fragrance crafted from nature's finest elements",
+        "brand": "House of Agha",
+        "product_line": "Eau de Parfum",
+        "heading": "Scent notes",
+        "subheading": "A bold blend of rare ingredients, crafted to leave a lasting impression.",
+        "background": "#f6f4ee"
       }
     },
     "gallery": {
@@ -589,10 +589,10 @@
           "type": "photo",
           "settings": {
             "products": "shamamah",
-            "asset": "hoa-pgal-shamamah-3",
-            "alt": "Shamamah lying on green satin",
+            "asset": "hoa-pgal-shamamah-garden",
+            "alt": "Shamamah on a stone ledge in a palace garden",
             "w": 1000,
-            "h": 1250
+            "h": 1333
           }
         },
         "photo_21": {
@@ -681,10 +681,10 @@
           "type": "photo",
           "settings": {
             "products": "tobacco-enigma",
-            "asset": "hoa-tobacco-enigma-portrait",
-            "alt": "Tobacco Enigma among tobacco leaves",
-            "w": 1200,
-            "h": 1607,
+            "asset": "hoa-pgal-tobacco-enigma-tree",
+            "alt": "Tobacco Enigma hanging from a tree in the forest",
+            "w": 1000,
+            "h": 1000,
             "focus": "50% 45%"
           }
         },
@@ -740,11 +740,11 @@
         "photo_18",
         "photo_19",
         "photo_20",
-        "photo_21",
         "photo_22",
         "photo_23",
         "photo_24",
         "photo_25",
+        "photo_21",
         "photo_26",
         "photo_27",
         "photo_27b",
