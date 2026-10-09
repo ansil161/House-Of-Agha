@@ -1069,3 +1069,26 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
 @media (prefers-reduced-motion: reduce) {
   .v2-world, .v2-world__zoom, .v2-world__copy, .v2-world__arrow { transition: none; }
 }
+
+/* Two worlds · still variant (V1 home, 2026-10-09: "no motion, split half half", "give the button design").
+   A fixed 50/50: each photo fills exactly its own half, nothing widens, zooms or drifts (hoa-v2.js skips it:
+   the section has no data-v2-worlds). The CTA is the site pill button (.hoa-btn). */
+.v2-worlds--still .v2-world,
+.v2-worlds--still .v2-world:hover,
+.v2-worlds--still .v2-world:focus-within { flex: 1 1 0; transition: none; }
+.v2-worlds--still .v2-world__media { left: 0; width: 100%; margin-left: 0; }
+.v2-worlds--still .v2-world__img { inset: 0; }
+.v2-worlds--still .v2-world__zoom,
+.v2-worlds--still .v2-world:hover .v2-world__zoom,
+.v2-worlds--still .v2-world:focus-within .v2-world__zoom { transform: none; filter: none; transition: none; }
+.v2-worlds--still .v2-world__copy,
+.v2-worlds--still .v2-world:hover .v2-world__copy,
+.v2-worlds--still .v2-world:focus-within .v2-world__copy { transform: none; opacity: 1; transition: none; }
+.v2-worlds--still .v2-worlds__split:has(.v2-world:hover) .v2-world:not(:hover) .v2-world__zoom { filter: none; }
+.v2-worlds--still .v2-worlds__split:has(.v2-world:hover) .v2-world:not(:hover) .v2-world__copy { opacity: 1; }
+.v2-world__btn { margin-top: clamp(18px, 2vw, 26px); align-self: flex-start; text-shadow: none; }
+/* Light photo + ink copy (Agha Blue in snow): the bottle sits mid-frame behind the copy, so a soft snow-white
+   fade rises from the foot to keep the words readable without hiding the cap and label above. */
+.v2-worlds--still .v2-world--dark .v2-world__media::after {
+  background: linear-gradient(to top, rgba(244, 245, 248, 0.9) 0%, rgba(244, 245, 248, 0.72) 30%, rgba(244, 245, 248, 0.25) 52%, rgba(244, 245, 248, 0) 66%);
+}

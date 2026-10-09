@@ -598,50 +598,57 @@
         "only_current_product": true
       }
     },
-    "campaign": {
-      "type": "hoa-campaign",
+    "worlds": {
+      "type": "hoa-v2-worlds",
+      "settings": {
+        "heading": "Two worlds of fragrance",
+        "still": true,
+        "button": true
+      },
       "blocks": {
-        "p_oud": {
-          "type": "panel",
+        "world_oud": {
+          "type": "world",
           "settings": {
-            "asset": "hoa-campaign-maha",
-            "w": 1600,
-            "h": 1986,
-            "alt": "A woman in a flowing red gown holds a bottle of Maha Eau de Parfum beneath a rose-pink arch",
-            "kicker": "Eau de Parfum",
-            "name": "Maha",
-            "text": "Blossom, warm sand and late sun through an open window.",
-            "url": "/products/maha",
-            "focus": "50% 20%",
-            "panel_bg": "#4a1418",
-            "panel_ink": "#f6e9df"
+            "label": "Oud / Intense",
+            "title": "The Oud",
+            "title_serif": "collection",
+            "notes": "Deep · Warm · Magnetic",
+            "handles": "oud-of-dark-paradise, oud-fury",
+            "cta_label": "Explore Oud",
+            "caption": "",
+            "tone": "light",
+            "asset": "hoa-world-oud-fury-wood",
+            "w": 2000,
+            "h": 1116,
+            "alt": "Oud Fury lying among wet agarwood pieces on warm sand-coloured paper, beaded with drops",
+            "focal": "0% 50%",
+            "focal_mobile": "35% 50%"
           }
         },
-        "p_fresh": {
-          "type": "panel",
+        "world_fresh": {
+          "type": "world",
           "settings": {
-            "asset": "hoa-campaign-sea-smoke",
-            "w": 1536,
-            "h": 2752,
-            "alt": "A man on a sunlit beach holds a bottle of Sea Smoke Eau de Parfum",
-            "kicker": "Eau de Parfum",
-            "name": "Sea Smoke",
-            "text": "Clear water, pale stone and salt carried in on the wind.",
-            "url": "/products/sea-smoke",
-            "focus": "50% 6%",
-            "fit": "frame",
-            "panel_bg": "#dfe9e6",
-            "panel_ink": "#14302f"
+            "label": "Fresh / Elevated",
+            "title": "The Fresh",
+            "title_serif": "collection",
+            "notes": "Clean · Modern · Effortless",
+            "handles": "agha-blue, sea-smoke",
+            "cta_label": "Explore Fresh",
+            "caption": "",
+            "tone": "dark",
+            "asset": "hoa-world-agha-blue-snow",
+            "w": 1611,
+            "h": 2000,
+            "alt": "Agha Blue resting in fresh snow between clear ice blocks, beaded with frost",
+            "focal": "50% 22%",
+            "focal_mobile": "50% 30%"
           }
         }
       },
       "block_order": [
-        "p_oud",
-        "p_fresh"
-      ],
-      "settings": {
-        "layout": "split"
-      }
+        "world_oud",
+        "world_fresh"
+      ]
     }
   },
   "order": [
@@ -653,7 +660,7 @@
     "collection",
     "discover",
     "product_film",
-    "campaign",
+    "worlds",
     "testimonials",
     "world",
     "films"

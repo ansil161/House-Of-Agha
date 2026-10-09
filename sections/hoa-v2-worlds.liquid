@@ -6,6 +6,8 @@
   (pure CSS, flex-grow); each photo is sized to the widest state, so the panels only reveal more of it
   and nothing reflows. Entrance + slow drift: assets/hoa-v2.js (initWorlds). Readable without JS.
   Fragrance names and links come from Shopify (all_products[handle]), else the shared catalog.
+  Settings used on V1 home (2026-10-09): "still" = a fixed 50/50 split with no hover widening, entrance
+  or drift; "button" = the CTA as the site's pill button (.hoa-btn) instead of the text link.
 {%- endcomment -%}
 {%- render 'hoa-v2-assets' -%}
 {%- capture catalog_json -%}{%- render 'hoa-catalog-data' -%}{%- endcapture -%}
@@ -13,7 +15,7 @@
   assign s = section.settings
   assign catalog = catalog_json | parse_json
 -%}
-<section class="v2-worlds" data-v2-worlds aria-labelledby="v2-worlds-title-{{ section.id }}">
+<section class="v2-worlds{% if s.still %} v2-worlds--still{% endif %}"{% unless s.still %} data-v2-worlds{% endunless %} aria-labelledby="v2-worlds-title-{{ section.id }}">
   <h2 class="v2-sr" id="v2-worlds-title-{{ section.id }}">{{ s.heading }}</h2>
   <div class="v2-worlds__split">
     {%- for block in section.blocks -%}
@@ -75,9 +77,13 @@
           {%- if picks != blank -%}
             <ul class="v2-world__picks" role="list" aria-label="{{ b.title | append: ' ' | append: b.title_serif | escape }}" data-v2-world-step>{{ picks }}</ul>
           {%- endif -%}
-          <a class="v2-world__cta" href="{{ cta_url }}" data-v2-world-step>
-            <span>{{ b.cta_label }}</span><span class="v2-world__arrow" aria-hidden="true"></span>
-          </a>
+          {%- if s.button -%}
+            <a class="hoa-btn{% if b.tone != 'dark' %} hoa-btn--light{% endif %} v2-world__btn" href="{{ cta_url }}" data-v2-world-step><span>{{ b.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+          {%- else -%}
+            <a class="v2-world__cta" href="{{ cta_url }}" data-v2-world-step>
+              <span>{{ b.cta_label }}</span><span class="v2-world__arrow" aria-hidden="true"></span>
+            </a>
+          {%- endif -%}
         </div>
       </article>
     {%- endfor -%}
@@ -90,7 +96,9 @@
   "class": "v2-section",
   "max_blocks": 2,
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading (screen readers only)", "default": "Two worlds of fragrance" }
+    { "type": "text", "id": "heading", "label": "Heading (screen readers only)", "default": "Two worlds of fragrance" },
+    { "type": "checkbox", "id": "still", "label": "Still 50/50 split (no motion)", "default": false },
+    { "type": "checkbox", "id": "button", "label": "Show the link as a button", "default": false }
   ],
   "blocks": [
     {
