@@ -22,6 +22,9 @@
       </div>
       <div class="hoa-section-head__side" data-hoa-reveal>
         <p class="hoa-lede">{{ s.text }}</p>
+        {%- if s.cta_label != blank -%}
+          <a class="hoa-btn" href="{{ s.cta_url | default: '/pages/the-house' }}"><span>{{ s.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
+        {%- endif -%}
       </div>
     </header>
 
@@ -88,7 +91,9 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The World of Agha" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Beyond the bottle." },
     { "type": "text", "id": "heading_serif", "label": "Heading, serif part", "default": "Into the day." },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "On a drive out of the city, in a quiet room, by the water. How the House lives once it leaves the box." }
+    { "type": "textarea", "id": "text", "label": "Text", "default": "On a drive out of the city, in a quiet room, by the water. How the House lives once it leaves the box." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Discover" },
+    { "type": "url", "id": "cta_url", "label": "Button link", "info": "Defaults to The House page." }
   ],
   "blocks": [
     {

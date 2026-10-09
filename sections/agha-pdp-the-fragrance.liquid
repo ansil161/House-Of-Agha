@@ -18,6 +18,9 @@
   wording — no description line is invented under it. The section renders nothing when
   the product has no notes and no claims.
 
+  2026-10-09 (later): "claims_only" (on by default) — the user removed The Fragrance (heading,
+  notes arc, bottle) and kept ONLY the claim icons row. Untick it to bring the full section back.
+
   Motion: assets/pdp.js (heading, then the bottle scales up while the trail lines draw in
   and the particles fade on, then the side items read in toward the bottle; the bottle
   also carries a slow, continuous idle drift in CSS, independent of scroll).
@@ -117,7 +120,25 @@
   assign right_blocks = right_blocks | split: '~'
 -%}
 
-{%- if left_blocks.size > 0 or right_blocks.size > 0 -%}
+{%- if s.claims_only -%}
+{%- if right_blocks.size > 0 -%}
+<section class="pdp pdp-section pdp-tf pdp-tf--claims" data-pdp-tf aria-label="{{ product.title | escape }}">
+  <div class="container">
+    <div class="pdp-tf__stage">
+      <ol class="pdp-tf__col pdp-tf__col--right">
+        {%- for b in right_blocks -%}
+          {%- assign parts = b | split: '¦' -%}
+          <li class="pdp-tf__block" data-pdp-tf-block data-side="right">
+            <span class="pdp-tf__block-icon">{% render 'agha-pdp-icon', icon: parts[0] %}</span>
+            <span class="pdp-tf__block-copy"><span class="pdp-tf__block-title">{{ parts[1] }}</span></span>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+{%- elsif left_blocks.size > 0 or right_blocks.size > 0 -%}
 <section class="pdp pdp-section pdp-tf" data-pdp-tf aria-labelledby="tf-{{ section.id }}-title">
   <div class="container">
     <header class="pdp-tf__head" data-pdp-reveal>
@@ -200,6 +221,7 @@
   "name": "Agha PDP · The fragrance",
   "class": "pdp-tf-section",
   "settings": [
+    { "type": "checkbox", "id": "claims_only", "label": "Show only the claim icons", "info": "Hides the heading, the notes arc and the bottle.", "default": true },
     { "type": "checkbox", "id": "show_eyebrow", "label": "Show product name above the heading", "default": true },
     { "type": "text", "id": "heading", "label": "Heading", "default": "The Fragrance" },
     { "type": "text", "id": "subheading", "label": "Supporting line", "default": "An olfactory journey in three acts." },

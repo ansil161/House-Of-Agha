@@ -578,7 +578,17 @@
   const tfBottle = ['oud-fury', 'agha-blue', 'dark-paradise', 'maha', 'sea-smoke', 'tobacco-enigma', 'shamamah'].includes(tfKey)
     ? `/assets/hoa-cutout-${tfKey}.webp` : images[0];
 
-  const theFragrance = (tfLeft.length || tfRight.length) ? `
+  // 2026-10-09: The Fragrance removed — only the claim icons row is kept (mirrors claims_only in the Liquid)
+  const TF_CLAIMS_ONLY = true;
+  const theFragrance = TF_CLAIMS_ONLY ? (tfRight.length ? `
+  <section class="pdp pdp-section pdp-tf pdp-tf--claims" data-pdp-tf aria-label="${esc(niceTitle)}">
+    <div class="container">
+      <div class="pdp-tf__stage">
+        <ol class="pdp-tf__col pdp-tf__col--right">${tfRight.join('')}
+        </ol>
+      </div>
+    </div>
+  </section>` : '') : (tfLeft.length || tfRight.length) ? `
   <section class="pdp pdp-section pdp-tf" data-pdp-tf aria-labelledby="tf-title">
     <div class="container">
       <header class="pdp-tf__head" data-pdp-reveal>

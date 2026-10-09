@@ -2588,6 +2588,10 @@ html:has(.pdp) body {
   .pdp-tf__arc .pdp-tf__block-title { font-size: 1.15rem; }
   .pdp-tf__col--right { gap: 14px; }
 }
+/* claims only (The Fragrance removed 2026-10-09): just the icon row, compact band */
+.pdp-tf--claims { padding-block: clamp(28px, 4vw, 56px); }
+.pdp-tf--claims .pdp-tf__col--right { margin-top: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .pdp-tf__arc .pdp-tf__note,
   .pdp-tf__act-label { transition: opacity 0.4s ease; transition-delay: 0s; }
