@@ -967,6 +967,59 @@
     <div class="hoa-bnf__viewport" data-hoa-bnf-viewport><ul class="hoa-bnf__track" data-hoa-bnf-track role="list">${bnfItems}</ul></div>
   </section>`;
 
+  /* ------------------------------------------ Fragrance notes (light cards) */
+  // Mirrors sections/fragrance-notes.liquid with the product.json defaults (notes_cards).
+  // The product's own notes replace a card's caption, like the Liquid's metafield step.
+  // The section's style and script blocks are read from the .liquid file itself (below).
+  const FNL_ICONS = {
+    top: '<path d="M5 19c8 0 14-6 14-14C11 5 5 11 5 19z"/><path d="M5 19l7-7"/>',
+    heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+    base: '<path d="M12 3c3 3.5 5 6.4 5 9.5a5 5 0 0 1-10 0C7 9.4 9 6.5 12 3z"/><path d="M5 21h14"/>',
+    none: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'
+  };
+  const fnlRots = [5, -6, -4, 6];
+  const fnlData = [
+    { style: 'white', label: 'Top notes', title: 'Top', caption: notes.top || 'Bergamot, Pink Pepper', glow: '#ffe08a', src: 'top' },
+    { style: 'black', label: 'Heart notes', title: 'Heart', caption: notes.heart || 'Rose, Jasmine', glow: '#ffc2d1', src: 'heart' },
+    { style: 'accent', label: 'Base notes', title: 'Base', caption: notes.base || 'Oud, Amber, Musk', glow: '#f2c48d', src: 'base' },
+    { style: 'grey', label: 'On skin', title: '12h', caption: 'Longevity', glow: '#d6deea', src: 'none' }
+  ];
+  const fnlChips = (txt) => txt.split(',').map((x) => x.trim()).filter(Boolean).map((x) => `<li data-fnl-chip>${esc(x)}</li>`).join('');
+  const fnlBand = fnlData.map((c) => `${esc(c.title)} <i>✦</i> `).join('');
+  const fnlPins = fnlData.map((c, i) => `
+      <span class="fnl-pin fnl-pin--${i % 2 ? 'left' : 'right'}" data-fnl-pin data-slot="${i + 1}" aria-hidden="true"><i class="fnl-pin__line" data-fnl-line></i><i class="fnl-pin__dot" data-fnl-dot></i></span>`).join('');
+  const fnlCards = fnlData.map((c, i) => `
+        <li class="fnl-card fnl-card--${c.style}" data-fnl-card data-slot="${i + 1}" data-rot="${fnlRots[i]}" data-glow="${c.glow}" style="--rot: ${fnlRots[i]}deg;">
+          <div class="fnl-card__in" data-fnl-in>
+            <div class="fnl-card__body">
+              <span class="fnl-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${FNL_ICONS[c.src]}</svg></span>
+              <p class="fnl-card__label">${c.label}</p>
+              <h3 class="fnl-card__title">${esc(c.title)}</h3>
+              <ul class="fnl-card__chips" role="list">${fnlChips(c.caption)}</ul>
+            </div>
+          </div>
+        </li>`).join('');
+  const notesCards = `
+  <div class="shopify-section fnl-section">
+  <section class="fnl" id="fnl-preview" style="--fnl-bg: #f4f4f2; --fnl-accent: #c9a96a; --fnl-accent-ink: #111111;" data-fnl aria-labelledby="fnl-preview-title">
+    <header class="fnl__head">
+      <p class="fnl__eyebrow">Scent profile</p>
+      <h2 class="fnl__title" id="fnl-preview-title">What's inside</h2>
+    </header>
+    <div class="fnl__stage" data-fnl-stage style="--fnl-aura: ${fnlData[0].glow};">
+      <div class="fnl__band" data-fnl-band aria-hidden="true">${`<span>${fnlBand}</span>`.repeat(4)}</div>
+      <div class="fnl__aura" aria-hidden="true"></div>
+      <div class="fnl__bottle" data-fnl-bottle>
+        <div class="fnl__spritz" data-fnl-spritz aria-hidden="true">${'<i></i>'.repeat(22)}</div>
+        <div class="fnl__float"><img class="fnl__img" src="/assets/hoa-bottle-${handle}.webp" width="289" height="760" loading="lazy" decoding="async" alt="${esc(niceTitle)} bottle"></div>
+        <div class="fnl__shadow" aria-hidden="true"></div>
+      </div>${fnlPins}
+      <ul class="fnl__cards" role="list">${fnlCards}
+      </ul>
+    </div>
+  </section>
+  </div>`;
+
   // "Pair it with": painted by assets/hoa-commerce.js from the catalog (same mount the Liquid product template uses)
   const pair = '<section class="pdp pdp-section hoa-pair" data-hoa-pair data-handle="' + handle + '" hidden></section>';
 
@@ -974,7 +1027,7 @@
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft) → campaign gallery
   //   → reviews (right after the gallery, client 2026-10-05) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
+  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + notesCards + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');
@@ -984,6 +1037,14 @@
   window.AghaPDP?.init();
   if (window.HOA_BNF) window.HOA_BNF.init();
   else { const b = document.createElement('script'); b.src = '/assets/hoa-benefits.js'; document.body.appendChild(b); }
+  // Fragrance notes (light cards): reuse the section file's own <style> and <script>
+  fetch('/sections/fragrance-notes.liquid').then((r) => r.text()).then((src) => {
+    // Only the top-level blocks (tag at the start of a line), not words in a comment
+    const css = src.match(/^<style>\r?\n([\s\S]*?)^<\/style>/m);
+    const js = src.match(/^<script>\r?\n([\s\S]*?)^<\/script>/m);
+    if (css) { const st = document.createElement('style'); st.textContent = css[1]; document.head.appendChild(st); }
+    if (js) { const sc = document.createElement('script'); sc.textContent = js[1]; document.body.appendChild(sc); }
+  }).catch(() => {});
   if (reels) {
     const sc = document.createElement('script');
     sc.src = '/assets/hoa-reels.js';

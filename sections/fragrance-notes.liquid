@@ -1,0 +1,683 @@
+{% comment %}
+  HOUSE OF AGHA — FRAGRANCE NOTES (light, PDP)
+  A clean, light stage. The bottle stands in the middle on a soft shadow; flat "sticker"
+  cards are pinned to it like product callouts, at the height of the bottle they describe:
+  Top at the cap, the 4th card (12h) at the neck, Heart at the body, Base at the foot. A dot
+  on the bottle and a dotted leader line join each card to its spot. Behind it all, a giant
+  outlined word band (the card titles) slides sideways with the scroll.
+
+  Motion (desktop)
+    1. Scrubbed entry: the bottle rises and straightens, a spritz of mist bursts from the
+       atomizer, the pins pop, the lines draw out, and the cards are "dealt" from behind
+       the bottle to their spots with a springy overshoot, 0.15 apart. The note chips pop
+       in after each card. A soft "scent aura" behind the bottle takes each card's glow
+       colour as it lands.
+    2. The word band keeps sliding with the scroll; the cards stay on their pins.
+    3. Idle: cards bob gently (CSS), bottle floats ~6px, pins ping.
+    4. Hover: the card leans toward the cursor (≤6px) and tilts (max 6°); its pin and line
+       light up, the other cards step back, and the aura turns that card's colour.
+  Phones (<768px): bottle on top, cards in a 2×2 grid that flip up into place, chips pop;
+  no pins.
+  prefers-reduced-motion: everything static.
+
+  Data
+    Cards ...... "note_card" blocks: style (white / black / accent / grey), label, title,
+                 caption (comma separated → chips), glow colour, icon. Up to 6 (cards 5–6
+                 sit at the far sides without a pin).
+    Notes ...... a card whose "Caption from metafield" is Top / Heart / Base shows
+                 custom.top_notes / custom.heart_notes / custom.base_notes when the product
+                 has it (single-line text "A, B" or a list of text); otherwise its own caption.
+    Bottle ..... section image → the theme's transparent cutout (assets/hoa-bottle-<handle>.webp)
+                 → product.featured_image.
+
+  CSS and JS live in this file. GSAP + ScrollTrigger come from layout/theme.liquid (cdnjs
+  3.12.5); the script loads that same build itself only when it's missing.
+  Local preview: assets/pdp-preview.js mirrors the markup and reuses this file's style and script blocks.
+{% endcomment %}
+
+{%- liquid
+  assign s = section.settings
+  assign cutouts = 'agha-blue,dark-paradise,maha,oud-fury,sea-smoke,shamamah,tobacco-enigma' | split: ','
+  assign product_title = product.title | default: 'House of Agha'
+  assign bottle_alt = product_title | append: ' bottle'
+  assign has_cutout = false
+  if product and cutouts contains product.handle
+    assign has_cutout = true
+    assign cut = 'hoa-bottle-' | append: product.handle | append: '.webp'
+  endif
+  comment
+    Resting rotation per slot (deg). Slot = the block's position.
+  endcomment
+  assign rots = '5,-6,-4,6,-5,4' | split: ','
+  capture band
+    for block in section.blocks
+      if block.settings.title != blank
+        echo block.settings.title | escape
+        echo ' <i>✦</i> '
+      endif
+    endfor
+  endcapture
+-%}
+
+<style>
+  /* ======================================================================
+     FRAGRANCE NOTES (light) — scoped to .fnl
+     A card is three layers so the motions never fight over one transform:
+       li.fnl-card ........ GSAP: the deal-in (x, y, scale, rotation)
+       .fnl-card__in ...... GSAP: mouse tilt (rotationX/Y)
+       .fnl-card__body .... CSS: the idle bob, and the card's look
+     ====================================================================== */
+  /* Registered so the aura colour can transition smoothly on hover */
+  @property --fnl-aura { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+
+  .fnl {
+    --fnl-ink: #111111;
+    --fnl-muted: #6b6b68;
+    /* bottle height / width; every pin and card is placed from these */
+    --bh: clamp(380px, 44vw, 520px);
+    --bw: calc(var(--bh) * 0.38);
+    --lead: clamp(34px, 4.6vw, 68px);
+    position: relative;
+    background: var(--fnl-bg, #f4f4f2);
+    color: var(--fnl-ink);
+    padding: clamp(64px, 9vw, 120px) clamp(16px, 4vw, 48px);
+    overflow-x: clip;
+  }
+  .fnl__head { position: relative; z-index: 2; text-align: center; max-width: 620px; margin: 0 auto; }
+  .fnl__eyebrow {
+    display: inline-block;
+    margin: 0 0 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #ffffff;
+    font: 600 0.68rem/1 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fnl-muted);
+  }
+  /* .fnl prefix: the PDP's own heading styles would beat a single class */
+  .fnl .fnl__title {
+    margin: 0;
+    font: 800 clamp(2rem, 4vw, 3.2rem)/1.05 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: -0.03em;
+    color: var(--fnl-ink);
+  }
+  .fnl__sub { margin: 12px 0 0; font: 400 0.95rem/1.55 var(--hoa-sans, system-ui, sans-serif); color: var(--fnl-muted); }
+
+  /* Giant outlined word band behind the bottle; JS slides it with the scroll */
+  .fnl__band {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    translate: 0 -50%;
+    display: flex;
+    white-space: nowrap;
+    pointer-events: none;
+    font: 800 clamp(5rem, 15vw, 13rem)/1 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(17, 17, 17, 0.09);
+  }
+  .fnl__band span { padding-right: 0.3em; }
+  .fnl__band i { font-style: normal; -webkit-text-stroke: 0; color: rgba(17, 17, 17, 0.08); font-size: 0.4em; vertical-align: middle; }
+
+  /* Stage: the bottle's centre is the stage's centre */
+  .fnl__stage {
+    position: relative;
+    max-width: 1080px;
+    height: calc(var(--bh) + clamp(120px, 12vw, 180px));
+    margin: clamp(20px, 3vw, 40px) auto 0;
+  }
+  .fnl__stage { transition: --fnl-aura 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+
+  /* Scent aura: a soft pastel glow behind the bottle (a gradient, no blur filter) */
+  .fnl__aura {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--bh) * 1.25);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--fnl-aura), color-mix(in srgb, var(--fnl-aura) 40%, transparent) 55%, transparent);
+    pointer-events: none;
+  }
+
+  .fnl__bottle { position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 1; }
+
+  /* Spritz: fine mist dots that burst from the atomizer (JS scatters them) */
+  .fnl__spritz { position: absolute; left: 50%; top: 2%; width: 0; height: 0; z-index: 2; pointer-events: none; }
+  .fnl__spritz i {
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(17, 17, 17, 0.28);
+    opacity: 0;
+  }
+  .fnl__spritz i:nth-child(3n) { width: 4px; height: 4px; background: var(--fnl-accent, #c9a96a); }
+  .fnl__spritz i:nth-child(4n) { width: 3px; height: 3px; }
+  .fnl__float { animation: fnl-float 3.2s ease-in-out infinite alternate; }
+  .fnl__img { display: block; height: var(--bh); width: auto; max-width: none; }
+  /* soft shadow on the "floor" under the bottle */
+  .fnl__shadow {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 4px);
+    width: 120%;
+    height: 22px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(17, 17, 17, 0.17), transparent);
+    animation: fnl-shadow 3.2s ease-in-out infinite alternate;
+  }
+  @keyframes fnl-float { to { transform: translateY(-6px); } }
+  @keyframes fnl-shadow { to { transform: scaleX(0.88); opacity: 0.7; } }
+
+  /* Pins: a dot on the bottle and a dotted leader line out to the card */
+  .fnl-pin { position: absolute; z-index: 2; width: 0; height: 0; pointer-events: none; }
+  .fnl-pin__dot {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--fnl-ink);
+    box-shadow: 0 0 0 3px #ffffff;
+  }
+  .fnl-pin__dot::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px solid var(--fnl-ink);
+    opacity: 0;
+    animation: fnl-ping 2.4s ease-out infinite;
+  }
+  .fnl-pin__line {
+    position: absolute;
+    top: -1px;
+    left: 8px;
+    width: calc(var(--lead) - 10px);
+    height: 0;
+    border-top: 2px dotted rgba(17, 17, 17, 0.55);
+    transform-origin: 0 50%;
+  }
+  .fnl-pin--left .fnl-pin__line { left: auto; right: 8px; transform-origin: 100% 50%; }
+  .fnl-pin__dot { transition: background-color 0.3s, box-shadow 0.3s; }
+  /* Focus: the hovered card's pin lights up in its glow, its line turns solid */
+  .fnl-pin.is-on .fnl-pin__dot { box-shadow: 0 0 0 3px #ffffff, 0 0 0 8px var(--fnl-aura); }
+  .fnl-pin.is-on .fnl-pin__line { border-top-style: solid; }
+  @keyframes fnl-ping { 0% { transform: scale(0.6); opacity: 0.6; } 80%, 100% { transform: scale(1.8); opacity: 0; } }
+
+  /* Where each pin sits on the bottle (from its centre): cap, neck, body, foot */
+  .fnl-pin[data-slot="1"] { left: calc(50% + var(--bh) * 0.12);  top: calc(50% - var(--bh) * 0.40); }
+  .fnl-pin[data-slot="2"] { left: calc(50% - var(--bw) * 0.5);   top: calc(50% + var(--bh) * 0.04); }
+  .fnl-pin[data-slot="3"] { left: calc(50% + var(--bw) * 0.5);   top: calc(50% + var(--bh) * 0.36); }
+  .fnl-pin[data-slot="4"] { left: calc(50% - var(--bh) * 0.12);  top: calc(50% - var(--bh) * 0.28); }
+
+  .fnl__cards { list-style: none; margin: 0; padding: 0; }
+
+  /* Card */
+  .fnl-card {
+    position: absolute;
+    z-index: 3;
+    width: clamp(176px, 16vw, 206px);
+    translate: 0 -50%; /* centred on its pin's height; GSAP owns transform */
+    transform: rotate(var(--rot, 0deg));
+  }
+  .fnl-card__body {
+    --fnl-c-bg: #ffffff;
+    --fnl-c-ink: var(--fnl-ink);
+    --fnl-c-muted: var(--fnl-muted);
+    --fnl-c-chip: #f1f1ee;
+    padding: 16px 18px 18px;
+    border-radius: 16px;
+    background: var(--fnl-c-bg);
+    color: var(--fnl-c-ink);
+    box-shadow: 0 1px 2px rgba(17, 17, 17, 0.05), 0 12px 28px -14px rgba(17, 17, 17, 0.2);
+    animation: fnl-bob 3.6s ease-in-out infinite alternate;
+  }
+  .fnl-card:nth-child(2) .fnl-card__body { animation-duration: 4.2s; animation-delay: -1.2s; }
+  .fnl-card:nth-child(3) .fnl-card__body { animation-duration: 3.2s; animation-delay: -2s; }
+  .fnl-card:nth-child(4) .fnl-card__body { animation-duration: 4.6s; animation-delay: -0.6s; }
+  @keyframes fnl-bob { to { transform: translateY(-5px); } }
+
+  .fnl-card--black  .fnl-card__body { --fnl-c-bg: #111111; --fnl-c-ink: #ffffff; --fnl-c-muted: rgba(255, 255, 255, 0.72); --fnl-c-chip: rgba(255, 255, 255, 0.12); }
+  .fnl-card--accent .fnl-card__body { --fnl-c-bg: var(--fnl-accent, #c9a96a); --fnl-c-ink: var(--fnl-accent-ink, #111111); --fnl-c-muted: var(--fnl-accent-ink, #111111); --fnl-c-chip: rgba(255, 255, 255, 0.35); }
+  .fnl-card--grey   .fnl-card__body { --fnl-c-bg: #e6e6e2; --fnl-c-chip: #ffffff; }
+
+  .fnl-card__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--fnl-c-chip);
+    overflow: hidden;
+  }
+  .fnl-card__icon img { width: 100%; height: 100%; object-fit: cover; }
+  .fnl-card__label {
+    margin: 14px 0 2px;
+    font: 600 0.68rem/1 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fnl-c-muted);
+  }
+  .fnl .fnl-card__title {
+    margin: 0;
+    font: 800 2rem/1.05 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: -0.03em;
+    color: var(--fnl-c-ink);
+  }
+  /* Notes as small pills */
+  .fnl-card__chips { list-style: none; display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 0; padding: 0; }
+  .fnl-card__chips li {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--fnl-c-chip);
+    font: 600 0.72rem/1 var(--hoa-sans, system-ui, sans-serif);
+    color: var(--fnl-c-ink);
+  }
+  .fnl-card--accent .fnl-card__label { opacity: 0.78; }
+
+  /* Focus: the other cards step back while one is hovered */
+  .fnl-card { transition: opacity 0.35s cubic-bezier(0.32, 0.72, 0, 1), filter 0.35s; }
+  .fnl__stage.is-focus .fnl-card:not(.is-on) { opacity: 0.45; filter: saturate(0.6); }
+
+  /* Cards at the end of their leader lines: right side starts after the line, left side ends before it */
+  .fnl-card[data-slot="1"] { left:  calc(50% + var(--bh) * 0.12 + var(--lead)); top: calc(50% - var(--bh) * 0.40); }
+  .fnl-card[data-slot="2"] { right: calc(50% + var(--bw) * 0.5 + var(--lead));  top: calc(50% + var(--bh) * 0.04); }
+  .fnl-card[data-slot="3"] { left:  calc(50% + var(--bw) * 0.5 + var(--lead));  top: calc(50% + var(--bh) * 0.36); }
+  .fnl-card[data-slot="4"] { right: calc(50% + var(--bh) * 0.12 + var(--lead)); top: calc(50% - var(--bh) * 0.28); }
+  .fnl-card[data-slot="5"] { left: 0;  top: 50%; }
+  .fnl-card[data-slot="6"] { right: 0; top: 62%; }
+
+  /* Phones: bottle on top, then a 2×2 grid, no rotation, no pins */
+  @media (max-width: 767px) {
+    .fnl { padding: 56px 16px; --bh: min(88vw, 340px); }
+    .fnl__band { font-size: 26vw; top: 38%; }
+    .fnl__stage { height: auto; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    .fnl__bottle { position: relative; left: auto; top: auto; translate: none; }
+    .fnl-pin, .fnl__spritz { display: none; }
+    .fnl__cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+    .fnl-card { position: static; width: auto; translate: none; transform: none; }
+    .fnl-card__body { height: 100%; padding: 14px; animation: none; }
+    .fnl .fnl-card__title { font-size: 1.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fnl__float, .fnl__shadow, .fnl-card__body, .fnl-pin__dot::after { animation: none; }
+    .fnl__stage { transition: none; }
+  }
+</style>
+
+<section
+  class="fnl"
+  id="fnl-{{ section.id }}"
+  style="--fnl-bg: {{ s.background }}; --fnl-accent: {{ s.accent }}; --fnl-accent-ink: {{ s.accent_text }};"
+  data-fnl
+  aria-labelledby="fnl-{{ section.id }}-title"
+>
+  <header class="fnl__head">
+    {%- if s.eyebrow != blank -%}<p class="fnl__eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+    <h2 class="fnl__title" id="fnl-{{ section.id }}-title">{{ s.heading }}</h2>
+    {%- if s.subheading != blank -%}<p class="fnl__sub">{{ s.subheading }}</p>{%- endif -%}
+  </header>
+
+  {%- assign first_glow = section.blocks.first.settings.glow | default: '#ffffff' -%}
+  <div class="fnl__stage" data-fnl-stage style="--fnl-aura: {{ first_glow }};">
+    {%- if band != blank -%}
+      <div class="fnl__band" data-fnl-band aria-hidden="true">
+        {%- for i in (1..4) -%}<span>{{ band }}</span>{%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="fnl__aura" aria-hidden="true"></div>
+
+    <div class="fnl__bottle" data-fnl-bottle>
+      <div class="fnl__spritz" data-fnl-spritz aria-hidden="true">
+        {%- for i in (1..22) -%}<i></i>{%- endfor -%}
+      </div>
+      <div class="fnl__float">
+        {%- if s.bottle != blank -%}
+          {{ s.bottle | image_url: width: 1000 | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 768px) 20vw, 50vw', loading: 'lazy', alt: bottle_alt, class: 'fnl__img' }}
+        {%- elsif has_cutout -%}
+          <img class="fnl__img" src="{{ cut | asset_url }}" width="289" height="760" loading="lazy" decoding="async" alt="{{ bottle_alt | escape }}">
+        {%- elsif product.featured_image -%}
+          {{ product.featured_image | image_url: width: 1000 | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 768px) 20vw, 50vw', loading: 'lazy', alt: bottle_alt, class: 'fnl__img' }}
+        {%- endif -%}
+      </div>
+      <div class="fnl__shadow" aria-hidden="true"></div>
+    </div>
+
+    {%- comment -%} Pins for the first four cards: odd slots point right, even slots left {%- endcomment -%}
+    {%- for block in section.blocks limit: 4 -%}
+      {%- assign side = forloop.index | modulo: 2 -%}
+      <span class="fnl-pin fnl-pin--{% if side == 1 %}right{% else %}left{% endif %}" data-fnl-pin data-slot="{{ forloop.index }}" aria-hidden="true">
+        <i class="fnl-pin__line" data-fnl-line></i><i class="fnl-pin__dot" data-fnl-dot></i>
+      </span>
+    {%- endfor -%}
+
+    {%- comment -%} DOM order = mobile reading order; desktop places each card by slot {%- endcomment -%}
+    <ul class="fnl__cards" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign caption = b.caption
+          assign mf = blank
+          if product
+            case b.notes_source
+              when 'top'
+                assign mf = product.metafields.custom.top_notes
+              when 'heart'
+                assign mf = product.metafields.custom.heart_notes
+              when 'base'
+                assign mf = product.metafields.custom.base_notes
+            endcase
+          endif
+          if mf != blank and mf.value != blank
+            if mf.type contains 'list'
+              assign caption = mf.value | join: ', '
+            else
+              assign caption = mf.value
+            endif
+          endif
+          assign rot = rots[forloop.index0] | default: 0
+        -%}
+        <li
+          class="fnl-card fnl-card--{{ b.card_style }}"
+          data-fnl-card
+          data-slot="{{ forloop.index }}"
+          data-rot="{{ rot }}"
+          data-glow="{{ b.glow }}"
+          style="--rot: {{ rot }}deg;"
+          {{ block.shopify_attributes }}
+        >
+          <div class="fnl-card__in" data-fnl-in>
+            <div class="fnl-card__body">
+              <span class="fnl-card__icon" aria-hidden="true">
+                {%- if b.icon != blank -%}
+                  {{ b.icon | image_url: width: 96 | image_tag: loading: 'lazy', alt: '', width: 36, height: 36 }}
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    {%- case b.notes_source -%}
+                      {%- when 'top' -%}<path d="M5 19c8 0 14-6 14-14C11 5 5 11 5 19z"/><path d="M5 19l7-7"/>
+                      {%- when 'heart' -%}<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>
+                      {%- when 'base' -%}<path d="M12 3c3 3.5 5 6.4 5 9.5a5 5 0 0 1-10 0C7 9.4 9 6.5 12 3z"/><path d="M5 21h14"/>
+                      {%- else -%}<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+                    {%- endcase -%}
+                  </svg>
+                {%- endif -%}
+              </span>
+              {%- if b.label != blank -%}<p class="fnl-card__label">{{ b.label }}</p>{%- endif -%}
+              <h3 class="fnl-card__title">{{ b.title }}</h3>
+              {%- if caption != blank -%}
+                <ul class="fnl-card__chips" role="list">
+                  {%- assign chips = caption | split: ',' -%}
+                  {%- for c in chips -%}
+                    {%- assign chip = c | strip -%}
+                    {%- if chip != blank -%}<li data-fnl-chip>{{ chip }}</li>{%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+<script>
+  /* ======================================================================
+     FRAGRANCE NOTES (light) — motion. Defined once per page, then boots
+     every [data-fnl] section (and re-boots on shopify:section:load).
+     Desktop: scrubbed entry (bottle rises, spritz bursts, pins pop, lines
+     draw, cards are dealt from behind the bottle, chips pop, the aura takes
+     each card's colour); the word band slides with the scroll; hovering a
+     card focuses it (magnet + tilt, pin lights, others step back). Cards stay
+     put once dealt so they keep lining up with their pins.
+     Phones: cards flip up into the grid. Reduced motion: nothing runs.
+     ====================================================================== */
+  (function () {
+    if (window.HOA_FNL) { window.HOA_FNL.boot(document); return; }
+
+    var CDN = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
+    var loading;
+
+    function load(src) {
+      return new Promise(function (ok, fail) {
+        var el = document.createElement('script');
+        el.src = src; el.onload = ok; el.onerror = fail;
+        document.head.appendChild(el);
+      });
+    }
+    // GSAP normally comes from layout/theme.liquid; load the same build only if it's missing.
+    function ready() {
+      if (window.gsap && window.ScrollTrigger) return Promise.resolve();
+      return loading || (loading = (window.gsap ? Promise.resolve() : load(CDN + 'gsap.min.js'))
+        .then(function () { return window.ScrollTrigger || load(CDN + 'ScrollTrigger.min.js'); }));
+    }
+    function all(root, sel) { return [].slice.call(root.querySelectorAll(sel)); }
+
+    // The word band slides left as the section scrolls past (all sizes)
+    function band(root, gsap) {
+      var el = root.querySelector('[data-fnl-band]');
+      if (!el) return;
+      gsap.fromTo(el, { xPercent: 0 }, {
+        xPercent: -25, ease: 'none',
+        scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 0.6 }
+      });
+    }
+
+    function desktop(root, gsap, cards) {
+      var stage = root.querySelector('.fnl__stage');
+      var bottle = root.querySelector('[data-fnl-bottle]');
+      var pins = all(root, '[data-fnl-pin]');
+      var rnd = gsap.utils.random;
+
+      // 1. Entry, scrubbed: tied to the stage scrolling up into view
+      var tl = gsap.timeline({
+        defaults: { ease: 'back.out(1.6)', duration: 0.6 },
+        scrollTrigger: { trigger: stage, start: 'top 85%', end: 'top 20%', scrub: 0.8, invalidateOnRefresh: true }
+      });
+      tl.fromTo(bottle, { y: 90, scale: 0.86, rotation: -7 }, { y: 0, scale: 1, rotation: 0, ease: 'power3.out', duration: 0.8 }, 0)
+        // Spritz: a cone of mist out of the atomizer, drifting up and fading
+        .fromTo(all(root, '[data-fnl-spritz] i'), { x: 0, y: 0, scale: 0.4, autoAlpha: 1 }, {
+          x: function () { return rnd(-170, 170); },
+          y: function () { return rnd(-150, -10); },
+          scale: function () { return rnd(0.6, 1.8); },
+          autoAlpha: 0, ease: 'power2.out', duration: 0.7, stagger: 0.01
+        }, 0.3)
+        .fromTo(all(root, '[data-fnl-dot]'), { scale: 0 }, { scale: 1, stagger: 0.15, duration: 0.3 }, 0.35)
+        .fromTo(all(root, '[data-fnl-line]'), { scaleX: 0 }, { scaleX: 1, stagger: 0.15, duration: 0.3, ease: 'power2.out' }, 0.45)
+        // Dealt from behind the bottle: start at the stage centre, small, spun the other way
+        .fromTo(cards, {
+          x: function (i, el) { return stage.offsetWidth / 2 - (el.offsetLeft + el.offsetWidth / 2); },
+          y: function (i, el) { return stage.offsetHeight / 2 - el.offsetTop; },
+          scale: 0.3,
+          rotation: function (i, el) { return -(parseFloat(el.dataset.rot) || 0) * 4; },
+          autoAlpha: 0
+        }, {
+          x: 0, y: 0, scale: 1, autoAlpha: 1, stagger: 0.15,
+          rotation: function (i, el) { return parseFloat(el.dataset.rot) || 0; }
+        }, 0.5);
+      // Chips pop in after their card lands; the aura takes each card's colour as it's dealt
+      cards.forEach(function (card, i) {
+        var at = 0.5 + i * 0.15;
+        tl.fromTo(card.querySelectorAll('[data-fnl-chip]'), { scale: 0, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, stagger: 0.05, duration: 0.25, ease: 'back.out(2.4)' }, at + 0.35);
+        if (card.dataset.glow) tl.to(stage, { '--fnl-aura': card.dataset.glow, duration: 0.2, ease: 'none' }, at + 0.1);
+      });
+
+      var inner = all(root, '[data-fnl-in]');
+      // After a hover, the aura returns to the last card's colour (where the entry left it)
+      var last = cards[cards.length - 1];
+      var restGlow = (last && last.dataset.glow) || '#ffffff';
+
+      // 2. Hover focus: magnet (≤6px) + tilt (≤6°); pin lights, others step back, aura recolours
+      var off = inner.map(function (el, i) {
+        var card = cards[i];
+        var pin = pins.filter(function (p) { return p.dataset.slot === card.dataset.slot; })[0];
+        gsap.set(el, { transformPerspective: 700 });
+        function q(prop) { return gsap.quickTo(el, prop, { duration: 0.45, ease: 'power3.out' }); }
+        var rx = q('rotationX'), ry = q('rotationY'), mx = q('x'), my = q('y');
+        function enter(e) {
+          if (e.pointerType !== 'mouse') return;
+          stage.classList.add('is-focus');
+          card.classList.add('is-on');
+          if (pin) pin.classList.add('is-on');
+          if (card.dataset.glow) stage.style.setProperty('--fnl-aura', card.dataset.glow);
+        }
+        function move(e) {
+          if (e.pointerType !== 'mouse') return;
+          var r = el.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - 0.5;
+          var py = (e.clientY - r.top) / r.height - 0.5;
+          ry(px * 12); rx(-py * 12); mx(px * 12); my(py * 12);
+        }
+        function leave() {
+          rx(0); ry(0); mx(0); my(0);
+          stage.classList.remove('is-focus');
+          card.classList.remove('is-on');
+          if (pin) pin.classList.remove('is-on');
+          stage.style.setProperty('--fnl-aura', restGlow);
+        }
+        el.addEventListener('pointerenter', enter);
+        el.addEventListener('pointermove', move);
+        el.addEventListener('pointerleave', leave);
+        return function () {
+          el.removeEventListener('pointerenter', enter);
+          el.removeEventListener('pointermove', move);
+          el.removeEventListener('pointerleave', leave);
+        };
+      });
+      return function () { off.forEach(function (f) { f(); }); };
+    }
+
+    function mobile(root, gsap, cards) {
+      gsap.fromTo(root.querySelector('[data-fnl-bottle]'), { y: 50, scale: 0.9 }, {
+        y: 0, scale: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: root.querySelector('.fnl__stage'), start: 'top 90%', end: 'top 40%', scrub: 0.8 }
+      });
+      // Cards flip up into the grid, like turning over stickers. The perspective is set
+      // first: inside a from() tween it would be animated too, and distort the cards.
+      gsap.set(cards, { transformPerspective: 600, transformOrigin: '50% 100%' });
+      gsap.from(root.querySelectorAll('[data-fnl-chip]'), {
+        scale: 0, autoAlpha: 0, duration: 0.35, ease: 'back.out(2.4)', stagger: 0.04, delay: 0.35,
+        scrollTrigger: { trigger: root.querySelector('.fnl__cards'), start: 'top 88%', once: true }
+      });
+      gsap.from(cards, {
+        rotationX: -75, y: 30, autoAlpha: 0,
+        duration: 0.7, ease: 'back.out(1.6)', stagger: 0.12,
+        scrollTrigger: { trigger: root.querySelector('.fnl__cards'), start: 'top 88%', once: true }
+      });
+    }
+
+    function init(root) {
+      if (root._fnl) return;
+      root._fnl = true;
+      ready().then(function () {
+        if (!root._fnl) return; // removed while GSAP was loading
+        var gsap = window.gsap;
+        gsap.registerPlugin(window.ScrollTrigger);
+        var cards = all(root, '[data-fnl-card]');
+        var mm = gsap.matchMedia();
+        root._fnl = mm;
+        mm.add({
+          desk: '(min-width: 768px) and (prefers-reduced-motion: no-preference)',
+          phone: '(max-width: 767px) and (prefers-reduced-motion: no-preference)'
+        }, function (ctx) {
+          band(root, gsap);
+          return ctx.conditions.desk ? desktop(root, gsap, cards) : mobile(root, gsap, cards);
+        });
+      });
+    }
+
+    function destroy(root) {
+      if (root._fnl && root._fnl.revert) root._fnl.revert();
+      root._fnl = null;
+    }
+
+    function boot(scope) { all(scope, '[data-fnl]').forEach(init); }
+
+    window.HOA_FNL = { boot: boot };
+    // Theme editor: rebuild when the section is added or re-rendered, clean up when it goes.
+    document.addEventListener('shopify:section:load', function (e) { boot(e.target); });
+    document.addEventListener('shopify:section:unload', function (e) { all(e.target, '[data-fnl]').forEach(destroy); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { boot(document); });
+    else boot(document);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Fragrance notes (cards)",
+  "tag": "div",
+  "class": "fnl-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Scent profile" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What's inside" },
+    { "type": "text", "id": "subheading", "label": "Line under the heading" },
+    { "type": "color", "id": "background", "label": "Background colour", "default": "#f4f4f2" },
+    { "type": "color", "id": "accent", "label": "Accent card colour", "default": "#c9a96a" },
+    { "type": "color", "id": "accent_text", "label": "Accent card text colour", "default": "#111111" },
+    { "type": "image_picker", "id": "bottle", "label": "Bottle image", "info": "A transparent PNG works best. Empty: the theme's bottle cutout for this product, then the product's featured image." },
+    { "type": "paragraph", "content": "Card positions: 1st = at the cap (right), 2nd = at the body (left), 3rd = at the foot (right), 4th = at the neck (left), 5th–6th = far sides." }
+  ],
+  "blocks": [
+    {
+      "type": "note_card",
+      "name": "Note card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "card_style",
+          "label": "Card style",
+          "default": "white",
+          "options": [
+            { "value": "white", "label": "White" },
+            { "value": "black", "label": "Black" },
+            { "value": "accent", "label": "Accent colour" },
+            { "value": "grey", "label": "Light grey" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label (small, above)", "default": "Top notes" },
+        { "type": "text", "id": "title", "label": "Title (big)", "default": "Top" },
+        { "type": "text", "id": "caption", "label": "Notes / caption (small pills, below)", "default": "Bergamot, Pink Pepper", "info": "Comma separated: each part becomes a pill." },
+        { "type": "color", "id": "glow", "label": "Glow colour", "default": "#ffe08a", "info": "The soft aura behind the bottle takes this colour when the card lands or is hovered." },
+        {
+          "type": "select",
+          "id": "notes_source",
+          "label": "Caption from metafield",
+          "default": "none",
+          "info": "When the product has this metafield, it replaces the caption. Also picks the default icon.",
+          "options": [
+            { "value": "none", "label": "None (clock icon)" },
+            { "value": "top", "label": "custom.top_notes" },
+            { "value": "heart", "label": "custom.heart_notes" },
+            { "value": "base", "label": "custom.base_notes" }
+          ]
+        },
+        { "type": "image_picker", "id": "icon", "label": "Icon", "info": "Square, shown at 36px. Empty: a line icon." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fragrance notes (cards)",
+      "blocks": [
+        { "type": "note_card", "settings": { "card_style": "white", "label": "Top notes", "title": "Top", "caption": "Bergamot, Pink Pepper", "glow": "#ffe08a", "notes_source": "top" } },
+        { "type": "note_card", "settings": { "card_style": "black", "label": "Heart notes", "title": "Heart", "caption": "Rose, Jasmine", "glow": "#ffc2d1", "notes_source": "heart" } },
+        { "type": "note_card", "settings": { "card_style": "accent", "label": "Base notes", "title": "Base", "caption": "Oud, Amber, Musk", "glow": "#f2c48d", "notes_source": "base" } },
+        { "type": "note_card", "settings": { "card_style": "grey", "label": "On skin", "title": "12h", "caption": "Longevity", "glow": "#d6deea", "notes_source": "none" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

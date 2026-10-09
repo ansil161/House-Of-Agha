@@ -371,6 +371,23 @@
         "only_current_product": true
       }
     },
+    "notes_cards": {
+      "type": "fragrance-notes",
+      "blocks": {
+        "card_top": { "type": "note_card", "settings": { "card_style": "white", "label": "Top notes", "title": "Top", "caption": "Bergamot, Pink Pepper", "glow": "#ffe08a", "notes_source": "top" } },
+        "card_heart": { "type": "note_card", "settings": { "card_style": "black", "label": "Heart notes", "title": "Heart", "caption": "Rose, Jasmine", "glow": "#ffc2d1", "notes_source": "heart" } },
+        "card_base": { "type": "note_card", "settings": { "card_style": "accent", "label": "Base notes", "title": "Base", "caption": "Oud, Amber, Musk", "glow": "#f2c48d", "notes_source": "base" } },
+        "card_wear": { "type": "note_card", "settings": { "card_style": "grey", "label": "On skin", "title": "12h", "caption": "Longevity", "glow": "#d6deea", "notes_source": "none" } }
+      },
+      "block_order": ["card_top", "card_heart", "card_base", "card_wear"],
+      "settings": {
+        "eyebrow": "Scent profile",
+        "heading": "What's inside",
+        "background": "#f4f4f2",
+        "accent": "#c9a96a",
+        "accent_text": "#111111"
+      }
+    },
     "gallery": {
       "type": "hoa-pdp-gallery",
       "blocks": {
@@ -837,6 +854,7 @@
     "craft",
     "experience",
     "fragrance_notes",
+    "notes_cards",
     "gallery",
     "reels",
     "review_summary",
