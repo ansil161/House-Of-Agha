@@ -356,6 +356,282 @@
     });
   }
 
+  /* ---------------------------------------- 01 hero, "The Object" (2026-10-12) */
+  // sections/hoa-v2-object-hero.liquid. ONE bottle: the CSS 3D bottle (buildBottle) is built first, so the
+  // bottle that rises in is the same element the visitor then turns; it is never swapped.
+  // The 3D logo (hoa-crest.js, profile v2) is told when to move through window.AGHA_HERO + 'agha:hero'.
+  function initObjectHero() {
+    var hero = $('[data-v2-ohero]');
+    if (!hero) return;
+    var wrap = $('[data-v2-ohero-bottle]', hero);
+    var flat = $('.v2-turn__flat', wrap);
+    var shade = $('.v2-turn__shade', wrap);
+    var hint = $('[data-v2-ohero-hint]', hero);
+    var HINT_KEY = 'agha-bottle-turned';
+    var obj = null, s = 1;
+    var ry = 0, target = 0, vel = 0;                 // degrees; vel in deg/s (the flick)
+    var raf = 0, last = 0, drag = null;
+
+    function apply() {
+      var t = 'rotateY(' + ry.toFixed(2) + 'deg)';
+      if (obj) obj.style.transform = 'scale(' + s.toFixed(4) + ') ' + t;
+      else flat.style.transform = t;
+      // the fixed light shows while it is turned away and fades as the label comes back to the front
+      var m = ((ry % 360) + 360) % 360, off = Math.min(m, 360 - m) / 180;
+      shade.style.opacity = obj ? Math.min(1, off * 5) * 0.85 : 0;
+    }
+    function size() { s = wrap.clientHeight / TEX_H; apply(); }
+    window.addEventListener('resize', size);
+
+    // tells the logo its next move (it may load before or after this; it reads the stamps either way)
+    function signal(k) {
+      var h = window.AGHA_HERO = window.AGHA_HERO || {};
+      if (!h[k]) h[k] = performance.now();
+      try { document.dispatchEvent(new CustomEvent('agha:hero')); } catch (_) {}
+    }
+    function showAll() { hero.classList.add('is-live', 'is-in', 'is-ready'); signal('appear'); signal('home'); showHint(); }
+    function showHint() {
+      var done = false;
+      try { done = localStorage.getItem(HINT_KEY) === '1'; } catch (_) {}
+      if (hint && !done) hint.classList.add('is-shown');
+    }
+
+    var built = new Promise(function (res) {
+      buildBottle(wrap, function (o) { obj = o; size(); res(); });
+      setTimeout(res, 2500);                         // a slow texture: enter with the flat cut-out, it turns flat
+    });
+    var logoReady = new Promise(function (res) {
+      if (window.__aghaLogoReady || !document.querySelector('[data-hoa-logo3d]')) { res(); return; }
+      document.addEventListener('agha:logo-ready', res, { once: true });
+      setTimeout(res, 2200);                         // no WebGL / slow CDN: the bottle does not wait for it
+    });
+
+    /* ---- the opening: logo -> bottle rises in -> logo to its place -> copy -> live ---- */
+    afterPreloader(function () {
+      if (reduce || !hasGsap()) { built.then(showAll); return; }
+      var gsap = window.gsap;
+      Promise.all([built, logoReady]).then(function () {
+        signal('appear');                            // 1. the logo, alone, at the centre
+        var turn = { v: -64 };
+        gsap.set(wrap, { yPercent: 62, scale: 0.8, autoAlpha: 0 });
+        hero.classList.add('is-live');
+        var tl = gsap.timeline({ delay: 0.8 });
+        // 2. the bottle comes up from below, turning to face you, and settles
+        tl.to(wrap, { autoAlpha: 1, duration: 0.45, ease: 'power1.out' }, 0)
+          .to(wrap, { yPercent: 0, scale: 1, duration: 1.9, ease: 'expo.out' }, 0)
+          .to(turn, { v: 0, duration: 2.1, ease: 'power3.out', onUpdate: function () { ry = target = turn.v; apply(); } }, 0)
+          // 3. as it rises, the logo glides out of its way to rest beside the shoulder
+          .call(function () { signal('home'); }, null, 0.25)
+          // 4. the copy comes up
+          .call(function () { hero.classList.add('is-in'); }, null, 1.2)
+          // 5. live: the bottle can be turned
+          .call(function () { hero.classList.add('is-ready'); showHint(); }, null, 2.1);
+
+        tl.call(function () { hero.classList.add('is-settled'); }, null, 3.4);   // CSS reveal transitions done
+      });
+    });
+
+    /* ---- Stage A: leaving the hero (scrubbed, not pinned) ----
+       The copy rises, dissolves and blurs, headline first, buttons last; the bottle (with its logo spot)
+       lifts out through the top faster than the page, turning a few degrees. fromTo + immediateRender
+       false, so the opening's own pre-state is never overwritten before the visitor scrolls. */
+    if (!reduce && hasGsap()) {
+      var gsap = window.gsap;
+      var lift = $('[data-v2-ohero-lift]', hero);
+      var outs = [$('.v2-ohero__title', hero), $('.v2-ohero__line', hero), $('.v2-ohero__ctas', hero)];
+      var exit = gsap.timeline({ defaults: { ease: 'none', immediateRender: false },
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true } });
+      // every tween starts at 0 (one that starts later would, scrolled back to the top, restore the
+      // opening's hidden pre-state); the 0.08 stagger lives in each tween's ease instead
+      outs.forEach(function (el, k) {
+        var off = k * 0.08, dur = 0.76 + off, o = off / dur;
+        if (el) exit.fromTo(el, { y: 0, autoAlpha: 1, filter: 'blur(0px)' }, { y: function () { return -0.18 * window.innerHeight; }, autoAlpha: 0, filter: 'blur(6px)', duration: dur,
+          ease: function (p) { return p <= o ? 0 : (p - o) / (1 - o); } }, 0);
+      });
+      exit.fromTo($('.v2-ohero__caption', hero), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5 }, 0)
+        .fromTo(lift, { y: 0, rotation: 0 }, { y: function () { return -1.2 * wrap.offsetHeight; }, rotation: -3, duration: 1, transformOrigin: '50% 60%' }, 0);
+    }
+
+    /* ---- turning: a sideways drag anywhere on the hero (not on its links) ---- */
+    var DEG_PER_PX = 0.42;
+    function loop(now) {
+      raf = 0;
+      var dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
+      last = now;
+      if (!drag && !reduce) {                        // the flick carries on and dies away
+        target += vel * dt;
+        vel *= Math.exp(-3.4 * dt);
+        if (Math.abs(vel) < 1.5) vel = 0;
+      }
+      ry += (target - ry) * (1 - Math.exp(-16 * dt));   // damped follow: refined, never jerky
+      if (Math.abs(target - ry) < 0.02) ry = target;
+      apply();
+      if (drag || vel || ry !== target) raf = requestAnimationFrame(loop);
+    }
+    function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } }
+
+    hero.addEventListener('pointerdown', function (e) {
+      if (!hero.classList.contains('is-ready') || e.button > 0) return;
+      if (e.target.closest('a, button, input, select, textarea, .hoa-logo3d')) return;
+      drag = { id: e.pointerId, x: e.clientX, t: performance.now(), moved: false };
+      vel = 0;
+      if (e.pointerType === 'mouse') e.preventDefault();       // no text selection while turning
+    });
+    hero.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var now = performance.now(), dx = e.clientX - drag.x;
+      if (!dx) return;
+      if (!drag.moved) {
+        drag.moved = true;
+        hero.classList.add('is-turning');
+        try { hero.setPointerCapture(e.pointerId); } catch (_) {}
+        if (hint) hint.classList.remove('is-shown');
+        try { localStorage.setItem(HINT_KEY, '1'); } catch (_) {}
+      }
+      target += dx * DEG_PER_PX;
+      var dts = Math.max(8, now - drag.t) / 1000;
+      vel = vel * 0.6 + (dx * DEG_PER_PX / dts) * 0.4;
+      drag.x = e.clientX; drag.t = now;
+      kick();
+    });
+    function release(e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (performance.now() - drag.t > 120) vel = 0;           // held still before letting go: no flick
+      vel = Math.max(-540, Math.min(540, vel));
+      drag = null;
+      hero.classList.remove('is-turning');
+      kick();
+    }
+    hero.addEventListener('pointerup', release);
+    hero.addEventListener('pointercancel', release);           // a vertical swipe became a scroll
+    hero.addEventListener('lostpointercapture', release);
+  }
+
+  /* ------------------------------- 02 story paragraph, Stage B (2026-10-12) */
+  // sections/hoa-v2-story.liquid. Normal flow, never pinned: one scrubbed timeline takes the words, in
+  // reading order, from faded + blurred to sharp, so the reveal front travels down with the scroll. The
+  // pill photos are words in that sequence (they also grow a little). Rail labels sit beside the lines.
+  function splitWords(el) {
+    var out = [];
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (t) {
+            if (!t) return;
+            if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(' ')); return; }
+            var w = document.createElement('span');
+            w.className = 'v2-story__w';
+            w.textContent = t;
+            frag.appendChild(w);
+            out.push(w);
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1) {
+          if (n.hasAttribute('data-v2-story-pill')) { n.classList.add('v2-story__w'); out.push(n); }
+          else walk(n);
+        }
+      });
+    })(el);
+    return out;
+  }
+  function initStory() {
+    $$('[data-v2-story]').forEach(function (sec) {
+      var text = $('[data-v2-story-text]', sec);
+      var rail = $('[data-v2-story-rail]', sec);
+      var marks = $$('[data-v2-story-mark]', sec);
+      if (!text) return;
+      root.classList.add('v2-story-js');
+      var words = splitWords(text);
+      var STEP = 0.1, DUR = 0.6;
+
+      // each label beside a line: spread over the paragraph's lines, top to bottom
+      var markAt = [];
+      function place() {
+        if (!rail || !words.length) return;
+        var lines = [];
+        words.forEach(function (w, i) {
+          var top = w.offsetTop;
+          if (!lines.length || Math.abs(top - lines[lines.length - 1].top) > 4) lines.push({ top: top, i: i, h: w.offsetHeight });
+        });
+        var tr = text.getBoundingClientRect(), rr = rail.parentNode.getBoundingClientRect();
+        rail.style.top = (tr.top - rr.top) + 'px';
+        rail.style.bottom = 'auto';
+        rail.style.height = tr.height + 'px';
+        marks.forEach(function (m, k) {
+          var L = lines[Math.round(k * (lines.length - 1) / Math.max(1, marks.length - 1))] || lines[0];
+          m.style.top = (L.top + L.h / 2 - m.offsetHeight / 2) + 'px';
+          markAt[k] = L.i;
+        });
+      }
+      place();
+      if (reduce || !hasGsap()) return;
+      var gsap = window.gsap;
+
+      var tl = gsap.timeline({ defaults: { ease: 'none' },
+        scrollTrigger: { trigger: text, start: 'top 85%', end: 'bottom 55%', scrub: 0.8, invalidateOnRefresh: true } });
+      words.forEach(function (w, i) {
+        var pill = w.hasAttribute('data-v2-story-pill');
+        tl.fromTo(w, { opacity: 0.08, filter: 'blur(5px)', y: 10, scale: pill ? 0.7 : 1 },
+          { opacity: 1, filter: 'blur(0px)', y: 0, scale: 1, duration: DUR, ease: 'power2.out' }, i * STEP);
+      });
+      marks.forEach(function (m, k) {
+        tl.fromTo(m, { opacity: 0, x: -8 }, { opacity: 0.35, x: 0, duration: DUR, ease: 'power2.out' }, (markAt[k] || 0) * STEP);
+      });
+      var t;
+      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(place, 150); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { place(); window.ScrollTrigger.refresh(); });
+    });
+  }
+
+  /* ---------------------------------- 03 "Born in ice", Stage C (2026-10-12) */
+  // sections/hoa-v2-place.liquid. C1 (as it scrolls in, not pinned): the photo card rises a little faster
+  // than the section, its photo settles and warms up, the headline rises to the centre over it.
+  // C2 (pinned, +160%): a short hold so the lock-up reads, then the headline splits apart and dissolves
+  // while the card opens out to the full screen (clip-path), so nothing is re-laid out.
+  function initPlace() {
+    if (reduce || !hasGsap()) return;
+    var gsap = window.gsap;
+    $$('[data-v2-place]').forEach(function (sec) {
+      var frame = $('[data-v2-place-frame]', sec);
+      var img = $('[data-v2-place-img]', sec);
+      var a = $('[data-v2-place-a]', sec), b = $('[data-v2-place-b]', sec);
+      gsap.matchMedia().add({ phone: '(max-width: 767px)', wide: '(min-width: 768px)' }, function (ctx) {
+        // the resting card as insets of the screen (%, as the CSS): 24vw x 62vh, phones 64vw x 56vh.
+        // The clip is written from one number (open: 0 = card, 1 = full screen): the browser shortens
+        // equal insets ("19% 38%"), which would scramble a plain string tween.
+        var IY = ctx.conditions.phone ? 22 : 19, IX = ctx.conditions.phone ? 18 : 38;
+        var clip = { open: 0 };
+        var setClip = function () {
+          var k = 1 - clip.open, y = (IY * k).toFixed(3) + '%', x = (IX * k).toFixed(3) + '%';
+          frame.style.clipPath = 'inset(' + y + ' ' + x + ' ' + y + ' ' + x + ' round ' + (10 * k).toFixed(2) + 'px)';
+        };
+        var split = ctx.conditions.phone ? 0.2 : 0.22;          // x vw each word travels
+        setClip();
+
+        // C1: entering
+        var c1 = gsap.timeline({ defaults: { ease: 'none' },
+          scrollTrigger: { trigger: sec, start: 'top bottom', end: 'top top', scrub: 0.8, invalidateOnRefresh: true } });
+        c1.fromTo(frame, { yPercent: 50 }, { yPercent: 0 }, 0)          // 50% of the screen = 120% of the 62vh card's own rise
+          .fromTo(img, { scale: 1.25, filter: 'saturate(0.7) brightness(1.08)' }, { scale: 1.1, filter: 'saturate(1) brightness(1)' }, 0)
+          .fromTo([a, b], { y: function () { return 0.14 * window.innerHeight; } }, { y: 0 }, 0);
+
+        // C2: held
+        var c2 = gsap.timeline({ defaults: { ease: 'none' },
+          scrollTrigger: { trigger: sec, start: 'top top', end: '+=160%', pin: true, scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 } });
+        c2.to({}, { duration: 0.25 })                                    // the breath
+          .to(a, { x: function () { return -split * window.innerWidth; }, duration: 0.75, ease: 'power1.inOut' }, 0.25)
+          .to(b, { x: function () { return split * window.innerWidth; }, duration: 0.75, ease: 'power1.inOut' }, 0.25)
+          .to([a, b], { opacity: 0.15, filter: 'blur(3px)', duration: 0.45, ease: 'power1.in' }, 0.55)
+          .fromTo(clip, { open: 0 }, { open: 1, duration: 0.75, ease: 'power2.inOut', onUpdate: setClip }, 0.25)
+          .to(img, { scale: 1, duration: 0.75, ease: 'power2.inOut' }, 0.25);
+        return function () { gsap.set([frame, img, a, b], { clearProps: 'all' }); frame.style.clipPath = ''; };
+      });
+    });
+    // late fonts/photos change heights: re-measure every trigger once
+    window.addEventListener('load', function () { window.ScrollTrigger.refresh(); }, { once: true });
+  }
+
   /* ------------------------------------------------- two worlds (diptych) */
   // Entrance, once, as the diptych arrives: the photos open softly (left, then right), then the copy
   // in reading order across both panels: labels, titles, mood lines, fragrances, and the link last.
@@ -400,6 +676,9 @@
   function init() {
     initNav();
     initHero();
+    initObjectHero();
+    initStory();
+    initPlace();
     initTurn();
     initWorlds();
     initReveals();

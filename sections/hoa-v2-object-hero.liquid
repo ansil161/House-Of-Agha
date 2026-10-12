@@ -1,0 +1,142 @@
+{%- comment -%}
+  Home V2 · 01 Hero — "The Object" (2026-10-12). Replaces "The Spectrum" (sections/hoa-v2-hero.liquid,
+  kept on disk) in templates/index.v2.json.
+  Copy on the left, ONE interactive bottle on the right, the 3D Agha logo floating between them.
+  Opening, one continuous move (assets/hoa-v2.js, initObjectHero): the logo appears as the focal point
+  -> the bottle rises in from below, turning to face you -> the logo glides to its place beside it ->
+  the headline and links come up -> the hero is live. The bottle that enters IS the interactive one
+  (the CSS 3D bottle of the V2 turn, rebuilt from assets/hoa-bottle-3d-<bottle>.webp): a sideways drag
+  anywhere on the hero turns it round its vertical axis, with a little inertia.
+  The logo is the site's one 3D logo layer (assets/hoa-crest.js, profile "v2"): its spots here are the
+  two empty markers below, placed by CSS per breakpoint; further down it travels on its own.
+  Without JS (or with reduced motion) everything simply shows.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- liquid
+  assign s = section.settings
+  capture catalog_json
+    render 'hoa-catalog-data'
+  endcapture
+  assign catalog = catalog_json | parse_json
+  assign cta_url = s.cta_url | default: routes.all_products_collection_url
+  assign cut = 'hoa-bottle-' | append: s.bottle | append: '.webp'
+  assign tex = 'hoa-bottle-3d-' | append: s.bottle | append: '.webp'
+
+  assign p = s.product
+  if p != blank
+    assign p_url = p.url
+    assign p_name = p.title
+    assign p_price = p.price | money
+  else
+    assign p_url = '/products/' | append: s.handle
+    assign p_name = s.handle
+    assign p_price = ''
+    for c in catalog.products
+      if c.handle == s.handle
+        assign p_name = c.name
+        assign p_n = c.salePrice | default: c.regularPrice
+        capture p_price
+          render 'hoa-v2-inr', n: p_n
+        endcapture
+      endif
+    endfor
+  endif
+-%}
+{%- comment -%} Arms the opening pre-state before first paint; the failsafe shows the hero if hoa-v2.js never runs. {%- endcomment -%}
+<script>document.documentElement.classList.add('v2-js');setTimeout(function(){var h=document.querySelector('[data-v2-ohero]');if(h)h.classList.add('is-live','is-in','is-ready');},9000);</script>
+<section class="v2-ohero" data-v2-ohero data-header-theme="light">
+  {%- comment -%} the logo's opening spot: centre of the hero {%- endcomment -%}
+  <span class="v2-ohero__intro" data-logo3d-intro aria-hidden="true"></span>
+
+  <div class="v2-wrap v2-ohero__inner">
+    <div class="v2-ohero__copy">
+      <h1 class="v2-hero__title v2-ohero__title">
+        <span class="v2-hero__mask"><span>{{ s.line_1_a }} <strong>{{ s.line_1_b }}</strong></span></span>
+        <span class="v2-hero__mask"><span>{{ s.line_2_a }} <strong>{{ s.line_2_b }}</strong></span></span>
+      </h1>
+      <p class="v2-hero__line v2-ohero__line" data-v2-ohero-step>{{ s.line }}</p>
+      <div class="v2-hero__ctas v2-ohero__ctas" data-v2-ohero-step>
+        <a class="v2-hero__btn" href="{{ cta_url }}">{{ s.cta_label }}<span aria-hidden="true">&rarr;</span></a>
+        {%- if s.cta_2_label != blank -%}
+          <a class="v2-link" href="{{ s.cta_2_url | default: '/pages/the-house' }}"><span>{{ s.cta_2_label }}</span></a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="v2-ohero__stage">
+      {%- comment -%} the bottle, its logo spot and its hint lift out of the hero together on scroll {%- endcomment -%}
+      <div class="v2-ohero__lift" data-v2-ohero-lift>
+        <div class="v2-turn__bottle v2-ohero__bottle" data-v2-ohero-bottle data-bottle="{{ s.bottle }}" data-tex="{{ tex | asset_url }}" style="--mask: url('{{ cut | asset_url }}')">
+          <img class="v2-turn__flat" src="{{ cut | asset_url }}" alt="{{ p_name | escape }}" width="291" height="760" fetchpriority="high" decoding="async">
+          <span class="v2-turn__shade" aria-hidden="true"></span>
+          <span class="v2-turn__floor" aria-hidden="true"></span>
+        </div>
+        {%- comment -%} the logo's resting spot in the hero, beside the bottle's shoulder {%- endcomment -%}
+        <span class="v2-ohero__home" data-logo3d-home aria-hidden="true"></span>
+
+        {%- if s.hint != blank -%}
+          <p class="v2-ohero__hint" data-v2-ohero-hint aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12H3m0 0 3-3m-3 3 3 3M16 12h5m0 0-3-3m3 3-3 3"/></svg>
+            <span>{{ s.hint }}</span>
+          </p>
+        {%- endif -%}
+      </div>
+
+      <a class="v2-ohero__caption" href="{{ p_url }}" data-v2-ohero-step>
+        <span class="v2-hero__item-name">{{ p_name }}</span>
+        <span class="v2-hero__item-meta">Eau de Parfum{% if p_price != blank %}, {{ p_price }}{% endif %}</span>
+        <span class="v2-hero__item-go">Discover <span aria-hidden="true">&rarr;</span></span>
+      </a>
+    </div>
+  </div>
+
+  {%- if s.show_logo3d -%}
+    {%- liquid
+      assign logo3d_src = s.logo3d_model_url | strip
+      if logo3d_src == blank
+        assign logo3d_src = 'agha-crest.glb' | asset_url
+      endif
+    -%}
+    <div hidden data-hoa-logo3d data-profile="v2" data-src="{{ logo3d_src }}" data-label="House of Agha logo. Drag to turn it."></div>
+    <script src="{{ 'hoa-crest.js' | asset_url }}" defer></script>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Hero (object)",
+  "class": "v2-section v2-section--hero",
+  "settings": [
+    { "type": "header", "content": "Headline", "info": "Two lines; the second part of each line is set heavier." },
+    { "type": "text", "id": "line_1_a", "label": "Line 1", "default": "Begins as" },
+    { "type": "text", "id": "line_1_b", "label": "Line 1, heavier", "default": "a place." },
+    { "type": "text", "id": "line_2_a", "label": "Line 2", "default": "Ends" },
+    { "type": "text", "id": "line_2_b", "label": "Line 2, heavier", "default": "close to you." },
+    { "type": "textarea", "id": "line", "label": "Short line", "default": "Seven eaux de parfum from House of Agha, each one a place you can wear." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop the Collection" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    { "type": "text", "id": "cta_2_label", "label": "Second link label", "default": "Our story" },
+    { "type": "url", "id": "cta_2_url", "label": "Second link" },
+    { "type": "header", "content": "Bottle" },
+    { "type": "product", "id": "product", "label": "Product", "info": "Name, price and link come from here when set." },
+    { "type": "text", "id": "handle", "label": "Handle when no product is picked", "default": "agha-blue" },
+    {
+      "type": "select", "id": "bottle", "label": "3D bottle", "default": "agha-blue",
+      "options": [
+        { "value": "agha-blue", "label": "Agha Blue" },
+        { "value": "oud-fury", "label": "Oud Fury" },
+        { "value": "dark-paradise", "label": "Oud of Dark Paradise" },
+        { "value": "maha", "label": "Maha" },
+        { "value": "sea-smoke", "label": "Sea Smoke" },
+        { "value": "tobacco-enigma", "label": "Tobacco Enigma" },
+        { "value": "shamamah", "label": "Shamamah" }
+      ]
+    },
+    { "type": "text", "id": "hint", "label": "Drag hint", "default": "Drag to turn", "info": "Under the bottle until the visitor's first turn. Empty = no hint." },
+    { "type": "header", "content": "3D logo" },
+    { "type": "checkbox", "id": "show_logo3d", "label": "3D Agha logo", "default": true, "info": "Opens the hero, rests beside the bottle, then travels down the page." },
+    { "type": "text", "id": "logo3d_model_url", "label": "3D logo model (.glb) URL", "info": "Leave empty to use agha-crest.glb from the theme's assets." }
+  ],
+  "presets": [{ "name": "V2 · Hero (object)" }]
+}
+{% endschema %}

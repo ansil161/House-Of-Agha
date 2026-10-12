@@ -26,7 +26,7 @@
 }
 
 /* ---------- Page (only pages carrying the V2 hero) ---------- */
-body:has(.v2-hero) {
+body:has(.v2-hero, .v2-ohero) {
   --hoa-paper: var(--v2-paper);   /* V1 sections kept on V2 (films, reels) sit on the same paper */
   background: var(--v2-paper);
   color: var(--v2-ink);
@@ -38,7 +38,7 @@ body:has(.v2-hero) {
 .v2-section img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- Navigation: thin, no container, almost absent ---------- */
-body:has(.v2-hero) .hoa-header.header {
+body:has(.v2-hero, .v2-ohero) .hoa-header.header {
   --hoa-header-h: var(--v2-header-h);
   height: var(--v2-header-h);
   background: transparent;
@@ -48,13 +48,13 @@ body:has(.v2-hero) .hoa-header.header {
   color: var(--v2-ink);
   transition: background-color 0.5s var(--v2-ease), border-color 0.5s var(--v2-ease), transform 0.6s var(--v2-ease), opacity 0.6s var(--v2-ease);
 }
-body:has(.v2-hero) .hoa-header.header.is-transparent,
-body:has(.v2-hero) .hoa-header.header.is-dark:not(.is-transparent) { background: transparent; color: var(--v2-ink); border-color: transparent; }
-body:has(.v2-hero) .hoa-header.header.v2-solid { background: var(--v2-paper); border-bottom-color: var(--v2-line); }
-body:has(.v2-hero) .hoa-header .hoa-header__logo { height: 30px; filter: none; }
-body:has(.v2-hero) .hoa-header__nav { gap: clamp(20px, 2.4vw, 40px); }
-body:has(.v2-hero) .hoa-header__nav a,
-body:has(.v2-hero) .hoa-header .header-action-btn {
+body:has(.v2-hero, .v2-ohero) .hoa-header.header.is-transparent,
+body:has(.v2-hero, .v2-ohero) .hoa-header.header.is-dark:not(.is-transparent) { background: transparent; color: var(--v2-ink); border-color: transparent; }
+body:has(.v2-hero, .v2-ohero) .hoa-header.header.v2-solid { background: var(--v2-paper); border-bottom-color: var(--v2-line); }
+body:has(.v2-hero, .v2-ohero) .hoa-header .hoa-header__logo { height: 30px; filter: none; }
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav { gap: clamp(20px, 2.4vw, 40px); }
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav a,
+body:has(.v2-hero, .v2-ohero) .hoa-header .header-action-btn {
   font-family: var(--v2-sans);
   font-size: 10.5px;
   font-weight: 500;
@@ -62,25 +62,25 @@ body:has(.v2-hero) .hoa-header .header-action-btn {
   text-transform: uppercase;
   opacity: 1;
 }
-body:has(.v2-hero) .hoa-header__nav a { position: relative; padding: 6px 0; }
-body:has(.v2-hero) .hoa-header__nav a::after {
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav a { position: relative; padding: 6px 0; }
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav a::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor;
   transform: scaleX(0); transform-origin: right; transition: transform 0.5s var(--v2-ease);
 }
-body:has(.v2-hero) .hoa-header__nav a:hover::after,
-body:has(.v2-hero) .hoa-header__nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav a:hover::after,
+body:has(.v2-hero, .v2-ohero) .hoa-header__nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 @media (min-width: 768px) {
-  body:has(.v2-hero) .hoa-header .cart-count,
-  body:has(.v2-hero) .hoa-header.is-transparent .cart-count {
+  body:has(.v2-hero, .v2-ohero) .hoa-header .cart-count,
+  body:has(.v2-hero, .v2-ohero) .hoa-header.is-transparent .cart-count {
     background: none; color: inherit; min-width: 0; height: auto; padding: 0; border-radius: 0;
     font-size: 10.5px; letter-spacing: 0.1em;
   }
-  body:has(.v2-hero) .hoa-header .cart-count::before { content: '('; }
-  body:has(.v2-hero) .hoa-header .cart-count::after { content: ')'; }
-  body:has(.v2-hero) .hoa-header__bag-icon { display: none; }
+  body:has(.v2-hero, .v2-ohero) .hoa-header .cart-count::before { content: '('; }
+  body:has(.v2-hero, .v2-ohero) .hoa-header .cart-count::after { content: ')'; }
+  body:has(.v2-hero, .v2-ohero) .hoa-header__bag-icon { display: none; }
 }
-body:has(.v2-hero) .hoa-header.is-transparent .cart-count { background: var(--v2-ink); color: var(--v2-paper); }
-body:has(.v2-hero) .hoa-header__wish-count { font-size: 9px; letter-spacing: 0; margin-left: 2px; }
+body:has(.v2-hero, .v2-ohero) .hoa-header.is-transparent .cart-count { background: var(--v2-ink); color: var(--v2-paper); }
+body:has(.v2-hero, .v2-ohero) .hoa-header__wish-count { font-size: 9px; letter-spacing: 0; margin-left: 2px; }
 
 /* ---------- Shared type ---------- */
 .v2-eyebrow {
@@ -799,12 +799,12 @@ html:not(.v2-js) .v2-voices__index { display: none; }
 @media (min-width: 861px) { .v2-sig__bottle { background: var(--v2-paper); } }
 
 /* V1 film + reels sections kept on V2: same type voice as the V2 headings */
-body:has(.v2-hero) .hoa-reels .hoa-h2 {
+body:has(.v2-hero, .v2-ohero) .hoa-reels .hoa-h2 {
   font-family: var(--v2-display); font-weight: 400;
   font-size: clamp(40px, 5.6vw, 92px); line-height: 0.98; letter-spacing: -0.012em; color: var(--v2-ink);
 }
-body:has(.v2-hero) .hoa-reels .hoa-h2 em { font-family: var(--v2-italic); font-style: italic; letter-spacing: -0.02em; color: var(--v2-ink); }
-body:has(.v2-hero) .hoa-reels .hoa-eyebrow { font: 500 10.5px/1.4 var(--v2-sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--v2-mute); }
+body:has(.v2-hero, .v2-ohero) .hoa-reels .hoa-h2 em { font-family: var(--v2-italic); font-style: italic; letter-spacing: -0.02em; color: var(--v2-ink); }
+body:has(.v2-hero, .v2-ohero) .hoa-reels .hoa-eyebrow { font: 500 10.5px/1.4 var(--v2-sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--v2-mute); }
 
 /* ==========================================================================
    02 THE TURN: sticky scroll story. The 3D bottle turns at the centre; each figure is its own
@@ -1091,4 +1091,248 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
    fade rises from the foot to keep the words readable without hiding the cap and label above. */
 .v2-worlds--still .v2-world--dark .v2-world__media::after {
   background: linear-gradient(to top, rgba(244, 245, 248, 0.9) 0%, rgba(244, 245, 248, 0.72) 30%, rgba(244, 245, 248, 0.25) 52%, rgba(244, 245, 248, 0) 66%);
+}
+
+/* ==========================================================================
+   01 HERO — "The Object" (2026-10-12, sections/hoa-v2-object-hero.liquid, motion in hoa-v2.js
+   initObjectHero). Copy left, one interactive CSS 3D bottle right, the 3D logo floating between
+   (drawn by assets/hoa-crest.js on its fixed layer; the two empty markers here are its spots).
+   Opening pre-state (html.v2-js): bottle hidden until .is-live, copy down until .is-in.
+   ========================================================================== */
+.v2-ohero {
+  --oh-bh: min(64svh, 620px);                 /* bottle height */
+  --oh-bw: calc(var(--oh-bh) * 0.3829);       /* its width (291 / 760) */
+  --oh-ls: clamp(84px, 8vw, 124px);           /* logo size at rest */
+  --oh-foot: 12%;                             /* bottle foot above the hero's bottom edge */
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  max-height: 1100px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 46% 58% at 70% 60%, rgba(255, 253, 248, 0.85), rgba(255, 253, 248, 0) 70%),
+    var(--v2-paper);
+  touch-action: pan-y;                        /* vertical swipes scroll; sideways ones turn the bottle */
+}
+.v2-ohero.is-turning { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+
+/* the logo's spots (empty; hoa-crest.js reads their boxes) */
+.v2-ohero__intro, .v2-ohero__home { position: absolute; pointer-events: none; visibility: hidden; }
+.v2-ohero__intro {
+  left: 50%; top: 50%;
+  width: clamp(150px, 26vh, 240px); height: clamp(150px, 26vh, 240px);
+  transform: translate(-50%, -50%);
+}
+.v2-ohero__home {
+  width: var(--oh-ls); height: var(--oh-ls);
+  left: calc(50% - var(--oh-bw) / 2 - var(--oh-ls) - clamp(18px, 2.4vw, 40px));
+  bottom: calc(var(--oh-foot) + var(--oh-bh) * 0.62);
+}
+
+.v2-ohero__inner {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  padding-top: var(--v2-header-h);
+}
+.v2-ohero__copy { position: relative; z-index: 2; display: grid; justify-items: start; gap: clamp(22px, 3.4vh, 34px); padding-bottom: 4vh; }
+.v2-ohero__title { grid-area: auto; font-size: clamp(40px, 4.4vw, 74px); }
+.v2-ohero__line { max-width: 32ch; }
+
+.v2-ohero__stage { position: relative; height: 100%; cursor: grab; }
+.v2-ohero.is-turning .v2-ohero__stage { cursor: grabbing; }
+.v2-ohero .v2-ohero__bottle {
+  position: absolute;
+  left: 0; right: 0; bottom: var(--oh-foot);
+  height: var(--oh-bh);
+  margin: 0 auto;
+  perspective: 1800px;
+}
+.v2-ohero .v2-ohero__bottle .v2-turn__floor { bottom: -2.5%; }
+
+/* the drag hint under the bottle: until the first turn */
+.v2-ohero__hint {
+  position: absolute; left: 0; right: 0; bottom: calc(var(--oh-foot) - 46px);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 0;
+  font: 500 10px/1 var(--v2-sans); letter-spacing: 0.22em; text-transform: uppercase;
+  color: #8A6E4B;
+  opacity: 0; transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.v2-ohero__hint svg { width: 18px; height: 18px; }
+.v2-ohero.is-ready .v2-ohero__hint.is-shown { opacity: 1; }
+
+/* the bottle's name, price, link */
+.v2-ohero__caption {
+  position: absolute; z-index: 2; right: 0; bottom: clamp(28px, 6vh, 56px);
+  display: grid; gap: 6px; justify-items: start;
+  color: var(--v2-ink); text-decoration: none;
+}
+.v2-ohero__caption:hover .v2-hero__item-go span, .v2-ohero__caption:focus-visible .v2-hero__item-go span { transform: translateX(5px); }
+.v2-ohero__caption:focus-visible { outline: 1px solid var(--v2-ink); outline-offset: 6px; }
+
+/* opening pre-state (only when JS runs; the inline failsafe adds every class after 9 s) */
+html.v2-js .v2-ohero:not(.is-live) .v2-ohero__bottle { visibility: hidden; }
+html.v2-js .v2-ohero:not(.is-in) .v2-hero__mask > span { transform: translateY(110%); }
+html.v2-js .v2-ohero [data-v2-ohero-step] { transition: opacity 1s ease, transform 1.2s var(--v2-ease); }
+html.v2-js .v2-ohero:not(.is-in) [data-v2-ohero-step] { opacity: 0; transform: translateY(14px); }
+.v2-ohero.is-in .v2-ohero__line { transition-delay: 0.35s; }
+.v2-ohero.is-in .v2-ohero__ctas { transition-delay: 0.5s; }
+.v2-ohero.is-in .v2-ohero__caption { transition-delay: 0.7s; }
+
+/* tablets (portrait) + phones: copy on top, the bottle below it; the logo rests on its left shoulder */
+@media (max-width: 899px) {
+  .v2-ohero {
+    --oh-bh: min(46svh, 430px);
+    --oh-ls: clamp(60px, 15vw, 84px);
+    --oh-foot: 11%;
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 72%, rgba(255, 253, 248, 0.85), rgba(255, 253, 248, 0) 70%),
+      var(--v2-paper);
+  }
+  .v2-ohero__inner {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    padding-top: calc(var(--v2-header-h) + clamp(18px, 4svh, 40px));
+  }
+  .v2-ohero__copy { gap: 18px; padding-bottom: 0; }
+  .v2-ohero__title { font-size: clamp(34px, 9vw, 54px); }
+  .v2-ohero__line { font-size: 14px; }
+  .v2-ohero__stage { position: static; }       /* bottle, markers and caption measure from the hero */
+  .v2-ohero__home { left: calc(50% - var(--oh-bw) / 2 - var(--oh-ls) - 6px); bottom: calc(var(--oh-foot) + var(--oh-bh) * 0.6); }
+  .v2-ohero__caption { left: auto; right: var(--v2-gutter); bottom: 18px; gap: 3px; justify-items: end; text-align: right; }
+  .v2-ohero__caption .v2-hero__item-name { font-size: 17px; }
+  .v2-ohero__caption .v2-hero__item-go { display: none; }
+  .v2-ohero__hint { bottom: calc(var(--oh-foot) - 34px); }
+}
+@media (min-width: 600px) and (max-width: 899px) and (min-height: 900px) {
+  .v2-ohero { --oh-bh: min(52svh, 580px); --oh-ls: 96px; }
+}
+@media (max-width: 899px) and (max-height: 700px) {
+  .v2-ohero { --oh-bh: min(40svh, 330px); }
+  .v2-ohero__ctas .v2-link { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.v2-js .v2-ohero .v2-ohero__bottle { visibility: visible; }
+  html.v2-js .v2-ohero .v2-hero__mask > span, html.v2-js .v2-ohero [data-v2-ohero-step] { transform: none; opacity: 1; transition: none; }
+}
+.v2-ohero__lift { position: absolute; inset: 0; pointer-events: none; }
+.v2-ohero__lift > * { pointer-events: auto; }
+.v2-ohero.is-settled [data-v2-ohero-step] { transition: none; }   /* scroll (GSAP) owns them after the opening */
+
+/* ==========================================================================
+   02 STORY PARAGRAPH (2026-10-12, sections/hoa-v2-story.liquid, motion: hoa-v2.js initStory)
+   Normal flow, never pinned. Words are split into inline-block spans by JS; the scrubbed timeline
+   takes each from faded + blurred to sharp. The rail labels are placed beside lines by JS.
+   ========================================================================== */
+.v2-story {
+  --st-serif: 'Cormorant Garamond', 'Didot', Georgia, serif;
+  --st-ink: #1B2B26;
+  background: var(--v2-story-bg, #F1EFEA);
+  color: var(--st-ink);
+}
+.v2-story__inner {
+  position: relative;
+  min-height: 180vh;
+  display: flex; align-items: center;
+  max-width: var(--v2-max); margin: 0 auto;
+  padding: 0 var(--v2-gutter);
+}
+.v2-story__text {
+  position: relative;
+  width: min(36vw, 560px);
+  margin: 0 auto;
+  left: 4vw;                                   /* a touch right of centre */
+  font-family: var(--st-serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.2vw, 46px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+.v2-story__text em { font-style: italic; color: #2E5A4C; }
+.v2-story__w { display: inline-block; will-change: transform, opacity, filter; }
+.v2-story__pill {
+  display: inline-block;
+  width: 1.5em; height: 0.75em;
+  margin: 0 0.12em;
+  border-radius: 999px;
+  overflow: hidden;
+  vertical-align: middle;
+  transform: translateY(-0.06em);
+  background: #DCD6CA;
+}
+.v2-story__pill img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.v2-story__rail {
+  position: absolute; top: 0; bottom: 0; left: 18vw;
+  margin: 0; padding: 0; list-style: none;
+  border-left: 1px solid rgba(27, 43, 38, 0.14);
+  pointer-events: none;
+}
+.v2-story__mark {
+  position: absolute; left: 12px; top: 0;
+  font: 500 11px/1 var(--v2-sans); letter-spacing: 0.12em; text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--st-ink); opacity: 0.35;
+}
+html:not(.v2-story-js) .v2-story__mark:not(:first-child) { display: none; }   /* no JS: no placement */
+
+@media (max-width: 1024px) {
+  .v2-story__text { width: min(62vw, 560px); left: 5vw; }
+  .v2-story__rail { left: var(--v2-gutter); }
+}
+@media (max-width: 640px) {
+  .v2-story__inner { min-height: 150vh; padding-left: calc(var(--v2-gutter) + 22px); }
+  .v2-story__text { width: 100%; left: 0; font-size: clamp(26px, 7.4vw, 34px); }
+  .v2-story__mark { left: 8px; font-size: 9px; writing-mode: vertical-rl; transform: rotate(180deg); }
+}
+
+/* ==========================================================================
+   03 "BORN IN ICE" (2026-10-12, sections/hoa-v2-place.liquid, motion: hoa-v2.js initPlace)
+   The card is the full-screen photo clipped down to a portrait card; the pinned scroll opens the clip.
+   ========================================================================== */
+.v2-place {
+  --pl-serif: 'Cormorant Garamond', 'Didot', Georgia, serif;
+  position: relative;
+  background: var(--v2-place-bg, #1E3932);
+  color: #fff;
+}
+.v2-place__stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+.v2-place__dot {
+  position: absolute; left: 5vw; top: 40%;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.v2-place__frame {
+  position: absolute; inset: 0;
+  /* the resting card: 24vw x 62vh, radius 10px (JS animates the same inset) */
+  clip-path: inset(19% 38% 19% 38% round 10px);
+  will-change: clip-path, transform;
+}
+.v2-place .v2-place__img { width: 100%; height: 100%; object-fit: cover; object-position: var(--v2-place-focal, 50% 50%); transform-origin: 50% 50%; will-change: transform, filter; }
+.v2-place .v2-place__title {
+  position: absolute; z-index: 2; left: 0; right: 0; top: 50%;
+  margin: 0;
+  display: flex; justify-content: center; align-items: baseline; gap: 0.24em;
+  transform: translateY(-50%);
+  font-family: var(--pl-serif); font-weight: 400;
+  font-size: clamp(48px, 6.4vw, 96px); line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 0 1px 24px rgba(10, 24, 20, 0.25);
+}
+.v2-place__a, .v2-place__b { display: inline-block; will-change: transform, opacity, filter; }
+.v2-place__b { font-style: italic; }
+@media (max-width: 767px) {
+  .v2-place__frame { clip-path: inset(22% 18% 22% 18% round 10px); }
+  .v2-place__dot { display: none; }
 }

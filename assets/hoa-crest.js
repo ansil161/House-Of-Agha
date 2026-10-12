@@ -27,6 +27,15 @@
       -> gone. Phones: hero only.
       SHOW_IN_HERO false (2026-10-12): invisible at the hero (no lift-off, no hint), so
       it first fades in at "Seven fragrances"; phones never show it.
+   8. Home V2 (anchor data-profile="v2", sections/hoa-v2-object-hero.liquid, 2026-10-12): the
+      SAME layer and model, a different route. The hero's own script (hoa-v2.js) runs the
+      opening and tells this one when to move through window.AGHA_HERO { appear, home } (ms,
+      performance.now()): the logo appears large at [data-logo3d-intro], then, as the bottle
+      rises in, glides to [data-logo3d-home] beside it (both markers are placed by CSS, so
+      every breakpoint has its own spot). Then: Scent Story (above the chapter text, held
+      while that column is sticky; since 2026-10-12 it fades out after the hero and back in there,
+      because the story + "Born in ice" sections now come first) -> the seam of Two worlds ->
+      gone. Phones/tablets: hero only. No "Drag to rotate" hint (the bottle has its own).
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
    Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
@@ -73,6 +82,15 @@ var HOA_CREST_CONFIG = {
     END_FADE: 0.3,            // after the last stop it fades out over this much scroll (x viewport)
     SMOOTH: 170               // spring stiffness on the travelling position (inertia)
   },
+  // Home V2 profile (see 8. above)
+  V2: {
+    APPEAR_MS: 900,           // fade + settle in at the intro spot
+    GLIDE_MS: 1700,           // intro spot -> home beside the bottle
+    SPIN_SECONDS: 22,         // (unused while SWAY_DEG > 0)
+    SWAY_DEG: 26,             // idle: a slow sway left/right instead of full turns, so it never goes edge-on
+    SWAY_SECONDS: 10,         //   beside the bottle (one full sway); 0 = the V1 full turn
+    FALLBACK_MS: 4500         // if the hero never signals: appear at home this long after the reveal
+  },
   THREE_URL: 'https://cdn.jsdelivr.net/npm/three@0.169.0/'
 };
 /* ------------------------------------------------------------------------ */
@@ -81,9 +99,15 @@ var HOA_CREST_CONFIG = {
   'use strict';
 
   var anchor = document.querySelector('[data-hoa-logo3d]');
-  var bottle = document.querySelector('[data-hoa-hero-bottle] img');
+  var V2 = !!anchor && anchor.getAttribute('data-profile') === 'v2';
+  var bottle = V2 ? null : document.querySelector('[data-hoa-hero-bottle] img');
   var modelUrl = C.MODEL_URL || (anchor && anchor.getAttribute('data-src'));
-  if (!anchor || !bottle || !modelUrl || !window.IntersectionObserver) return;
+  if (!anchor || (!V2 && !bottle) || !modelUrl || !window.IntersectionObserver) return;
+  var HERO_ON = V2 || C.SHOW_IN_HERO;                     // shown at the hero stop
+  var INTRO_MS = V2 ? C.V2.GLIDE_MS : C.INTRO_MS;
+  var SPIN_SECONDS = V2 ? C.V2.SPIN_SECONDS : C.SPIN_SECONDS;
+  var SWAY = V2 && C.V2.SWAY_DEG > 0 ? C.V2.SWAY_DEG * Math.PI / 180 : 0;   // radians
+  var swayT = 0;
 
   var html = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -203,6 +227,7 @@ var HOA_CREST_CONFIG = {
     var hintDone = false;
     try { hintDone = localStorage.getItem(HINT_KEY) === '1'; } catch (_) {}
     var introStart = -1;                                  // ms; -1 = not yet, 0 = skipped
+    var readyAt = 0;                                      // ms: the model is in
     var pose = null;                                      // { x, y, s }: centre + logo height, px
     var J = C.JOURNEY;
     var px = { x: 0, v: 0 }, py = { x: 0, v: 0 }, ps = { x: 0, v: 0 };   // travelling position, smoothed
@@ -217,18 +242,28 @@ var HOA_CREST_CONFIG = {
       fit.add(model);
       
       // landed below the hero (reload, anchor): no lift-off, it is simply there
-      if (reduceMotion || !C.SHOW_IN_HERO || window.scrollY > window.innerHeight * 0.5) introStart = 0;
+      if (reduceMotion || !HERO_ON || window.scrollY > window.innerHeight * 0.5) introStart = 0;
+      readyAt = performance.now();
+      window.__aghaLogoReady = true;
+      try { document.dispatchEvent(new CustomEvent('agha:logo-ready')); } catch (_) {}
 
       size();
       window.addEventListener('resize', size);
       window.addEventListener('scroll', wake, { passive: true });
+      document.addEventListener('agha:hero', wake);           // V2: the hero calls the next move
       wake();
       document.addEventListener('visibilitychange', function () { document.hidden ? pause() : wake(); });
     }, undefined, fail);
 
     /* ---------- where the logo is ---------- */
     // the printed logo on the label, and the bottle's drawn edges (object-fit: contain)
+    function marker(sel) {                                // a CSS-placed spot: its centre, its height = logo size
+      var el = document.querySelector(sel);
+      var r = el ? el.getBoundingClientRect() : null;
+      return r && r.height ? { x: r.left + r.width / 2, y: r.top + r.height / 2, s: r.height } : null;
+    }
     function label() {
+      if (V2) return marker('[data-logo3d-intro]') || marker('[data-logo3d-home]') || { x: vw / 2, y: vh / 2, s: 120 };
       var r = bottle.getBoundingClientRect();
       var nw = bottle.naturalWidth || 480, nh = bottle.naturalHeight || 1272;
       var k = Math.min(r.width / nw, r.height / nh);
@@ -246,6 +281,7 @@ var HOA_CREST_CONFIG = {
       return r.height ? r.top + r.height / 2 : null;
     }
     function homePose(L) {
+      if (V2) { var m = marker('[data-logo3d-home]') || L; return { x: m.x, y: m.y, s: m.s, hint: 'below' }; }
       var H = L.home, s = L.s * H.scale, gap = L.s * H.gap;
       var ly = H.line ? lineY() : null;
       return {
@@ -269,7 +305,39 @@ var HOA_CREST_CONFIG = {
     var collBtn = document.querySelector('.hoa-collection__head > .hoa-btn');
     var worldHead = document.querySelector('.hoa-world-section h2');
     var worldLede = document.querySelector('.hoa-world-section .hoa-lede');
-    var STOPS = [
+    var ssStack = document.querySelector('.ss__stack');
+    var ssAside = document.querySelector('.ss__aside');
+    var worldsSplit = document.querySelector('.v2-worlds__split');
+    var worldFirst = document.querySelector('.v2-worlds__split > .v2-world');
+    var STOPS_V2 = [
+      { // Scent Story: above the chapter text ("Notes / Rooted in Oud"), left-aligned with it, held for as
+        // long as that column is sticky. It glides here from the hero in full view (the first scroll).
+        wide: true,   // (glide: true travels in full view; the hero is now followed by the story + Born in ice, so it fades)
+        pose: function () {
+          if (!ssStack || !ssAside) return null;
+          var r = ssStack.getBoundingClientRect();
+          if (!r.height) return null;
+          var s = clampN(vw * 0.055, 72, 96);
+          var y = r.top - s / 2 - 28;
+          if (r.top < vh && y - s / 2 < 76) return null;   // short screens: no room under the header
+          return { x: r.left + s / 2, y: y, s: s };
+        },
+        span: function () {                                 // scroll range: from just before it sticks until it lets go
+          var r = ssAside.getBoundingClientRect(), top = r.top + window.scrollY;
+          return [top - vh * 0.3, top + r.height - vh];
+        }
+      },
+      { // Two worlds: on the seam between the Oud and the Fresh photographs (it follows the seam on hover)
+        wide: true, inAt: 0.75, outAt: 0.25,
+        pose: function () {
+          if (!worldsSplit || !worldFirst) return null;
+          var a = worldFirst.getBoundingClientRect(), r = worldsSplit.getBoundingClientRect();
+          if (!r.height) return null;
+          return { x: a.right, y: r.top + r.height / 2, s: clampN(vw * 0.075, 90, 130) };
+        }
+      }
+    ];
+    var STOPS = V2 ? STOPS_V2 : [
       { // "Seven fragrances. Seven worlds."  ◉   right of the headline, on its line
         wide: true, inAt: 0.72, outAt: 0.24,
         pose: function () {
@@ -319,7 +387,8 @@ var HOA_CREST_CONFIG = {
         var p = st.pose();
         if (!p) continue;
         var doc = p.y + sy;                                 // the spot's place on the page
-        list.push({ pose: p, a: doc - st.inAt * vh, b: doc - st.outAt * vh });
+        var sp = st.span ? st.span() : null;                // or its own scroll range (a sticky spot)
+        list.push({ pose: p, a: sp ? sp[0] : doc - st.inAt * vh, b: sp ? sp[1] : doc - st.outAt * vh, glide: !!st.glide });
       }
       for (var m = 1; m < list.length; m++) {               // never let two holds overlap
         if (list[m].a < list[m - 1].b + 1) list[m - 1].b = list[m].a - 1;
@@ -328,22 +397,24 @@ var HOA_CREST_CONFIG = {
       for (k = 0; k < list.length; k++) {
         A = list[k];
         if (sy <= A.b) {                                     // holding at stop k
-          if (sy >= A.a || k === 0) return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !C.SHOW_IN_HERO ? 0 : 1, hero: A.hero ? 1 : 0 };
+          if (sy >= A.a || k === 0) return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !HERO_ON ? 0 : 1, hero: A.hero ? 1 : 0, tilt: 0 };
           B = A; A = list[k - 1];                            // between stop k-1 and k
           t = clamp01((sy - A.b) / Math.max(1, B.a - A.b));
           var e = ease(t);
           var f = Math.min(J.FADE, J.FADE_VH * vh / Math.max(1, B.a - A.b));
           var a = t < f ? 1 - t / f : t > 1 - f ? (t - (1 - f)) / f : 0;   // out, hidden, back in
-          if (A.hero && !C.SHOW_IN_HERO && t < f) a = 0;                  // not shown at the hero: only fades in
+          if (B.glide) a = 1;                                               // travels in full view
+          if (A.hero && !HERO_ON && t < f) a = 0;                           // not shown at the hero: only fades in
           return {
             x: mix(A.pose.x, B.pose.x, e), y: mix(A.pose.y, B.pose.y, e), s: mix(A.pose.s, B.pose.s, e),
-            a: a, hero: A.hero ? 1 - e : 0
+            a: a, hero: A.hero ? 1 - e : 0,
+            tilt: B.glide ? Math.sin(Math.PI * t) : 0                       // a slight lean while it travels
           };
         }
       }
       A = list[list.length - 1];                             // past the last stop: fade out for good
       t = clamp01((sy - A.b) / (vh * J.END_FADE));
-      return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !C.SHOW_IN_HERO ? 0 : 1 - t, hero: A.hero ? 1 : 0 };
+      return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !HERO_ON ? 0 : 1 - t, hero: A.hero ? 1 : 0, tilt: 0 };
     }
 
     /* ---------- hover: over the logo it stops and leans toward the cursor ---------- */
@@ -424,10 +495,10 @@ var HOA_CREST_CONFIG = {
       last = now;
 
       // spins whenever nobody is holding or hovering it (once it has landed)
-      var landed = introStart === 0 || (introStart > 0 && now - introStart > C.INTRO_MS);
+      var landed = introStart === 0 || (introStart > 0 && now - introStart > INTRO_MS);
       var nowSpin = C.IDLE_SPIN && !reduceMotion && landed && !drag && !overLogo;
       if (nowSpin !== spinning) {
-        if (nowSpin) { spinVel = yaw.v; spinVelV = pitch.v; }        // carry on from how it was moving
+        if (nowSpin) { spinVel = yaw.v; spinVelV = pitch.v; if (SWAY) yaw.x = wrap(yaw.x); }   // carry on from how it was moving
         else {                                                      // hovered: come round, the short way
           yaw.x = wrap(yaw.x); pitch.x = wrap(pitch.x);
           yaw.v = spinVel; pitch.v = spinVelV; spinVel = spinVelV = 0;
@@ -441,9 +512,15 @@ var HOA_CREST_CONFIG = {
       var k = far ? 16 : C.HOVER_STIFFNESS;
       var d = far ? 8 : C.HOVER_DAMPING;
       while (acc >= STEP) {
-        if (spinning) {
+        if (spinning && SWAY) {                                                    // V2: sways, comes round softly
+          swayT += STEP;
+          yaw.v += spinVel; spinVel = 0;
+          spring(yaw, SWAY * Math.sin(TAU * swayT / C.V2.SWAY_SECONDS), 16, 8, STEP);
+          pitch.v += spinVelV; spinVelV = 0;
+          spring(pitch, 0, 16, 8, STEP);
+        } else if (spinning) {
           var ramp = 1 - Math.exp(-1.2 * STEP);                                  // eases to the idle speeds
-          spinVel += (TAU / C.SPIN_SECONDS - spinVel) * ramp;
+          spinVel += (TAU / SPIN_SECONDS - spinVel) * ramp;
           yaw.x = wrap(yaw.x + spinVel * STEP);
           if (C.SPIN_VERTICAL) {
             spinVelV += (TAU / C.SPIN_SECONDS_VERTICAL - spinVelV) * ramp;
@@ -466,11 +543,21 @@ var HOA_CREST_CONFIG = {
       }
 
       /* where: printed label -> its resting place on the bottle (lift-off), then the journey */
-      if (introStart < 0 && revealedAt && now - revealedAt > C.INTRO_DELAY) introStart = now;
-      var i = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01((now - introStart) / C.INTRO_MS);
+      var introAlpha, appear = 1;
+      if (V2) {
+        // the hero's script calls the moves (window.AGHA_HERO); a late model simply fades in where it should be
+        var ph = window.AGHA_HERO || {};
+        if (!ph.appear && revealedAt && now - revealedAt > C.V2.FALLBACK_MS) ph = window.AGHA_HERO = { appear: now, home: now };
+        if (introStart < 0 && ph.home) introStart = ph.home;
+        var from = Math.max(ph.appear || 0, readyAt);
+        appear = introStart === 0 ? 1 : ph.appear ? clamp01((now - from) / C.V2.APPEAR_MS) : 0;
+        introAlpha = appear;
+      } else if (introStart < 0 && revealedAt && now - revealedAt > C.INTRO_DELAY) introStart = now;
+      var i = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01((now - introStart) / INTRO_MS);
       var lift = ease(i);
-      var introAlpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
+      if (!V2) introAlpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
       var L = label();
+      if (V2) L.s *= 0.86 + 0.14 * (1 - Math.pow(1 - appear, 3));                // settles in, a touch smaller first
       var Hm = homePose(L);
       var bob = reduceMotion ? 0 : Math.sin((now - t0) / 1000 * 1.1) * Hm.s * 0.03 * lift;
       var at = journey({
@@ -490,7 +577,7 @@ var HOA_CREST_CONFIG = {
       }
       pose = { x: px.x, y: py.x + bob, s: ps.x * (1 + 0.06 * grab.x) };         // held: a touch closer
       var alpha = at.a * (at.hero > 0.5 ? introAlpha : 1);
-      var tip = -Math.sin(Math.PI * lift) * 0.2;                                 // tips up as it comes forward
+      var tip = -Math.sin(Math.PI * lift) * (V2 ? 0.12 : 0.2) - (at.tilt || 0) * 0.1;   // tips up as it comes forward / travels
 
       /* place it */
       var px2w = frameH / vh;
@@ -506,7 +593,7 @@ var HOA_CREST_CONFIG = {
       hit.style.visibility = alpha > 0.5 ? 'visible' : 'hidden';
 
       // the hint: under the logo once it has landed, until the first drag
-      var showHint = C.SHOW_IN_HERO && !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
+      var showHint = !V2 && C.SHOW_IN_HERO && !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
       hint.classList.toggle('is-shown', showHint);
       if (showHint || hint.style.transform === '') {
         if (!hintW) { hintW = hint.offsetWidth; hintH = hint.offsetHeight; }

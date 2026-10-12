@@ -1,0 +1,79 @@
+{%- comment -%}
+  Home V2 · 02 Story paragraph (2026-10-12). A large serif paragraph in a narrow column, in normal flow
+  (NOT pinned): as it scrolls up, it resolves word by word from blurred and faded to sharp, so the
+  reveal front travels with the scroll (assets/hoa-v2.js, initStory: one scrubbed timeline).
+  Three small pill photos sit inline between the words and resolve with them. A thin rail of labels
+  on the left lights up as the line it sits beside resolves.
+  Text: [1] [2] [3] = the three photos; *asterisks* = italic (the last words, resolved last).
+  Without JS or with reduced motion it is simply a sharp paragraph.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
+{%- liquid
+  assign s = section.settings
+  assign text = s.text | escape
+  assign parts = text | split: '*'
+  capture body
+    for part in parts
+      if forloop.index0 == 1 or forloop.index0 == 3 or forloop.index0 == 5
+        echo '<em>' | append: part | append: '</em>'
+      else
+        echo part
+      endif
+    endfor
+  endcapture
+  for n in (1..3)
+    assign key = 'photo_' | append: n
+    assign akey = 'asset_' | append: n
+    assign altkey = 'alt_' | append: n
+    if s[key] != blank
+      assign src = s[key] | image_url: width: 240
+    else
+      assign src = s[akey] | append: '-sm.webp' | asset_url
+    endif
+    assign alt = s[altkey] | escape
+    capture pill
+      echo '<span class="v2-story__pill" data-v2-story-pill><img src="' | append: src | append: '" alt="' | append: alt | append: '" width="96" height="48" loading="lazy" decoding="async"></span>'
+    endcapture
+    assign token = '[' | append: n | append: ']'
+    assign body = body | replace: token, pill
+  endfor
+  assign rail = s.rail | split: ','
+-%}
+<section class="v2-story" data-v2-story style="--v2-story-bg: {{ s.background }}">
+  <div class="v2-story__inner">
+    {%- if rail.size > 0 -%}
+      <ol class="v2-story__rail" role="list" aria-hidden="true" data-v2-story-rail>
+        {%- for label in rail -%}
+          <li class="v2-story__mark" data-v2-story-mark>{{ label | strip }}</li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+    <p class="v2-story__text" data-v2-story-text>{{ body }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "V2 · Story paragraph",
+  "class": "v2-section v2-section--story",
+  "settings": [
+    { "type": "textarea", "id": "text", "label": "Paragraph", "info": "[1] [2] [3] place the three photos between words. Wrap words in *asterisks* for italic.", "default": "House of Agha composes each fragrance around a single place [1] a smoke-lit room, an ice cave, a garden after rain. We build it note by note, [2] dress it in its own bottle, colour and light [3] so that wherever you go, a world goes with you. A memory. A ritual. *A place you can wear.*" },
+    { "type": "text", "id": "rail", "label": "Rail labels", "info": "Comma-separated, top to bottom (e.g. the House's years). Each lights up beside a line of the paragraph.", "default": "Place, Notes, Glass, You" },
+    { "type": "header", "content": "Photo 1" },
+    { "type": "image_picker", "id": "photo_1", "label": "Photo" },
+    { "type": "text", "id": "asset_1", "label": "Theme asset when no photo is picked", "default": "hoa-hc-oud" },
+    { "type": "text", "id": "alt_1", "label": "Alt text", "default": "Raw agarwood" },
+    { "type": "header", "content": "Photo 2" },
+    { "type": "image_picker", "id": "photo_2", "label": "Photo" },
+    { "type": "text", "id": "asset_2", "label": "Theme asset when no photo is picked", "default": "hoa-hc-rose" },
+    { "type": "text", "id": "alt_2", "label": "Alt text", "default": "A deep red rose" },
+    { "type": "header", "content": "Photo 3" },
+    { "type": "image_picker", "id": "photo_3", "label": "Photo" },
+    { "type": "text", "id": "asset_3", "label": "Theme asset when no photo is picked", "default": "hoa-world-hand" },
+    { "type": "text", "id": "alt_3", "label": "Alt text", "default": "A bottle with the gold House of Agha crest" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#F1EFEA" }
+  ],
+  "presets": [{ "name": "V2 · Story paragraph" }]
+}
+{% endschema %}

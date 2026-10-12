@@ -1,74 +1,18 @@
 {
   "sections": {
     "hero": {
-      "type": "hoa-v2-hero",
-      "blocks": {
-        "frag_agha_blue": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "agha-blue",
-            "bottle": "agha-blue",
-            "tint": "#D9E1EE"
-          }
-        },
-        "frag_oud_fury": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "oud-fury",
-            "bottle": "oud-fury",
-            "tint": "#EADCC6"
-          }
-        },
-        "frag_maha": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "maha",
-            "bottle": "maha",
-            "tint": "#F1DFD0"
-          }
-        },
-        "frag_sea_smoke": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "sea-smoke",
-            "bottle": "sea-smoke",
-            "tint": "#D3E7E5"
-          }
-        },
-        "frag_oud_of_dark_paradise": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "oud-of-dark-paradise",
-            "bottle": "dark-paradise",
-            "tint": "#DEDAD6"
-          }
-        },
-        "frag_tobacco_enigma": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "tobacco-enigma",
-            "bottle": "tobacco-enigma",
-            "tint": "#E3E5C9"
-          }
-        },
-        "frag_shamamah": {
-          "type": "fragrance",
-          "settings": {
-            "handle": "shamamah",
-            "bottle": "shamamah",
-            "tint": "#ECE5D6"
-          }
-        }
-      },
-      "block_order": [
-        "frag_agha_blue",
-        "frag_oud_fury",
-        "frag_maha",
-        "frag_sea_smoke",
-        "frag_oud_of_dark_paradise",
-        "frag_tobacco_enigma",
-        "frag_shamamah"
-      ],
+      "type": "hoa-v2-object-hero",
+      "settings": {
+        "bottle": "agha-blue",
+        "handle": "agha-blue"
+      }
+    },
+    "story": {
+      "type": "hoa-v2-story",
+      "settings": {}
+    },
+    "place": {
+      "type": "hoa-v2-place",
       "settings": {}
     },
     "scent_story": {
@@ -385,6 +329,8 @@
   },
   "order": [
     "hero",
+    "story",
+    "place",
     "scent_story",
     "turn",
     "worlds",

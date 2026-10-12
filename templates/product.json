@@ -847,7 +847,6 @@
   "order": [
     "main",
     "benefits",
-    "the_fragrance",
     "story",
     "details",
     "composition",
@@ -855,6 +854,7 @@
     "experience",
     "fragrance_notes",
     "notes_cards",
+    "the_fragrance",
     "gallery",
     "reels",
     "review_summary",

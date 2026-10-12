@@ -2591,6 +2591,19 @@ html:has(.pdp) body {
 /* claims only (The Fragrance removed 2026-10-09): just the icon row, compact band */
 .pdp-tf--claims { padding-block: clamp(28px, 4vw, 56px); }
 .pdp-tf--claims .pdp-tf__col--right { margin-top: 0; }
+/* 2026-10-12: moved under the "House of Agha · Scent notes" section and enlarged */
+.pdp-tf--claims { padding-block: clamp(40px, 6vw, 88px); }
+.pdp-tf--claims .pdp-tf__col--right { gap: clamp(28px, 8vw, 120px); }
+.pdp-tf--claims .pdp-tf__col--right .pdp-tf__block { gap: 16px; }
+.pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-icon { width: 92px; height: 92px; }
+.pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-icon svg { width: 44px; height: 44px; }
+.pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-title { font-size: clamp(1.05rem, 1.6vw, 1.4rem); }
+@media (max-width: 600px) {
+  .pdp-tf--claims .pdp-tf__col--right { gap: 14px; }
+  .pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-icon { width: 66px; height: 66px; }
+  .pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-icon svg { width: 32px; height: 32px; }
+  .pdp-tf--claims .pdp-tf__col--right .pdp-tf__block-title { font-size: clamp(0.84rem, 3.6vw, 1rem); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .pdp-tf__arc .pdp-tf__note,
@@ -5362,7 +5375,7 @@ html:has(.pdp) body {
     border-radius: clamp(12px, 1.2vw, 18px);
     overflow: hidden;
     background: #F3F1ED;
-    cursor: pointer;
+    cursor: zoom-in;
   }
   .pdp-tiles__btn img {
     position: absolute;

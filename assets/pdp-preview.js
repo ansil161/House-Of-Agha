@@ -154,7 +154,7 @@
           </div>
           ${media.length > 1 ? `
           <div class="pdp-tiles" role="group" aria-label="More product photos">
-            ${media.slice(1, 5).map((src, i) => `<button type="button" class="pdp-tiles__btn" data-pdp-tile="${i + 1}" aria-label="Show this photo as the main image"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
+            ${media.slice(1, 5).map((src, i) => `<button type="button" class="pdp-tiles__btn" data-pdp-tile="${i + 1}" aria-label="View this photo full screen"><img src="${src}" alt="" loading="lazy"></button>`).join('')}
           </div>` : ''}
           <ul class="pdp-proofs" role="list" aria-label="Why we are better">
             ${whyItems.map((w) => `<li class="pdp-proof"><span class="pdp-proof__icon">${['badge','bottle','hourglass','ifra'].includes(w[0]) ? `<img class="pdp-proof__art" src="assets/hoa-proof-${w[0]}.svg" alt="" width="40" height="40" loading="lazy" decoding="async">` : pdxIcon(w[0])}</span><b class="pdp-proof__title">${w[1]}</b><small class="pdp-proof__text">${w[2]}</small></li>`).join('')}
@@ -1048,7 +1048,7 @@
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft) → campaign gallery
   //   → reviews (right after the gallery, client 2026-10-05) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + benefits + theFragrance + collage + story + fragranceNotes + notesCards + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
+  root.innerHTML = hero + benefits + collage + story + fragranceNotes + notesCards + theFragrance + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');

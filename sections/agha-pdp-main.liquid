@@ -153,13 +153,13 @@
         </div>
         {%- comment -%}
           The product's next four photos under the main image, two per row. Each tile is a button:
-          a click swaps it with the main image (pdp.js initGalleryTiles), so no photo is ever shown twice
-          and the previous main photo is always one click away. Phones use the swipe strip (hidden there).
+          a click opens that photo full screen in the lightbox (pdp.js initGalleryTiles, 2026-10-12).
+          Phones use the swipe strip (hidden there).
         {%- endcomment -%}
         {%- if media_count > 1 -%}
           <div class="pdp-tiles" role="group" aria-label="More product photos">
             {%- for media in product.media offset: 1 limit: 4 -%}
-              <button type="button" class="pdp-tiles__btn" data-pdp-tile="{{ forloop.index }}" aria-label="Show this photo as the main image">
+              <button type="button" class="pdp-tiles__btn" data-pdp-tile="{{ forloop.index }}" aria-label="View this photo full screen">
                 {{ media.preview_image | image_url: width: 900 | image_tag: widths: '450, 700, 900', sizes: '(min-width: 769px) 28vw, 1px', loading: 'lazy', alt: '' }}
               </button>
             {%- endfor -%}

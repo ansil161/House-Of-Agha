@@ -268,7 +268,7 @@
 
   /* ------------------------------------------------ Gallery tiles: swap */
   // The 2 x 2 photos under the main image (.pdp-tiles). A tile holds one slide index (data-pdp-tile);
-  // clicking it makes that photo the main image and the tile takes the photo that was main, so each
+  // clicking it opens that photo in the lightbox (below); without a lightbox, clicking it makes that photo the main image and the tile takes the photo that was main, so each
   // photo appears once. Anything else that changes the main photo (variant image, lightbox) goes
   // through the same setActive, so the tiles always stay in step.
   function initGalleryTiles(main, gallery) {
@@ -292,10 +292,13 @@
       const tile = tiles.find((t) => +t.dataset.pdpTile === index);
       if (tile) show(tile, prev);                                  // the old main photo takes its place
     };
+    // 2026-10-12: a click opens the photo full screen (the main image is often scrolled out of view
+    // by the time the tiles are, so a silent swap read as "not clickable"); swap only without a viewer.
     tiles.forEach((tile) => listen(tile, 'click', () => {
       const i = +tile.dataset.pdpTile;
       if (!gallery.slides[i]) return;
-      gallery.setActive(i);
+      if (main._pdpOpenLightbox) main._pdpOpenLightbox(i);
+      else gallery.setActive(i);
     }));
   }
 
@@ -369,6 +372,7 @@
       if (count) count.textContent = pad(index + 1);
     };
 
+    let fromTile = false;
     const open = (i) => {
       show(i);
       dialog.showModal();
@@ -400,8 +404,16 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(tileIndex[t]); }
       });
     });
+    // The 2 x 2 photo tiles (initGalleryTiles) open the viewer on their photo; closing it then leaves
+    // the main image and the tiles as they were.
+    main._pdpOpenLightbox = (slideIndex) => {
+      const img = $('img', gallery.slides[slideIndex]);
+      fromTile = true;
+      open(Math.max(0, images.indexOf(img)));
+    };
     listen(dialog, 'close', () => {
       document.body.style.overflow = '';
+      if (fromTile) { fromTile = false; return; }
       const slideIndex = gallery.slides.findIndex((s) => $('img', s) === images[index]);
       if (slideIndex > -1) gallery.setActive(slideIndex, { scroll: true });
     });
