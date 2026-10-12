@@ -113,6 +113,7 @@ async function renderTemplate(name, templateGlobals) {
   let main = '';
   for (const key of tpl.order) {
     const conf = tpl.sections[key];
+    if (conf.disabled) continue;                       // as on Shopify: kept in the template, not rendered
     const file = path.join(THEME, 'sections', conf.type + '.liquid');
     const src = fs.readFileSync(file, 'utf8');
     const schema = readSchema(src);

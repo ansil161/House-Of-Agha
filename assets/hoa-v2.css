@@ -946,7 +946,7 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
   isolation: isolate;
   flex: 1 1 0;
   min-width: 0;
-  display: flex; flex-direction: column; justify-content: space-between;
+  display: flex; flex-direction: column; justify-content: flex-end;
   padding: var(--v2-worlds-pad);
   overflow: hidden;
   transition: flex-grow 0.85s var(--v2-worlds-ease);
@@ -974,15 +974,12 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
 .v2-world--light { --v2-world-shade: rgba(10, 8, 6, 0.42); --v2-world-shade-top: rgba(10, 8, 6, 0.22); }
 .v2-world--dark { --v2-world-shade: rgba(244, 241, 234, 0.30); --v2-world-shade-top: rgba(244, 241, 234, 0.18); }
 
-/* small labels, top */
-.v2-world__tag, .v2-world__caption {
+/* small caption, top right */
+.v2-world__caption {
   margin: 0;
   font: 500 10.5px/1.4 var(--v2-sans);
   letter-spacing: 0.24em; text-transform: uppercase;
 }
-.v2-world__tag { display: flex; align-items: center; gap: 14px; }
-.v2-world__n { letter-spacing: 0.08em; opacity: 0.72; }
-.v2-world__n::after { content: ''; display: inline-block; width: 28px; height: 1px; margin-left: 14px; vertical-align: middle; background: currentColor; opacity: 0.55; }
 .v2-world__caption {
   position: absolute; top: var(--v2-worlds-pad); right: var(--v2-worlds-pad);
   font-size: 10px; letter-spacing: 0.2em; opacity: 0.7; pointer-events: none;
@@ -1029,7 +1026,7 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
   color: inherit; text-decoration: none;
 }
 .v2-world__hit { position: absolute; inset: 0; z-index: 0; }   /* the whole panel opens the world (mouse); keyboard uses the CTA */
-.v2-world__tag, .v2-world__copy { position: relative; z-index: 1; pointer-events: none; }
+.v2-world__copy { position: relative; z-index: 1; pointer-events: none; }
 .v2-world__copy a { pointer-events: auto; }
 .v2-world__cta:focus-visible { outline: none; }
 .v2-world__cta:focus-visible > span:first-child { outline: 1px solid currentColor; outline-offset: 6px; }
@@ -1061,8 +1058,8 @@ html:has(.v2-turn) body { overflow-x: clip; overflow-y: visible; }
   .v2-world__media { left: 0; width: 100%; margin-left: 0; }
   .v2-world__img img { object-position: var(--v2-world-pos-m, var(--v2-world-pos, center)); }
   .v2-world__copy { width: 100%; max-width: 22rem; }
-  .v2-world__title { font-size: clamp(36px, 10.4vw, 46px); line-height: 0.98; }
-  .v2-world__title em { display: block; }
+  /* sized so "The Fresh collection" (the longer name, ~8.75em) holds one line inside the copy width */
+  .v2-world__title { font-size: clamp(28px, calc(11.2vw - 5.5px), 39px); line-height: 0.98; }
   .v2-world__cta { padding: 6px 0; }        /* taller tap target */
   .v2-world--light { --v2-world-shade: rgba(10, 8, 6, 0.5); }
 }
@@ -1335,4 +1332,59 @@ html:not(.v2-story-js) .v2-story__mark:not(:first-child) { display: none; }   /*
 @media (max-width: 767px) {
   .v2-place__frame { clip-path: inset(22% 18% 22% 18% round 10px); }
   .v2-place__dot { display: none; }
+}
+
+/* ==========================================================================
+   Home (V1) 01 Hero — "The Photo" (2026-10-12, sections/hoa-photo-hero.liquid; here because the
+   V1 home already loads hoa-v2.* for Two worlds)
+   One full-bleed campaign photo, no copy; the 3D logo rests in the dark stone on its left.
+   The bottle in the default photo sits at 61% across, 14% of the photo's width wide.
+   ========================================================================== */
+.v2-phero {
+  --ph-x: 60.8%;                                /* the bottle's centre in the photo */
+  --ph-iw: max(100vw, 223.66svh);               /* the photo's drawn width under object-fit: cover */
+  --ph-ls: clamp(120px, 13vw, 230px);           /* logo size at rest */
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b0806;
+}
+.v2-phero__link { position: absolute; inset: 0; display: block; }
+.v2-phero__media, .v2-phero__img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.v2-phero__img { display: block; object-fit: cover; object-position: var(--ph-x) 30%; transform-origin: var(--ph-x) 55%; }
+/* a soft shade under the header so the menu reads on the photo */
+.v2-phero::after {
+  content: ''; position: absolute; inset: 0 0 auto; height: 22%; pointer-events: none; z-index: 1;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+}
+html.v2-js .v2-phero__img { opacity: 0; transform: scale(1.06); transition: opacity 1.4s var(--v2-ease), transform 2.4s var(--v2-ease); }
+html.v2-js .v2-phero.is-in .v2-phero__img { opacity: 1; transform: none; }
+
+/* the logo's spots (empty; hoa-crest.js reads their boxes) */
+.v2-phero__intro, .v2-phero__home { position: absolute; pointer-events: none; visibility: hidden; transform: translate(-50%, -50%); }
+.v2-phero__home { left: 21%; top: 47%; width: var(--ph-ls); height: var(--ph-ls); }
+.v2-phero__intro { left: 21%; top: 47%; width: calc(var(--ph-ls) * 1.3); height: calc(var(--ph-ls) * 1.3); }
+
+/* portrait (tablets, phones): the photo is cropped round the bottle, the logo takes the strip on its left */
+@media (orientation: portrait) {
+  /* the cropped photo is very wide: at full screen height the bottle would be cut off, so the hero
+     is 80% of the screen tall, where the whole bottle shows */
+  .v2-phero {
+    height: 80vh; height: 80svh; min-height: 0;
+    --ph-iw: max(100vw, 178.9svh);                            /* 80svh × the photo's 2.2366 ratio */
+    --ph-x: 60%;                                              /* bottle a touch right of centre: room for the logo */
+    /* from the screen edge to the bottle's left side: its centre (60.8% of the photo) minus half its width */
+    --ph-free: calc(var(--ph-iw) * 0.608 + (100vw - var(--ph-iw)) * 0.6 - var(--ph-iw) * 0.072);
+    --ph-ls: clamp(64px, calc(var(--ph-free) * 0.7), 200px);
+  }
+  .v2-phero__home, .v2-phero__intro { left: calc(var(--ph-free) / 2); top: 50%; }
+  .v2-phero__intro { width: var(--ph-ls); height: var(--ph-ls); }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  html.v2-js .v2-phero__img { opacity: 1; transform: none; transition: none; }
 }

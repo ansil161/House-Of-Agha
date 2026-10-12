@@ -22,11 +22,10 @@
    7. The journey: the same logo travels down the homepage. Each stop is pinned to its
       content (it scrolls with it); between stops it glides to the next spot and size,
       fading out across product/film stretches and back in at the next stop (JOURNEY
-      below). Rendering stops while it is hidden. Desktop: hero -> "Seven fragrances"
-      headline -> collection headline (was The House seal until 2026-10-09) -> World headline
-      -> gone. Phones: hero only.
+      below). Rendering stops while it is hidden. Desktop: hero -> World headline
+      -> gone ("Seven fragrances" + collection stops removed 2026-10-12). Phones: hero only.
       SHOW_IN_HERO false (2026-10-12): invisible at the hero (no lift-off, no hint), so
-      it first fades in at "Seven fragrances"; phones never show it.
+      it first fades in at World; phones never show it.
    8. Home V2 (anchor data-profile="v2", sections/hoa-v2-object-hero.liquid, 2026-10-12): the
       SAME layer and model, a different route. The hero's own script (hoa-v2.js) runs the
       opening and tells this one when to move through window.AGHA_HERO { appear, home } (ms,
@@ -36,6 +35,9 @@
       while that column is sticky; since 2026-10-12 it fades out after the hero and back in there,
       because the story + "Born in ice" sections now come first) -> the seam of Two worlds ->
       gone. Phones/tablets: hero only. No "Drag to rotate" hint (the bottle has its own).
+   9. Home V1 photo hero (anchor data-profile="photo", sections/hoa-photo-hero.liquid, 2026-10-12):
+      the hero half of 8. (markers + AGHA_HERO, sway, shown in the hero on every screen) with the
+      V1 route after it (World headline -> gone).
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
    Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
@@ -99,14 +101,16 @@ var HOA_CREST_CONFIG = {
   'use strict';
 
   var anchor = document.querySelector('[data-hoa-logo3d]');
-  var V2 = !!anchor && anchor.getAttribute('data-profile') === 'v2';
-  var bottle = V2 ? null : document.querySelector('[data-hoa-hero-bottle] img');
+  var PROFILE = anchor ? anchor.getAttribute('data-profile') : '';
+  var V2 = PROFILE === 'v2';                                // V2 route: Scent Story -> Two worlds
+  var MARK = V2 || PROFILE === 'photo';                     // hero spots = CSS markers + window.AGHA_HERO (V2, and the V1 photo hero, 9.)
+  var bottle = MARK ? null : document.querySelector('[data-hoa-hero-bottle] img');
   var modelUrl = C.MODEL_URL || (anchor && anchor.getAttribute('data-src'));
-  if (!anchor || (!V2 && !bottle) || !modelUrl || !window.IntersectionObserver) return;
-  var HERO_ON = V2 || C.SHOW_IN_HERO;                     // shown at the hero stop
-  var INTRO_MS = V2 ? C.V2.GLIDE_MS : C.INTRO_MS;
-  var SPIN_SECONDS = V2 ? C.V2.SPIN_SECONDS : C.SPIN_SECONDS;
-  var SWAY = V2 && C.V2.SWAY_DEG > 0 ? C.V2.SWAY_DEG * Math.PI / 180 : 0;   // radians
+  if (!anchor || (!MARK && !bottle) || !modelUrl || !window.IntersectionObserver) return;
+  var HERO_ON = MARK || C.SHOW_IN_HERO;                     // shown at the hero stop
+  var INTRO_MS = MARK ? C.V2.GLIDE_MS : C.INTRO_MS;
+  var SPIN_SECONDS = MARK ? C.V2.SPIN_SECONDS : C.SPIN_SECONDS;
+  var SWAY = MARK && C.V2.SWAY_DEG > 0 ? C.V2.SWAY_DEG * Math.PI / 180 : 0;   // radians
   var swayT = 0;
 
   var html = document.documentElement;
@@ -263,7 +267,7 @@ var HOA_CREST_CONFIG = {
       return r && r.height ? { x: r.left + r.width / 2, y: r.top + r.height / 2, s: r.height } : null;
     }
     function label() {
-      if (V2) return marker('[data-logo3d-intro]') || marker('[data-logo3d-home]') || { x: vw / 2, y: vh / 2, s: 120 };
+      if (MARK) return marker('[data-logo3d-intro]') || marker('[data-logo3d-home]') || { x: vw / 2, y: vh / 2, s: 120 };
       var r = bottle.getBoundingClientRect();
       var nw = bottle.naturalWidth || 480, nh = bottle.naturalHeight || 1272;
       var k = Math.min(r.width / nw, r.height / nh);
@@ -281,7 +285,7 @@ var HOA_CREST_CONFIG = {
       return r.height ? r.top + r.height / 2 : null;
     }
     function homePose(L) {
-      if (V2) { var m = marker('[data-logo3d-home]') || L; return { x: m.x, y: m.y, s: m.s, hint: 'below' }; }
+      if (MARK) { var m = marker('[data-logo3d-home]') || L; return { x: m.x, y: m.y, s: m.s, hint: 'below' }; }
       var H = L.home, s = L.s * H.scale, gap = L.s * H.gap;
       var ly = H.line ? lineY() : null;
       return {
@@ -300,9 +304,6 @@ var HOA_CREST_CONFIG = {
       return rg.getBoundingClientRect();
     }
     function clampN(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-    var sigHead = document.querySelector('.hoa-frag-section h2');
-    var collHead = document.querySelector('.hoa-collection__title');
-    var collBtn = document.querySelector('.hoa-collection__head > .hoa-btn');
     var worldHead = document.querySelector('.hoa-world-section h2');
     var worldLede = document.querySelector('.hoa-world-section .hoa-lede');
     var ssStack = document.querySelector('.ss__stack');
@@ -338,33 +339,7 @@ var HOA_CREST_CONFIG = {
       }
     ];
     var STOPS = V2 ? STOPS_V2 : [
-      { // "Seven fragrances. Seven worlds."  ◉   right of the headline, on its line
-        wide: true, inAt: 0.72, outAt: 0.24,
-        pose: function () {
-          if (!sigHead) return null;
-          var t = textBox(sigHead), h = sigHead.getBoundingClientRect();
-          var s = clampN(vw * 0.072, 84, 118);
-          if (h.right - t.right < s + 48) return null;
-          return { x: (t.right + h.right) / 2, y: t.top + t.height / 2, s: s };
-        }
-      },
-      { // Collection (user 2026-10-09: "remove it from The House, use it in the collection section"):
-        // on the heading's LAST line ("…fragrances."), centred in the space between its end and the
-        // View-all button (the heading wraps over several lines and fills the width above)
-        wide: true, inAt: 0.75, outAt: 0.25,
-        pose: function () {
-          if (!collHead) return null;
-          var rg = document.createRange();
-          rg.selectNodeContents(collHead);
-          var rs = rg.getClientRects(), last = null;
-          for (var i = rs.length - 1; i >= 0; i--) { if (rs[i].width > 2) { last = rs[i]; break; } }
-          if (!last) return null;
-          var end = collBtn ? collBtn.getBoundingClientRect().left : collHead.getBoundingClientRect().right;
-          var s = clampN(vw * 0.072, 84, 118);
-          if (end - last.right < s + 48) return null;
-          return { x: (last.right + end) / 2, y: last.top + last.height / 2, s: s };
-        }
-      },
+      // "Seven fragrances" + Collection stops removed (user 2026-10-12)
       { // World: between "Beyond the bottle. Into the day." and its intro line, then it is gone
         wide: true, inAt: 0.75, outAt: 0.25,
         pose: function () {
@@ -544,7 +519,7 @@ var HOA_CREST_CONFIG = {
 
       /* where: printed label -> its resting place on the bottle (lift-off), then the journey */
       var introAlpha, appear = 1;
-      if (V2) {
+      if (MARK) {
         // the hero's script calls the moves (window.AGHA_HERO); a late model simply fades in where it should be
         var ph = window.AGHA_HERO || {};
         if (!ph.appear && revealedAt && now - revealedAt > C.V2.FALLBACK_MS) ph = window.AGHA_HERO = { appear: now, home: now };
@@ -555,9 +530,9 @@ var HOA_CREST_CONFIG = {
       } else if (introStart < 0 && revealedAt && now - revealedAt > C.INTRO_DELAY) introStart = now;
       var i = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01((now - introStart) / INTRO_MS);
       var lift = ease(i);
-      if (!V2) introAlpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
+      if (!MARK) introAlpha = introStart < 0 ? 0 : introStart === 0 ? 1 : clamp01(i / 0.12);   // appears on the label, then lifts
       var L = label();
-      if (V2) L.s *= 0.86 + 0.14 * (1 - Math.pow(1 - appear, 3));                // settles in, a touch smaller first
+      if (MARK) L.s *= 0.86 + 0.14 * (1 - Math.pow(1 - appear, 3));                // settles in, a touch smaller first
       var Hm = homePose(L);
       var bob = reduceMotion ? 0 : Math.sin((now - t0) / 1000 * 1.1) * Hm.s * 0.03 * lift;
       var at = journey({
@@ -577,7 +552,7 @@ var HOA_CREST_CONFIG = {
       }
       pose = { x: px.x, y: py.x + bob, s: ps.x * (1 + 0.06 * grab.x) };         // held: a touch closer
       var alpha = at.a * (at.hero > 0.5 ? introAlpha : 1);
-      var tip = -Math.sin(Math.PI * lift) * (V2 ? 0.12 : 0.2) - (at.tilt || 0) * 0.1;   // tips up as it comes forward / travels
+      var tip = -Math.sin(Math.PI * lift) * (MARK ? 0.12 : 0.2) - (at.tilt || 0) * 0.1;   // tips up as it comes forward / travels
 
       /* place it */
       var px2w = frameH / vh;
@@ -593,7 +568,7 @@ var HOA_CREST_CONFIG = {
       hit.style.visibility = alpha > 0.5 ? 'visible' : 'hidden';
 
       // the hint: under the logo once it has landed, until the first drag
-      var showHint = !V2 && C.SHOW_IN_HERO && !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
+      var showHint = !MARK && C.SHOW_IN_HERO && !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
       hint.classList.toggle('is-shown', showHint);
       if (showHint || hint.style.transform === '') {
         if (!hintW) { hintW = hint.offsetWidth; hintH = hint.offsetHeight; }

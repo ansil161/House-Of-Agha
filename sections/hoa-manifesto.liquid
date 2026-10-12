@@ -3,6 +3,7 @@
   Same copy as before (tag, statement, supporting line + CTA, three principles); new layout.
   The section pins. The ice cave fills the screen; the real Agha Blue silhouette closes around
   it until the place sits inside the actual flacon (cut-out, assets/hoa-vessel-agha-blue.webp),
+  [2026-10-12: place photo = hoa-house-agha-blue (client portrait AB POT 2 outpainted to 21:9, shown whole below the navbar); principles list removed]
   the cave still glowing in its glass, light drifting through it like water caustics, the
   bottle mirrored on still water below. The statement lights up word by word on the way; it
   is rendered twice (ink under the glass, white masked to the silhouette above it) so it is
@@ -28,7 +29,6 @@
         <div class="hoa-vessel__lead">
           <div class="hoa-vessel__meta">
             <span class="hoa-vessel__tag">{{ s.eyebrow }}</span>
-            <span class="hoa-vessel__rule" aria-hidden="true"></span>
           </div>
           <p class="hoa-vessel__statement" data-vessel-words>
             {%- for part in parts -%}
@@ -51,28 +51,7 @@
           <div class="hoa-vessel__slot" data-vessel-slot aria-hidden="true"></div>
         </div>
 
-        <ol class="hoa-vessel__notes">
-          {%- for i in (1..3) -%}
-            {%- capture key_t %}note_{{ i }}_title{% endcapture -%}
-            {%- capture key_b %}note_{{ i }}_text{% endcapture -%}
-            {%- if s[key_t] != blank -%}
-              <li class="hoa-vessel__note" style="--i: {{ i | plus: 1 }}">
-                {%- comment -%} 1 compass rose (one world), 2 sunburst (its own light), 3 drop (worn close) {%- endcomment -%}
-                <span class="hoa-vessel__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-                    {%- case i -%}
-                      {%- when 1 -%}<circle cx="12" cy="12" r="9.2"/><path d="M12 4.6l1.9 5.5L19.4 12l-5.5 1.9L12 19.4l-1.9-5.5L4.6 12l5.5-1.9z"/><circle cx="12" cy="12" r="1"/>
-                      {%- when 2 -%}<circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8"/>
-                      {%- else -%}<path d="M12 3.2c3.4 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.6-6.6 6-10.8z"/><path d="M9.2 14.4a2.9 2.9 0 0 0 2.4 2.7"/>
-                    {%- endcase -%}
-                  </svg>
-                </span>
-                <span class="hoa-vessel__note-title">{{ s[key_t] }}</span>
-                {%- if s[key_b] != blank %}<span class="hoa-vessel__note-text">{{ s[key_b] }}</span>{% endif -%}
-              </li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ol>
+        {%- comment -%} the three principles (One world / Its own light / Worn close) were removed 2026-10-12 {%- endcomment -%}
       {%- endcapture -%}
 
       {%- comment -%} a faint cold halo behind the finished bottle {%- endcomment -%}
@@ -86,13 +65,13 @@
         <img class="hoa-vessel__reflect" src="{{ s.bottle | default: 'hoa-vessel-agha-blue' | append: '.webp' | asset_url }}" width="430" height="1104" alt="" aria-hidden="true" loading="lazy" decoding="async">
         {%- comment -%} the place, seen through the bottle's silhouette {%- endcomment -%}
         <div class="hoa-vessel__scene">
-          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2000, h: 1117, alt: s.alt, sizes: '100vw' -%}
+          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2400, h: 1018, alt: s.alt, sizes: '100vw' -%}
         </div>
         {%- comment -%} the real bottle, arriving as the place condenses {%- endcomment -%}
         <img class="hoa-vessel__bottle" src="{{ s.bottle | default: 'hoa-vessel-agha-blue' | append: '.webp' | asset_url }}" width="430" height="1104" alt="{{ s.fragrance | escape }}" loading="lazy" decoding="async">
         {%- comment -%} the place again, glowing inside the glass (screen blend, body only) {%- endcomment -%}
         <div class="hoa-vessel__scene hoa-vessel__ghost" aria-hidden="true">
-          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2000, h: 1117, alt: '', sizes: '100vw' -%}
+          {%- render 'hoa-img', name: s.asset, image: s.image, w: 2400, h: 1018, alt: '', sizes: '100vw' -%}
         </div>
         {%- comment -%} light moving through the glass like caustics off water {%- endcomment -%}
         <span class="hoa-vessel__caustics" aria-hidden="true"></span>
@@ -122,20 +101,13 @@
     { "type": "textarea", "id": "body", "label": "Supporting line", "default": "House of Agha composes eaux de parfum around a single world at a time, and dresses each one in its own bottle, colour and light." },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "The story of the House" },
     { "type": "url", "id": "link_url", "label": "Link" },
-    { "type": "header", "content": "Principles" },
-    { "type": "text", "id": "note_1_title", "label": "Principle 1", "default": "One world" },
-    { "type": "text", "id": "note_1_text", "label": "Principle 1 line", "default": "Each fragrance is composed around a single place." },
-    { "type": "text", "id": "note_2_title", "label": "Principle 2", "default": "Its own light" },
-    { "type": "text", "id": "note_2_text", "label": "Principle 2 line", "default": "A bottle, colour and mood made for that world alone." },
-    { "type": "text", "id": "note_3_title", "label": "Principle 3", "default": "Worn close" },
-    { "type": "text", "id": "note_3_text", "label": "Principle 3 line", "default": "Eaux de parfum meant to stay near the skin." },
     { "type": "header", "content": "The bottle" },
     { "type": "text", "id": "fragrance", "label": "Fragrance", "default": "Agha Blue" },
     { "type": "text", "id": "bottle", "label": "Bottle cut-out (theme asset)", "default": "hoa-vessel-agha-blue", "info": "Base name of a transparent 430 × 1104 WebP of the bottle." },
     { "type": "text", "id": "place_label", "label": "Place in the statement", "default": "an ice cave", "info": "Underlined in the statement once the bottle has settled. Write it exactly as it appears there." },
     { "type": "image_picker", "id": "image", "label": "Place photograph" },
-    { "type": "text", "id": "asset", "label": "Place photograph fallback (theme asset)", "default": "hoa-hero-agha-blue" },
-    { "type": "text", "id": "alt", "label": "Alt text", "default": "An ice cave opening onto still blue water" },
+    { "type": "text", "id": "asset", "label": "Place photograph fallback (theme asset)", "default": "hoa-house-agha-blue" },
+    { "type": "text", "id": "alt", "label": "Alt text", "default": "Agha Blue on still water under a glowing planet, snow peaks behind" },
     { "type": "range", "id": "glow", "label": "Place glowing in the glass", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 60 },
     { "type": "range", "id": "focus_x", "label": "Slide inside the glass", "min": -30, "max": 30, "step": 1, "unit": "%", "default": -22, "info": "Moves the photograph sideways once it sits inside the bottle, e.g. to keep a campaign bottle out of the glass." }
   ],

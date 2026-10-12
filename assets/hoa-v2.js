@@ -507,6 +507,39 @@
     hero.addEventListener('lostpointercapture', release);
   }
 
+  /* ----------------------------------------- 01 hero, "The Photo" (2026-10-12) */
+  // sections/hoa-photo-hero.liquid (V1 home): the photo comes up, the 3D logo (hoa-crest.js, profile photo) appears
+  // in the stone on its left, a little larger, and settles. On scroll the photo eases back slightly.
+  function initPhotoHero() {
+    var hero = $('[data-v2-phero]');
+    if (!hero) return;
+    var img = $('.v2-phero__img', hero);
+    function signal(k) {
+      var h = window.AGHA_HERO = window.AGHA_HERO || {};
+      if (!h[k]) h[k] = performance.now();
+      try { document.dispatchEvent(new CustomEvent('agha:hero')); } catch (_) {}
+    }
+    var shown = false;
+    function show() {
+      if (shown) return;
+      shown = true;
+      hero.classList.add('is-in');
+      if (reduce) { signal('appear'); signal('home'); return; }
+      setTimeout(function () { signal('appear'); }, 500);
+      setTimeout(function () { signal('home'); }, 1700);
+    }
+    afterPreloader(function () {
+      if (!img || img.complete) { show(); return; }
+      img.addEventListener('load', show, { once: true });
+      img.addEventListener('error', show, { once: true });
+      setTimeout(show, 1800);                        // a slow photo: the logo does not wait for it
+    });
+    if (!reduce && hasGsap() && img) {
+      window.gsap.to($('.v2-phero__media', hero), { yPercent: 12, ease: 'none',
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 } });
+    }
+  }
+
   /* ------------------------------- 02 story paragraph, Stage B (2026-10-12) */
   // sections/hoa-v2-story.liquid. Normal flow, never pinned: one scrubbed timeline takes the words, in
   // reading order, from faded + blurred to sharp, so the reveal front travels down with the scroll. The
@@ -677,6 +710,7 @@
     initNav();
     initHero();
     initObjectHero();
+    initPhotoHero();
     initStory();
     initPlace();
     initTurn();

@@ -12,7 +12,7 @@
   behind the bottle (Top → Heart → Base), reversed on the way back up; cards spring in, their
   rule draws, the note circles pop one by one, then they bob gently; hover lifts a card. No JS = everything
   shown, static. prefers-reduced-motion: static.
-  Phones (<700px): the same poster scaled to the screen width (2026-10-12), pinned like desktop.
+  Phones (<700px): the same poster with tall cards (notes as rows), not pinned (2026-10-12).
 
   Data
     Cards ...... "note_card" blocks (first 3 used on the stage): label, notes source, fallback
@@ -335,23 +335,21 @@
     .sn__top { grid-template-columns: 1fr auto; }
   }
 
-  /* Phones (2026-10-12, user: "the exact look and feel of the PC version"): the same poster,
-     scaled to the screen instead of a stacked list. Brand over tagline · product, the bottle in
-     the middle with the three pills tucked in behind it on alternating sides, the still life at
-     its foot, "Scent notes" lower right, and the same pinned scroll story (script below).
-     Everything is sized from the screen width (vw) so it holds from 360px to 699px; the note
-     columns take the width of their own names so three notes fit in a half-screen card. */
+  /* Phones (2026-10-12, UX pass): the desktop poster could not fit three notes side by side in a
+     half-screen pill without 7px names, so each card turns tall: label on top, the notes as rows
+     (photo + name) — same bottle in the middle, same three tinted cards tucked in behind it on
+     alternating sides (Top upper-left, Heart right, Base lower-left), same still life and
+     "Scent notes" lower right. No pinning on phones: the sticky buy bar covered the pinned frame,
+     so each card arrives as it scrolls into view (script below). */
   @media (max-width: 699px) {
     .sn {
-      --bh: 48vw;
+      --bh: min(70vw, 330px);
       --bw: calc(var(--bh) * 0.38);
-      --tuck: calc(var(--bw) * 0.14);
-      --pic: 8.6vw;
-      padding: 28px 0 40px;
+      --tuck: calc(var(--bw) * 0.16);
+      --pic: max(26px, 7.4vw);
+      padding: 28px 0 48px;
     }
-    .sn.sn--pin { --bh: min(48vw, calc(100svh - var(--hoa-header-h, 76px) - 360px)); }
     .sn__inner { display: flex; flex-direction: column; }
-    .sn--pin .sn__inner { justify-content: center; }
 
     /* poster frame: brand centred, tagline left and product right under it */
     .sn__top {
@@ -362,37 +360,49 @@
     }
     .sn__brand { grid-area: brand; gap: 10px; font-size: 0.8rem; letter-spacing: 0.36em; }
     .sn__brand::after { height: 22px; }
-    .sn__tagline { display: block; grid-area: tag; max-width: 15em; font-size: 0.52rem; line-height: 1.6; letter-spacing: 0.2em; }
-    .sn__product { grid-area: prod; font-size: 0.62rem; letter-spacing: 0.2em; }
+    .sn__tagline { display: block; grid-area: tag; max-width: 15em; font-size: 0.56rem; line-height: 1.6; letter-spacing: 0.18em; }
+    .sn__product { grid-area: prod; font-size: 0.66rem; letter-spacing: 0.2em; }
     .sn__tagline::after, .sn__product::after { width: 28px; margin-top: 8px; }
 
-    /* the stage: desktop placement, phone sizes */
-    .sn__stage { order: 1; height: calc(var(--bh) * 1.18); margin-top: 6px; }
-    .sn-card[data-slot="1"] { right: calc(50% + var(--bw) * 0.5 - var(--tuck)); top: calc(50% - var(--bh) * 0.5); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 2.2vw); }
-    .sn-card[data-slot="2"] { left: calc(50% + var(--bw) * 0.5 - var(--tuck)); top: calc(50% - var(--bh) * 0.2); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 2.2vw); }
-    .sn-card[data-slot="3"] { right: calc(50% + var(--bw) * 0.5 - var(--tuck)); top: calc(50% + var(--bh) * 0.1); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 2.2vw); }
-    .sn-card .sn-card__body { padding: 2.2vw 2.6vw 2vw; }
-    /* a touch less tilt than desktop (−6 / 7 / −9) so the pills keep a margin to the screen edge */
-    .sn-card[data-slot="1"] { --rot: -5deg !important; }
-    .sn-card[data-slot="2"] { --rot: 5deg !important; }
-    .sn-card[data-slot="3"] { --rot: -6deg !important; }
-    /* every card runs --tuck in behind the glass; its padding there keeps all notes in view */
+    /* the stage: room above and below the bottle for the two left-hand cards */
+    .sn__stage { order: 1; height: calc(var(--bh) * 1.42); margin-top: 18px; }
+    .sn-card[data-slot="1"],
+    .sn-card[data-slot="3"] { right: calc(50% + var(--bw) * 0.5 - var(--tuck)); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 12px); }
+    .sn-card[data-slot="2"] { left: calc(50% + var(--bw) * 0.5 - var(--tuck)); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 12px); }
+    .sn-card[data-slot="1"] { top: calc(50% - var(--bh) * 0.66); }
+    .sn-card[data-slot="2"] { top: calc(50% - var(--bh) * 0.3); }
+    .sn-card[data-slot="3"] { top: calc(50% + var(--bh) * 0.08); }
+    /* tall cards: a gentle tilt keeps them clear of the screen edge */
+    .sn-card[data-slot="1"] { --rot: -3deg !important; }
+    .sn-card[data-slot="2"] { --rot: 3deg !important; }
+    .sn-card[data-slot="3"] { --rot: -2.5deg !important; }
+
+    .sn-card .sn-card__body { border-radius: 22px; padding: 12px 12px 13px; }
+    /* the end tucked in behind the glass keeps its notes in view */
     .sn-card[data-slot="1"] .sn-card__body,
-    .sn-card[data-slot="3"] .sn-card__body { padding-right: calc(var(--tuck) + 0.8vw); padding-left: 1.6vw; }
-    .sn-card[data-slot="2"] .sn-card__body { padding-left: calc(var(--tuck) + 0.8vw); padding-right: 1.6vw; }
-    .sn-card__label { gap: 6px; margin-bottom: 1.8vw; font-size: max(8.5px, 2.4vw); letter-spacing: 0.2em; }
-    .sn-card__label::after { flex-basis: 4vw; }
-    .sn-card__notes { width: auto; gap: 0.6vw; }
-    .sn-note { flex: none; width: min-content; min-width: var(--pic); gap: 1.2vw; }
-    .sn-note__pic { width: var(--pic); font-size: 0.9rem; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.75), 0 6px 12px -6px rgba(30, 20, 10, 0.5); }
-    .sn-note__name { font-size: max(7px, 1.95vw); letter-spacing: 0.02em; line-height: 1.25; }
+    .sn-card[data-slot="3"] .sn-card__body { padding-right: calc(var(--tuck) + 6px); padding-left: 12px; }
+    .sn-card[data-slot="2"] .sn-card__body { padding-left: calc(var(--tuck) + 8px); padding-right: 10px; }
+    .sn-card__label { gap: 6px; margin-bottom: 10px; font-size: 9px; letter-spacing: 0.2em; white-space: nowrap; }
+    .sn-card__label::after { flex-basis: 14px; }
+
+    /* notes as rows: photo, then the name beside it */
+    .sn-card__notes { flex-direction: column; align-items: stretch; width: auto; gap: 7px; }
+    .sn-note { display: flex; align-items: center; gap: 7px; width: auto; min-width: 0; }
+    .sn-note__pic { flex: none; width: var(--pic); font-size: 0.85rem; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.75), 0 6px 12px -6px rgba(30, 20, 10, 0.5); }
+    .sn-note__name { font-size: 9px; letter-spacing: 0.06em; line-height: 1.25; text-align: left; }
 
     /* "Scent notes": lower right, under the stage, as on the poster */
-    .sn__head { order: 2; position: static; width: auto; margin: 4px 16px 0 auto; max-width: 62%; text-align: right; }
-    .sn .sn__title { font-size: clamp(1.9rem, 9vw, 2.6rem); }
+    .sn__head { order: 2; position: static; width: auto; margin: 8px 16px 0 auto; max-width: 70%; text-align: right; }
+    .sn .sn__title { font-size: clamp(2rem, 9vw, 2.6rem); }
     .sn__head .sn__title span { display: block; padding: 0; }
-    .sn__head .sn__sub { margin: 10px 0 0; padding-top: 10px; max-width: none; font-size: 0.74rem; line-height: 1.5; background-position: 100% 0; }
+    .sn__head .sn__sub { margin: 10px 0 0; padding-top: 10px; max-width: none; font-size: 0.8rem; line-height: 1.5; background-position: 100% 0; }
   }
+  /* very narrow phones: a long single word (FRANKINCENSE) still fits its row */
+  @media (max-width: 359px) {
+    .sn-note__name { letter-spacing: 0.01em; }
+    .sn-card .sn-card__body { padding-inline: 10px; }
+  }
+  @media (max-width: 339px) { .sn-note__name { font-size: 8px; } }
 
   @media (prefers-reduced-motion: reduce) {
     .sn .sn-card,
@@ -506,7 +516,7 @@
 {%- endif -%}
 
 <script>
-  /* SCENT NOTES — scroll story. ≥700px wide and ≥700px tall, or phones ≥600px tall: the section
+  /* SCENT NOTES — scroll story. ≥700px wide and ≥700px tall: the section
      pins (.sn--pin) and the scroll through it reveals one card per step: Top, Heart, Base. Scroll
      back up and they leave in reverse. Shorter screens: each card arrives as it scrolls up into
      view and leaves again when you scroll back above it. Reduced motion / no JS: everything shown, static. */
@@ -526,7 +536,7 @@
       function update() {
         queued = false;
         var vh = window.innerHeight;
-        var pin = wide.matches ? vh >= 700 : vh >= 600; // phones pin too (2026-10-12), short screens scroll
+        var pin = wide.matches && vh >= 700; // phones never pin (the buy bar covered the pinned frame)
         root.classList.toggle('sn--pin', pin);
         var r = root.getBoundingClientRect();
         root.classList.toggle('is-in', r.top < vh * 0.75 && r.bottom > 0);

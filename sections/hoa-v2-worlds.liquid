@@ -1,7 +1,7 @@
 {%- comment -%}
   Home V2 · Two worlds — an editorial diptych. Two full-bleed campaign photographs meet with no seam,
-  each one a fragrance world (block "world"): a small label up top, the campaign line at the foot,
-  the fragrances of that world and one quiet link.
+  each one a fragrance world (block "world"): the campaign line at the foot
+  and one quiet link (the fragrance list is no longer shown; its first handle is still the link target).
   Desktop with a fine pointer: the panel you point at widens to ~56% while the other gives way
   (pure CSS, flex-grow); each photo is sized to the widest state, so the panels only reveal more of it
   and nothing reflows. Entrance + slow drift: assets/hoa-v2.js (initWorlds). Readable without JS.
@@ -65,18 +65,11 @@
 
         <a class="v2-world__hit" href="{{ cta_url }}" tabindex="-1" aria-hidden="true"></a>
 
-        <p class="v2-world__tag" data-v2-world-step>
-          <span class="v2-world__n">{{ forloop.index | prepend: '0' }}</span>
-          <span>{{ b.label }}</span>
-        </p>
         {%- if b.caption != blank -%}<p class="v2-world__caption" data-v2-world-step>{{ b.caption }}</p>{%- endif -%}
 
         <div class="v2-world__copy">
           <h3 class="v2-world__title" id="{{ panel_id }}" data-v2-world-step>{{ b.title }} <em>{{ b.title_serif }}</em></h3>
           {%- if b.notes != blank -%}<p class="v2-world__notes" data-v2-world-step>{{ b.notes }}</p>{%- endif -%}
-          {%- if picks != blank -%}
-            <ul class="v2-world__picks" role="list" aria-label="{{ b.title | append: ' ' | append: b.title_serif | escape }}" data-v2-world-step>{{ picks }}</ul>
-          {%- endif -%}
           {%- if s.button -%}
             <a class="hoa-btn{% if b.tone != 'dark' %} hoa-btn--light{% endif %} v2-world__btn" href="{{ cta_url }}" data-v2-world-step><span>{{ b.cta_label }}</span>{% render 'hoa-btn-icon' %}</a>
           {%- else -%}

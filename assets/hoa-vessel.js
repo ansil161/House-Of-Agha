@@ -81,10 +81,14 @@
       style.setProperty('--bx', (sl.x + BODY.x0 * uf).toFixed(1) + 'px');
       style.setProperty('--bw', ((BODY.x1 - BODY.x0) * uf).toFixed(1) + 'px');
       style.setProperty('--bb', (sl.y + BODY.y1 * uf).toFixed(1) + 'px');
-      // the photo at its own ratio, covering a box 140% of the stage; condensed, it is
+      // the photo at its own ratio; condensed, it is
       // just taller than the bottle's body
       var ar = sceneImg && sceneImg.naturalWidth ? sceneImg.naturalWidth / sceneImg.naturalHeight : 16 / 9;
-      var iw = Math.max(w * 1.4, h * ar), ih = iw / ar;
+      // the WHOLE photo fills the space below the fixed navbar (user 2026-10-12: "see it full");
+      // --io pushes it down by half the navbar and is gone once it condenses
+      var hh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hoa-header-h')) || 0;
+      var iw = Math.max(w, (h - hh) * ar), ih = iw / ar;
+      style.setProperty('--io', (hh / 2).toFixed(1) + 'px');
       style.setProperty('--iw', iw.toFixed(1) + 'px');
       style.setProperty('--ih', ih.toFixed(1) + 'px');
       style.setProperty('--ks', Math.min(1, (BODY.y1 - BODY.y0) * uf * 1.12 / ih).toFixed(4));

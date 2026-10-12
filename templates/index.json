@@ -1,7 +1,12 @@
 {
   "sections": {
+    "photo_hero": {
+      "type": "hoa-photo-hero",
+      "settings": {}
+    },
     "hero": {
       "type": "hoa-hero",
+      "disabled": true,
       "blocks": {
         "slide_oud_fury": {
           "type": "slide",
@@ -652,6 +657,7 @@
     }
   },
   "order": [
+    "photo_hero",
     "hero",
     "scroll_film",
     "bridge",

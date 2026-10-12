@@ -1,0 +1,61 @@
+{%- comment -%}
+  Home (V1) · 01 Hero — "The Photo" (2026-10-12). Replaces the campaign hero (sections/hoa-hero.liquid,
+  still in templates/index.json, disabled) as the first section of the homepage.
+  One full-bleed campaign photo, no copy, and the 3D Agha logo resting in the dark space on its left.
+  The logo is the site's one 3D logo layer (assets/hoa-crest.js, profile "photo"): it appears at
+  [data-logo3d-intro] and settles at [data-logo3d-home] (both placed by CSS), told when by
+  assets/hoa-v2.js (initPhotoHero); further down the page it takes the V1 route (World headline).
+  data-hoa-hero makes the header transparent over it (assets/hoa-home.js); -static skips the slide logic.
+  Styles: end of assets/hoa-v2.css (.v2-phero), loaded through the hoa-v2-assets snippet.
+{%- endcomment -%}
+{%- render 'hoa-v2-assets' -%}
+{%- liquid
+  assign s = section.settings
+  assign alt = s.alt | default: 'Oud of Dark Paradise by House of Agha'
+-%}
+<section class="v2-phero" id="hoa-hero" data-v2-phero data-hoa-hero data-hoa-hero-static data-header-theme="dark">
+  <h1 class="v2-sr">{{ s.title | default: 'House of Agha' }}</h1>
+  {%- if s.link != blank -%}<a class="v2-phero__link" href="{{ s.link }}" aria-label="{{ alt | escape }}">{%- endif -%}
+  <picture class="v2-phero__media">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 2400 | image_tag: widths: '800, 1200, 1600, 2000, 2400', sizes: '100vw', alt: alt, fetchpriority: 'high', loading: 'eager', class: 'v2-phero__img' }}
+    {%- else -%}
+      <img class="v2-phero__img" src="{{ 'hoa-v2-hero-dark-paradise.webp' | asset_url }}"
+        srcset="{{ 'hoa-v2-hero-dark-paradise-1200.webp' | asset_url }} 1200w, {{ 'hoa-v2-hero-dark-paradise.webp' | asset_url }} 2259w"
+        sizes="(orientation: portrait) 179svh, 100vw" alt="{{ alt | escape }}" width="2259" height="1010" fetchpriority="high" decoding="async">
+    {%- endif -%}
+  </picture>
+  {%- if s.link != blank -%}</a>{%- endif -%}
+
+  {%- comment -%} the logo's spots: it opens a little larger, then settles {%- endcomment -%}
+  <span class="v2-phero__intro" data-logo3d-intro aria-hidden="true"></span>
+  <span class="v2-phero__home" data-logo3d-home aria-hidden="true"></span>
+
+  {%- if s.show_logo3d -%}
+    {%- liquid
+      assign logo3d_src = s.logo3d_model_url | strip
+      if logo3d_src == blank
+        assign logo3d_src = 'agha-crest.glb' | asset_url
+      endif
+    -%}
+    <div hidden data-hoa-logo3d data-profile="photo" data-src="{{ logo3d_src }}" data-label="House of Agha logo. Drag to turn it."></div>
+    <script src="{{ 'hoa-crest.js' | asset_url }}" defer></script>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero (photo)",
+  "class": "hoa-photo-hero-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Wide (16:9). Empty = the Oud of Dark Paradise campaign photo." },
+    { "type": "text", "id": "alt", "label": "Photo description", "default": "Oud of Dark Paradise by House of Agha" },
+    { "type": "url", "id": "link", "label": "Photo link", "info": "Optional: the whole photo links here." },
+    { "type": "text", "id": "title", "label": "Page heading (screen readers only)", "default": "House of Agha" },
+    { "type": "header", "content": "3D logo" },
+    { "type": "checkbox", "id": "show_logo3d", "label": "3D Agha logo", "default": true, "info": "Rests on the left of the photo, then travels down the page." },
+    { "type": "text", "id": "logo3d_model_url", "label": "3D logo model (.glb) URL", "info": "Leave empty to use agha-crest.glb from the theme's assets." }
+  ],
+  "presets": [{ "name": "Hero (photo)" }]
+}
+{% endschema %}
