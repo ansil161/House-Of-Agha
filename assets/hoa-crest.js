@@ -175,23 +175,23 @@ var HOA_CREST_CONFIG = {
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function mix(a, b, t) { return a + (b - a) * t; }
 
-  // High-contrast studio for the reflections: a near-black room with a few bright softboxes
-  // (two tall strips at the sides, a wide panel overhead, a small warm card low front).
+  // High-contrast studio for the reflections: a dark grey room with four SMALL, hard strip softboxes
+  // (top, left, right rim, a thin low strip) and one soft warm wash behind the camera. A face only
+  // lights while a strip is in its mirror direction, so the glints stay thin and travel along the
+  // relief walls and curves as the logo turns; the grey room + the wash keep every face gold, never black.
   function goldStudio(THREE) {
     var room = new THREE.Scene();
-    var box = new THREE.BoxGeometry(1, 1, 1);
-    var walls = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x0b0906, side: THREE.BackSide }));
+    var walls = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0x6e665a, side: THREE.BackSide }));
     walls.scale.set(30, 20, 30);
     room.add(walls);
     var plane = new THREE.PlaneGeometry(1, 1);
     [
       // [x, y, z, width, height, brightness, colour]
-      [-9, 1, 4, 2.2, 12, 3.2, 0xffffff],     // left strip
-      [9, 2, 2, 2.6, 12, 2.6, 0xfff3e2],      // right strip
-      [0, 9.5, 2, 12, 3, 2.4, 0xffffff],      // overhead panel
-      [0, 1, 14, 14, 9, 1.1, 0xffe6c0],    // big dim panel behind the camera: the face-on view reads as gold
-      [2, -6, 9, 6, 1.6, 2.5, 0xffd9a0],    // warm low card, front
-      [-4, 3, -12, 5, 4, 2.5, 0xdfe8ff]     // cool card behind
+      [0, 9.5, 3, 7, 0.5, 8, 0xffffff],       // top strip
+      [-9.5, 1, 3, 0.5, 8, 8, 0xffffff],      // left strip
+      [9, 1.5, -4, 0.45, 9, 7, 0xfff1dc],     // right rim strip, behind
+      [1, -6, 8, 8, 0.25, 4, 0xffe2b0],       // thin low strip, front
+      [0, 1, 14, 16, 10, 2.6, 0xffeccc]       // soft wash behind the camera
     ].forEach(function (b) {
       var m = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({ color: new THREE.Color(b[6]).multiplyScalar(b[5]), side: THREE.DoubleSide }));
       m.position.set(b[0], b[1], b[2]);
@@ -213,7 +213,7 @@ var HOA_CREST_CONFIG = {
     // Polished gold (user 2026-10-12: "no shine, glint or reflections while rotating, it looks flat"):
     // filmic tone mapping so the bright softbox reflections roll off into white instead of clipping flat.
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 0.95;
     renderer.setClearColor(0x000000, 0);
 
     var scene = new THREE.Scene();
@@ -225,12 +225,12 @@ var HOA_CREST_CONFIG = {
     pmrem.dispose();
 
     // polished gold, in place of the file's flat-looking standard material
-    var GOLD = { ENV: 1.5, ENV_DRAG: 1.8 };
+    var GOLD = { ENV: 1.2, ENV_DRAG: 1.4 };
     var gold = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#FFC94A'),
+      color: new THREE.Color('#D4A93C'),
       metalness: 1,
-      roughness: 0.22,
-      clearcoat: 0.6,
+      roughness: 0.17,
+      clearcoat: 0.3,
       clearcoatRoughness: 0.1,
       envMapIntensity: GOLD.ENV,
       side: THREE.DoubleSide
@@ -239,10 +239,10 @@ var HOA_CREST_CONFIG = {
     // lights, fixed in the world (the logo turns under them): warm key top-right, cool rim behind, low fill,
     // and a small glint that follows the mouse while it is over the logo
     scene.add(new THREE.AmbientLight(0xfff1dc, 0.15));
-    var key = new THREE.DirectionalLight(0xfff4e0, 1.6);
+    var key = new THREE.DirectionalLight(0xfff4e0, 1.1);
     key.position.set(4, 5, 6);
     scene.add(key);
-    var rim = new THREE.DirectionalLight(0xbfd6ff, 1.6);
+    var rim = new THREE.DirectionalLight(0xbfd6ff, 1.2);
     rim.position.set(-4, 2.5, -6);
     scene.add(rim);
     var glint = new THREE.PointLight(0xffffff, 0, 0, 1.4);

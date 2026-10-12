@@ -2575,7 +2575,11 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
   pointer-events: none;
 }
 .hoa-logo3d[hidden] { display: none; }
-.hoa-logo3d__canvas { display: block; width: 100%; height: 100%; }
+.hoa-logo3d__canvas {
+  display: block; width: 100%; height: 100%;
+  /* separation from white pages: a tight dark edge + a soft contact shadow under the logo */
+  filter: drop-shadow(0 1px 1px rgba(60, 38, 8, 0.35)) drop-shadow(0 10px 16px rgba(60, 38, 8, 0.22));
+}
 .hoa-logo3d__hit {
   position: absolute;
   left: 0;
