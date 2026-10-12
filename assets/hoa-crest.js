@@ -175,6 +175,33 @@ var HOA_CREST_CONFIG = {
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function mix(a, b, t) { return a + (b - a) * t; }
 
+  // High-contrast studio for the reflections: a near-black room with a few bright softboxes
+  // (two tall strips at the sides, a wide panel overhead, a small warm card low front).
+  function goldStudio(THREE) {
+    var room = new THREE.Scene();
+    var box = new THREE.BoxGeometry(1, 1, 1);
+    var walls = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x0b0906, side: THREE.BackSide }));
+    walls.scale.set(30, 20, 30);
+    room.add(walls);
+    var plane = new THREE.PlaneGeometry(1, 1);
+    [
+      // [x, y, z, width, height, brightness, colour]
+      [-9, 1, 4, 2.2, 12, 3.2, 0xffffff],     // left strip
+      [9, 2, 2, 2.6, 12, 2.6, 0xfff3e2],      // right strip
+      [0, 9.5, 2, 12, 3, 2.4, 0xffffff],      // overhead panel
+      [0, 1, 14, 14, 9, 1.1, 0xffe6c0],    // big dim panel behind the camera: the face-on view reads as gold
+      [2, -6, 9, 6, 1.6, 2.5, 0xffd9a0],    // warm low card, front
+      [-4, 3, -12, 5, 4, 2.5, 0xdfe8ff]     // cool card behind
+    ].forEach(function (b) {
+      var m = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({ color: new THREE.Color(b[6]).multiplyScalar(b[5]), side: THREE.DoubleSide }));
+      m.position.set(b[0], b[1], b[2]);
+      m.scale.set(b[3], b[4], 1);
+      m.lookAt(0, 0, 0);
+      room.add(m);
+    });
+    return room;
+  }
+
   function init(THREE, GLTFLoader, RoomEnvironment, MeshoptDecoder) {
     var renderer;
     try {
@@ -183,19 +210,44 @@ var HOA_CREST_CONFIG = {
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    // Neutral rendering, as a standard glTF viewer (user 2026-10-09: "the exact 3D file, no effect from our side,
-    // the exact metallic gold"): Khronos PBR Neutral tone mapping keeps the file's base colour true, exposure 1.
-    renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.toneMappingExposure = 1;
+    // Polished gold (user 2026-10-12: "no shine, glint or reflections while rotating, it looks flat"):
+    // filmic tone mapping so the bright softbox reflections roll off into white instead of clipping flat.
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
     renderer.setClearColor(0x000000, 0);
 
     var scene = new THREE.Scene();
     var pmrem = new THREE.PMREMGenerator(renderer);
-    // The file's own look (user 2026-10-09: "exact 3D file glazing, not added from our side"): the GLB stores only its
-    // material (metal 1, roughness 0.22, its gold) and no lights, so the glaze comes from reflecting a viewer's studio.
-    // This is the standard neutral glTF-viewer studio (three.js RoomEnvironment), unmodified: no added strips or lights.
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    // A full metal shows nothing but its reflections, and the plain RoomEnvironment is a soft grey box: too even to
+    // read as a glint. This studio is dark with a few hard softboxes, so as the logo (never the studio) turns,
+    // bright strips slide across the relief and the faces turned away fall to dark gold.
+    scene.environment = pmrem.fromScene(goldStudio(THREE), 0.02).texture;
     pmrem.dispose();
+
+    // polished gold, in place of the file's flat-looking standard material
+    var GOLD = { ENV: 1.5, ENV_DRAG: 1.8 };
+    var gold = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color('#FFC94A'),
+      metalness: 1,
+      roughness: 0.22,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: GOLD.ENV,
+      side: THREE.DoubleSide
+    });
+
+    // lights, fixed in the world (the logo turns under them): warm key top-right, cool rim behind, low fill,
+    // and a small glint that follows the mouse while it is over the logo
+    scene.add(new THREE.AmbientLight(0xfff1dc, 0.15));
+    var key = new THREE.DirectionalLight(0xfff4e0, 1.6);
+    key.position.set(4, 5, 6);
+    scene.add(key);
+    var rim = new THREE.DirectionalLight(0xbfd6ff, 1.6);
+    rim.position.set(-4, 2.5, -6);
+    scene.add(rim);
+    var glint = new THREE.PointLight(0xffffff, 0, 0, 1.4);
+    scene.add(glint);
+    var glintI = { x: 0, v: 0 }, shine = { x: 0, v: 0 };
 
     // a long lens: little perspective skew away from the screen centre
     var FOV = 18, DIST = 20;
@@ -243,6 +295,7 @@ var HOA_CREST_CONFIG = {
       var box = new THREE.Box3().setFromObject(model);
       dims = box.getSize(new THREE.Vector3());
       model.position.sub(box.getCenter(new THREE.Vector3()));
+      model.traverse(function (o) { if (o.isMesh) { if (o.material) o.material.dispose(); o.material = gold; } });
       fit.add(model);
       
       // landed below the hero (reload, anchor): no lift-off, it is simply there
@@ -509,6 +562,8 @@ var HOA_CREST_CONFIG = {
           spring(pitch, t[1], k, d, STEP);
         }
         spring(grab, drag ? 1 : 0, 160, 2 * Math.sqrt(160), STEP);
+        spring(glintI, pointer && !reduceMotion ? 1 : 0, 40, 2 * Math.sqrt(40), STEP);
+        spring(shine, drag ? 1 : 0, 30, 2 * Math.sqrt(30), STEP);
         acc -= STEP;
       }
       // hover limits, once it is inside them
@@ -560,6 +615,11 @@ var HOA_CREST_CONFIG = {
       pivot.position.set((pose.x - vw / 2) * px2w, -(pose.y - vh / 2) * px2w, 0);
       pivot.rotation.set(pitch.x + tip, yaw.x, 0, 'YXZ');
       canvas.style.opacity = alpha;
+      // while held, the reflections brighten a little so the shine reads during the turn
+      gold.envMapIntensity = GOLD.ENV + (GOLD.ENV_DRAG - GOLD.ENV) * shine.x;
+      // the cursor glint: a small light just in front of the logo, under the mouse
+      if (pointer) glint.position.set((pointer.x - vw / 2) * px2w, -(pointer.y - vh / 2) * px2w, pose.s * px2w * 0.9);
+      glint.intensity = 14 * Math.pow(pose.s * px2w, 2) * Math.max(0, glintI.x);
       renderer.render(scene, camera);
 
       var side = pose.s * 1.04;

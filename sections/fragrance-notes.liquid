@@ -1,33 +1,34 @@
 {% comment %}
-  HOUSE OF AGHA — SCENT NOTES (PDP "Scent profile", notes_cards in product.json)
-  2026-10-09 v2, from the user's sketch + reference poster ("House of Agha · Oud Fury Notes"):
-  the bottle stands in the middle and three tinted pill cards are tucked BEHIND it — Top notes
-  upper-left (its end hidden behind the cap), Heart notes on the right, Base notes lower-left —
-  each with round note photos and small spaced captions. A poster frame around it: "House of Agha"
-  top-centre, product name top-right, and "Scent notes" set large.
-  2026-10-12 (user): tagline, "Eau de Parfum", the italic line under the heading and every
-  decorative rule (brand hairline, rules under the frame text, card label rules) removed.
-  (The earlier light sticker cards with pins / spritz / word band were replaced by this.)
+  HOUSE OF AGHA — SCENT NOTES (PDP, notes_cards in product.json)
+  2026-10-12 refactor (user's UX brief + responsive brief). One markup, one data source; only the
+  layout changes per breakpoint (mobile-first, min-width queries):
 
-  Motion: a scroll story — the section pins and each scroll step brings the next card out from
-  behind the bottle (Top → Heart → Base), reversed on the way back up; cards spring in, their
-  note circles pop one by one, then they bob gently; hover lifts a card. No JS = everything
-  shown, static. prefers-reduced-motion: static.
-  Phones (<700px): the same poster with tall cards (notes as rows), not pinned (2026-10-12).
+    < 768 px ........ stacked: heading → bottle (≤70vw) → scent line → Top / Heart / Base cards
+                      (3 notes a row, 2 when 3 don't fit) → buy row; the Add-to-bag button sticks
+                      to the bottom of the screen while the section is on screen (safe-area aware).
+                      Landscape phones (height < 500) keep this layout, button not sticky.
+    768–1023 px ..... 2 columns: bottle left, the three cards stacked right, -2° tilt, no overlap.
+    ≥ 1024 px ....... floating: bottle centred, Top upper-left, Heart right-middle, Base lower-left,
+                      each tucked ≤ 28px (≈8% of its width) behind the glass; the tucked end is
+                      padding, so no note circle is ever covered. One tilt (-4°) on the card
+                      background only, text stays horizontal. ≥ 760 px tall: the section pins and
+                      each scroll step brings in the next card (reversible).
 
-  Data
-    Cards ...... "note_card" blocks (first 3 used on the stage): label, notes source, fallback
-                 caption, card + text colour.
-    Notes ...... notes source top / heart / base → custom.top_notes / heart_notes / base_notes
-                 through snippets/agha-pdp-data (its dev fallback while metafields are empty),
-                 else the block's caption. Up to 3 notes per card (user, 2026-10-09); each photo comes from
-                 snippets/agha-note-image set 'sn' (assets/sn-note-<key>.webp, cut from the reference
-                 poster: saffron, bergamot, lavender, oud, jasmine, neroli, cardamom, sandalwood,
-                 amber; others fall back to note-<key>.jpg), a letter shows when missing.
-    Still life .. assets/sn-pile-botanical.webp (left) + sn-pile-oud.webp (right, behind the glass),
-                 transparent cut-outs from the same poster, at the bottle's foot as in the poster.
-    Bottle ..... section image → transparent cutout assets/hoa-bottle-<handle>.webp →
-                 product.featured_image.
+  Data (never hard-coded)
+    Notes ....... custom.top_notes / heart_notes / base_notes via snippets/agha-pdp-data (→ the
+                  live-store notes while metafields are empty); a block with source "none" uses its
+                  own list. 1–4 notes per card (setting "Notes per card", default 3); an empty
+                  card is not rendered; no notes at all = no section.
+    Scent line .. custom.scent_tags ("Smoky. Resinous. Warm.") → custom.scent_character →
+                  the section's fallback line.
+    Colours ..... each block's card / text colour → --note-top / --note-heart / --note-base
+                  (+ -ink), all text ≥ 4.5:1 on its card.
+    Photos ...... snippets/agha-note-image set 'sn' (120px sources), a letter when missing.
+    Bottle ...... section image → assets/hoa-bottle-<handle>.webp → product.featured_image.
+    Buy row ..... mirrors the product form of the main section ([data-pdp-form]): size chips click
+                  its option radios, the price follows its [data-pdp-price], the button presses its
+                  Add-to-bag. Hidden when there is no such form. While the section is on screen the
+                  page's own buy dock is hidden (html.sn-cta-on), so there is one buy bar at a time.
   Local preview: assets/pdp-preview.js mirrors the markup and reuses this file's style and
   script blocks (matched at the start of a line — never start a comment line with one).
 {% endcomment %}
@@ -36,6 +37,7 @@
 {%- assign pdp = pdp_json | parse_json -%}
 {%- liquid
   assign s = section.settings
+  assign max_notes = s.max_notes | default: 3
   assign cutouts = 'agha-blue,dark-paradise,maha,oud-fury,sea-smoke,shamamah,tobacco-enigma' | split: ','
   assign product_title = product.title | default: 'House of Agha'
   assign bottle_alt = product_title | append: ' bottle'
@@ -48,18 +50,31 @@
     assign has_cutout = true
     assign cut = 'hoa-bottle-' | append: cut_key | append: '.webp'
   endif
-  comment
-    Resting tilt per card (deg), in block order: top, heart, base
-  endcomment
-  assign rots = '-6,7,-9' | split: ','
 
   comment
-    The notes depend on the product: a card shows the product's own notes (metafield, else the
-    live-store notes in snippets/agha-store-notes). The block's list is used only when its source
-    is "none". A card with no notes is left out; no notes at all = no section (e.g. Shamamah).
+    One line about the scent, from product data: tags as "Smoky. Resinous. Warm.", else the character line
   endcomment
+  assign scent_line = ''
+  if pdp.scent_tags != blank
+    assign scent_line = pdp.scent_tags | join: '. ' | append: '.'
+  elsif pdp.scent_character != blank
+    assign scent_line = pdp.scent_character
+  endif
+  if scent_line == blank
+    assign scent_line = s.subheading
+  endif
+
+  comment
+    Palette: each card's colours become section variables, keyed by the note level it shows
+  endcomment
+  assign palette = ''
   assign any_notes = false
   for block in section.blocks limit: 3
+    assign lvl = block.settings.notes_source
+    if lvl == 'none'
+      assign lvl = 'top,heart,base' | split: ',' | slice: forloop.index0 | first
+    endif
+    assign palette = palette | append: '--note-' | append: lvl | append: ': ' | append: block.settings.card_color | append: '; --note-' | append: lvl | append: '-ink: ' | append: block.settings.text_color | append: '; '
     case block.settings.notes_source
       when 'top'
         if pdp.top_notes != blank
@@ -79,316 +94,348 @@
         endif
     endcase
   endfor
+  assign current_variant = product.selected_or_first_available_variant
 -%}
 
 <style>
   /* ======================================================================
-     SCENT NOTES — scoped to .sn
-     li.sn-card ....... placement + resting tilt (--rot) + the slide-out
-     .sn-card__in ..... idle bob and hover lift
-     .sn-card__body ... the pill itself
+     SCENT NOTES — scoped to .sn. Mobile first; min-width queries only.
+     li.sn-card ....... placement (desktop) + entrance motion
+     .sn-card__body ... the card; its tinted background is ::before (the only thing tilted)
      ====================================================================== */
   .sn {
-    --sn-ink: #1c1915;
-    --sn-muted: #6d665c;
-    --bh: clamp(420px, 44vw, 580px);   /* bottle height: every card is placed from it */
-    --bw: calc(var(--bh) * 0.38);       /* bottle width (cutouts are 289×760) */
-    --cw: calc(var(--bh) * 0.7);        /* card width */
-    --tuck: calc(var(--bh) * 0.075);    /* how far a card runs in behind the bottle */
-    --ck: calc(var(--bh) * 0.78);       /* card scale: medium cards (user, 2026-10-09) */
+    --note-top: #ffffff;   --note-top-ink: #2b2620;
+    --note-heart: #b9c7a5; --note-heart-ink: #2c3a24;
+    --note-base: #ead08a;  --note-base-ink: #3d2f17;
+    --sn-ink: #1a1a1a;
+    --sn-muted: #5a5349;                       /* 7:1 on the paper */
+    --fs-head: clamp(1.5rem, 4vw, 2.5rem);
+    --fs-title: clamp(0.875rem, 1.5vw, 1rem);
+    --fs-note: clamp(0.6875rem, 1.1vw, 0.8125rem);   /* 11px → 13px */
+    --pic: 60px;                               /* note circle */
+    --col: 94px;                               /* one note's column */
+    --tilt: 0deg;
     position: relative;
     background: var(--sn-bg, #f6f4ee);
     color: var(--sn-ink);
-    padding: clamp(40px, 5vw, 64px) clamp(16px, 4vw, 56px) clamp(56px, 7vw, 96px);
-    overflow-x: clip;
+    padding: 40px 16px 0;
   }
-  .sn__inner { position: relative; max-width: 1240px; margin: 0 auto; }
+  .sn *, .sn *::before, .sn *::after { box-sizing: border-box; }
+  .sn__inner { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-  /* Poster frame: brand (centre) · product (right) */
-  .sn__top {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: start;
-    gap: 24px;
-  }
-  .sn__brand,
-  .sn__product {
-    margin: 0;
-    font: 400 0.7rem/1.75 var(--font-serif, Georgia, serif);
-    letter-spacing: 0.28em;
+  /* ---------- heading (mobile: its parts join the column order) ---------- */
+  .sn__head { display: contents; }
+  .sn__eyebrow {
+    order: 1;
+    margin: 0 0 8px;
+    font: 600 0.75rem/1.4 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
+    color: var(--sn-muted);
+    text-align: center;
   }
-  .sn__brand { grid-column: 2; font-size: 1rem; letter-spacing: 0.42em; text-align: center; }
-  .sn__product { grid-column: 3; justify-self: end; text-align: right; font-size: 0.82rem; letter-spacing: 0.24em; }
-
-  /* "Scent notes" — big on the left of the stage (wide screens), above it otherwise */
-  /* lower right, clear of the cards on the left (the base card's width follows the product's notes) */
-  .sn__head { position: absolute; right: 0; bottom: 2%; z-index: 3; width: min(270px, 21%); text-align: right; }
   .sn .sn__title {
+    order: 1;
     margin: 0;
-    font: 400 clamp(2.6rem, 4.4vw, 4rem)/0.95 var(--font-didot, 'Didot', Georgia, serif);
-    text-transform: uppercase;
+    font: 400 var(--fs-head)/1.15 var(--font-didot, 'Didot', Georgia, serif);
     letter-spacing: 0.01em;
     color: var(--sn-ink);
+    text-align: center;
+    text-wrap: balance;
   }
-  .sn__title span { display: block; padding-left: 0.6em; }
-  .sn__head .sn__title span { padding-left: 0; }
+  .sn__lede {
+    order: 3;
+    max-width: 36ch;
+    margin: 18px 0 0;
+    font: 500 1rem/1.5 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.01em;
+    color: var(--sn-muted);
+    text-align: center;
+  }
+  .sn__cue { display: none; }
 
-  /* Stage: the bottle's centre is the stage's centre */
-  .sn__stage {
-    position: relative;
-    height: calc(var(--bh) + clamp(60px, 8vw, 110px));
-    margin-top: clamp(-30px, -2vw, 0px);
+  /* ---------- stage ---------- */
+  .sn__stage { display: contents; }
+  .sn__bottle { order: 2; position: relative; margin-top: 24px; }
+  .sn__img {
+    display: block;
+    height: clamp(260px, 78vw, 340px);
+    width: auto;
+    max-width: 70vw;
+    object-fit: contain;
   }
-  .sn__bottle { position: absolute; left: 50%; top: 50%; z-index: 3; translate: -50% -50%; }
-  .sn__img { display: block; height: var(--bh); width: auto; max-width: none; -webkit-box-reflect: below 0 linear-gradient(transparent 86%, rgba(0, 0, 0, 0.16)); }
-  .sn__shadow {
+  .sn__shadow {                                   /* soft contact shadow */
     position: absolute;
     left: 50%;
-    top: calc(100% - 6px);
-    width: 150%;
-    height: 26px;
+    top: calc(100% - 8px);
+    width: 170%;
+    height: 22px;
     translate: -50% 0;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(40, 28, 16, 0.26), transparent);
+    background: radial-gradient(closest-side, rgba(40, 28, 16, 0.3), transparent);
     z-index: -1;
   }
+  .sn__pile { display: none; }
 
-  .sn__cards { list-style: none; margin: 0; padding: 0; }
-
-  .sn-card {
-    --c-bg: #ffffff;
-    --c-ink: #3a3245;
+  /* ---------- note cards ---------- */
+  .sn__cards { order: 4; list-style: none; width: 100%; max-width: 560px; margin: 28px 0 0; padding: 0; display: grid; gap: 14px; }
+  .sn-card[data-level="top"]   { --c-bg: var(--note-top);   --c-ink: var(--note-top-ink); }
+  .sn-card[data-level="heart"] { --c-bg: var(--note-heart); --c-ink: var(--note-heart-ink); }
+  .sn-card[data-level="base"]  { --c-bg: var(--note-base);  --c-ink: var(--note-base-ink); }
+  .sn-card__body { position: relative; isolation: isolate; padding: 18px 12px 18px; color: var(--c-ink); }
+  .sn-card__body::before {
+    content: "";
     position: absolute;
-    z-index: 1;
-    width: max-content;
-    transform: rotate(var(--rot, 0deg));
+    inset: 0;
+    z-index: -1;
+    border-radius: 28px;
+    background: radial-gradient(120% 90% at 30% 10%, rgba(255, 255, 255, 0.28), transparent 60%), var(--c-bg);
+    box-shadow: inset 0 0 0 1px rgba(26, 26, 26, 0.07), 0 2px 4px rgba(40, 28, 16, 0.05), 0 18px 36px -22px rgba(40, 28, 16, 0.45);
+    transform: rotate(var(--tilt));
   }
-  /* Where each card sits, measured from the bottle (stage centre) */
-  .sn-card[data-slot="1"] { right: calc(50% - var(--bw) * 0.02); top: calc(50% - var(--bh) * 0.46); }
-  .sn-card[data-slot="2"] { left: calc(50% + var(--bw) * 0.5 - var(--tuck)); top: calc(50% - var(--bh) * 0.22); }
-  .sn-card[data-slot="3"] { right: calc(50% + var(--bw) * 0.5 - var(--tuck)); top: calc(50% + var(--bh) * 0.1); }
-
-  /* Ingredient still life at the bottle's foot, as in the reference poster: the botanicals
-     (bergamot, lime, lavender, saffron, amber) on the LEFT against the glass, the oud wood + amber
-     on the RIGHT running in behind the bottle; all on a glossy floor (soft reflection below) */
-  .sn__pile {
-    position: absolute;
-    bottom: calc(50% - var(--bh) * 0.52);
-    height: auto;
-    pointer-events: none;
-    filter: drop-shadow(0 8px 8px rgba(40, 28, 16, 0.2));
-    -webkit-box-reflect: below -4px linear-gradient(transparent 82%, rgba(0, 0, 0, 0.14));
-  }
-  .sn__pile--botanical { z-index: 4; right: calc(50% + var(--bw) * 0.5 - var(--bh) * 0.05); width: calc(var(--bh) * 0.46); }
-  .sn__pile--oud { z-index: 2; left: calc(50% + var(--bw) * 0.5 - var(--bh) * 0.11); width: calc(var(--bh) * 0.52); }
-
-  .sn-card__in { transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
-  .sn-card__body {
-    position: relative;
-    padding: calc(var(--ck) * 0.045) calc(var(--ck) * 0.07) calc(var(--ck) * 0.04);
-    border-radius: 999px;
-    color: var(--c-ink);
-    background:
-      radial-gradient(120% 90% at 30% 10%, rgba(255, 255, 255, 0.28), transparent 60%),
-      var(--c-bg);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 2px 4px rgba(40, 28, 16, 0.06),
-      0 22px 44px -22px rgba(40, 28, 16, 0.45);
-  }
-  /* The end that runs in behind the bottle gets extra room so no note hides under it */
-  .sn-card[data-slot="1"] .sn-card__body { padding-right: calc(var(--bw) * 0.5 + var(--ck) * 0.04); }
-  .sn-card[data-slot="2"] .sn-card__body { padding-left: calc(var(--tuck) + var(--ck) * 0.05); }
-  .sn-card[data-slot="3"] .sn-card__body { padding-right: calc(var(--tuck) + var(--ck) * 0.05); }
-
   .sn-card__label {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 0 0 calc(var(--ck) * 0.022);
-    font: 500 calc(var(--ck) * 0.03)/1 var(--font-serif, Georgia, serif);
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    margin: 0 0 14px;
+    font: 700 var(--fs-title)/1.3 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.01em;
+    text-align: center;
+    color: var(--c-ink);
   }
-
-  /* Same card size on every product: room for exactly 3 notes; fewer notes sit centred in it */
-  .sn-card__notes { --nw: calc(var(--ck) * 0.18); list-style: none; display: flex; justify-content: center; gap: calc(var(--ck) * 0.02); width: calc(var(--nw) * 3 + var(--ck) * 0.04); margin: 0; padding: 0; }
-  /* a long single word (FRANKINCENSE) widens its own column instead of running into the next */
-  .sn-note { display: grid; justify-items: center; align-content: start; gap: calc(var(--ck) * 0.016); width: var(--nw); flex: none; }
+  /* 3 a row; the 3rd wraps (centred) when 3 don't fit; never truncated */
+  .sn-card__notes { list-style: none; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 8px; }
+  .sn-note { flex: 0 0 var(--col); display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
   .sn-note__pic {
     position: relative;
     display: grid;
     place-items: center;
-    width: calc(var(--ck) * 0.13);
+    width: var(--pic);
     aspect-ratio: 1;
     border-radius: 50%;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75), 0 8px 16px -8px rgba(30, 20, 10, 0.5);
-    font: 400 1.4rem/1 var(--font-didot, Georgia, serif);
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 8px 16px -8px rgba(30, 20, 10, 0.5);
+    font: 400 1.25rem/1 var(--font-didot, Georgia, serif);
+    color: var(--c-ink);
     transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .sn-note__pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sn-note__pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .sn-note__name {
-    font: 500 max(9px, calc(var(--ck) * 0.02))/1.3 var(--font-serif, Georgia, serif);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    max-width: 100%;
+    font: 500 max(11px, var(--fs-note))/1.35 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.01em;
     text-align: center;
-    opacity: 0.85;
+    color: var(--c-ink);
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
-  /* Hover: the card lifts, its notes swell a little */
-  @media (hover: hover) {
-    .sn-card:hover .sn-card__in { transform: translateY(-8px); }
-    .sn-card:hover .sn-note__pic,
-    .sn[data-sn-ready] .sn-card.is-on:hover .sn-note__pic { transform: scale(1.06); }
+  /* ---------- buy row: name + price, size chips, Add to bag ---------- */
+  .sn-purchase { display: contents; }
+  .sn-purchase[hidden] { display: none; }
+  .sn-buy { order: 5; width: 100%; max-width: 560px; margin-top: 32px; display: grid; gap: 14px; justify-items: center; text-align: center; }
+  .sn-buy__name { margin: 0; font: 400 1.5rem/1.2 var(--font-didot, Georgia, serif); color: var(--sn-ink); }
+  .sn-buy__price { margin: 4px 0 0; font: 600 1rem/1.4 var(--hoa-sans, system-ui, sans-serif); color: var(--sn-ink); }
+  .sn-buy__sizes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; border: 0; }
+  .sn-buy__sizes:empty { display: none; }
+  .sn-size {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid rgba(26, 26, 26, 0.22);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--sn-ink);
+    font: 600 0.8125rem/1 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.02em;
+    cursor: pointer;
   }
+  .sn-size[aria-pressed="true"] { background: var(--sn-ink); border-color: var(--sn-ink); color: #fff; }
+  .sn-size:disabled { opacity: 0.45; text-decoration: line-through; cursor: not-allowed; }
+  .sn-size:focus-visible, .sn-add:focus-visible { outline: 2px solid var(--sn-ink); outline-offset: 3px; }
 
-  /* ---------- Scroll story (2026-10-09, user): the section pins and each scroll step brings in
-     the next card (Top → Heart → Base); scrolling back up takes them away again. JS sets
-     .sn--pin (desktop), .is-in on the section and .is-on on each card. No JS = all shown. */
-  .sn.sn--pin { height: calc(100vh + 150vh); padding-block: 0; }
-  .sn--pin .sn__inner {
+  /* the button: sticky at the bottom of the screen while the section is on screen (phones) */
+  .sn-cta {
+    order: 6;
     position: sticky;
-    top: var(--hoa-header-h, 76px);
-    height: calc(100vh - var(--hoa-header-h, 76px));
+    bottom: 0;
+    z-index: 20;
+    width: calc(100% + 32px);
+    margin: 18px -16px 0;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(246, 244, 238, 0.94);
+    -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+    box-shadow: 0 -1px 0 rgba(26, 26, 26, 0.06);
+  }
+  .sn-add {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 48px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--sn-ink);
+    color: #fff;
+    font: 700 0.875rem/1 var(--hoa-sans, system-ui, sans-serif);
+    letter-spacing: 0.04em;
+    cursor: pointer;
   }
-  /* the pinned stage must fit the screen under the header */
-  .sn.sn--pin { --bh: min(clamp(420px, 44vw, 580px), calc(100vh - var(--hoa-header-h, 76px) - 230px)); }
+  .sn-add:disabled { opacity: 0.5; cursor: not-allowed; }
+  .sn-add__price { font-weight: 500; opacity: 0.8; }
+  /* the page's own buy dock steps aside while this sticky button shows */
+  html.sn-cta-on .pdp-dock { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
 
-  /* Bottle + still life: rise in with the section */
-  .sn[data-sn-ready] .sn__bottle { opacity: 0; translate: -50% calc(-50% + 40px); transition: opacity 0.8s ease, translate 1s cubic-bezier(0.22, 1, 0.36, 1); }
-  .sn[data-sn-ready].is-in .sn__bottle { opacity: 1; translate: -50% -50%; }
-  .sn[data-sn-ready] .sn__pile { opacity: 0; translate: 0 24px; transition: opacity 0.8s ease 0.3s, translate 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s; }
-  .sn[data-sn-ready].is-in .sn__pile { opacity: 1; translate: none; }
-
-  /* Card motion. Arriving (.is-on): springs out from behind the glass, unblurs, settles on its
-     tilt; then the label's rule draws, the note circles pop one by one and the names rise.
-     Leaving (scrolling back up, user 2026-10-09): the same film played backwards — names drop,
-     circles shrink out last-to-first, the rule retracts, then the card pulls back (a small
-     anticipation) and slides in behind the bottle. Base-state transitions = the exit. */
-  .sn[data-sn-ready] .sn-card {
-    opacity: 0;
-    filter: blur(6px);
-    transition: opacity 0.5s ease 0.5s, transform 0.85s cubic-bezier(0.5, -0.45, 0.66, 0) 0.3s, filter 0.5s ease 0.45s;
-  }
-  .sn[data-sn-ready] .sn-card[data-slot="1"],
-  .sn[data-sn-ready] .sn-card[data-slot="3"] { transform: translateX(42%) rotate(0deg) scale(0.8); }
-  .sn[data-sn-ready] .sn-card[data-slot="2"] { transform: translateX(-42%) rotate(0deg) scale(0.8); }
-  .sn[data-sn-ready] .sn-card.is-on {
-    opacity: 1;
-    filter: none;
-    transform: rotate(var(--rot, 0deg));
-    transition: opacity 0.5s ease, transform 1s cubic-bezier(0.34, 1.5, 0.5, 1), filter 0.6s ease;
-  }
-  .sn[data-sn-ready] .sn-note__pic { opacity: 0; transform: scale(0.3); transition: opacity 0.3s ease calc(var(--xd) + 0.08s), transform 0.45s cubic-bezier(0.36, 0, 0.66, -0.56) var(--xd); }
-  .sn[data-sn-ready] .sn-note__name { opacity: 0; translate: 0 8px; transition: opacity 0.25s ease var(--xd), translate 0.3s ease var(--xd); }
-  .sn[data-sn-ready] .sn-card.is-on .sn-note__pic { opacity: 1; transform: none; transition: opacity 0.35s ease var(--nd), transform 0.7s cubic-bezier(0.34, 1.7, 0.5, 1) var(--nd); }
-  .sn[data-sn-ready] .sn-card.is-on .sn-note__name { opacity: 0.85; translate: none; transition: opacity 0.4s ease calc(var(--nd) + 0.12s), translate 0.5s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--nd) + 0.12s); }
-  /* --nd = arrival delay (first to last), --xd = leaving delay (last to first) */
-  .sn-note:nth-child(1) { --nd: 0.32s; --xd: 0.16s; }
-  .sn-note:nth-child(2) { --nd: 0.42s; --xd: 0.08s; }
-  .sn-note:nth-child(3) { --nd: 0.52s; --xd: 0s; }
-
-  /* idle bob once a card has landed */
-  .sn-card.is-on .sn-card__body { animation: sn-bob 4s ease-in-out 1.1s infinite alternate; }
-  .sn-card[data-slot="2"] .sn-card__body { animation-duration: 4.6s; }
-  .sn-card[data-slot="3"] .sn-card__body { animation-duration: 3.6s; }
-  @keyframes sn-bob { to { transform: translateY(-6px); } }
-
-  /* Mid widths: the title moves above the stage */
-  @media (max-width: 1199px) {
-    .sn__head { position: static; width: auto; margin: clamp(28px, 4vw, 44px) 0 0; text-align: center; }
-
-    .sn__title span { display: inline; padding: 0; }
-    .sn__stage { margin-top: 0; }
-    .sn.sn--pin { --bh: min(clamp(420px, 44vw, 580px), calc(100vh - var(--hoa-header-h, 76px) - 380px)); }
-    .sn--pin .sn__head { margin-top: 8px; }
-  }
-  @media (max-width: 899px) {
-    .sn { --bh: 400px; }
-    .sn.sn--pin { --bh: min(400px, calc(100vh - var(--hoa-header-h, 76px) - 360px)); }
-    .sn__top { grid-template-columns: 1fr auto; }
-    .sn__brand { grid-column: 1; text-align: left; }
-    .sn__product { grid-column: 2; }
+  /* landscape phones: same stacked layout, the button is not sticky */
+  @media (max-height: 499px) {
+    .sn-cta { position: static; width: 100%; margin: 18px 0 0; padding: 0 0 40px; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
   }
 
-  /* Phones (2026-10-12, UX pass): the desktop poster could not fit three notes side by side in a
-     half-screen pill without 7px names, so each card turns tall: label on top, the notes as rows
-     (photo + name) — same bottle in the middle, same three tinted cards tucked in behind it on
-     alternating sides (Top upper-left, Heart right, Base lower-left), same still life and
-     "Scent notes" lower right. No pinning on phones: the sticky buy bar covered the pinned frame,
-     so each card arrives as it scrolls into view (script below). */
-  @media (max-width: 699px) {
+  /* ---------- entrance (JS adds data-sn-ready; no JS = all shown) ---------- */
+  .sn[data-sn-ready] .sn-card { opacity: 0; transform: translateY(16px); transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+  .sn[data-sn-ready] .sn-card.is-on { opacity: 1; transform: none; }
+
+  @media (hover: hover) {
+    .sn-card:hover .sn-note__pic { transform: scale(1.05); }
+    .sn-size:hover:not(:disabled):not([aria-pressed="true"]) { border-color: var(--sn-ink); }
+    .sn-add:hover:not(:disabled) { background: #333; }
+  }
+
+  /* ======================================================================
+     TABLET 768–1023: two columns — bottle left, the three cards stacked right
+     ====================================================================== */
+  @media (min-width: 768px) and (min-height: 500px) {
+    .sn { --tilt: -2deg; --col: 96px; padding: 64px 32px 72px; }
+    .sn__head { display: block; max-width: 640px; margin: 0 auto; text-align: center; }
+    .sn__eyebrow, .sn .sn__title, .sn__lede { margin-left: auto; margin-right: auto; }
+    .sn__lede { margin-top: 14px; }
+    .sn__stage {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 860px;
+      margin-top: 48px;               /* clear space between the heading and the cap */
+    }
+    .sn__bottle { margin: 0; justify-self: center; }
+    .sn__img { height: clamp(380px, 52vw, 500px); max-width: none; }
+    .sn__cards { margin: 0; max-width: none; gap: 18px; }
+    .sn-card__body { padding: 18px 18px 20px; }
+    .sn-purchase { display: flex; order: 5; width: 100%; max-width: 860px; margin-top: 44px; padding: 16px 16px 16px 28px; align-items: center; gap: 20px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px rgba(26, 26, 26, 0.07), 0 18px 40px -28px rgba(40, 28, 16, 0.5); }
+    .sn-buy { margin: 0; max-width: none; flex: 1; display: flex; align-items: center; gap: 20px; justify-content: space-between; text-align: left; }
+    .sn-buy__name { font-size: 1.375rem; }
+    .sn-cta { position: static; width: auto; margin: 0; padding: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+    .sn-add { width: auto; min-width: 200px; }
+  }
+
+  /* ======================================================================
+     DESKTOP ≥1024: floating — bottle centred, cards tucked in behind it
+     ====================================================================== */
+  @media (min-width: 1024px) and (min-height: 500px) {
     .sn {
-      --bh: min(70vw, 330px);
-      --bw: calc(var(--bh) * 0.38);
-      --tuck: calc(var(--bw) * 0.16);
-      --pic: max(26px, 7.4vw);
-      padding: 28px 0 48px;
+      --bh: clamp(440px, 40vw, 580px);       /* bottle height: every card is placed from it */
+      --bw: calc(var(--bh) * 0.38);          /* bottle width (cutouts are 289×760) */
+      --edge: calc(var(--bw) * 0.49);        /* half the body width */
+      --tuck: 28px;                          /* ≤ 8% of a card's width runs in behind the glass */
+      --sh: calc(var(--bh) + 48px);          /* stage height */
+      --tilt: -4deg;
+      --col: clamp(92px, 7vw, 104px);
+      --pic: clamp(60px, 4.6vw, 72px);
+      padding: clamp(64px, 6vw, 88px) clamp(24px, 3vw, 48px) clamp(72px, 7vw, 104px);
+      overflow-x: clip;
     }
-    .sn__inner { display: flex; flex-direction: column; }
-
-    /* poster frame: brand centred, product right under it */
-    .sn__top {
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas: 'brand brand' '. prod';
-      gap: 10px 16px;
-      padding-inline: 16px;
+    .sn__stage { display: block; position: relative; height: var(--sh); max-width: none; }
+    .sn__bottle { position: absolute; left: 50%; top: 0; z-index: 3; translate: -50% 0; }
+    .sn__img { height: var(--bh); -webkit-box-reflect: below 0 linear-gradient(transparent 86%, rgba(0, 0, 0, 0.14)); }
+    .sn__pile {                               /* the still life, clear of the glass */
+      display: block;
+      position: absolute;
+      z-index: 2;
+      top: calc(var(--bh) * 0.7);
+      left: calc(50% + var(--edge) + var(--bh) * 0.03);
+      width: calc(var(--bh) * 0.42);
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 8px rgba(40, 28, 16, 0.2));
     }
-    .sn__brand { grid-area: brand; font-size: 0.8rem; letter-spacing: 0.36em; text-align: center; }
-    .sn__product { grid-area: prod; font-size: 0.66rem; letter-spacing: 0.2em; }
+    .sn__cards { display: block; margin: 0; }
+    .sn-card { position: absolute; z-index: 1; width: max-content; }
+    /* Top: upper-left · Heart: right-middle · Base: lower-left — the same for every product */
+    .sn-card[data-slot="1"] { right: calc(50% + var(--edge) - var(--tuck)); bottom: calc(var(--sh) - var(--bh) * 0.41); }
+    .sn-card[data-slot="2"] { left: calc(50% + var(--edge) - var(--tuck)); top: calc(var(--bh) * 0.24); }
+    .sn-card[data-slot="3"] { right: calc(50% + var(--edge) - var(--tuck)); top: calc(var(--bh) * 0.6); }
+    .sn-card__body { padding: 22px 20px 22px; }
+    .sn-card__body::before { border-radius: 40px; }
+    /* the end that runs in behind the glass is padding only: no note sits there */
+    .sn-card[data-slot="1"] .sn-card__body, .sn-card[data-slot="3"] .sn-card__body { padding-right: calc(var(--tuck) + 20px); }
+    .sn-card[data-slot="2"] .sn-card__body { padding-left: calc(var(--tuck) + 20px); }
+    /* same card size on every product: room for 3 notes; 4 get a 4th column */
+    .sn-card__notes { flex-wrap: nowrap; gap: 10px; width: calc(var(--col) * 3 + 20px); }
+    .sn-card[data-n="4"] .sn-card__notes { width: calc(var(--col) * 4 + 30px); }
 
-    /* the stage: room above and below the bottle for the two left-hand cards */
-    .sn__stage { order: 1; height: calc(var(--bh) * 1.42); margin-top: 18px; }
-    .sn-card[data-slot="1"],
-    .sn-card[data-slot="3"] { right: calc(50% + var(--bw) * 0.5 - var(--tuck)); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 12px); }
-    .sn-card[data-slot="2"] { left: calc(50% + var(--bw) * 0.5 - var(--tuck)); max-width: calc(50% - var(--bw) * 0.5 + var(--tuck) - 12px); }
-    .sn-card[data-slot="1"] { top: calc(50% - var(--bh) * 0.66); }
-    .sn-card[data-slot="2"] { top: calc(50% - var(--bh) * 0.3); }
-    .sn-card[data-slot="3"] { top: calc(50% + var(--bh) * 0.08); }
-    /* tall cards: a gentle tilt keeps them clear of the screen edge */
-    .sn-card[data-slot="1"] { --rot: -3deg !important; }
-    .sn-card[data-slot="2"] { --rot: 3deg !important; }
-    .sn-card[data-slot="3"] { --rot: -2.5deg !important; }
+    .sn-purchase { max-width: 900px; margin-top: 36px; }
 
-    .sn-card .sn-card__body { border-radius: 22px; padding: 12px 12px 13px; }
-    /* the end tucked in behind the glass keeps its notes in view */
-    .sn-card[data-slot="1"] .sn-card__body,
-    .sn-card[data-slot="3"] .sn-card__body { padding-right: calc(var(--tuck) + 6px); padding-left: 12px; }
-    .sn-card[data-slot="2"] .sn-card__body { padding-left: calc(var(--tuck) + 8px); padding-right: 10px; }
-    .sn-card__label { gap: 6px; margin-bottom: 10px; font-size: 9px; letter-spacing: 0.2em; white-space: nowrap; }
+    /* gentle idle bob once a card has landed */
+    .sn-card.is-on .sn-card__body { animation: sn-bob 4s ease-in-out 1.1s infinite alternate; }
+    .sn-card[data-slot="2"] .sn-card__body { animation-duration: 4.6s; }
+    .sn-card[data-slot="3"] .sn-card__body { animation-duration: 3.6s; }
 
-    /* notes as rows: photo, then the name beside it */
-    .sn-card__notes { flex-direction: column; align-items: stretch; width: auto; gap: 7px; }
-    .sn-note { display: flex; align-items: center; gap: 7px; width: auto; min-width: 0; }
-    .sn-note__pic { flex: none; width: var(--pic); font-size: 0.85rem; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.75), 0 6px 12px -6px rgba(30, 20, 10, 0.5); }
-    .sn-note__name { font-size: 9px; letter-spacing: 0.06em; line-height: 1.25; text-align: left; }
+    /* entrance: each card slides out from behind the glass */
+    .sn[data-sn-ready] .sn__bottle { opacity: 0; translate: -50% 40px; transition: opacity 0.8s ease, translate 1s cubic-bezier(0.22, 1, 0.36, 1); }
+    .sn[data-sn-ready].is-in .sn__bottle { opacity: 1; translate: -50% 0; }
+    .sn[data-sn-ready] .sn__pile { opacity: 0; transition: opacity 0.8s ease 0.3s; }
+    .sn[data-sn-ready].is-in .sn__pile { opacity: 1; }
+    .sn[data-sn-ready] .sn-card { filter: blur(6px); transition: opacity 0.5s ease 0.4s, transform 0.85s cubic-bezier(0.5, -0.45, 0.66, 0) 0.2s, filter 0.5s ease 0.35s; }
+    .sn[data-sn-ready] .sn-card[data-slot="1"], .sn[data-sn-ready] .sn-card[data-slot="3"] { transform: translateX(40%) scale(0.85); }
+    .sn[data-sn-ready] .sn-card[data-slot="2"] { transform: translateX(-40%) scale(0.85); }
+    .sn[data-sn-ready] .sn-card.is-on { opacity: 1; filter: none; transform: none; transition: opacity 0.5s ease, transform 1s cubic-bezier(0.34, 1.4, 0.5, 1), filter 0.6s ease; }
+    .sn[data-sn-ready] .sn-note__pic { opacity: 0; transform: scale(0.3); transition: opacity 0.3s ease, transform 0.4s ease; }
+    .sn[data-sn-ready] .sn-card.is-on .sn-note__pic { opacity: 1; transform: none; transition: opacity 0.35s ease var(--nd), transform 0.7s cubic-bezier(0.34, 1.6, 0.5, 1) var(--nd); }
+    .sn-note:nth-child(1) { --nd: 0.3s; }
+    .sn-note:nth-child(2) { --nd: 0.4s; }
+    .sn-note:nth-child(3) { --nd: 0.5s; }
+    .sn-note:nth-child(4) { --nd: 0.6s; }
 
-    /* "Scent notes": lower right, under the stage, as on the poster */
-    .sn__head { order: 2; position: static; width: auto; margin: 8px 16px 0 auto; max-width: 70%; text-align: right; }
-    .sn .sn__title { font-size: clamp(2rem, 9vw, 2.6rem); }
-    .sn__head .sn__title span { display: block; padding: 0; }
+    /* pinned scroll story (JS: ≥1024 wide and ≥760 tall) */
+    .sn.sn--pin { height: calc(100svh + 150svh); padding-block: 0; }
+    .sn--pin .sn__inner {
+      position: sticky;
+      top: var(--hoa-header-h, 76px);
+      height: calc(100svh - var(--hoa-header-h, 76px));
+      justify-content: center;
+    }
+    .sn.sn--pin { --bh: min(clamp(440px, 40vw, 580px), calc(100svh - var(--hoa-header-h, 76px) - 330px)); }
+    .sn--pin .sn__stage { margin-top: 40px; }
+    .sn--pin .sn-purchase { margin-top: 22px; }
+    .sn--pin .sn__cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font: 600 0.75rem/1.4 var(--hoa-sans, system-ui, sans-serif);
+      letter-spacing: 0.04em;
+      color: var(--sn-muted);
+      transition: opacity 0.4s ease;
+    }
+    .sn__cue svg { width: 14px; height: 14px; animation: sn-cue 1.6s ease-in-out infinite; }
+    .sn.is-done .sn__cue { opacity: 0; }
   }
-  /* very narrow phones: a long single word (FRANKINCENSE) still fits its row */
-  @media (max-width: 359px) {
-    .sn-note__name { letter-spacing: 0.01em; }
-    .sn-card .sn-card__body { padding-inline: 10px; }
+  /* 1024–1279 with 4 notes: narrower columns so the card still fits beside the bottle */
+  @media (min-width: 1024px) and (max-width: 1279px) and (min-height: 500px) {
+    .sn-card[data-n="4"] { --col: 74px; --pic: 56px; }
   }
-  @media (max-width: 339px) { .sn-note__name { font-size: 8px; } }
+  @keyframes sn-bob { to { transform: translateY(-6px); } }
+  @keyframes sn-cue { 50% { transform: translateY(4px); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .sn .sn-card,
-    .sn .sn__bottle,
-    .sn .sn-note__pic,
-    .sn .sn-note__name { opacity: 1 !important; filter: none !important; transition: none !important; }
-    .sn .sn-card[data-slot] { transform: rotate(var(--rot, 0deg)) !important; }
-    .sn .sn-card__body { animation: none !important; }
-    .sn .sn-card__in, .sn .sn-note__pic { transition: none; }
+    .sn .sn-card, .sn .sn__bottle, .sn .sn__pile, .sn .sn-note__pic { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; }
+    .sn .sn__bottle { translate: -50% 0 !important; }
+    .sn .sn-card__body, .sn__cue svg { animation: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) and (max-width: 1023px) {
+    .sn .sn__bottle { translate: none !important; }
   }
 </style>
 
@@ -396,55 +443,48 @@
 <section
   class="sn"
   id="sn-{{ section.id }}"
-  style="--sn-bg: {{ s.background }};"
+  style="--sn-bg: {{ s.background }}; {{ palette }}"
   data-sn
   aria-labelledby="sn-{{ section.id }}-title"
 >
   <div class="sn__inner">
-    <div class="sn__top">
-      <p class="sn__brand">{{ s.brand }}</p>
-      <p class="sn__product">{{ product_title }}</p>
-    </div>
-
     <header class="sn__head">
-      {%- assign title_words = s.heading | split: ' ' -%}
-      <h2 class="sn__title" id="sn-{{ section.id }}-title">{{ title_words.first }}{% if title_words.size > 1 %} <span>{{ title_words | slice: 1, 10 | join: ' ' }}</span>{% endif %}</h2>
+      {%- if s.brand != blank -%}<p class="sn__eyebrow">{{ s.brand }}</p>{%- endif -%}
+      <h2 class="sn__title" id="sn-{{ section.id }}-title">{{ s.heading }}</h2>
+      {%- if scent_line != blank -%}<p class="sn__lede">{{ scent_line }}</p>{%- endif -%}
+      {%- if s.scroll_cue != blank -%}
+        <p class="sn__cue" aria-hidden="true">{{ s.scroll_cue }}<svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+      {%- endif -%}
     </header>
 
     <div class="sn__stage">
       <div class="sn__bottle">
         {%- if s.bottle != blank -%}
-          {{ s.bottle | image_url: width: 1000 | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 700px) 20vw, 40vw', loading: 'lazy', alt: bottle_alt, class: 'sn__img' }}
+          {{ s.bottle | image_url: width: 1200 | image_tag: widths: '400, 800, 1200', sizes: '(min-width: 1024px) 18vw, (min-width: 768px) 26vw, 40vw', loading: 'lazy', alt: bottle_alt, class: 'sn__img' }}
         {%- elsif has_cutout -%}
           <img class="sn__img" src="{{ cut | asset_url }}" width="289" height="760" loading="lazy" decoding="async" alt="{{ bottle_alt | escape }}">
         {%- elsif product.featured_image -%}
-          {{ product.featured_image | image_url: width: 1000 | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 700px) 20vw, 40vw', loading: 'lazy', alt: bottle_alt, class: 'sn__img' }}
+          {{ product.featured_image | image_url: width: 1200 | image_tag: widths: '400, 800, 1200', sizes: '(min-width: 1024px) 18vw, (min-width: 768px) 26vw, 40vw', loading: 'lazy', alt: bottle_alt, class: 'sn__img' }}
         {%- endif -%}
         <span class="sn__shadow" aria-hidden="true"></span>
       </div>
       {%- if s.show_still_life -%}
-        {%- comment -%}
-          Per product: the ingredients at the bottle's foot follow that product's notes. Products
-          listed in pile_keys have their own assets/sn-pile-<key>-left.webp / -right.webp (top /
-          fresh notes on the left, base / woody notes on the right); the rest show the poster's set. Per-product sets were generated
-          2026-10-09 (Higgsfield nano_banana_2, poster style) and cut out.
-        {%- endcomment -%}
+        {%- comment -%} Per product (assets/sn-pile-<key>-right.webp), else the poster's set; desktop only, clear of the glass {%- endcomment -%}
         {%- assign pile_keys = 'oud-fury,agha-blue,dark-paradise,maha,sea-smoke,tobacco-enigma' | split: ',' -%}
-        {%- assign pile_left = 'sn-pile-botanical.webp' -%}
         {%- assign pile_right = 'sn-pile-oud.webp' -%}
         {%- if pile_keys contains cut_key -%}
-          {%- assign pile_left = 'sn-pile-' | append: cut_key | append: '-left.webp' -%}
           {%- assign pile_right = 'sn-pile-' | append: cut_key | append: '-right.webp' -%}
         {%- endif -%}
-        <img class="sn__pile sn__pile--oud" src="{{ pile_right | asset_url }}" width="556" height="354" loading="lazy" decoding="async" alt="">
-        {%- comment -%} Left side has no ingredients (user, 2026-10-09): that space belongs to the Base notes card {%- endcomment -%}
+        <img class="sn__pile" src="{{ pile_right | asset_url }}" width="556" height="354" loading="lazy" decoding="async" alt="">
       {%- endif -%}
 
       <ul class="sn__cards" role="list">
+        {%- assign slot = 0 -%}
         {%- for block in section.blocks limit: 3 -%}
           {%- liquid
             assign b = block.settings
             assign list = b.caption
+            assign lvl = b.notes_source
             case b.notes_source
               when 'top'
                 assign list = pdp.top_notes
@@ -452,76 +492,138 @@
                 assign list = pdp.heart_notes
               when 'base'
                 assign list = pdp.base_notes
+              else
+                assign lvl = 'top,heart,base' | split: ',' | slice: forloop.index0 | first
             endcase
             if list == blank
               continue
             endif
             assign names = list | split: ','
-            assign rot = rots[forloop.index0] | default: 0
-            assign delay = forloop.index0 | times: 0.16 | plus: 0.25
+            assign n = names.size
+            if n > max_notes
+              assign n = max_notes
+            endif
           -%}
-          <li
-            class="sn-card"
-            data-slot="{{ forloop.index }}"
-            style="--rot: {{ rot }}deg; --d: {{ delay }}s; --c-bg: {{ b.card_color }}; --c-ink: {{ b.text_color }};"
-            {{ block.shopify_attributes }}
-          >
-            <div class="sn-card__in">
-              <div class="sn-card__body">
-                <h3 class="sn-card__label">{{ b.label }}</h3>
-                <ul class="sn-card__notes" role="list">
-                  {%- for n in names limit: 3 -%}
-                    {%- assign note_name = n | strip -%}
-                    {%- if note_name != blank -%}
-                      <li class="sn-note">
-                        <span class="sn-note__pic" aria-hidden="true">{{ note_name | slice: 0 }}<img src="{% render 'agha-note-image', name: note_name, set: 'sn' %}" alt="" width="120" height="120" loading="lazy" onerror="this.remove()"></span>
-                        <span class="sn-note__name">{{ note_name }}</span>
-                      </li>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </ul>
-              </div>
+          <li class="sn-card" data-slot="{{ forloop.index }}" data-level="{{ lvl }}" data-n="{{ n }}" {{ block.shopify_attributes }}>
+            <div class="sn-card__body">
+              <h3 class="sn-card__label">{{ b.label }}</h3>
+              <ul class="sn-card__notes" role="list">
+                {%- for nm in names limit: max_notes -%}
+                  {%- assign note_name = nm | strip -%}
+                  {%- if note_name != blank -%}
+                    <li class="sn-note">
+                      <span class="sn-note__pic"><span aria-hidden="true">{{ note_name | slice: 0 }}</span><img src="{% render 'agha-note-image', name: note_name, set: 'sn' %}" alt="{{ note_name | escape }}" width="120" height="120" loading="lazy" decoding="async" onerror="this.remove()"></span>
+                      <span class="sn-note__name" lang="en">{{ note_name }}</span>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
             </div>
           </li>
         {%- endfor -%}
       </ul>
     </div>
+
+    {%- if s.show_buy and product -%}
+      <div class="sn-purchase" data-sn-buy hidden>
+        <div class="sn-buy">
+          <div>
+            <p class="sn-buy__name">{{ product_title }}</p>
+            <p class="sn-buy__price" data-sn-price>{{ current_variant.price | money }}</p>
+          </div>
+          <div class="sn-buy__sizes" role="group" aria-label="Size" data-sn-sizes></div>
+        </div>
+        <div class="sn-cta">
+          <button type="button" class="sn-add" data-sn-add>
+            <span data-sn-add-label>{% if current_variant.available %}Add to bag{% else %}Sold out{% endif %}</span>
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 {%- endif -%}
 
 <script>
-  /* SCENT NOTES — scroll story. ≥700px wide and ≥700px tall: the section
-     pins (.sn--pin) and the scroll through it reveals one card per step: Top, Heart, Base. Scroll
-     back up and they leave in reverse. Shorter screens: each card arrives as it scrolls up into
-     view and leaves again when you scroll back above it. Reduced motion / no JS: everything shown, static. */
+  /* SCENT NOTES — entrance, pinned scroll story (≥1024 wide, ≥760 tall), the buy row's link to the
+     product form, and the sticky button's hand-off with the page's buy dock. */
   (function () {
     var STEPS = [0.1, 0.4, 0.7]; // pinned progress at which card 1, 2, 3 arrive
+
+    function initBuy(root) {
+      var box = root.querySelector('[data-sn-buy]');
+      var form = document.querySelector('[data-pdp-form]');
+      if (!box || !form) return;
+      var mainAdd = form.querySelector('[data-pdp-add]');
+      if (!mainAdd) return;
+      var add = box.querySelector('[data-sn-add]');
+      var label = box.querySelector('[data-sn-add-label]');
+      var price = box.querySelector('[data-sn-price]');
+      var sizes = box.querySelector('[data-sn-sizes]');
+      var mainPrice = document.querySelector('[data-pdp-main] [data-pdp-price]');
+      var mainLabel = mainAdd.querySelector('[data-pdp-add-label]');
+      var fs = form.querySelector('.pdp-options');
+      var radios = fs ? [].slice.call(fs.querySelectorAll('input[type="radio"]')) : [];
+      var chips = radios.map(function (r) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'sn-size';
+        b.textContent = r.value;
+        b.addEventListener('click', function () { if (!r.checked) r.click(); sync(); });
+        sizes.appendChild(b);
+        return b;
+      });
+      function sync() {
+        radios.forEach(function (r, i) {
+          chips[i].setAttribute('aria-pressed', r.checked ? 'true' : 'false');
+          chips[i].disabled = !r.checked && !!r.closest('.is-unavailable');
+        });
+        if (mainPrice) price.textContent = mainPrice.textContent;
+        add.disabled = mainAdd.disabled;
+        if (mainLabel) label.textContent = mainLabel.textContent.trim();
+      }
+      add.addEventListener('click', function () { if (!mainAdd.disabled) mainAdd.click(); });
+      form.addEventListener('change', function () { setTimeout(sync, 0); });
+      if ('MutationObserver' in window) {
+        var mo = new MutationObserver(sync);
+        mo.observe(mainAdd, { attributes: true, childList: true, subtree: true, characterData: true });
+        if (mainPrice) mo.observe(mainPrice, { childList: true, subtree: true, characterData: true });
+      }
+      box.hidden = false;
+      sync();
+    }
 
     function init(root) {
       if (root._sn) return;
       root._sn = true;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      root.setAttribute('data-sn-ready', '');
-      var inner = root.querySelector('.sn__inner');
+      initBuy(root);
+      var html = document.documentElement;
       var cards = [].slice.call(root.querySelectorAll('.sn-card'));
-      var wide = window.matchMedia('(min-width: 700px)');
+      var inner = root.querySelector('.sn__inner');
+      var cta = root.querySelector('.sn-cta');
+      var desk = window.matchMedia('(min-width: 1024px) and (min-height: 500px)');
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!still) root.setAttribute('data-sn-ready', '');
       var queued = false;
 
       function update() {
         queued = false;
         var vh = window.innerHeight;
-        var pin = wide.matches && vh >= 700; // phones never pin (the buy bar covered the pinned frame)
-        root.classList.toggle('sn--pin', pin);
         var r = root.getBoundingClientRect();
+        // this section has its own buy row (sticky on phones): the page's buy dock steps aside meanwhile
+        html.classList.toggle('sn-cta-on', !!cta && !root.querySelector('[data-sn-buy][hidden]') && r.top < vh && r.bottom > 0);
+        if (still) return;
+        var pin = desk.matches && vh >= 760;
+        root.classList.toggle('sn--pin', pin);
         root.classList.toggle('is-in', r.top < vh * 0.75 && r.bottom > 0);
         if (pin) {
           var top = parseFloat(getComputedStyle(inner).top) || 0;
           var range = root.offsetHeight - inner.offsetHeight;
           var p = range > 0 ? (top - r.top) / range : 1;
           cards.forEach(function (c, i) { c.classList.toggle('is-on', p >= STEPS[Math.min(i, STEPS.length - 1)]); });
+          root.classList.toggle('is-done', p >= STEPS[STEPS.length - 1]);
         } else {
-          cards.forEach(function (c) { c.classList.toggle('is-on', c.getBoundingClientRect().top < vh * 0.85); });
+          cards.forEach(function (c) { c.classList.toggle('is-on', c.getBoundingClientRect().top < vh * 0.88); });
         }
       }
       function queue() { if (!queued) { queued = true; requestAnimationFrame(update); } }
@@ -545,12 +647,16 @@
   "class": "sn-section",
   "max_blocks": 3,
   "settings": [
-    { "type": "text", "id": "brand", "label": "Brand line (top centre)", "default": "House of Agha" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Scent notes", "info": "The first word sits on its own line." },
+    { "type": "text", "id": "brand", "label": "Eyebrow", "default": "House of Agha" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Scent notes" },
+    { "type": "text", "id": "subheading", "label": "Scent line fallback", "default": "How it opens, settles and lingers on skin.", "info": "Shown only when the product has no scent tags (custom.scent_tags) or character (custom.scent_character)." },
+    { "type": "text", "id": "scroll_cue", "label": "Scroll cue (pinned desktop only)", "default": "Scroll to reveal the notes" },
+    { "type": "range", "id": "max_notes", "label": "Notes per card", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "checkbox", "id": "show_buy", "label": "Show name, price, size and Add to bag", "default": true },
     { "type": "color", "id": "background", "label": "Background colour", "default": "#f6f4ee" },
-    { "type": "checkbox", "id": "show_still_life", "label": "Show ingredients at the bottle's foot", "default": true },
+    { "type": "checkbox", "id": "show_still_life", "label": "Show ingredients beside the bottle (desktop)", "default": true },
     { "type": "image_picker", "id": "bottle", "label": "Bottle image", "info": "A transparent PNG works best. Empty: the theme's bottle cutout for this product, then the product's featured image." },
-    { "type": "paragraph", "content": "Card positions: 1st = upper left (behind the cap), 2nd = right, 3rd = lower left." }
+    { "type": "paragraph", "content": "Card positions on desktop: 1st = upper left, 2nd = right, 3rd = lower left. Card colours become --note-top / --note-heart / --note-base." }
   ],
   "blocks": [
     {
@@ -570,9 +676,9 @@
             { "value": "none", "label": "Only the list below" }
           ]
         },
-        { "type": "text", "id": "caption", "label": "Notes (only when \"Notes from\" is the list below)", "default": "Saffron, Bergamot, Lavender", "info": "Comma separated, up to 3. Product notes always come from the product, so this card shows nothing for a product without them." },
+        { "type": "text", "id": "caption", "label": "Notes (only when \"Notes from\" is the list below)", "default": "Saffron, Bergamot, Lavender", "info": "Comma separated, up to 4." },
         { "type": "color", "id": "card_color", "label": "Card colour", "default": "#ffffff" },
-        { "type": "color", "id": "text_color", "label": "Text colour", "default": "#2b2620" }
+        { "type": "color", "id": "text_color", "label": "Text colour", "default": "#2b2620", "info": "Keep 4.5:1 contrast with the card colour." }
       ]
     }
   ],

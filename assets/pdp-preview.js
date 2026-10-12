@@ -1004,42 +1004,58 @@
     const k = handle.replace('oud-of-', '');
     return SN_PILE_KEYS.includes(k) ? `/assets/sn-pile-${k}-${side}.webp` : `/assets/${dflt}`;
   };
+  // Same data object as the Liquid: three levels, 1–4 notes each (max_notes 3), colours per level
+  const SN_MAX = Number(new URLSearchParams(window.location.search).get('snmax')) || 3;
   const snData = [
-    { label: 'Top notes', list: tfTop, bg: '#ffffff', ink: '#2b2620', rot: -6 },
-    { label: 'Heart notes', list: tfHeart, bg: '#b9c7a5', ink: '#2c3a24', rot: 7 },
-    { label: 'Base notes', list: tfBase, bg: '#ead08a', ink: '#3d2f17', rot: -9 }
+    { level: 'top', label: 'Top notes', list: tfTop },
+    { level: 'heart', label: 'Heart notes', list: tfHeart },
+    { level: 'base', label: 'Base notes', list: tfBase }
   ];
-  // The notes depend on the product; a card without notes is left out, none at all = no section
-  const snCards = snData.map((c, i) => !c.list ? '' : `
-          <li class="sn-card" data-slot="${i + 1}" style="--rot: ${c.rot}deg; --d: ${(0.25 + i * 0.16).toFixed(2)}s; --c-bg: ${c.bg}; --c-ink: ${c.ink};">
-            <div class="sn-card__in">
-              <div class="sn-card__body">
-                <h3 class="sn-card__label">${c.label}</h3>
-                <ul class="sn-card__notes" role="list">${c.list.split(',').map((x) => x.trim()).filter(Boolean).slice(0, 3).map((x) => `
-                  <li class="sn-note"><span class="sn-note__pic" aria-hidden="true">${esc(x[0])}<img src="${snKey(x) ? `/assets/sn-note-${snKey(x)}.webp` : `/assets/note-${noteKey(x)}.jpg`}" alt="" width="120" height="120" loading="lazy" onerror="this.remove()"></span><span class="sn-note__name">${esc(x)}</span></li>`).join('')}
-                </ul>
-              </div>
+  // One line about the scent: tags → character → the section's fallback
+  const snLine = tags.length ? tags.join('. ') + '.' : (product.scentCharacter || 'How it opens, settles and lingers on skin.');
+  const snCards = snData.map((c, i) => {
+    if (!c.list) return '';
+    const names = c.list.split(',').map((x) => x.trim()).filter(Boolean).slice(0, SN_MAX);
+    return `
+          <li class="sn-card" data-slot="${i + 1}" data-level="${c.level}" data-n="${names.length}">
+            <div class="sn-card__body">
+              <h3 class="sn-card__label">${c.label}</h3>
+              <ul class="sn-card__notes" role="list">${names.map((x) => `
+                <li class="sn-note"><span class="sn-note__pic"><span aria-hidden="true">${esc(x[0])}</span><img src="${snKey(x) ? `/assets/sn-note-${snKey(x)}.webp` : `/assets/note-${noteKey(x)}.jpg`}" alt="${esc(x)}" width="120" height="120" loading="lazy" decoding="async" onerror="this.remove()"></span><span class="sn-note__name" lang="en">${esc(x)}</span></li>`).join('')}
+              </ul>
             </div>
-          </li>`).join('');
+          </li>`;
+  }).join('');
   const notesCards = !snData.some((c) => c.list) ? '' : `
   <div class="shopify-section sn-section">
-  <section class="sn" id="sn-preview" style="--sn-bg: #f6f4ee;" data-sn aria-labelledby="sn-preview-title">
+  <section class="sn" id="sn-preview" style="--sn-bg: #f6f4ee; --note-top: #ffffff; --note-top-ink: #2b2620; --note-heart: #b9c7a5; --note-heart-ink: #2c3a24; --note-base: #ead08a; --note-base-ink: #3d2f17;" data-sn aria-labelledby="sn-preview-title">
     <div class="sn__inner">
-      <div class="sn__top">
-        <p class="sn__brand">House of Agha</p>
-        <p class="sn__product">${esc(niceTitle)}</p>
-      </div>
       <header class="sn__head">
-        <h2 class="sn__title" id="sn-preview-title">Scent <span>notes</span></h2>
+        <p class="sn__eyebrow">House of Agha</p>
+        <h2 class="sn__title" id="sn-preview-title">Scent notes</h2>
+        <p class="sn__lede">${esc(snLine)}</p>
+        <p class="sn__cue" aria-hidden="true">Scroll to reveal the notes<svg viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
       </header>
       <div class="sn__stage">
         <div class="sn__bottle">
           <img class="sn__img" src="/assets/hoa-bottle-${handle.replace('oud-of-', '')}.webp" width="289" height="760" loading="lazy" decoding="async" alt="${esc(niceTitle)} bottle">
           <span class="sn__shadow" aria-hidden="true"></span>
         </div>
-        <img class="sn__pile sn__pile--oud" src="${snPile('right', 'sn-pile-oud.webp')}" width="556" height="354" loading="lazy" decoding="async" alt="">
+        <img class="sn__pile" src="${snPile('right', 'sn-pile-oud.webp')}" width="556" height="354" loading="lazy" decoding="async" alt="">
         <ul class="sn__cards" role="list">${snCards}
         </ul>
+      </div>
+      <div class="sn-purchase" data-sn-buy hidden>
+        <div class="sn-buy">
+          <div>
+            <p class="sn-buy__name">${esc(niceTitle)}</p>
+            <p class="sn-buy__price" data-sn-price>${money(current.price == null ? null : current.price / 100)}</p>
+          </div>
+          <div class="sn-buy__sizes" role="group" aria-label="Size" data-sn-sizes></div>
+        </div>
+        <div class="sn-cta">
+          <button type="button" class="sn-add" data-sn-add><span data-sn-add-label>Add to bag</span></button>
+        </div>
       </div>
     </div>
   </section>
