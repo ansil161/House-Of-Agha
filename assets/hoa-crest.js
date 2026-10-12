@@ -25,6 +25,8 @@
       below). Rendering stops while it is hidden. Desktop: hero -> "Seven fragrances"
       headline -> collection headline (was The House seal until 2026-10-09) -> World headline
       -> gone. Phones: hero only.
+      SHOW_IN_HERO false (2026-10-12): invisible at the hero (no lift-off, no hint), so
+      it first fades in at "Seven fragrances"; phones never show it.
 
    Springs integrate in fixed 1/240 s steps: identical at any frame rate.
    Reduced motion: no lift animation, float, spin or hover tilt; drag works and it
@@ -43,6 +45,7 @@ var HOA_CREST_CONFIG = {
   INTRO_DELAY: 450,           // ms after the page shows
   INTRO_MS: 2000,             // lift-off duration
   MAX_FLING: 9,               // rad/s: the fastest a released flick keeps it turning
+  SHOW_IN_HERO: false,        // false = never shown at the hero (user, 2026-10-12); it first appears at the next stop
   IDLE_SPIN: true,            // turns on its own when nobody holds or hovers it
   SPIN_VERTICAL: false,       // false = left/right only; it stays upright (user, 2026-10-09)
   SPIN_SECONDS: 12,           // idle (IDLE_SPIN only): one full turn left to right
@@ -214,7 +217,7 @@ var HOA_CREST_CONFIG = {
       fit.add(model);
       
       // landed below the hero (reload, anchor): no lift-off, it is simply there
-      if (reduceMotion || window.scrollY > window.innerHeight * 0.5) introStart = 0;
+      if (reduceMotion || !C.SHOW_IN_HERO || window.scrollY > window.innerHeight * 0.5) introStart = 0;
 
       size();
       window.addEventListener('resize', size);
@@ -325,12 +328,13 @@ var HOA_CREST_CONFIG = {
       for (k = 0; k < list.length; k++) {
         A = list[k];
         if (sy <= A.b) {                                     // holding at stop k
-          if (sy >= A.a || k === 0) return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: 1, hero: A.hero ? 1 : 0 };
+          if (sy >= A.a || k === 0) return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !C.SHOW_IN_HERO ? 0 : 1, hero: A.hero ? 1 : 0 };
           B = A; A = list[k - 1];                            // between stop k-1 and k
           t = clamp01((sy - A.b) / Math.max(1, B.a - A.b));
           var e = ease(t);
           var f = Math.min(J.FADE, J.FADE_VH * vh / Math.max(1, B.a - A.b));
           var a = t < f ? 1 - t / f : t > 1 - f ? (t - (1 - f)) / f : 0;   // out, hidden, back in
+          if (A.hero && !C.SHOW_IN_HERO && t < f) a = 0;                  // not shown at the hero: only fades in
           return {
             x: mix(A.pose.x, B.pose.x, e), y: mix(A.pose.y, B.pose.y, e), s: mix(A.pose.s, B.pose.s, e),
             a: a, hero: A.hero ? 1 - e : 0
@@ -339,7 +343,7 @@ var HOA_CREST_CONFIG = {
       }
       A = list[list.length - 1];                             // past the last stop: fade out for good
       t = clamp01((sy - A.b) / (vh * J.END_FADE));
-      return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: 1 - t, hero: A.hero ? 1 : 0 };
+      return { x: A.pose.x, y: A.pose.y, s: A.pose.s, a: A.hero && !C.SHOW_IN_HERO ? 0 : 1 - t, hero: A.hero ? 1 : 0 };
     }
 
     /* ---------- hover: over the logo it stops and leans toward the cursor ---------- */
@@ -502,7 +506,7 @@ var HOA_CREST_CONFIG = {
       hit.style.visibility = alpha > 0.5 ? 'visible' : 'hidden';
 
       // the hint: under the logo once it has landed, until the first drag
-      var showHint = !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
+      var showHint = C.SHOW_IN_HERO && !hintDone && i >= 1 && !drag && at.hero > 0.999 && at.a > 0.99;   // at the hero stop only
       hint.classList.toggle('is-shown', showHint);
       if (showHint || hint.style.transform === '') {
         if (!hintW) { hintW = hint.offsetWidth; hintH = hint.offsetHeight; }

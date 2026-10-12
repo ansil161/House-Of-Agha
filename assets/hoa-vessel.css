@@ -237,11 +237,11 @@
 .hoa-vessel__statement {
   margin: clamp(18px, 3vh, 30px) 0 0;
   max-width: 21ch;
-  font-family: var(--hoa-sans);
-  font-weight: 500;
+  font-family: 'Times New Roman', Times, 'Liberation Serif', serif;   /* user, 2026-10-12 */
+  font-weight: 400;
   font-size: clamp(1.7rem, 2.65vw, 2.9rem);
   line-height: 1.1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.01em;
   text-wrap: pretty;
 }
 .hoa-vessel__statement em {
@@ -260,7 +260,7 @@
   background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
   transition: background-size 0.9s var(--vs-ease);
 }
-.hoa-vessel.is-closed .hoa-vessel__phrase { background-size: 100% 1px; }
+/* underline removed (user, 2026-10-12): .hoa-vessel.is-closed .hoa-vessel__phrase { background-size: 100% 1px; } */
 
 .hoa-vessel__foot {
   display: flex;
