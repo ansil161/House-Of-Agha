@@ -8,8 +8,8 @@
    · frames load coarse-to-fine (every 16th, 8th, 4th, 2nd, then the rest) once the section
      is within ~1.5 screens, so any scroll position has a near frame early; the nearest loaded
      frame is drawn until the exact one arrives
-   · desktop/landscape: cover-fit. Portrait phones: the 16:9 film is fitted to the width
-     (slightly zoomed) over a soft, blurred fill of the same frame, edges feathered
+   · desktop/landscape: cover-fit. Portrait (phones, upright tablets): a virtual camera, full
+     screen on the falling bottle, then pulling back to the whole line-up (see render)
    · works with Lenis (it scrolls the window) and without GSAP; no-JS shows frame 1
    ========================================================================== */
 (function () {
@@ -17,6 +17,9 @@
 
   var STRIDES = [16, 8, 4, 2, 1];
   var PARALLEL = 6;
+  // Portrait camera: film progress where the pull-back starts / ends, the opening zoom
+  // (share of cover) and the share of the frame width the finished line-up needs on screen.
+  var CAM_FROM = 0.42, CAM_TO = 0.86, CAM_OPEN = 0.66, CAM_ROW = 0.74;
 
   function Film(el) {
     this.el = el;
@@ -31,9 +34,8 @@
     this.drawn = -1;
     this.raf = 0;
     this.near = false;
-    this.soft = document.createElement('canvas'); // blurred fill (portrait)
-    this.soft.width = 16; this.soft.height = 9;
-    this.feather = document.createElement('canvas'); // feathered frame (portrait)
+    this.soft = document.createElement('canvas'); // samples the wall / floor tone (portrait)
+    this.soft.width = 2; this.soft.height = 1;
 
     var self = this;
     this.onScroll = function () { self.measure(); self.kick(); };
@@ -130,7 +132,6 @@
     var w = this.canvas.clientWidth, h = this.canvas.clientHeight;
     this.canvas.width = Math.max(1, Math.round(w * dpr));
     this.canvas.height = Math.max(1, Math.round(h * dpr));
-    this.feather.width = this.canvas.width;
     this.drawn = -1;
   };
 
@@ -172,31 +173,51 @@
       var s = Math.max(cw / iw, ch / ih), w = iw * s, h = ih * s;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     } else {
-      // Portrait: soft fill of the same frame, then the frame fitted to the width with feathered edges.
-      var sx = this.soft.getContext('2d');
-      sx.drawImage(img, 0, 0, 16, 9);
-      var bs = Math.max(cw / 16, ch / 9);
+      // Portrait (phones, tablets upright): a virtual camera instead of one small 16:9 strip.
+      // The bottle falls through the middle of the frame, so the film opens full-screen on it
+      // (cover, a touch wider) and then pulls back while the line-up forms, ending with the whole
+      // row across the screen. Any space above / below the frame is the frame's own wall and
+      // floor carried out to the edge (top / bottom rows stretched, then calmed to their tone).
+      var t = this.count > 1 ? i / (this.count - 1) : 0;
+      var k = (t - CAM_FROM) / (CAM_TO - CAM_FROM);
+      k = k < 0 ? 0 : k > 1 ? 1 : k;
+      k = k * k * (3 - 2 * k);
+      var sCover = Math.max(cw / iw, ch / ih);
+      var sStart = sCover * CAM_OPEN;
+      var sEnd = Math.min(sStart, cw / (iw * CAM_ROW));
+      var sc = sStart + (sEnd - sStart) * k;
+      var dw = iw * sc, dh = ih * sc;
+      var dx = (cw - dw) / 2, dy = (ch - dh) / 2;
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(this.soft, (cw - 16 * bs) / 2, (ch - 9 * bs) / 2, 16 * bs, 9 * bs);
-
-      var fw = cw * 1.1, fh = fw / ia;
-      var f = this.feather, fx = f.getContext('2d');
-      if (f.height !== Math.round(fh)) f.height = Math.round(fh);
-      fx.globalCompositeOperation = 'source-over';
-      fx.clearRect(0, 0, f.width, f.height);
-      fx.drawImage(img, (f.width - fw) / 2, 0, fw, f.height);
-      fx.globalCompositeOperation = 'destination-in';
-      var g = fx.createLinearGradient(0, 0, 0, f.height);
-      g.addColorStop(0, 'rgba(0,0,0,0)');
-      g.addColorStop(0.14, 'rgba(0,0,0,1)');
-      g.addColorStop(0.86, 'rgba(0,0,0,1)');
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      fx.fillStyle = g;
-      fx.fillRect(0, 0, f.width, f.height);
-      ctx.drawImage(f, 0, (ch - f.height) / 2);
+      if (dy > 0.5) {
+        var band = Math.max(1, Math.round(ih * 0.004));
+        ctx.drawImage(img, 0, 0, iw, band, dx, 0, dw, dy + 1);
+        ctx.drawImage(img, 0, ih - band, iw, band, dx, dy + dh - 1, dw, ch - dy - dh + 1);
+        var tone = this.tones(img);
+        var gt = ctx.createLinearGradient(0, dy, 0, 0);
+        gt.addColorStop(0, tone[0] + '0)');
+        gt.addColorStop(1, tone[0] + '0.85)');
+        ctx.fillStyle = gt;
+        ctx.fillRect(0, 0, cw, dy + 1);
+        var gb = ctx.createLinearGradient(0, dy + dh, 0, ch);
+        gb.addColorStop(0, tone[1] + '0)');
+        gb.addColorStop(1, tone[1] + '0.85)');
+        ctx.fillStyle = gb;
+        ctx.fillRect(0, dy + dh - 1, cw, ch - dy - dh + 1);
+      }
+      ctx.drawImage(img, dx, dy, dw, dh);
     }
     if (!this.el.classList.contains('is-ready')) this.el.classList.add('is-ready');
+  };
+
+  // Average colour of the frame's top and bottom strips, as 'rgba(r,g,b,' prefixes.
+  Film.prototype.tones = function (img) {
+    var x = this.soft.getContext('2d', { willReadFrequently: true });
+    x.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight * 0.05, 0, 0, 1, 1);
+    x.drawImage(img, 0, img.naturalHeight * 0.95, img.naturalWidth, img.naturalHeight * 0.05, 1, 0, 1, 1);
+    var d = x.getImageData(0, 0, 2, 1).data;
+    return ['rgba(' + d[0] + ',' + d[1] + ',' + d[2] + ',', 'rgba(' + d[4] + ',' + d[5] + ',' + d[6] + ','];
   };
 
   Film.prototype.destroy = function () {

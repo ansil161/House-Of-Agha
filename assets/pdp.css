@@ -2167,6 +2167,28 @@ html:has(.pdp) body {
   .pdp-fnote__icon svg { width: 22px; height: 22px; }
   .pdp-fnote__body { max-width: none; }
 }
+/* 2026-10-12 mobile pass: the arch was 86vw wide (≈ 450px tall on a phone), so the notes only
+   began a full screen below the title. A smaller arch keeps title, product and the first facts
+   together; the facts sit on hairline rows, an odd last fact spans the row. */
+@media (max-width: 768px) {
+  .pdp-fnotes .pdp-heading { margin-bottom: 18px; }
+  .pdp-fnotes .pdp-heading h2 { font-size: clamp(2.2rem, 10vw, 3rem); }
+  .pdp-fnotes__stage { column-gap: 0; row-gap: 0; max-width: 520px; }
+  .pdp-fnotes__image { width: min(62vw, 300px); margin: 0 auto 26px; }
+  .pdp-fnote,
+  .pdp-fnote--left,
+  .pdp-fnote--right {
+    gap: 10px;
+    padding: 20px 10px;
+    border-top: 1px solid var(--pdp-line);
+  }
+  .pdp-fnote:nth-of-type(even) { border-left: 1px solid var(--pdp-line); }
+  .pdp-fnote:last-child:nth-of-type(odd) { grid-column: 1 / -1; border-left: 0; }
+  .pdp-fnote__icon { width: 44px; height: 44px; }
+  .pdp-fnote__label { font-size: 1rem; }
+  .pdp-fnote__value { margin-top: 6px; font-size: 0.8rem; overflow-wrap: anywhere; }
+  .pdp-fnote__text { font-size: 0.72rem; }
+}
 
 /* ==========================================================================
    THE FRAGRANCE — one art-directed composition: an enlarged, unboxed bottle

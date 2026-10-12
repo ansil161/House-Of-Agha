@@ -306,10 +306,6 @@
       "type": "agha-pdp-finale",
       "settings": {}
     },
-    "fragrance_notes": {
-      "type": "agha-pdp-fragrance-notes",
-      "settings": {}
-    },
     "the_fragrance": {
       "type": "agha-pdp-the-fragrance",
       "settings": {}
@@ -852,7 +848,6 @@
     "composition",
     "craft",
     "experience",
-    "fragrance_notes",
     "notes_cards",
     "the_fragrance",
     "gallery",

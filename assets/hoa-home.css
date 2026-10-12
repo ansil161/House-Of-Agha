@@ -2488,8 +2488,11 @@ html:has(.hoa-seq) body { overflow-x: clip; overflow-y: visible; }
 .hoa-seq.is-ready .hoa-seq__poster { visibility: hidden; }
 @media (max-width: 767px) {
   .hoa-seq { height: var(--seq-length-m, 250vh); }
-  /* portrait: show the whole frame width, like the canvas does */
-  .hoa-seq__poster { object-fit: contain; }
+}
+/* Portrait: the canvas opens full screen on the falling bottle (assets/hoa-sequence.js camera),
+   so the poster fills the screen the same way until the first frame paints */
+@media (orientation: portrait) {
+  .hoa-seq__poster { object-fit: cover; object-position: 50% 45%; }
 }
 
 

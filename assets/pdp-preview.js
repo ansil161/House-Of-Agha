@@ -469,17 +469,23 @@
           </div>
           <span class="pdp-fnote__rule" aria-hidden="true"></span>
         </div>`;
+  // Same note source as the Liquid (agha-pdp-data): the product's notes, else the live-store notes
+  const fnMock = (window.AGHA_DEV_NOTES || {})[handle];
+  const fnTop = notes.top || (fnMock && fnMock.topNotes.join(', ')) || '';
+  const fnHeart = notes.heart || (fnMock && fnMock.heartNotes.join(', ')) || '';
+  const fnBase = notes.base || (fnMock && fnMock.baseNotes.join(', ')) || '';
   const fnoteItems = [
-    notes.top && fnote('l1', 'left', 'leaf', 'Top notes', 'The opening you meet first.', { list: notes.top }),
-    notes.heart && fnote('l2', 'left', 'flower', 'Heart notes', 'The character that unfolds.', { list: notes.heart }),
-    notes.base && fnote('r1', 'right', 'wood', 'Base notes', 'What stays on the skin.', { list: notes.base }),
+    fnTop && fnote('l1', 'left', 'leaf', 'Top notes', 'The opening you meet first.', { list: fnTop }),
+    fnHeart && fnote('l2', 'left', 'flower', 'Heart notes', 'The character that unfolds.', { list: fnHeart }),
+    fnBase && fnote('r1', 'right', 'wood', 'Base notes', 'What stays on the skin.', { list: fnBase }),
     product.family && fnote('l3', 'left', 'drop', 'Fragrance family', 'Where it sits in the house.', { value: product.family }),
     character && fnote('r2', 'right', 'sparkle', 'Scent character', 'How it feels to wear.', { value: character }),
     product.longevity && fnote('r3', 'right', 'time', 'Longevity', 'How long it stays with you.', { value: product.longevity, detail: product.sillage })
   ].filter(Boolean);
   // Like the Liquid, only render when the product carries note data (family alone is not enough here,
   // since every preview product has one; the real line-up has no confirmed notes yet).
-  const hasNoteData = notes.top || notes.heart || notes.base || product.scentCharacter || product.longevity;
+  const hasNoteData = fnTop || fnHeart || fnBase || product.scentCharacter || product.longevity;
+  // 2026-10-12: section removed from the page (user); markup kept for restore, not rendered
   const fragranceNotes = hasNoteData ? `
   <section class="pdp pdp-section pdp-fnotes" data-pdp-fnotes aria-labelledby="fnotes-title">
     <div class="container">
@@ -1048,7 +1054,7 @@
   //   buy (hero) → why it's worth it (notes, proofs) → understand it (story, craft) → campaign gallery
   //   → reviews (right after the gallery, client 2026-10-05) → discover more.
   // The old "features" strip repeated the proofs, the craft steps and the trust list, so it is no longer shown.
-  root.innerHTML = hero + benefits + collage + story + fragranceNotes + notesCards + theFragrance + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
+  root.innerHTML = hero + benefits + collage + story + notesCards + theFragrance + gallery + reels + reviewSummary + reviewsSection + faq + pair + related + finale;
   // Summary "Write a review" reuses the existing review form / sign-in link above.
   root.querySelector('[data-pdx-write]')?.addEventListener('click', (e) => {
     const target = root.querySelector('[data-pdp-review-open], [data-pdp-review-login]');
