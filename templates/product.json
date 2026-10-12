@@ -376,11 +376,8 @@
       },
       "block_order": ["card_top", "card_heart", "card_base"],
       "settings": {
-        "tagline": "A fragrance crafted from nature's finest elements",
         "brand": "House of Agha",
-        "product_line": "Eau de Parfum",
         "heading": "Scent notes",
-        "subheading": "A bold blend of rare ingredients, crafted to leave a lasting impression.",
         "background": "#f6f4ee"
       }
     },

@@ -1,7 +1,8 @@
 {% comment %}
   03 — SIGNATURE FRAGRANCES
   A full-width showroom carousel on paper: three bottles at once, the active one large in
-  the middle, its neighbours smaller on either side, plain arrows at the page edges.
+  the middle, its neighbours smaller on either side, round arrow buttons at the page edges
+  and a row of dots under the bottles (2026-10-12, so visitors see that it slides).
   No cards: the bottles sit straight on the section. The name, line and link of the active
   fragrance settle below. Arrows, a click on a side bottle, swipe and the keyboard all move
   it, and it loops. GSAP drives the move; without it the bottles simply swap places.
@@ -55,6 +56,15 @@
     <button type="button" class="hoa-cf__arrow hoa-cf__arrow--next" data-hoa-cf-next aria-label="Next fragrance">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 3L18 12L9 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
+  </div>
+
+  {%- comment -%} dots: show that the row slides and where you are in it (user 2026-10-12) {%- endcomment -%}
+  <div class="hoa-cf__dots" data-hoa-cf-dots>
+    {%- for block in section.blocks -%}
+      {%- assign b = block.settings -%}
+      {%- if b.product != blank %}{% assign f_name = b.product.title %}{% else %}{% assign f_name = b.name %}{% endif -%}
+      <button type="button" class="hoa-cf__dot{% if forloop.first %} is-active{% endif %}" data-hoa-cf-dot="{{ forloop.index0 }}" aria-label="Show {{ f_name | escape }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+    {%- endfor -%}
   </div>
 
   <div class="hoa-wrap">

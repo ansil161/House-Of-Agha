@@ -1026,13 +1026,11 @@
   <section class="sn" id="sn-preview" style="--sn-bg: #f6f4ee;" data-sn aria-labelledby="sn-preview-title">
     <div class="sn__inner">
       <div class="sn__top">
-        <p class="sn__tagline">A fragrance crafted from nature's finest elements</p>
         <p class="sn__brand">House of Agha</p>
-        <p class="sn__product">${esc(niceTitle)}<em>Eau de Parfum</em></p>
+        <p class="sn__product">${esc(niceTitle)}</p>
       </div>
       <header class="sn__head">
         <h2 class="sn__title" id="sn-preview-title">Scent <span>notes</span></h2>
-        <p class="sn__sub">A bold blend of rare ingredients, crafted to leave a lasting impression.</p>
       </header>
       <div class="sn__stage">
         <div class="sn__bottle">

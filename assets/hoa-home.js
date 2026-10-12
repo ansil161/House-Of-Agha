@@ -220,6 +220,7 @@
     var infos = Array.prototype.slice.call(sec.querySelectorAll('[data-hoa-cf-info]'));
     var prev = sec.querySelector('[data-hoa-cf-prev]');
     var next = sec.querySelector('[data-hoa-cf-next]');
+    var dots = Array.prototype.slice.call(sec.querySelectorAll('[data-hoa-cf-dot]'));
     var n = cards.length;
     if (!n || !track) return;
     var active = 0;
@@ -266,6 +267,10 @@
         c.classList.toggle('is-active', on);
         c.setAttribute('aria-hidden', on ? 'false' : 'true');
         c.tabIndex = on ? 0 : -1;
+      });
+      dots.forEach(function (d, k) {
+        d.classList.toggle('is-active', k === active);
+        if (k === active) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
       });
     }
 
@@ -319,6 +324,8 @@
     var onNext = function () { go(1); };
     if (prev) prev.addEventListener('click', onPrev);
     if (next) next.addEventListener('click', onNext);
+    var onDot = function (e) { go(offset(dots.indexOf(e.currentTarget), active)); };
+    dots.forEach(function (d) { d.addEventListener('click', onDot); });
 
     // A click on a side bottle brings it to the centre instead of following its link.
     var suppressClick = false;
@@ -385,7 +392,7 @@
       var head = sec.querySelector('[data-hoa-cf-head]');
       var pics = cards.map(function (c) { return c.querySelector('img'); });
       var side = pics.filter(function (_, k) { return Math.abs(offset(k, active)) === 1; });
-      var arrows = [prev, next].filter(Boolean);
+      var arrows = [prev, next, sec.querySelector('[data-hoa-cf-dots]')].filter(Boolean);
       var tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
       tl.from(head, { autoAlpha: 0, y: 24, duration: 0.9 }, 0)
         .from(side, { autoAlpha: 0, scale: 0.9, duration: 1.1 }, 0.15)
@@ -400,6 +407,7 @@
       if (ro) ro.disconnect(); else window.removeEventListener('resize', onResize);
       if (prev) prev.removeEventListener('click', onPrev);
       if (next) next.removeEventListener('click', onNext);
+      dots.forEach(function (d) { d.removeEventListener('click', onDot); });
       cards.forEach(function (c) { c.removeEventListener('click', onCardClick); });
       sec.removeEventListener('keydown', onKey);
       track.removeEventListener('pointerdown', onDown);
