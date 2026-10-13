@@ -242,13 +242,6 @@
     inkRead($('.hoa-hc__text'));
     inkRead($('.hoa-ab-hyd__text'));
 
-    // Philosophy photos settle from a slight zoom while they pass
-    $$('[data-hoa-bd-tile]').forEach(function (t) {
-      var wrap = $('.hoa-bd-tile__img', t);
-      if (!wrap) return;
-      gsap.fromTo(wrap, { scale: 1.16 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: t, start: 'top bottom', end: 'top 30%', scrub: 0.8 } });
-    });
-
     // Closing card widens to full width, its photo settles
     var cta = $('[data-hoa-ab-cta]');
     if (cta) {

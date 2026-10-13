@@ -86,7 +86,7 @@
                 {%- endif -%}
               </span>
               <span class="hoa-hc-card__body">
-                <span class="hoa-hc-card__no">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                {%- comment -%} Card number + its hairline removed 2026-10-13 (client). {%- endcomment -%}
                 <span class="hoa-hc-card__title">{{ b.title }}</span>
                 {%- if b.text != blank -%}<span class="hoa-hc-card__text">{{ b.text | newline_to_br }}</span>{%- endif -%}
               </span>

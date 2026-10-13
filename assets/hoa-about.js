@@ -25,7 +25,7 @@
                        of Agha rise and آقا is revealed right to left, as it is written.
      Story line ...... words warm from faint to ink as the paragraphs are read.
      Hyderabad ....... the Charminar draws tier by tier with the scroll while the card pins.
-     Philosophy ...... Bidri band: heading rises, tiles enter in turn, frames draw, ornaments engrave.
+     Philosophy ...... own file since 2026-10-13: assets/hoa-philosophy.js (pinned copper still).
      (Seven worlds, the name pin and the stacking cards below belong to sections that
      are not on the page now; they only run if those sections come back.)
 
@@ -470,57 +470,7 @@
         ScrollTrigger.create({ trigger: nameWord, start: 'top 82%', once: true, onEnter: function () { nameTl.play(); } });
       }
 
-      /* 05 Philosophy (Deccan ornament): the heading's words rise and the pattern behind it
-         fades in to its low opacity; the tiles enter in turn, each inner hairline draws in and
-         its small mark is engraved line by line; the divider ornament draws and the line at
-         the foot opens from the centre. Short and once; nothing waits on it. */
-      var bdTitle = document.querySelector('[data-hoa-bd-title]');
-      if (bdTitle) {
-        var bdHead = gsap.timeline({ scrollTrigger: { trigger: bdTitle, start: 'top 85%', once: true } });
-        bdHead.from(maskWords(bdTitle), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.06 });
-        var bdSub = document.querySelector('[data-hoa-bd-sub]');
-        if (bdSub) bdHead.from(bdSub, { y: 12, opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.35);
-      }
-      var bdPattern = document.querySelector('[data-hoa-bd-pattern]');
-      if (bdPattern) {
-        gsap.from(bdPattern, { opacity: 0, duration: 1.6, ease: 'power1.out', clearProps: 'opacity',
-          scrollTrigger: { trigger: bdPattern, start: 'top 85%', once: true } });
-      }
-      var bdDivider = document.querySelector('[data-hoa-bd-divider]');
-      if (bdDivider) {
-        var bdDivPaths = bdDivider.querySelectorAll('[pathLength]');
-        gsap.set(bdDivPaths, { strokeDasharray: 1, strokeDashoffset: 1 });
-        gsap.timeline({ scrollTrigger: { trigger: bdDivider, start: 'top 88%', once: true } })
-          .fromTo(bdDivider, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.2, ease: 'power2.inOut', clearProps: 'clipPath' }, 0)
-          .to(bdDivPaths, { strokeDashoffset: 0, duration: 1, ease: 'power1.inOut', stagger: 0.1 }, 0.2);
-      }
-      var bdFoot = document.querySelector('[data-hoa-bd-foot]');
-      if (bdFoot) {
-        gsap.fromTo(bdFoot, { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.6, ease: 'power2.inOut', clearProps: 'clipPath',
-          scrollTrigger: { trigger: bdFoot, start: 'top 95%', once: true } });
-      }
-      var bdTiles = gsap.utils.toArray('[data-hoa-bd-tile]');
-      if (bdTiles.length) {
-        gsap.set(bdTiles, { opacity: 0, y: 28 });
-        bdTiles.forEach(function (t) {
-          var edge = t.querySelector('[data-hoa-bd-edge]');
-          if (edge) gsap.set(edge, { clipPath: 'inset(0 100% 100% 0)' });
-          gsap.set(t.querySelectorAll('[data-hoa-bd-orn] [pathLength]'), { strokeDasharray: 1, strokeDashoffset: 1 });
-        });
-        ScrollTrigger.batch(bdTiles, {
-          start: 'top 88%',
-          once: true,
-          onEnter: function (batch) {
-            batch.forEach(function (t, i) {
-              var d = i * 0.12;
-              gsap.to(t, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: d });
-              var edge = t.querySelector('[data-hoa-bd-edge]');
-              if (edge) gsap.to(edge, { clipPath: 'inset(0 0% 0% 0)', duration: 1.1, ease: 'power2.inOut', delay: d + 0.25, clearProps: 'clipPath' });
-              gsap.to(t.querySelectorAll('[data-hoa-bd-orn] [pathLength]'), { strokeDashoffset: 0, duration: 0.9, ease: 'power1.inOut', stagger: 0.08, delay: d + 0.45 });
-            });
-          }
-        });
-      }
+      /* 05 Philosophy: its own file since 2026-10-13 ("The Distillation", assets/hoa-philosophy.js). */
 
       /* Arches: once each arched photo arrives, its gold outline draws itself and the
          photo fades up from a hair larger. The opening photo belongs to the intro. */

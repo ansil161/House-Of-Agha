@@ -1,0 +1,322 @@
+/* ==========================================================================
+   HOUSE OF AGHA · ABOUT 05 · PHILOSOPHY · "MORE THAN JUST FRAGRANCE" (2026-10-13)
+   sections/hoa-about-philosophy.liquid, motion in assets/hoa-philosophy.js.
+   Built to the client's reference image: warm ivory, Fraunces light with italic accents,
+   tinted organic panels (champagne, sage, soft blue, blush), hairlines, small numbers.
+     >= 1100px   | 01 |          | 03 |  |
+                 |    | headline | 04 |
+                 | 02 |  bottle  | 05 |  |
+     700-1099px  headline + bottle, then the stories in two columns
+     < 700px     headline, bottle, the five stories in sequence
+   All selectors are scoped to .hoa-ph.
+   ========================================================================== */
+.hoa-ph {
+  --ph-bg: #F6F1E9;
+  --ph-ink: #1E1813;
+  --ph-ink-2: #3B332C;
+  --ph-mute: #625950;
+  --ph-hair: rgba(30, 24, 19, 0.28);
+  --ph-serif: var(--ab-serif, 'Fraunces', Georgia, serif);
+  --ph-sans: var(--hoa-sans, system-ui, sans-serif);
+  --ph-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  margin: 0 0 var(--ab-space, 120px);
+  padding: clamp(48px, 5vw, 72px) 0 clamp(72px, 8vw, 120px);
+  background:
+    radial-gradient(60% 50% at 50% 40%, rgba(255, 255, 255, 0.55), transparent 70%),
+    var(--ph-bg);
+  color: var(--ph-ink);
+}
+
+/* faint silk ribbon, bottom left (decorative, desktop only) */
+.hoa-ph__silk {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  bottom: 0;
+  width: 62%;
+  height: 340px;
+  pointer-events: none;
+  display: none;
+}
+
+/* ---------- Top bar ---------- */
+.hoa-ph__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: clamp(28px, 3vw, 40px);
+}
+.hoa-ph__eyebrow,
+.hoa-ph__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-family: var(--ph-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ph-ink);
+}
+.hoa-ph__link { text-decoration: none; }
+.hoa-ph__link .hoa-ph__link-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(30, 24, 19, 0.55);
+  border-radius: 50%;
+  transition: background-color 0.4s var(--ph-ease), color 0.4s var(--ph-ease), border-color 0.4s var(--ph-ease);
+}
+.hoa-ph__link-icon svg { width: 14px; height: 14px; transition: transform 0.4s var(--ph-ease); }
+.hoa-ph__link:hover .hoa-ph__link-icon { background: var(--ph-ink); border-color: var(--ph-ink); color: var(--ph-bg); }
+.hoa-ph__link:hover .hoa-ph__link-icon svg { transform: translateX(2px); }
+.hoa-ph__link:focus-visible { outline: 1px solid var(--ph-ink); outline-offset: 6px; }
+
+/* ---------- Centre: headline, line, bottle ---------- */
+.hoa-ph__centre { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.hoa-ph__kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+  font-family: var(--ph-serif);
+  font-variation-settings: "opsz" 24;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.25vw, 1.25rem);
+  letter-spacing: 0.01em;
+  color: #8A6A3E;
+}
+.hoa-ph__kicker .hoa-about .hoa-ph__title {
+  margin: 0;
+  font-family: var(--ph-serif);
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 4vw, 4.9rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  color: var(--ph-ink);
+}
+.hoa-ph__title-line { display: block; white-space: nowrap; }
+.hoa-ph__title-line--em { font-style: italic; font-size: 1.04em; letter-spacing: -0.03em; }
+.hoa-ph__lede {
+  max-width: 32ch;
+  margin: clamp(16px, 1.8vw, 24px) auto 0;
+  font-family: var(--ph-serif);
+  font-variation-settings: "opsz" 18;
+  font-weight: 400;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.5;
+  color: var(--ph-ink-2);
+  text-wrap: balance;
+}
+
+.hoa-ph__bottle {
+  position: relative;
+  width: min(78%, 340px);
+  margin: clamp(28px, 3vw, 44px) 0 0;
+  aspect-ratio: 13 / 20;
+}
+.hoa-ph__capsule {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #E9DFD0;
+}
+.hoa-ph__capsule-img { position: absolute; inset: -6% 0; display: block; }
+.hoa-ph__capsule-img img,
+.hoa-ph__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* sound toggle on the film (shown from JS) */
+.hoa-ph__sound {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 7%;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(30, 24, 19, 0.18);
+  border-radius: 50%;
+  background: rgba(250, 246, 239, 0.82);
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  color: var(--ph-ink);
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: background-color 0.35s var(--ph-ease), color 0.35s var(--ph-ease);
+}
+.hoa-ph__sound[hidden] { display: none; }
+.hoa-ph__sound svg { width: 20px; height: 20px; grid-area: 1 / 1; }
+.hoa-ph__sound-on { opacity: 0; }
+.hoa-ph__sound[aria-pressed="true"] .hoa-ph__sound-on { opacity: 1; }
+.hoa-ph__sound[aria-pressed="true"] .hoa-ph__sound-off { opacity: 0; }
+.hoa-ph__sound:hover { background: var(--ph-ink); color: var(--ph-bg); }
+.hoa-ph__sound:focus-visible { outline: 2px solid var(--ph-ink); outline-offset: 3px; }
+
+/* ---------- Story panels ---------- */
+.hoa-ph-story {
+  --tone: #EFE3D1;
+  --tone-2: #F5EDE1;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 49% minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 2.2vw, 36px);
+  padding: 8px clamp(30px, 3.4vw, 56px) 8px 8px;
+}
+.hoa-ph-story--champagne { --tone: #EFE2CE; --tone-2: #F6EEE2; }
+.hoa-ph-story--sage      { --tone: #DCE1D1; --tone-2: #E9ECE1; }
+.hoa-ph-story--blue      { --tone: #DADFEC; --tone-2: #E8EBF3; }
+.hoa-ph-story--blush     { --tone: #ECD8DA; --tone-2: #F3E7E7; }
+.hoa-ph-story--lavender  { --tone: #E2DBEA; --tone-2: #EEE9F2; }
+/* the tinted ground; its shape differs per panel */
+.hoa-ph-story::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  /* fixed corner curves, not a full pill: a pill's round ends cut across the text on tall
+     panels. With >= 30px between the text and the panel edge, a curve of <= 96px never
+     reaches the text (r <= padding / (1 - 1/sqrt 2)). */
+  border-radius: 96px;
+  background: linear-gradient(100deg, var(--tone) 0%, var(--tone-2) 100%);
+}
+
+.hoa-ph-story__media {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tone) 70%, #000 6%);
+  box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.55), 0 14px 30px -18px rgba(60, 40, 20, 0.35);
+}
+.hoa-ph-story__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.1s var(--ph-ease);
+}
+
+.hoa-ph-story__text { padding: clamp(26px, 2.6vw, 38px) 0; }
+.hoa-ph-story__no {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 14px;
+  font-family: var(--ph-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ph-ink);
+}
+.hoa-ph-story__no { gap: 12px; }
+/* the principle's icon in a fine ring, in place of a number */
+.hoa-ph-story__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid rgba(30, 24, 19, 0.28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  color: #7A5A30;
+}
+.hoa-ph-story__icon svg { width: 17px; height: 17px; }
+.hoa-ph-story__word { letter-spacing: 0.22em; text-transform: uppercase; color: var(--ph-mute); }
+.hoa-about .hoa-ph-story__title {
+  margin: 0;
+  font-family: var(--ph-serif);
+  font-variation-settings: "opsz" 72, "SOFT" 0, "WONK" 0;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.15vw, 2.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ph-ink);
+}
+.hoa-ph-story__title em { display: block; font-style: italic; }
+.hoa-ph-story__copy {
+  max-width: 26ch;
+  margin: 16px 0 0;
+  font-family: var(--ph-sans);
+  font-size: clamp(0.875rem, 1vw, 0.97rem);
+  line-height: 1.6;
+  color: var(--ph-mute);
+}
+
+/* panel shapes, after the reference, by place: l = left column, r = right column
+   l1 rounded left, a long curve top right, square bottom right; tall oval photo
+   l2 full pill; photo a "D" (round left, straight right)
+   l3 / r1 round photo over the rounded left end of a shorter pill
+   r2 round photo inside a full pill
+   r3 full pill; photo a "D" */
+.hoa-ph-story--l1::before { border-radius: 150px 96px 0 150px; }
+.hoa-ph-story--l1 .hoa-ph-story__media { aspect-ratio: 7 / 8; border-radius: 50%; }
+.hoa-ph-story--l2 .hoa-ph-story__media { aspect-ratio: 7 / 8; border-radius: 999px 0 0 999px; box-shadow: none; }
+.hoa-ph-story--l3::before,
+.hoa-ph-story--r1::before { left: 12%; top: 0; bottom: 0; }
+.hoa-ph-story--r2::before { left: 0; top: 0; bottom: 0; }
+.hoa-ph-story--r3 .hoa-ph-story__media { aspect-ratio: 9 / 10; border-radius: 999px 0 0 999px; box-shadow: none; }
+
+/* ---------- Layouts ---------- */
+.hoa-ph__stage { display: grid; gap: 18px; }
+.hoa-ph__col { display: contents; }
+.hoa-ph__centre { margin-bottom: clamp(16px, 4vw, 32px); }
+
+@media (min-width: 700px) {
+  .hoa-ph__stage { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .hoa-ph__centre { grid-column: 1 / -1; }
+}
+
+@media (min-width: 1100px) {
+  .hoa-ph__silk { display: block; }
+  .hoa-ph__top { margin-bottom: 0; }
+  .hoa-ph__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.84fr) minmax(0, 1fr);
+    column-gap: clamp(20px, 2.2vw, 36px);
+    align-items: start;
+  }
+  /* six principles make the sides taller than the centre: heading + bottle ride along (sticky) */
+  .hoa-ph__centre { grid-column: 2; grid-row: 1; margin: 0; padding-top: 0; position: sticky; top: calc(var(--hoa-header-h, 80px) + 16px); }
+  .hoa-ph__col { display: flex; flex-direction: column; gap: clamp(18px, 1.8vw, 28px); }
+  .hoa-ph__col--left { grid-column: 1; grid-row: 1; padding-top: clamp(40px, 4.6vw, 80px); }
+  .hoa-ph__col--right { grid-column: 3; grid-row: 1; padding-top: clamp(28px, 3vw, 52px); }
+  .hoa-ph__bottle { width: min(84%, 340px, calc((100vh - var(--hoa-header-h, 80px) - 330px) * 0.65)); }   /* keeps the sticky centre within one screen */
+}
+
+@media (max-width: 699px) {
+  .hoa-ph-story { grid-template-columns: 40% minmax(0, 1fr); padding-right: 30px; }
+  .hoa-ph-story__text { padding: 14px 0; }
+  .hoa-ph-story__copy { font-size: 0.85rem; }
+  .hoa-ph-story::before { border-radius: 80px; }
+  .hoa-ph-story--l1::before { border-radius: 120px 80px 0 120px; }
+}
+
+/* hover: a slight push into the photo, pointer devices only */
+@media (hover: hover) and (pointer: fine) {
+  .hoa-ph-story:hover .hoa-ph-story__media img { transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoa-ph-story__media img, .hoa-ph__link-icon, .hoa-ph__link-icon svg { transition: none; }
+}

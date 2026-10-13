@@ -180,7 +180,9 @@
             "lines": "A tribute to the rich heritage of fine perfumery.\nA vision to craft timeless fragrances.\nA journey to a global name rooted in tradition.",
             "asset": "hoa-philo-legacy",
             "w": 1600,
-            "h": 1986
+            "h": 1986,
+            "tone": "champagne",
+            "alt": "Copper deg stills over wood fires in a traditional attar distillery"
           }
         },
         "pillar_2": {
@@ -191,7 +193,9 @@
             "lines": "An unwavering love for the art of scent creation.\nSophistication blended with beauty.\nAn enduring connection to our patrons.",
             "asset": "hoa-shamamah-lily",
             "w": 1086,
-            "h": 1448
+            "h": 1448,
+            "tone": "blush",
+            "alt": "Shamamah by House of Agha among golden lilies"
           }
         },
         "pillar_3": {
@@ -202,7 +206,9 @@
             "lines": "Authentic, artisanal craftsmanship.\nSupport for skilled perfumers.\nResponsibility to tradition and the world.",
             "asset": "hoa-philo-purpose",
             "w": 1086,
-            "h": 1448
+            "h": 1448,
+            "tone": "sage",
+            "alt": "A gloved hand holding Oud of Dark Paradise"
           }
         },
         "pillar_4": {
@@ -213,7 +219,9 @@
             "lines": "Heritage in harmony with modernity.\nRoom for creativity and exploration.\nUnique, unforgettable fragrances.",
             "asset": "hoa-philo-innovation",
             "w": 1254,
-            "h": 1254
+            "h": 1254,
+            "tone": "blue",
+            "alt": "A perfumer measuring a formula with a pipette in the lab"
           }
         },
         "pillar_5": {
@@ -224,7 +232,9 @@
             "lines": "Devotion to exceeding expectations.\nAn open dialogue with fragrance lovers.\nInvestment in our people and their artistry.",
             "asset": "hoa-world-gift",
             "w": 1086,
-            "h": 1448
+            "h": 1448,
+            "tone": "lavender",
+            "alt": "Agha Blue in its gift box among white peonies"
           }
         },
         "pillar_6": {
@@ -235,7 +245,9 @@
             "lines": "A meticulous approach to every detail.\nOnly the finest ingredients.\nA passion for innovation in scent creation.",
             "asset": "hoa-philo-craft",
             "w": 1672,
-            "h": 941
+            "h": 941,
+            "tone": "champagne",
+            "alt": "A perfumer dropping oil into a House of Agha bottle"
           }
         }
       },
@@ -247,7 +259,19 @@
         "pillar_5",
         "pillar_6"
       ],
-      "settings": {}
+      "settings": {
+        "kicker": "",
+        "heading_1": "Our",
+        "heading_2": "philosophy.",
+        "text": "What guides every bottle.",
+        "link_url": "shopify://collections/all",
+        "centre_asset": "hoa-pgal-shamamah-garden",
+        "centre_w": 1000,
+        "centre_h": 1333,
+        "centre_alt": "A gold dropper releasing a drop of attar into a glass flask, among oud wood and jasmine",
+        "centre_video_asset": "hoa-philo-pour.mp4",
+        "centre_poster_asset": "hoa-philo-pour-poster.webp"
+      }
     },
     "closing": {
       "type": "hoa-about-closing",
