@@ -1678,14 +1678,18 @@ html:has(.pdp) body {
 }
 
 .pdp-lightbox__stage {
-  display: grid;
-  place-items: center;
+  position: relative;
   min-height: 0;
   padding: 0 24px;
 }
 
+/* Absolutely centred so max-height resolves against the stage: the whole photo always fits the screen
+   (in the grid it ignored max-height and a landscape photo overflowed, showing only its top; 2026-10-13) */
 .pdp-lightbox__stage img {
-  max-width: 100%;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: calc(100% - 48px);
   max-height: 100%;
   object-fit: contain;
   border-radius: var(--pdp-radius);
@@ -5391,7 +5395,7 @@ html:has(.pdp) body {
   .pdp-tiles__btn {
     position: relative;
     display: block;
-    aspect-ratio: 1 / 1.18;
+    aspect-ratio: 4 / 3; /* landscape 4:3 scenes, shown whole (2026-10-13; was a 1 : 1.18 portrait crop) */
     padding: 0;
     border: 0;
     border-radius: clamp(12px, 1.2vw, 18px);
@@ -5405,7 +5409,7 @@ html:has(.pdp) body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 45%;
+    object-position: 50% 50%;
     transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
   }
   .pdp-tiles__btn:hover img { transform: scale(1.035); }

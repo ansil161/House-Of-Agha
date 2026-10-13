@@ -376,6 +376,7 @@
       },
       "block_order": ["card_top", "card_heart", "card_base"],
       "settings": {
+        "show_buy": false,
         "brand": "House of Agha",
         "heading": "Scent notes",
         "background": "#f6f4ee"

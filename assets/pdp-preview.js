@@ -1045,18 +1045,6 @@
         <ul class="sn__cards" role="list">${snCards}
         </ul>
       </div>
-      <div class="sn-purchase" data-sn-buy hidden>
-        <div class="sn-buy">
-          <div>
-            <p class="sn-buy__name">${esc(niceTitle)}</p>
-            <p class="sn-buy__price" data-sn-price>${money(current.price == null ? null : current.price / 100)}</p>
-          </div>
-          <div class="sn-buy__sizes" role="group" aria-label="Size" data-sn-sizes></div>
-        </div>
-        <div class="sn-cta">
-          <button type="button" class="sn-add" data-sn-add><span data-sn-add-label>Add to bag</span></button>
-        </div>
-      </div>
     </div>
   </section>
   </div>`;

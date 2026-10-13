@@ -73,7 +73,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-oud-fury.webp', '/assets/hoa-oud-fury-portrait.webp', '/assets/hoa-hero-oud-fury.webp', '/assets/hoa-oud-fury-smoke.webp', '/assets/hoa-craft-embers.webp', '/assets/hoa-world-profile.webp'],
     // PDP buy-column slider + thumbnails + 'more views' tiles (the brand's own Oud Fury photographs)
-    media: ['/assets/hoa-pdp-oud-fury-1.webp', '/assets/hoa-pdp-oud-fury-2.webp', '/assets/hoa-pdp-oud-fury-3.webp', '/assets/hoa-pdp-oud-fury-4.webp', '/assets/hoa-pdp-oud-fury-5.webp', '/assets/hoa-pdp-oud-fury-6.webp'],
+    media: ['/assets/hoa-pdp-oud-fury-1.webp', '/assets/hoa-pdp-oud-fury-l1.webp', '/assets/hoa-pdp-oud-fury-l2.webp', '/assets/hoa-pdp-oud-fury-l3.webp', '/assets/hoa-pdp-oud-fury-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Amber smoke, charred wood and a single shaft of evening light.",
     sizes: { 'Eau de Parfum': 4500 },
     compare: { 'Eau de Parfum': 5200 },
@@ -85,7 +85,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-hero-agha-blue.webp', '/assets/hoa-craft-ice.webp', '/assets/hoa-world-gift.webp'],
     // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
-    media: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-pgal-agha-blue-6.webp', '/assets/hoa-agha-blue-portrait.webp', '/assets/hoa-pgal-agha-blue-5.webp', '/assets/hoa-craft-ice.webp'],
+    media: ['/assets/hoa-product-agha-blue.webp', '/assets/hoa-pdp-agha-blue-l1.webp', '/assets/hoa-pdp-agha-blue-l2.webp', '/assets/hoa-pdp-agha-blue-l3.webp', '/assets/hoa-pdp-agha-blue-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Ice caves, cold stone and the deep blue of a winter night.",
     sizes: { 'Eau de Parfum': 5200 },
     reviews: [{ rating: 5, author: "Sara K.", location: "Dubai", verified: true, body: "Agha Blue feels like cold air after rain. It is the one I reach for on hot, crowded days." }]
@@ -96,7 +96,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-dark-paradise-portrait.webp', '/assets/hoa-hero-dark-paradise.webp', '/assets/hoa-craft-sand.webp', '/assets/hoa-world-hand.webp'],
     // PDP buy-column slider + thumbnails: one photo per scene, none repeated in the campaign gallery below (user, 2026-10-09)
-    media: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-pdp-dark-paradise-2.webp', '/assets/hoa-pdp-dark-paradise-3.webp', '/assets/hoa-pdp-dark-paradise-4.webp', '/assets/hoa-pdp-dark-paradise-5.webp'],
+    media: ['/assets/hoa-product-dark-paradise.webp', '/assets/hoa-pdp-dark-paradise-l1.webp', '/assets/hoa-pdp-dark-paradise-l2.webp', '/assets/hoa-pdp-dark-paradise-l3.webp', '/assets/hoa-pdp-dark-paradise-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Black sand, rising smoke and a room lit only by embers.",
     sizes: { 'Eau de Parfum': 4800 },
     reviews: [{ rating: 5, author: "Rehan S.", location: "London", verified: true, body: "Dark Paradise is my evening scent. Smoky, close to the skin, never loud." }]
@@ -107,7 +107,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-maha.webp', '/assets/hoa-maha-portrait.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
     // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
-    media: ['/assets/hoa-product-maha.webp', '/assets/hoa-pgal-maha-4.webp', '/assets/hoa-family-floral.webp', '/assets/hoa-craft-water.webp', '/assets/hoa-world-journey.webp'],
+    media: ['/assets/hoa-product-maha.webp', '/assets/hoa-pdp-maha-l1.webp', '/assets/hoa-pdp-maha-l2.webp', '/assets/hoa-pdp-maha-l3.webp', '/assets/hoa-pdp-maha-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Blossom, warm sand and late sun through an open window.",
     sizes: { 'Eau de Parfum': 4600 },
     compare: { 'Eau de Parfum': 5400 },
@@ -119,7 +119,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-world-poolside.webp'],
     // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
-    media: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-sea-smoke-portrait.webp', '/assets/hoa-family-aquatic.webp', '/assets/hoa-world-water.webp', '/assets/hoa-alt-sea-smoke.webp'],
+    media: ['/assets/hoa-product-sea-smoke.webp', '/assets/hoa-pdp-sea-smoke-l1.webp', '/assets/hoa-pdp-sea-smoke-l2.webp', '/assets/hoa-pdp-sea-smoke-l3.webp', '/assets/hoa-pdp-sea-smoke-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Clear water, pale stone and salt carried in on the wind.",
     sizes: { 'Eau de Parfum': 4900 },
     reviews: [{ rating: 5, author: "Meera P.", location: "Bengaluru", verified: true, body: "Sea Smoke has been in my carry-on for every trip this year. Clean, salty, easy to wear." }]
@@ -130,7 +130,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-ingredients-tobacco.webp', '/assets/hoa-family-green.webp', '/assets/hoa-craft-moss.webp'],
     // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
-    media: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-tobacco-enigma-portrait.webp', '/assets/hoa-pdp-tobacco-enigma-3.webp', '/assets/hoa-pdp-tobacco-enigma-4.webp', '/assets/hoa-pdp-tobacco-enigma-5.webp'],
+    media: ['/assets/hoa-product-tobacco-enigma.webp', '/assets/hoa-pdp-tobacco-enigma-l1.webp', '/assets/hoa-pdp-tobacco-enigma-l2.webp', '/assets/hoa-pdp-tobacco-enigma-l3.webp', '/assets/hoa-pdp-tobacco-enigma-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Tobacco leaf, moss and a forest floor after rain.",
     sizes: { 'Eau de Parfum': 5400 },
     reviews: [{ rating: 5, author: "Kabir D.", location: "Delhi", verified: true, body: "Tobacco Enigma is warm and green at the same time. I did not expect to love tobacco this much." }]
@@ -141,7 +141,7 @@ const AGHA_PRODUCTS = {
     eyebrow: 'Eau de Parfum',
     images: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-shamamah-portrait.webp', '/assets/hoa-shamamah-lily.webp'],
     // PDP buy-column slider + thumbnails: main photo + four different scenes, none repeated in the campaign gallery below
-    media: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-pdp-shamamah-2.webp', '/assets/hoa-pdp-shamamah-3.webp', '/assets/hoa-pdp-shamamah-4.webp', '/assets/hoa-shamamah-lily.webp'],
+    media: ['/assets/hoa-product-shamamah.webp', '/assets/hoa-pdp-shamamah-l1.webp', '/assets/hoa-pdp-shamamah-l2.webp', '/assets/hoa-pdp-shamamah-l3.webp', '/assets/hoa-pdp-shamamah-l4.webp'],  // tiles = 4:3 landscape scenes (2026-10-13)
     description: "Jasmine, gilded columns and the hush of a palace garden.",
     sizes: { 'Eau de Parfum': 4700 },
     reviews: [{ rating: 5, author: "Layla H.", location: "Doha", verified: true, body: "Shamamah smells like a garden in the late afternoon. It is the bottle guests always pick up first." }]

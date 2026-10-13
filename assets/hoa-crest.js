@@ -61,6 +61,14 @@ var HOA_CREST_CONFIG = {
   SPIN_VERTICAL: false,       // false = left/right only; it stays upright (user, 2026-10-09)
   SPIN_SECONDS: 12,           // idle (IDLE_SPIN only): one full turn left to right
   SPIN_SECONDS_VERTICAL: 18,  // idle: one full turn top over bottom (different, so it never repeats one loop)
+  SPIN_BLEND: 2,              // 1/s: after a release the flick blends into the idle spin (~95% there in 1.5 s)
+  SPIN_TILT: 12,              // degrees: idle spin is tilted this much on X (2026-10-13, reference video)...
+  SPIN_WOBBLE: 8,             // ...plus/minus this, a slow sine, so the angle never repeats exactly
+  SPIN_WOBBLE_SECONDS: 7.3,   // one wobble (not a divisor of SPIN_SECONDS)
+  // light that keeps moving while the logo is nearly still (2026-10-13, user: "only shiny when I drag it")
+  ENV_TURN: 0.15,             // rad/s: the studio reflections turn slowly around the logo
+  KEY_LAP_SECONDS: 9,         // the key light circles the logo once in this long
+  SWEEP: { EVERY: 3.5, MS: 800, STRENGTH: 0.6, WIDTH: 0.14 },   // diagonal shine band across the face
   // resting place, in units of the printed logo's height. side: 'center' (on the bottle),
   // 'left' or 'right' (beside it, gap apart); line: true = on the headline's line ("House ·
   // logo · of Agha"), else rise: up from the printed logo (negative = down); lineShift: nudge
@@ -88,8 +96,8 @@ var HOA_CREST_CONFIG = {
   V2: {
     APPEAR_MS: 900,           // fade + settle in at the intro spot
     GLIDE_MS: 1700,           // intro spot -> home beside the bottle
-    SPIN_SECONDS: 22,         // (unused while SWAY_DEG > 0)
-    SWAY_DEG: 26,             // idle: a slow sway left/right instead of full turns, so it never goes edge-on
+    SPIN_SECONDS: 12,         // idle: one full turn (2026-10-13: full turns, like the reference video)
+    SWAY_DEG: 0,              // >0 = a slow sway left/right instead of full turns (was 26: it never went edge-on)
     SWAY_SECONDS: 10,         //   beside the bottle (one full sway); 0 = the V1 full turn
     FALLBACK_MS: 4500         // if the hero never signals: appear at home this long after the reveal
   },
@@ -112,6 +120,7 @@ var HOA_CREST_CONFIG = {
   var SPIN_SECONDS = MARK ? C.V2.SPIN_SECONDS : C.SPIN_SECONDS;
   var SWAY = MARK && C.V2.SWAY_DEG > 0 ? C.V2.SWAY_DEG * Math.PI / 180 : 0;   // radians
   var swayT = 0;
+  var SWEEP_W = C.SWEEP.WIDTH.toFixed(3);                 // band half-width, as a GLSL float
 
   var html = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -175,24 +184,34 @@ var HOA_CREST_CONFIG = {
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function mix(a, b, t) { return a + (b - a) * t; }
 
-  // High-contrast studio for the reflections: a dark grey room with four SMALL, hard strip softboxes
-  // (top, left, right rim, a thin low strip) and one soft warm wash behind the camera. A face only
-  // lights while a strip is in its mirror direction, so the glints stay thin and travel along the
-  // relief walls and curves as the logo turns; the grey room + the wash keep every face gold, never black.
+  // Studio for the reflections (2026-10-13, user: "the whole face flips between flat yellow and flat brown/black").
+  // A mid-tone gradient dome, never black (darkest ~0.2 at the floor, lighter overhead and toward the viewer), so a
+  // face turned away still reads as darker gold; plus four NARROW strips (long vertical left and right, overhead,
+  // a thin low one). Only the edges and curves that line up with a strip flash, so the shine stays local.
+  var STUDIO = {
+    FLOOR: 0.2, SKY: 0.42, FRONT: 0.3,      // gradient brightness: bottom, top, extra toward the camera
+    TINT: [1, 0.92, 0.78],                  // warm neutral
+    STRIPS: [
+      // [x, y, z, width, height, brightness, colour]
+      [-10, 0.5, 2, 0.35, 12, 10, 0xffffff],  // long vertical strip, left
+      [10, 1, 1, 0.35, 12, 9, 0xfff1dc],      // long vertical strip, right
+      [0, 10, 2, 9, 0.35, 10, 0xffffff],      // overhead strip
+      [0, -6.5, 8, 9, 0.18, 4, 0xffe2b0]      // thin low strip, in front
+    ]
+  };
   function goldStudio(THREE) {
     var room = new THREE.Scene();
-    var walls = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0x6e665a, side: THREE.BackSide }));
-    walls.scale.set(30, 20, 30);
-    room.add(walls);
+    var dome = new THREE.SphereGeometry(20, 64, 32);
+    var p = dome.attributes.position, col = new Float32Array(p.count * 3), v = new THREE.Vector3();
+    for (var i = 0; i < p.count; i++) {
+      v.fromBufferAttribute(p, i).normalize();
+      var b = mix(STUDIO.FLOOR, STUDIO.SKY, (v.y + 1) / 2) + STUDIO.FRONT * Math.max(0, v.z);
+      col[i * 3] = b * STUDIO.TINT[0]; col[i * 3 + 1] = b * STUDIO.TINT[1]; col[i * 3 + 2] = b * STUDIO.TINT[2];
+    }
+    dome.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    room.add(new THREE.Mesh(dome, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
     var plane = new THREE.PlaneGeometry(1, 1);
-    [
-      // [x, y, z, width, height, brightness, colour]
-      [0, 9.5, 3, 7, 0.5, 8, 0xffffff],       // top strip
-      [-9.5, 1, 3, 0.5, 8, 8, 0xffffff],      // left strip
-      [9, 1.5, -4, 0.45, 9, 7, 0xfff1dc],     // right rim strip, behind
-      [1, -6, 8, 8, 0.25, 4, 0xffe2b0],       // thin low strip, front
-      [0, 1, 14, 16, 10, 2.6, 0xffeccc]       // soft wash behind the camera
-    ].forEach(function (b) {
+    STUDIO.STRIPS.forEach(function (b) {
       var m = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({ color: new THREE.Color(b[6]).multiplyScalar(b[5]), side: THREE.DoubleSide }));
       m.position.set(b[0], b[1], b[2]);
       m.scale.set(b[3], b[4], 1);
@@ -213,34 +232,127 @@ var HOA_CREST_CONFIG = {
     // Polished gold (user 2026-10-12: "no shine, glint or reflections while rotating, it looks flat"):
     // filmic tone mapping so the bright softbox reflections roll off into white instead of clipping flat.
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.95;
+    renderer.toneMappingExposure = 1.0;
     renderer.setClearColor(0x000000, 0);
 
     var scene = new THREE.Scene();
     var pmrem = new THREE.PMREMGenerator(renderer);
-    // A full metal shows nothing but its reflections, and the plain RoomEnvironment is a soft grey box: too even to
-    // read as a glint. This studio is dark with a few hard softboxes, so as the logo (never the studio) turns,
-    // bright strips slide across the relief and the faces turned away fall to dark gold.
+    // A polished metal shows little but its reflections: the studio (above) is a soft gradient with a few narrow
+    // strips, so as the logo (never the studio) turns, thin streaks slide across the bevels and curves.
     scene.environment = pmrem.fromScene(goldStudio(THREE), 0.02).texture;
     pmrem.dispose();
 
     // polished gold, in place of the file's flat-looking standard material
-    var GOLD = { ENV: 1.2, ENV_DRAG: 1.4 };
+    // (2026-10-13) metalness just under 1 + moderate roughness keep a floor of gold colour in dark reflections
+    var GOLD = { ENV: 1.3, ENV_DRAG: 1.4 };
     var gold = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#D4A93C'),
-      metalness: 1,
-      roughness: 0.17,
-      clearcoat: 0.3,
-      clearcoatRoughness: 0.1,
+      color: new THREE.Color('#D9A93A'),
+      metalness: 0.9,
+      roughness: 0.2,
+      clearcoat: 0.4,
+      clearcoatRoughness: 0.08,
       envMapIntensity: GOLD.ENV,
       side: THREE.DoubleSide
     });
 
-    // lights, fixed in the world (the logo turns under them): warm key top-right, cool rim behind, low fill,
-    // and a small glint that follows the mouse while it is over the logo
-    scene.add(new THREE.AmbientLight(0xfff1dc, 0.15));
+    // Glint sweep (2026-10-13): every SWEEP.EVERY s a warm-white diagonal band crosses the face in SWEEP.MS,
+    // added in the shader on top of the lit gold. The band runs in the logo's own space, so it rides with the
+    // turning face; it fades on surfaces that face away from the viewer, so an edge-on frame never glows flat.
+    var sweepU = {
+      uSweepPos: { value: -9 },                       // band centre along the diagonal, -1..1 across the face
+      uSweepAmt: { value: 0 },
+      uSweepCol: { value: new THREE.Color(1, 0.9, 0.72) },
+      uSweepAxis: { value: new THREE.Vector3(1, 1, 0) }, // set from the model: the face diagonal, per unit radius
+      uSweepMid: { value: new THREE.Vector3() }
+    };
+    gold.onBeforeCompile = function (sh) {
+      Object.keys(sweepU).forEach(function (k) { sh.uniforms[k] = sweepU[k]; });
+      sh.vertexShader = 'varying vec3 vSweepObj;\n' +
+        sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvSweepObj = position;');
+      sh.fragmentShader = 'varying vec3 vSweepObj;\nuniform float uSweepPos, uSweepAmt;\nuniform vec3 uSweepCol, uSweepAxis, uSweepMid;\n' +
+        sh.fragmentShader.replace('#include <opaque_fragment>',
+          'float sweepD = abs(dot(vSweepObj - uSweepMid, uSweepAxis) - uSweepPos);\n' +
+          'float sweepB = (1.0 - smoothstep(0.0, ' + SWEEP_W + ', sweepD)) * clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0);\n' +
+          'outgoingLight += uSweepCol * (uSweepAmt * sweepB);\n#include <opaque_fragment>');
+    };
+    function sweepAxis(geo) {                         // the face diagonal (x + y on screen) in the file's own axes
+      geo.computeBoundingBox();
+      var bb = geo.boundingBox, ext = bb.getSize(new THREE.Vector3());
+      var ax = ext.x < ext.y ? (ext.x < ext.z ? 0 : 2) : (ext.y < ext.z ? 1 : 2);
+      var u = (ax + 1) % 3, w = (ax + 2) % 3;
+      var R = Math.max(ext.getComponent(u), ext.getComponent(w)) / 2;
+      var a = new THREE.Vector3();
+      a.setComponent(u, 1); a.setComponent(w, 1);
+      sweepU.uSweepAxis.value.copy(a.multiplyScalar(1 / (Math.SQRT2 * R)));
+      bb.getCenter(sweepU.uSweepMid.value);
+    }
+
+    // Relief read (user 2026-10-13: "rings, lions, border look flat and muddy"). The GLB is one modelled relief
+    // mesh with no UVs, so no bump map or re-extrusion: instead every vertex on a front/back-facing surface is
+    // tinted by its height inside the relief, so recess floors sit a shade deeper and the raised rings, lions and
+    // border stand out in full gold. Side walls (where the travelling glints run) keep the full colour.
+    var CAVITY = { FLOOR: 0.42, FACING: 0.55, FLOOR_PCT: 0.01 };
+    function cavity(geo) {
+      var pos = geo.attributes.position, nor = geo.attributes.normal;
+      if (!pos || !nor) return;
+      geo.computeBoundingBox();
+      var bb = geo.boundingBox, ext = bb.getSize(new THREE.Vector3());
+      var ax = ext.x < ext.y ? (ext.x < ext.z ? 0 : 2) : (ext.y < ext.z ? 1 : 2);   // thinnest axis = relief depth
+      var mid = (bb.min.getComponent(ax) + bb.max.getComponent(ax)) / 2;
+      var get = ['getX', 'getY', 'getZ'][ax];
+      var n = pos.count, h = new Float32Array(n), face = new Uint8Array(n), hs = [], i;
+      for (i = 0; i < n; i++) {
+        if (Math.abs(nor[get](i)) < CAVITY.FACING) continue;
+        h[i] = Math.abs(pos[get](i) - mid);
+        face[i] = 1;
+        hs.push(h[i]);
+      }
+      // the floor is a low percentile, not the minimum: a few stray deep vertices would otherwise squash the
+      // three real relief levels (base disc / details / top rims) into the top of the range
+      hs = Float32Array.from(hs).sort();   // typed array: numeric sort
+      var lo = hs[Math.floor(hs.length * CAVITY.FLOOR_PCT)], hi = hs[hs.length - 1];
+      if (!(hi - lo > 1e-6)) return;
+      var col = new Float32Array(n * 3);
+      for (i = 0; i < n; i++) {
+        var t = face[i] ? clamp01((h[i] - lo) / (hi - lo)) : 1;
+        var c = mix(CAVITY.FLOOR, 1, t * t * (3 - 2 * t));
+        col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = c;
+      }
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      gold.userData.cavity = true;
+    }
+
+    // Shallow dome on the big faces (2026-10-13). A perfectly flat face mirrors ONE direction of the studio, so it
+    // changes colour all at once. The file's geometry and silhouette stay as they are; only the face normals are
+    // bent outward as if the face were a dome rising ~3% of the logo width at the centre, so reflections (and the
+    // studio gradient) vary across the face and streaks travel over it while it turns. Side walls keep their normals.
+    var DOME = { SLOPE: 0.22, FACING: 0.3 };   // SLOPE = normal tilt at the rim (2 x rise / radius)
+    function domeNormals(geo) {
+      var pos = geo.attributes.position, nor = geo.attributes.normal;
+      if (!pos || !nor) return;
+      geo.computeBoundingBox();
+      var bb = geo.boundingBox, ext = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
+      var ax = ext.x < ext.y ? (ext.x < ext.z ? 0 : 2) : (ext.y < ext.z ? 1 : 2);   // thinnest axis = relief depth
+      var u = (ax + 1) % 3, w = (ax + 2) % 3;
+      var R = Math.max(ext.getComponent(u), ext.getComponent(w)) / 2;
+      var p = new THREE.Vector3(), n = new THREE.Vector3(), out = new Float32Array(nor.count * 3);
+      for (var i = 0; i < nor.count; i++) {
+        p.fromBufferAttribute(pos, i).sub(c);
+        n.fromBufferAttribute(nor, i);
+        var f = clamp01((Math.abs(n.getComponent(ax)) - DOME.FACING) / (1 - DOME.FACING));
+        n.setComponent(u, n.getComponent(u) + f * DOME.SLOPE * p.getComponent(u) / R);
+        n.setComponent(w, n.getComponent(w) + f * DOME.SLOPE * p.getComponent(w) / R);
+        n.normalize();
+        out[i * 3] = n.x; out[i * 3 + 1] = n.y; out[i * 3 + 2] = n.z;
+      }
+      geo.setAttribute('normal', new THREE.BufferAttribute(out, 3));
+    }
+
+    // lights, fixed in the world (the logo turns under them): warm key top-right, cool rim behind, a low
+    // hemisphere fill so nothing goes fully dark, and a small glint that follows the mouse while it is over the logo
+    scene.add(new THREE.HemisphereLight(0xfff1dc, 0x5a4630, 0.35));
     var key = new THREE.DirectionalLight(0xfff4e0, 1.1);
-    key.position.set(4, 5, 6);
+    key.position.set(4, 5, 6);                                   // (circles the logo while it runs, see frame())
     scene.add(key);
     var rim = new THREE.DirectionalLight(0xbfd6ff, 1.2);
     rim.position.set(-4, 2.5, -6);
@@ -278,6 +390,7 @@ var HOA_CREST_CONFIG = {
     var overLogo = false;
     var drag = null;
     var spinning = false, spinVel = 0, spinVelV = 0;      // turning on its own: sideways, top over bottom
+    var idleT = 0;                                        // s spent spinning (drives the tilt wobble)
     var hintW = 0, hintH = 0;
     var HINT_KEY = 'agha-logo3d-dragged';
     var hintDone = false;
@@ -295,7 +408,8 @@ var HOA_CREST_CONFIG = {
       var box = new THREE.Box3().setFromObject(model);
       dims = box.getSize(new THREE.Vector3());
       model.position.sub(box.getCenter(new THREE.Vector3()));
-      model.traverse(function (o) { if (o.isMesh) { if (o.material) o.material.dispose(); o.material = gold; } });
+      model.traverse(function (o) { if (o.isMesh) { if (o.material) o.material.dispose(); o.material = gold; cavity(o.geometry); domeNormals(o.geometry); sweepAxis(o.geometry); } });
+      if (gold.userData.cavity) { gold.vertexColors = true; gold.needsUpdate = true; }
       fit.add(model);
       
       // landed below the hero (reload, anchor): no lift-off, it is simply there
@@ -547,15 +661,16 @@ var HOA_CREST_CONFIG = {
           pitch.v += spinVelV; spinVelV = 0;
           spring(pitch, 0, 16, 8, STEP);
         } else if (spinning) {
-          var ramp = 1 - Math.exp(-1.2 * STEP);                                  // eases to the idle speeds
+          var ramp = 1 - Math.exp(-C.SPIN_BLEND * STEP);                         // eases to the idle speeds
           spinVel += (TAU / SPIN_SECONDS - spinVel) * ramp;
           yaw.x = wrap(yaw.x + spinVel * STEP);
           if (C.SPIN_VERTICAL) {
             spinVelV += (TAU / C.SPIN_SECONDS_VERTICAL - spinVelV) * ramp;
             pitch.x = wrap(pitch.x + spinVelV * STEP);
-          } else {
-            pitch.v = spinVelV; spinVelV = 0;                                    // upright: settle the tilt
-            spring(pitch, 0, 16, 8, STEP);
+          } else {                                                               // a set tilt with a slow wobble
+            idleT += STEP;
+            pitch.v += spinVelV; spinVelV = 0;
+            spring(pitch, (C.SPIN_TILT + C.SPIN_WOBBLE * Math.sin(TAU * idleT / C.SPIN_WOBBLE_SECONDS)) * DEG, 16, 8, STEP);
           }
         } else if (!drag) {
           spring(yaw, t[0], k, d, STEP);
@@ -620,6 +735,17 @@ var HOA_CREST_CONFIG = {
       // the cursor glint: a small light just in front of the logo, under the mouse
       if (pointer) glint.position.set((pointer.x - vw / 2) * px2w, -(pointer.y - vh / 2) * px2w, pose.s * px2w * 0.9);
       glint.intensity = 14 * Math.pow(pose.s * px2w, 2) * Math.max(0, glintI.x);
+      // light that moves on its own, so streaks keep sliding over the relief even when the logo is nearly still:
+      // the studio reflections turn slowly, the key light circles the logo, and a shine band sweeps the face
+      if (!reduceMotion) {
+        var secs = (now - t0) / 1000;
+        scene.environmentRotation.y = secs * C.ENV_TURN;
+        var kA = TAU * secs / C.KEY_LAP_SECONDS;
+        key.position.set(3 * Math.sin(kA), 2.5, 3 * Math.cos(kA));
+        var sp = (secs % C.SWEEP.EVERY) / (C.SWEEP.MS / 1000);
+        sweepU.uSweepPos.value = sp < 1 ? mix(-1.2, 1.2, sp) : -9;
+        sweepU.uSweepAmt.value = sp < 1 ? C.SWEEP.STRENGTH * Math.sin(Math.PI * sp) : 0;
+      }
       renderer.render(scene, camera);
 
       var side = pose.s * 1.04;
