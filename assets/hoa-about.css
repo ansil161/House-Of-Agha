@@ -2080,7 +2080,7 @@ body.hoa-about {
 .hoa-hc__canvas {
   --p: calc(min(100cqw, 1680px) / 1536);
   --v: max(calc(0.8 * var(--p)), min(var(--p), calc((100svh - var(--hoa-header-h, 76px)) / 990)));
-  --H: calc(1150 * var(--v));   /* 2026-10-07: was 990; +160 so the Qutub Shahi miniature can fill the column width */
+  --H: calc(1110 * var(--v));   /* 2026-10-07: was 990; +160 for the miniature. 2026-10-13: -40, foot removed */
   --u: var(--v);
   position: relative;
   width: min(100cqw, 1680px);

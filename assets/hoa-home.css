@@ -678,17 +678,19 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
   padding: 0;
   border: 1.5px solid #0b0b0b;
   border-radius: 50%;
-  background: transparent;
+  background: #DCCBB0; /* sand fill so the ring reads on the white page (2026-10-13) */
   color: #0b0b0b;
+  box-shadow: 0 6px 18px rgba(11, 11, 11, 0.10);
   cursor: pointer;
   transform: translateY(-50%);
   transition: transform 0.5s var(--hoa-ease), background-color 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s linear;
 }
-.hoa-cf__arrow svg { width: 18px; height: 18px; }
+.hoa-cf__arrow svg { width: 22px; height: 22px; }
+.hoa-cf__arrow svg path { stroke-width: 2.6; }
 .hoa-cf__arrow--prev { left: clamp(12px, 3vw, 48px); }
 .hoa-cf__arrow--next { right: clamp(12px, 3vw, 48px); }
 @media (hover: hover) {
-  .hoa-cf__arrow:hover { background: rgba(11, 11, 11, 0.06); }
+  .hoa-cf__arrow:hover { background: #CDB894; }
   .hoa-cf__arrow--prev:hover { transform: translate(-3px, -50%); }
   .hoa-cf__arrow--next:hover { transform: translate(3px, -50%); }
 }
@@ -784,7 +786,7 @@ html.lenis, html.lenis body { height: auto; scroll-behavior: auto !important; }
 @media (max-width: 899px) {
   .hoa-cf { --cf-w: min(60vw, 320px); }
   .hoa-cf__arrow { width: 42px; height: 42px; }
-  .hoa-cf__arrow svg { width: 16px; height: 16px; }
+  .hoa-cf__arrow svg { width: 19px; height: 19px; }
 }
 @media (max-width: 480px) {
   .hoa-cf { --cf-w: 66vw; }
