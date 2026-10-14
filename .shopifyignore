@@ -6,3 +6,7 @@ vercel.json
 package.json
 package-lock.json
 *.html
+assets/pdp-preview.js
+assets/wishlist-preview.js
+assets/hoa-checkout.js
+assets/hoa-checkout.css
