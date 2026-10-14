@@ -1,0 +1,49 @@
+# All Collections — AGHA PERFUMES
+
+[AGHA](http://localhost:3000/)
+- [Shop](http://localhost:3000/collections/all)
+- [Product Detail](http://localhost:3000/products/oud-royal)
+- [Discover](http://localhost:3000/pages/discover)
+- [The House](http://localhost:3000/pages/the-house)
+- [Gifts](http://localhost:3000/pages/gifts)
+- [Private Access](http://localhost:3000/pages/private-access)
+[Shop](http://localhost:3000/collections/all)
+[Product Detail](http://localhost:3000/products/oud-royal)
+[Discover](http://localhost:3000/pages/discover)
+[The House](http://localhost:3000/pages/the-house)
+[Gifts](http://localhost:3000/pages/gifts)
+[Private Access](http://localhost:3000/pages/private-access)
+
+# EXTRAITS DE PARFUM
+Uncompromising 35% oil concentration extraits macerated for 90 days in dark chambers. Crafted to linger on skin and fabric for over 12 hours.
+[ALL SCENTS (08)](http://localhost:3000/collections/all)
+[WOODY & OUD](http://localhost:3000/collections/all)
+[FLORAL SUEDE](http://localhost:3000/collections/all)
+[AMBER RESINS](http://localhost:3000/collections/all)
+[DISCOVERY SETS](http://localhost:3000/collections/all)
+
+### [OUD ROYAL](http://localhost:3000/products/oud-royal)
+[OUD ROYAL](http://localhost:3000/products/oud-royal)
+
+### [VELVET IRIS](http://localhost:3000/products/oud-royal)
+[VELVET IRIS](http://localhost:3000/products/oud-royal)
+
+### [SANTAL NOCTURNE](http://localhost:3000/products/oud-royal)
+[SANTAL NOCTURNE](http://localhost:3000/products/oud-royal)
+
+### [AMBER ABSOLUTE](http://localhost:3000/products/oud-royal)
+[AMBER ABSOLUTE](http://localhost:3000/products/oud-royal)
+
+### FILTER FRAGRANCES
+
+#### OLFACTORY FAMILY
+
+#### VOLUME
+© 2026 AGHA PERFUMES HOUSE. ALL RIGHTS RESERVED.
+ALL COLLECTIONS ARCHITECTURE
+
+### FRAGRANCE BAG
+
+## OUD ROYAL
+₹14,500
+Resinous Cambodian agarwood and wild black rose extract.
