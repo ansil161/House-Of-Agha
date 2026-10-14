@@ -1,0 +1,12 @@
+<div class="section-padding">
+  <div class="container" style="max-width: 850px;">
+    <span class="editorial-label">404</span>
+    <h1 class="font-serif" style="margin-top: 16px; font-size: clamp(2.4rem, 5vw, 4.5rem);">{{ 'general.page_not_found' | t }}</h1>
+    <p class="text-soft" style="margin-top: 24px; line-height: 1.8;">{{ 'general.page_not_found_text' | t }}</p>
+    <p style="margin-top: 32px;"><a class="btn-primary" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a></p>
+  </div>
+</div>
+
+{% schema %}
+{ "name": "404" }
+{% endschema %}

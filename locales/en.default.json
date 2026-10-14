@@ -1,0 +1,25 @@
+{
+  "general": {
+    "continue_shopping": "Continue shopping",
+    "page_not_found": "Page not found",
+    "page_not_found_text": "The page you are looking for does not exist or has moved."
+  },
+  "cart": {
+    "title": "Your bag",
+    "empty": "Your bag is empty.",
+    "subtotal": "Subtotal",
+    "checkout": "Check out",
+    "remove": "Remove",
+    "quantity": "Quantity"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search the house",
+    "submit": "Search",
+    "results_count": {
+      "one": "{{ count }} result for \"{{ terms }}\"",
+      "other": "{{ count }} results for \"{{ terms }}\""
+    },
+    "no_results": "No results found for \"{{ terms }}\"."
+  }
+}

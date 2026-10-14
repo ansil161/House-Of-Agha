@@ -1,0 +1,10 @@
+<div class="section-padding">
+  <div class="container" style="max-width: 850px;">
+    <h1 class="font-serif" style="font-size: clamp(2.4rem, 5vw, 4.5rem);">{{ page.title | escape }}</h1>
+    <div class="text-soft" style="margin-top: 28px; line-height: 1.8;">{{ page.content }}</div>
+  </div>
+</div>
+
+{% schema %}
+{ "name": "Page" }
+{% endschema %}

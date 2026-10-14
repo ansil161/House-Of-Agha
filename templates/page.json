@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "main": { "type": "hoa-main-page" }
+  },
+  "order": ["main"]
+}

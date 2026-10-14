@@ -1,0 +1,36 @@
+<div class="section-padding">
+  <div class="container" style="max-width: 850px;">
+    <h1 class="font-serif" style="font-size: clamp(2.4rem, 5vw, 4.5rem);">{{ 'cart.title' | t }}</h1>
+    {%- if cart.item_count == 0 -%}
+      <p class="text-soft" style="margin-top: 24px;">{{ 'cart.empty' | t }}</p>
+      <p style="margin-top: 32px;"><a class="btn-primary" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a></p>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" style="margin-top: 32px;">
+        {%- for item in cart.items -%}
+          <div style="display: flex; gap: 20px; align-items: center; border-top: 1px solid var(--color-border); padding: 20px 0;">
+            {%- if item.image -%}
+              <a href="{{ item.url }}"><img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.image.alt | escape }}" width="80" height="80" loading="lazy"></a>
+            {%- endif -%}
+            <div style="flex: 1;">
+              <a class="font-serif" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+              {%- unless item.product.has_only_default_variant -%}<div class="text-soft">{{ item.variant.title | escape }}</div>{%- endunless -%}
+            </div>
+            <label class="text-soft">{{ 'cart.quantity' | t }}
+              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" style="width: 64px;">
+            </label>
+            <span>{{ item.final_line_price | money }}</span>
+            <a class="text-soft" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+          </div>
+        {%- endfor -%}
+        <div style="border-top: 1px solid var(--color-border); padding-top: 24px; display: flex; justify-content: space-between;">
+          <span>{{ 'cart.subtotal' | t }}</span><strong>{{ cart.total_price | money }}</strong>
+        </div>
+        <button class="btn-primary" type="submit" name="checkout" style="margin-top: 24px;">{{ 'cart.checkout' | t }}</button>
+      </form>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{ "name": "Cart" }
+{% endschema %}

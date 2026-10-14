@@ -1,0 +1,23 @@
+<div class="section-padding">
+  <div class="container" style="max-width: 850px;">
+    <h1 class="font-serif" style="font-size: clamp(2.4rem, 5vw, 4.5rem);">{{ 'search.title' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" style="margin-top: 28px; display: flex; gap: 12px;">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" aria-label="{{ 'search.placeholder' | t }}" style="flex: 1;">
+      <button class="btn-primary" type="submit">{{ 'search.submit' | t }}</button>
+    </form>
+    {%- if search.performed -%}
+      <p class="text-soft" style="margin-top: 24px;">
+        {%- if search.results_count > 0 -%}{{ 'search.results_count' | t: count: search.results_count, terms: search.terms }}{%- else -%}{{ 'search.no_results' | t: terms: search.terms }}{%- endif -%}
+      </p>
+      <ul style="list-style: none; padding: 0; margin-top: 16px;">
+        {%- for item in search.results -%}
+          <li style="border-top: 1px solid var(--color-border); padding: 16px 0;"><a class="font-serif" href="{{ item.url }}">{{ item.title | escape }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{ "name": "Search" }
+{% endschema %}
