@@ -73,7 +73,7 @@ var HOA_CREST_CONFIG = {
   // light that keeps moving while the logo is nearly still (2026-10-13, user: "only shiny when I drag it")
   ENV_TURN: 0.1,              // rad/s: the studio reflections turn slowly around the logo
   KEY_LAP_SECONDS: 9,         // the key light circles the logo once in this long
-  DEPTH: 0.15,                // the plate's thickness as a share of its width (the file is ~0.056: too thin for side walls)
+  DEPTH: 0.09,              // the plate's thickness as a share of its width (the file is ~0.056: too thin for side walls)
   // resting place, in units of the printed logo's height. side: 'center' (on the bottle),
   // 'left' or 'right' (beside it, gap apart); line: true = on the headline's line ("House ·
   // logo · of Agha"), else rise: up from the printed logo (negative = down); lineShift: nudge

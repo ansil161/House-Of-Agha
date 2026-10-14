@@ -1343,7 +1343,7 @@ html:not(.v2-story-js) .v2-story__mark:not(:first-child) { display: none; }   /*
 .v2-phero {
   --ph-x: 60.8%;                                /* the bottle's centre in the photo */
   --ph-iw: max(100vw, 223.66svh);               /* the photo's drawn width under object-fit: cover */
-  --ph-ls: clamp(120px, 13vw, 230px);           /* logo size at rest */
+  --ph-ls: clamp(96px, 10.5vw, 185px);           /* logo size at rest */
   position: relative;
   height: 100vh;
   height: 100svh;
@@ -1365,8 +1365,10 @@ html.v2-js .v2-phero.is-in .v2-phero__img { opacity: 1; transform: none; }
 
 /* the logo's spots (empty; hoa-crest.js reads their boxes) */
 .v2-phero__intro, .v2-phero__home { position: absolute; pointer-events: none; visibility: hidden; transform: translate(-50%, -50%); }
-.v2-phero__home { left: 21%; top: 47%; width: var(--ph-ls); height: var(--ph-ls); }
-.v2-phero__intro { left: 21%; top: 47%; width: calc(var(--ph-ls) * 1.3); height: calc(var(--ph-ls) * 1.3); }
+/* centred on the stone pillar left of the light (35% across the photo), whatever the screen's shape */
+.v2-phero { --ph-rock: calc((100vw - var(--ph-iw)) * 0.608 + var(--ph-iw) * 0.35); }
+.v2-phero__home { left: var(--ph-rock); top: 44%; width: var(--ph-ls); height: var(--ph-ls); }
+.v2-phero__intro { left: var(--ph-rock); top: 44%; width: calc(var(--ph-ls) * 1.3); height: calc(var(--ph-ls) * 1.3); }
 
 /* portrait (tablets, phones): the photo is cropped round the bottle, the logo takes the strip on its left */
 @media (orientation: portrait) {
