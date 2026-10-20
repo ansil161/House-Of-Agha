@@ -47,6 +47,8 @@
     <script src="{{ 'hoa-story.js' | asset_url }}" defer></script>
   {%- endif -%}
   {%- if template.name == 'product' -%}
+    {%- comment -%} black product page (user, 2026-10-20): token remap + overrides, loads after the PDP styles {%- endcomment -%}
+    {{ 'hoa-pdp-dark.css' | asset_url | stylesheet_tag }}
     {%- comment -%} the product cards in "You may also like" are the shop's cards {%- endcomment -%}
     {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
@@ -71,12 +73,12 @@
   {{ 'hoa-mobile.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'hoa-mobile.js' | asset_url }}" defer></script>
 </head>
-<body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
+<body{% if template.name == 'index' %} class="hoa-home"{% elsif template.suffix == 'the-house' %} class="hoa-page hoa-about"{% elsif template.suffix == 'wishlist' %} class="hoa-wishlist-page"{% elsif template.name == 'collection' %} class="hoa-shop-page"{% elsif template.name == 'product' %} class="hoa-pdp-dark"{% elsif template.directory == 'customers' %} class="hoa-account-page"{% endif %}>
   {% render 'preloader' %}
 
   <!-- Navigation Header -->
   {% render 'header' %}
-  {%- if template.name == 'collection' or template.name == 'product' -%}{% section 'hoa-message-strip' %}{%- endif -%}
+  {%- if template.name == 'product' -%}{% section 'hoa-message-strip' %}{%- endif -%}
 
   <!-- Main Content Layout -->
   <main id="main-content" role="main">

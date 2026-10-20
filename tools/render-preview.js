@@ -380,7 +380,7 @@ async function renderTemplate(name, templateGlobals) {
   console.log('mobile layer on', all.length, 'pages');
 
   // Message strip (sections/hoa-message-strip.liquid): layout/theme.liquid renders it right after
-  // the header on the collection and product templates only, so mirror that in shop.html / product.html.
+  // the header on the product template only (removed from the shop 2026-10-20); shop.html is just cleaned of it.
   {
     const src = fs.readFileSync(path.join(THEME, 'sections/hoa-message-strip.liquid'), 'utf8');
     const schema = readSchema(src);
@@ -395,15 +395,19 @@ async function renderTemplate(name, templateGlobals) {
         .replace(/\n[ \t]*<!-- Message strip[\s\S]*?<!-- \/Message strip -->/, '')
         .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-message-strip\.css">\n/, '')
         .replace(/[ \t]*<script src="\/?assets\/hoa-message-strip\.js" defer><\/script>\n/, '');
+      if (f === 'shop.html') { fs.writeFileSync(file, page); continue; }   // shop: no strip (user, 2026-10-20)
+      // black product page (layout/theme.liquid gives the product template body.hoa-pdp-dark + hoa-pdp-dark.css)
+      page = page.replace(/<body(?: class="[^"]*")?>/, f === 'product.html' ? '<body class="hoa-pdp-dark">' : '<body class="hoa-shop-page">')
+        .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-pdp-dark\.css">\n/, '');
       const menuEnd = page.indexOf('</nav>', page.indexOf('<nav class="hoa-menu"'));
       if (menuEnd < 0) { console.warn('no header menu in', f); continue; }
       const at = menuEnd + '</nav>'.length;
       page = page.slice(0, at) + block + page.slice(at);
       const pre = (page.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
-      page = page.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-message-strip.css">\n  <script src="${pre}assets/hoa-message-strip.js" defer></script>\n</head>`);
+      page = page.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-message-strip.css">\n  <script src="${pre}assets/hoa-message-strip.js" defer></script>\n${f === 'product.html' ? `  <link rel="stylesheet" href="${pre}assets/hoa-pdp-dark.css">\n` : ''}</head>`);
       fs.writeFileSync(file, page);
     }
-    console.log('message strip on shop.html, product.html');
+    console.log('message strip on product.html');
   }
 
   // Preloader (snippets/preloader.liquid): layout/theme.liquid renders it right after <body> on
