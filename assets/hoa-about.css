@@ -546,8 +546,8 @@ body.hoa-about {
   background: var(--ab-ivory);
   color: var(--ab-ink);
 }
-body.hoa-about .hoa-header.header { background: transparent; }
-body.hoa-about .hoa-header.header.scrolled { background: transparent; }
+body.hoa-about .hoa-header.header { background: rgba(255, 255, 255, 0.9); }
+body.hoa-about .hoa-header.header.scrolled { background: rgba(255, 255, 255, 0.96); }
 .hoa-about .hoa-ab-h2 { color: var(--ab-ink); }
 .hoa-about .hoa-ab-muted { color: var(--ab-mute); }
 .hoa-about ::selection { background: var(--ab-sand-2); color: var(--ab-ink); }

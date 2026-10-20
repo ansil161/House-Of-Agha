@@ -372,9 +372,11 @@ async function renderTemplate(name, templateGlobals) {
     let html = fs.readFileSync(file, 'utf8')
       .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-mobile\.css">\n/, '')
       .replace(/[ \t]*<script src="\/?assets\/hoa-mobile\.js" defer><\/script>\n/, '')
+      .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-v2-skin\.css">\n/, '')
+      .replace(/[ \t]*<script src="\/?assets\/hoa-version\.js"><\/script>\n/, '')
       .replace(/<meta name="viewport" content="[^"]*">/, '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">');
     const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
-    html = html.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-mobile.css">\n  <script src="${pre}assets/hoa-mobile.js" defer></script>\n</head>`);
+    html = html.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-v2-skin.css">\n  <script src="${pre}assets/hoa-version.js"></script>\n  <link rel="stylesheet" href="${pre}assets/hoa-mobile.css">\n  <script src="${pre}assets/hoa-mobile.js" defer></script>\n</head>`);
     fs.writeFileSync(file, html);
   }
   console.log('mobile layer on', all.length, 'pages');
@@ -396,15 +398,14 @@ async function renderTemplate(name, templateGlobals) {
         .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-message-strip\.css">\n/, '')
         .replace(/[ \t]*<script src="\/?assets\/hoa-message-strip\.js" defer><\/script>\n/, '');
       if (f === 'shop.html') { fs.writeFileSync(file, page); continue; }   // shop: no strip (user, 2026-10-20)
-      // black product page (layout/theme.liquid gives the product template body.hoa-pdp-dark + hoa-pdp-dark.css)
-      page = page.replace(/<body(?: class="[^"]*")?>/, f === 'product.html' ? '<body class="hoa-pdp-dark">' : '<body class="hoa-shop-page">')
-        .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-pdp-dark\.css">\n/, '');
+      // body class for the V2 black product skin (layout/theme.liquid does the same; the styles only apply under html.hoa-v2)
+      page = page.replace(/<body(?: class="[^"]*")?>/, f === 'product.html' ? '<body class="hoa-pdp-dark">' : '<body class="hoa-shop-page">');
       const menuEnd = page.indexOf('</nav>', page.indexOf('<nav class="hoa-menu"'));
       if (menuEnd < 0) { console.warn('no header menu in', f); continue; }
       const at = menuEnd + '</nav>'.length;
       page = page.slice(0, at) + block + page.slice(at);
       const pre = (page.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
-      page = page.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-message-strip.css">\n  <script src="${pre}assets/hoa-message-strip.js" defer></script>\n${f === 'product.html' ? `  <link rel="stylesheet" href="${pre}assets/hoa-pdp-dark.css">\n` : ''}</head>`);
+      page = page.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-message-strip.css">\n  <script src="${pre}assets/hoa-message-strip.js" defer></script>\n</head>`);
       fs.writeFileSync(file, page);
     }
     console.log('message strip on product.html');

@@ -47,8 +47,6 @@
     <script src="{{ 'hoa-story.js' | asset_url }}" defer></script>
   {%- endif -%}
   {%- if template.name == 'product' -%}
-    {%- comment -%} black product page (user, 2026-10-20): token remap + overrides, loads after the PDP styles {%- endcomment -%}
-    {{ 'hoa-pdp-dark.css' | asset_url | stylesheet_tag }}
     {%- comment -%} the product cards in "You may also like" are the shop's cards {%- endcomment -%}
     {{ 'hoa-shop.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
@@ -69,6 +67,9 @@
     {{ 'hoa-account.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-account.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- comment -%} V2 (2026-10-20): transparent navbar + black product page, only under html.hoa-v2; hoa-version.js sets it {%- endcomment -%}
+  {{ 'hoa-v2-skin.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'hoa-version.js' | asset_url }}"></script>
   {%- comment -%} Phone composition layer: loads last so it can recompose any template below 768px {%- endcomment -%}
   {{ 'hoa-mobile.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'hoa-mobile.js' | asset_url }}" defer></script>
