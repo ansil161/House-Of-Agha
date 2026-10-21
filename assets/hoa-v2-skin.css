@@ -1,0 +1,174 @@
+/* ==========================================================================
+   V2 SKIN (user, 2026-10-20): transparent navbar + black product page, V2 only.
+   V1 is untouched: every rule is scoped to html.hoa-v2 (assets/hoa-version.js sets it).
+   BLACK PRODUCT PAGE: scoped to html.hoa-v2.hoa-pdp body (layout/theme.liquid adds it on the product template).
+   pdp.css loads inside the section, after this file, so everything here is prefixed
+   with the body class to win on specificity. Token remap first, then the surfaces
+   that hard-code white.
+   ========================================================================== */
+html.hoa-v2.hoa-pdp body {
+  --pdp-soft: #141210;
+  --pdp-line: rgba(246, 241, 231, 0.14);
+  --pdp-ink: #F4EFE6;
+  --pdp-ink-soft: #CFC8BC;
+  --pdp-muted: #968F84;
+  --pdp-sand: #1B1815;
+  --pdp-clay: #26221D;
+  --pdp-umber: #F4EFE6;
+  --pdp-success: #5BC08A;
+  --pdp-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.45);
+  --pdp-shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.5), 0 24px 48px rgba(0, 0, 0, 0.55);
+  --pc-gold: #D9B26A;
+  --pc-gold-line: rgba(217, 178, 106, 0.3);
+  --pc-ivory: #141210;
+  --cv-paper: #141210;
+  --cv-gold: #D9B26A;
+  --cv-gold-line: rgba(217, 178, 106, 0.3);
+  --cv-offer: #1B1815;
+  --cv-wine: #D9B26A;
+  --cv-wine-soft: rgba(217, 178, 106, 0.12);
+  --cv-peach: #1F1A14;
+  --cv-peach-line: rgba(217, 178, 106, 0.3);
+  --cv-peach-ink: #E8C98F;
+  --cv-save: #5BC08A;
+  --fl-bg: #0A0908;
+  --fl-ink: #F4EFE6;
+  --fl-soft: #CFC8BC;
+  --fl-muted: #968F84;
+  --fl-line: rgba(246, 241, 231, 0.14);
+  --fl-accent: #D9B26A;
+  background: #0A0908;
+  color: #F4EFE6;
+  color-scheme: dark;
+}
+
+/* ---- page + section surfaces ---- */
+html.hoa-v2.hoa-pdp body main,
+html.hoa-v2.hoa-pdp body .pdp,
+html.hoa-v2.hoa-pdp body .pdx,
+html.hoa-v2.hoa-pdp body .sn,
+html.hoa-v2.hoa-pdp body .hoa-pgal,
+html.hoa-v2.hoa-pdp body .hoa-reels,
+html.hoa-v2.hoa-pdp body .pdp-banner,
+html.hoa-v2.hoa-pdp body .hoa-pair,
+html.hoa-v2.hoa-pdp body .shopify-section { background-color: #0A0908; color: #F4EFE6; }
+
+/* ---- cards / panels / fields ---- */
+html.hoa-v2.hoa-pdp body .pdp-chip,
+html.hoa-v2.hoa-pdp body .pdp-tiles__btn,
+html.hoa-v2.hoa-pdp body .pdp-value,
+html.hoa-v2.hoa-pdp body .pdp-tile,
+html.hoa-v2.hoa-pdp body .pdp-offer,
+html.hoa-v2.hoa-pdp body .pdp-qty,
+html.hoa-v2.hoa-pdp body .pdp-deliver__field,
+html.hoa-v2.hoa-pdp body .pdp-review,
+html.hoa-v2.hoa-pdp body .pdx-rev__thumb,
+html.hoa-v2.hoa-pdp body .hoa-pgal__item,
+html.hoa-v2.hoa-pdp body .hoa-pair__card,
+html.hoa-v2.hoa-pdp body .hoa-pc,
+html.hoa-v2.hoa-pdp body .hoa-pc__visual,
+html.hoa-v2.hoa-pdp body .pdp details,
+html.hoa-v2.hoa-pdp body details { background-color: #141210; color: #F4EFE6; border-color: rgba(246, 241, 231, 0.14); }
+html.hoa-v2.hoa-pdp body .hoa-pc__bar { background-color: #141210; color: #F4EFE6; }
+
+/* ---- sticky dock, bag drawer ---- */
+html.hoa-v2.hoa-pdp body .pdp-dock { background-color: rgba(10, 9, 8, 0.92); color: #F4EFE6; border-color: rgba(246, 241, 231, 0.14); }
+html.hoa-v2.hoa-pdp body .cart-drawer,
+html.hoa-v2.hoa-pdp body .cart-drawer-footer,
+html.hoa-v2.hoa-pdp body .bag-ship,
+html.hoa-v2.hoa-pdp body .bag-cross,
+html.hoa-v2.hoa-pdp body .bag-paybar,
+html.hoa-v2.hoa-pdp body .bag-deal,
+html.hoa-v2.hoa-pdp body .cart-line,
+html.hoa-v2.hoa-pdp body .cart-line__media { background-color: #141210; color: #F4EFE6; border-color: rgba(246, 241, 231, 0.14); }
+
+/* ---- buttons: ivory on black (primary), ghost outlines (secondary) ---- */
+html.hoa-v2.hoa-pdp body .pdp-btn--primary,
+html.hoa-v2.hoa-pdp body .pdp-btn:not(.pdp-btn--ghost):not(.pdp-btn--secondary) { background-color: #F4EFE6; color: #0A0908; border-color: #F4EFE6; }
+html.hoa-v2.hoa-pdp body .pdp-btn--ghost,
+html.hoa-v2.hoa-pdp body .pdp-btn--secondary,
+html.hoa-v2.hoa-pdp body .vton-btn { background-color: rgba(246, 241, 231, 0.06); color: #F4EFE6; border-color: rgba(246, 241, 231, 0.28); }
+html.hoa-v2.hoa-pdp body .hoa-footer__submit { background-color: #F4EFE6; color: #0A0908; }
+
+/* ---- header: transparent over black, so ivory text + inverted logo ---- */
+html.hoa-v2.hoa-pdp body .hoa-header.header { color: #F4EFE6; }
+html.hoa-v2.hoa-pdp body .hoa-header .hoa-header__logo { filter: invert(1); }
+html.hoa-v2.hoa-pdp body .hoa-header .cart-count { background: #F4EFE6; color: #0A0908; }
+
+/* ---- text that hard-codes a dark colour (found by scanning the rendered page) ---- */
+html.hoa-v2.hoa-pdp body :is(.pdp-title, .pdp-price__amount, .pdp-deal__label, .pdp-deal__code-text, .pdp-deal__auto,
+  .sn__title, .sn-card__label, .sn-note__name, .pdx-heading, .pdx-rev__n, .pdx-rev__more, .pdx-rev__media-label,
+  .hoa-pair__names, .hoa-cprice__now, .hoa-pc__now, .hoa-pair__more, .editorial-label,
+  .cart-drawer-title, .cart-drawer-count, .cart-line__title, .cart-total-price, .cart-continue,
+  .bag-offer__title, .bag-cross__add, .bag-deals__title, .bag-deals__pill, .bag-paybar__now, .bag-ship__text,
+  .pdp-offer__name, .pdp-value, .pdp-chip, .bag-coupon__remove, .bag-badges__pay-label,
+  main h2, main h3, main dt, main dd, .cart-drawer b, .cart-drawer dt, .cart-drawer dd) { color: #F4EFE6; }
+html.hoa-v2.hoa-pdp body :is(.pdp-lede, .sn__lede, .sn__eyebrow, .pdx-rev__based, .cart-line__meta, .bag-offer__eyebrow,
+  .bag-paybar__was, .bag-paybar__save, .hoa-bundle__save) { color: #B9B2A6; }
+html.hoa-v2.hoa-pdp body .pdp-console__family { color: #6FCF9B; }
+/* struck-through old price stays muted */
+html.hoa-v2.hoa-pdp body :is(s, del, .pdp-price__was) { color: #7C766C; }
+
+/* ---- gradients, selected states, round buttons ---- */
+html.hoa-v2.hoa-pdp body .pdp-stage__track { background: radial-gradient(115% 85% at 50% 38%, #1B1815 0%, #121010 55%, #0A0908 100%); }
+html.hoa-v2.hoa-pdp body .pdp-deal--lead { background: linear-gradient(135deg, #2A1F12 0%, #17120D 70%); border-color: rgba(217, 178, 106, 0.35); }
+html.hoa-v2.hoa-pdp body .pdp-deal--auto { background: linear-gradient(135deg, #10261B 0%, #0D1712 70%); border-color: rgba(91, 192, 138, 0.35); }
+html.hoa-v2.hoa-pdp body .pdp-deal--auto :is(.pdp-deal__label, .pdp-deal__auto) { color: #6FCF9B; }
+html.hoa-v2.hoa-pdp body .pdp-deal--lead .pdp-deal__label { color: #E8C98F; }
+html.hoa-v2.hoa-pdp body .pdp-offer.is-selected { background-color: #10261B; border-color: #5BC08A; }
+html.hoa-v2.hoa-pdp body .pdp-value { background-color: #2A1F12; color: #E8C98F; }
+html.hoa-v2.hoa-pdp body :is(.pdp-icon-btn, .hoa-pc__like, .hoa-reel__shop, .hoa-reel__view, .cart-drawer-close, .pdp-expand) { background-color: rgba(246, 241, 231, 0.1); color: #F4EFE6; border-color: rgba(246, 241, 231, 0.22); }
+html.hoa-v2.hoa-pdp body :is(.pdp-icon-btn, .hoa-pc__like, .cart-drawer-close) svg { stroke: currentColor; }
+html.hoa-v2.hoa-pdp body .hoa-reel__thumb { background-color: #1B1815; }
+html.hoa-v2.hoa-pdp body .pdp-console .pdp-deal.pdp-deal--auto:not(.pdp-deal--lead),
+html.hoa-v2.hoa-pdp body .pdp-console .pdp-deal--auto { background: linear-gradient(135deg, #10261B 0%, #0D1712 70%); border-color: rgba(91, 192, 138, 0.35); }
+html.hoa-v2.hoa-pdp body .pdp-console .pdp-deal--auto::before,
+html.hoa-v2.hoa-pdp body .pdp-console .pdp-deal--auto::after { border-color: rgba(91, 192, 138, 0.35); }
+html.hoa-v2.hoa-pdp body .pdp-console .pdp-deal--auto .pdp-deal__auto { border-top-color: rgba(91, 192, 138, 0.35); color: #6FCF9B; }
+
+/* ---- scent notes (sections/fragrance-notes.liquid carries its own palette on .sn) ---- */
+html.hoa-v2.hoa-pdp body .sn {
+  --note-top: #211D18 !important;   --note-top-ink: #F1ECE2 !important;
+  --note-heart: #1D2A1F !important; --note-heart-ink: #CFE3BC !important;
+  --note-base: #2D2413 !important;  --note-base-ink: #EBCF92 !important;
+  --sn-ink: #F4EFE6 !important;
+  --sn-muted: #B9B2A6 !important;
+  --sn-bg: #0A0908 !important;
+}
+html.hoa-v2.hoa-pdp body .sn-card__body::before { background: radial-gradient(120% 90% at 30% 10%, rgba(255, 255, 255, 0.07), transparent 60%), var(--c-bg); box-shadow: inset 0 0 0 1px rgba(246, 241, 231, 0.12); }
+html.hoa-v2.hoa-pdp body .sn-note__pic { background-color: rgba(246, 241, 231, 0.1); }
+html.hoa-v2.hoa-pdp body .sn-size { background: #141210; color: #F4EFE6; border-color: rgba(246, 241, 231, 0.28); }
+html.hoa-v2.hoa-pdp body .sn-size[aria-pressed="true"] { background: #F4EFE6; color: #0A0908; border-color: #F4EFE6; }
+html.hoa-v2.hoa-pdp body .sn-add { color: #0A0908; }
+html.hoa-v2.hoa-pdp body .sn-add:hover:not(:disabled) { background: #fff; }
+html.hoa-v2.hoa-pdp body .sn-cta { background: rgba(10, 9, 8, 0.94); box-shadow: 0 -1px 0 rgba(246, 241, 231, 0.08); }
+html.hoa-v2.hoa-pdp body .sn-purchase { background: #141210; box-shadow: inset 0 0 0 1px rgba(246, 241, 231, 0.12), 0 18px 40px -28px rgba(0, 0, 0, 0.8); }
+html.hoa-v2.hoa-pdp body .sn__shadow { background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), transparent); }
+html.hoa-v2.hoa-pdp body :is(.hoa-reel__name, .hoa-reel__price) { color: #F4EFE6; }
+
+/* ---- studio product shots: white-background photos are blended with multiply, which turns them black on a dark
+   plate. Give every such photo a light paper plate to sit on (the multiply then melts the white into it). ---- */
+html.hoa-v2.hoa-pdp body :is(.hoa-pair__img, .pdp-offer__img, .hoa-pc__visual, .hoa-pc__img--product, .bag-deal img, .cart-line__media, .hoa-bundle__thumb) { background-color: #EFEAE0; }
+html.hoa-v2.hoa-pdp body .hoa-pc__visual { background-image: none; }
+
+/* ---- the V1 / V2 switch (assets/hoa-version.js) ---- */
+.hoa-vswitch { position: fixed; left: 14px; bottom: 14px; z-index: 90; display: flex; padding: 3px; border-radius: 999px; background: rgba(20, 18, 16, 0.88); box-shadow: 0 0 0 1px rgba(246, 241, 231, 0.18), 0 8px 24px rgba(0, 0, 0, 0.35); font: 600 11px/1 system-ui, sans-serif; letter-spacing: 0.08em; }
+.hoa-vswitch button { appearance: none; border: 0; background: transparent; color: #cfc8bc; padding: 8px 13px; border-radius: 999px; cursor: pointer; font: inherit; letter-spacing: inherit; }
+.hoa-vswitch button[aria-pressed="true"] { background: #F4EFE6; color: #0A0908; }
+/* reels shop strip: studio shot on a light plate, price (an inner span) in ivory */
+html.hoa-v2.hoa-pdp body .hoa-reel__thumb { background-color: #EFEAE0; }
+html.hoa-v2.hoa-pdp body .hoa-reel__price span { color: #F4EFE6; }
+html.hoa-v2.hoa-pdp body .hoa-reel__add { background-color: #F4EFE6; color: #0A0908; }
+html.hoa-v2.hoa-pdp body .hoa-reel__add span { color: #0A0908; }
+
+/* ==========================================================================
+   V2 (user, 2026-10-20): no typewriter message strip under the navbar ("Discover the Art of House of Agha"),
+   and the product page's navbar is transparent like every other page's. The strip's height variable goes to 0
+   so the content that clears the navbar (shop, product page) does not leave a gap where the strip was.
+   ========================================================================== */
+html.hoa-v2.hoa-pdp { --hoa-strip-h: 0px; }
+html.hoa-v2.hoa-pdp .hoa-strip-section { display: none !important; }
+html.hoa-v2.hoa-pdp:has(.hoa-strip) { --pdp-header-offset: 96px; }
+@media (max-width: 767px) { html.hoa-v2.hoa-pdp:has(.hoa-strip) { --pdp-header-offset: 72px; } }
+html.hoa-v2.hoa-pdp body .hoa-header.header,
+html.hoa-v2.hoa-pdp body .hoa-header.header.scrolled { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }

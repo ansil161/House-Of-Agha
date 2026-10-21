@@ -67,6 +67,10 @@
     {{ 'hoa-account.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'hoa-account.js' | asset_url }}" defer></script>
   {%- endif -%}
+  {%- comment -%} V2 (html.hoa-v2, set by hoa-version.js): black product page + per-bottle colour themes; every rule is scoped to V2 {%- endcomment -%}
+  {{ 'hoa-v2-skin.css' | asset_url | stylesheet_tag }}
+  {{ 'hoa-v2-pdp.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'hoa-version.js' | asset_url }}"></script>
   {%- comment -%} Phone composition layer: loads last so it can recompose any template below 768px {%- endcomment -%}
   {{ 'hoa-mobile.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'hoa-mobile.js' | asset_url }}" defer></script>

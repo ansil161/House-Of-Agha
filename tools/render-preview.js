@@ -372,9 +372,11 @@ async function renderTemplate(name, templateGlobals) {
     let html = fs.readFileSync(file, 'utf8')
       .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-mobile\.css">\n/, '')
       .replace(/[ \t]*<script src="\/?assets\/hoa-mobile\.js" defer><\/script>\n/, '')
+      .replace(/[ \t]*<link rel="stylesheet" href="\/?assets\/hoa-v2-(?:skin|pdp)\.css">\n/g, '')
+      .replace(/[ \t]*<script src="\/?assets\/hoa-version\.js"><\/script>\n/, '')
       .replace(/<meta name="viewport" content="[^"]*">/, '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">');
     const pre = (html.match(/<link rel="stylesheet" href="(\/?)assets\/hoa-home\.css">/) || ['', ''])[1];
-    html = html.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-mobile.css">\n  <script src="${pre}assets/hoa-mobile.js" defer></script>\n</head>`);
+    html = html.replace('</head>', () => `  <link rel="stylesheet" href="${pre}assets/hoa-v2-skin.css">\n  <link rel="stylesheet" href="${pre}assets/hoa-v2-pdp.css">\n  <script src="${pre}assets/hoa-version.js"></script>\n  <link rel="stylesheet" href="${pre}assets/hoa-mobile.css">\n  <script src="${pre}assets/hoa-mobile.js" defer></script>\n</head>`);
     fs.writeFileSync(file, html);
   }
   console.log('mobile layer on', all.length, 'pages');

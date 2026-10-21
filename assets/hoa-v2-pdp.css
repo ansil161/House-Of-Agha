@@ -1,0 +1,185 @@
+/* ==========================================================================
+   V2 PRODUCT PAGE · BOTTLE COLOUR THEME (user, 2026-10-21)
+   The whole page takes the colours of the bottle. Oud Fury = black smoked glass that
+   melts into amber and a copper pool at the base, gold foil on the label.
+   Scoped to html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) (assets/hoa-version.js sets all three), so V1 is untouched.
+   Loads after hoa-v2-skin.css (the plain black base) and beats it on specificity.
+   ========================================================================== */
+html.hoa-v2.hoa-pdp[data-bottle="oud-fury"] {
+  --bt-b0: #060403; --bt-b1: #130b05; --bt-b2: #1d1007; --bt-b3: #2b180a; --bt-b4: #3a1f0c; --bt-b5: #5a3212; --bt-b6: #5b2c12; --bt-b7: #6b3a14;
+  --bt-on: #1a0f06;
+  --bt-gold: #e6bd72; --bt-gold-hi: #f6dba4; --bt-f1: #f6dba4; --bt-f2: #e0a950; --bt-f3: #b9742a;
+  --bt-ink: #f7efe1; --bt-soft: #d9c9ae; --bt-muted: #a5927a;
+  --bt-n1: #f4e4c6; --bt-n2: #ffd89a; --bt-n3: #ffe3b0;
+  --bt-glow-rgb: 217, 153, 63; --bt-gold-rgb: 230, 189, 114; --bt-tint-rgb: 255, 214, 150; --bt-amber-rgb: 138, 80, 24; --bt-copper-rgb: 91, 44, 18;
+  --bt-dock-rgb: 29, 16, 7; --bt-dock2-rgb: 10, 6, 3;
+}
+/* AGHA BLUE: frosted cobalt glass, ice-white wood cap, silver foil label */
+html.hoa-v2.hoa-pdp[data-bottle="agha-blue"] {
+  --bt-b0: #020611; --bt-b1: #050d24; --bt-b2: #0a1840; --bt-b3: #0f2358; --bt-b4: #14307a; --bt-b5: #1b44a8; --bt-b6: #1a3a96; --bt-b7: #2456c8;
+  --bt-on: #05102c;
+  --bt-gold: #cfe0ff; --bt-gold-hi: #eef4ff; --bt-f1: #f2f7ff; --bt-f2: #bcd0f5; --bt-f3: #7f9de0;
+  --bt-ink: #f1f5ff; --bt-soft: #c3d1ee; --bt-muted: #8fa2c8;
+  --bt-n1: #dbe7ff; --bt-n2: #b4cdff; --bt-n3: #e6eeff;
+  --bt-glow-rgb: 70, 130, 255; --bt-gold-rgb: 190, 214, 255; --bt-tint-rgb: 170, 200, 255; --bt-amber-rgb: 40, 90, 210; --bt-copper-rgb: 20, 48, 140;
+  --bt-dock-rgb: 8, 20, 56; --bt-dock2-rgb: 3, 8, 22;
+}
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) {
+  --bt-glass: var(--bt-b0); --bt-deep: var(--bt-b1); --bt-umber: var(--bt-b3);
+  --bt-card: rgba(var(--bt-tint-rgb), 0.055); --bt-card-hi: rgba(var(--bt-tint-rgb), 0.1);
+  --bt-line: rgba(var(--bt-gold-rgb), 0.2); --bt-line-hi: rgba(var(--bt-gold-rgb), 0.42);
+  --bt-btn: linear-gradient(135deg, var(--bt-f1) 0%, var(--bt-f2) 48%, var(--bt-f3) 100%);
+  --bt-page: linear-gradient(180deg, var(--bt-b0) 0%, var(--bt-b1) 18%, var(--bt-b2) 42%, var(--bt-b4) 68%, var(--bt-b5) 88%, var(--bt-b3) 100%);
+}
+
+/* ---- the page: one long gradient, black glass at the top running down into amber ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]),
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body { background: var(--bt-b0); color: var(--bt-ink); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body { background: var(--bt-page); background-repeat: no-repeat; background-size: 100% 100%; }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(main, .pdp, .pdx, .sn, .hoa-pgal, .hoa-reels, .pdp-banner, .hoa-pair, .shopify-section) { background-color: transparent; background-image: none; color: var(--bt-ink); }
+/* glow that follows the bottle, behind the first screen */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 118vh; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(46% 38% at 68% 62%, rgba(var(--bt-glow-rgb), 0.32) 0%, rgba(var(--bt-amber-rgb), 0.14) 45%, transparent 72%),
+    radial-gradient(60% 50% at 12% 100%, rgba(var(--bt-copper-rgb), 0.45) 0%, transparent 70%);
+}
+
+/* ---- gallery stage + thumbnails ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-stage__track { background: radial-gradient(90% 70% at 50% 62%, var(--bt-b5) 0%, var(--bt-b3) 48%, var(--bt-b0) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-tile, .pdp-tiles__btn, .hoa-pgal__item) { border-color: var(--bt-line); background-color: var(--bt-card); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-tiles__btn.is-active, .pdp-tiles__btn[aria-current="true"], .pdp-tile.is-active) { border-color: var(--bt-gold); box-shadow: 0 0 0 1px var(--bt-gold), 0 10px 28px -10px rgba(var(--bt-glow-rgb), 0.55); }
+
+/* ---- cards, chips, fields: smoked-amber glass ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-chip, .pdp-qty, .pdp-deliver__field, .pdp-review, .pdx-rev__thumb, .hoa-pair__card, .pdp details, details, .pdp-value, .pdp-offer, .pdp-tiles__btn) {
+  background: linear-gradient(160deg, rgba(var(--bt-tint-rgb), 0.09) 0%, rgba(var(--bt-tint-rgb), 0.03) 100%);
+  border-color: var(--bt-line);
+  color: var(--bt-ink);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-offer.is-selected { background: linear-gradient(160deg, rgba(var(--bt-gold-rgb), 0.22), rgba(var(--bt-amber-rgb), 0.16)); border-color: var(--bt-gold); box-shadow: 0 12px 30px -16px rgba(var(--bt-glow-rgb), 0.6); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-chip[aria-pressed="true"],
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-chip.is-active { background: var(--bt-btn); color: var(--bt-on); border-color: transparent; }
+
+/* ---- type ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-title, .pdp-price__amount, main h2, main h3, .sn__title, .pdx-heading) { color: var(--bt-gold-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-title { text-shadow: 0 2px 30px rgba(var(--bt-glow-rgb), 0.35); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-lede, .sn__lede, .sn__eyebrow, .cart-line__meta, .pdx-rev__based) { color: var(--bt-soft); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-console__family, .editorial-label) { color: var(--bt-gold); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(s, del, .pdp-price__was) { color: var(--bt-muted); }
+
+/* ---- deal boxes: amber (offer) and the original green (save) ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-deal--lead { background: linear-gradient(135deg, var(--bt-b5) 0%, var(--bt-b2) 78%); border-color: var(--bt-line-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-deal--lead .pdp-deal__label { color: var(--bt-gold-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-value { background: linear-gradient(135deg, rgba(var(--bt-gold-rgb), 0.28), rgba(var(--bt-amber-rgb), 0.2)); color: var(--bt-gold-hi); }
+
+/* ---- buttons: gold-foil gradient primary, amber ghost ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-btn--primary, .pdp-btn:not(.pdp-btn--ghost):not(.pdp-btn--secondary), .sn-add, .hoa-reel__add, .hoa-footer__submit) {
+  background: var(--bt-btn); color: var(--bt-on); border-color: transparent;
+  box-shadow: 0 14px 34px -14px rgba(var(--bt-glow-rgb), 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-btn--primary, .sn-add):hover:not(:disabled) { filter: brightness(1.08) saturate(1.1); transform: translateY(-1px); background: var(--bt-btn); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-btn--ghost, .pdp-btn--secondary, .vton-btn) { background: rgba(var(--bt-tint-rgb), 0.06); color: var(--bt-ink); border-color: var(--bt-line-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-icon-btn, .hoa-pc__like, .pdp-expand) { background: rgba(var(--bt-tint-rgb), 0.1); border-color: var(--bt-line-hi); color: var(--bt-gold-hi); }
+
+/* ---- sticky dock + header ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-dock { background: linear-gradient(180deg, rgba(var(--bt-dock-rgb), 0.9), rgba(var(--bt-dock2-rgb), 0.96)); border-color: var(--bt-line); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-header.header { color: var(--bt-gold-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-header .cart-count { background: var(--bt-gold); color: var(--bt-on); }
+
+/* ---- scent notes: smoke / ember / resin, each one a slice of the bottle ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn {
+  --note-top: var(--bt-b3) !important;   --note-top-ink: var(--bt-n1) !important;
+  --note-heart: var(--bt-b5) !important; --note-heart-ink: var(--bt-n2) !important;
+  --note-base: var(--bt-b7) !important;  --note-base-ink: var(--bt-n3) !important;
+  --sn-ink: var(--bt-ink) !important; --sn-muted: var(--bt-soft) !important; --sn-bg: transparent !important;
+}
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-card__body::before { background: radial-gradient(120% 90% at 30% 10%, rgba(var(--bt-tint-rgb), 0.16), transparent 60%), var(--c-bg); box-shadow: inset 0 0 0 1px var(--bt-line); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-purchase { background: linear-gradient(160deg, var(--bt-b3), var(--bt-b1)); box-shadow: inset 0 0 0 1px var(--bt-line), 0 24px 50px -28px rgba(0, 0, 0, 0.85); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-size { background: rgba(var(--bt-tint-rgb), 0.06); color: var(--bt-ink); border-color: var(--bt-line-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-size[aria-pressed="true"] { background: var(--bt-btn); color: var(--bt-on); border-color: transparent; }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-cta { background: rgba(var(--bt-dock2-rgb), 0.94); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn__shadow { background: radial-gradient(closest-side, rgba(var(--bt-glow-rgb), 0.4), transparent); }
+
+/* ==========================================================================
+   SECTION BANDS: every section is a different slice of the bottle, joined by a gold hairline.
+   black glass -> smoked ember -> amber -> copper -> espresso -> black (footer)
+   ========================================================================== */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.hoa-bnf, .sn-section, .pdp-tf--claims, .hoa-pgal, .hoa-reels--product, .pdx-rev, .pdp-reviews, .pdp-faq, .hoa-pair, .pdp-related, .pdp-finale) { position: relative; isolation: isolate; }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.sn-section, .pdp-tf--claims, .hoa-pgal, .hoa-reels--product, .pdx-rev, .pdp-reviews, .pdp-faq, .hoa-pair, .pdp-related, .pdp-finale)::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--bt-gold-rgb), 0.7) 50%, transparent 100%);
+}
+
+/* benefits ticker: a strip of real gold foil */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-bnf { background: linear-gradient(100deg, var(--bt-f3) 0%, var(--bt-f1) 28%, var(--bt-f2) 52%, var(--bt-f1) 74%, var(--bt-f3) 100%); color: var(--bt-on); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-bnf :is(.hoa-bnf__text, .hoa-bnf__credit, .hoa-bnf__credit a) { color: var(--bt-on); }
+
+/* scent notes: black glass with an ember glow rising from the base */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .sn-section { background: radial-gradient(70% 55% at 50% 100%, rgba(var(--bt-glow-rgb), 0.3) 0%, transparent 70%), linear-gradient(180deg, var(--bt-b0) 0%, var(--bt-b1) 55%, var(--bt-b3) 100%); }
+
+/* claims row: espresso with gold icons */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-tf--claims { background: linear-gradient(180deg, var(--bt-b3) 0%, var(--bt-b2) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-tf--claims :is(svg, [class*="icon"]) { color: var(--bt-gold); stroke: currentColor; }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-tf--claims :is(p, span, h3, h4, b, strong, [class*="label"], [class*="title"]) { color: var(--bt-gold-hi); }
+
+/* gallery: the amber of the juice */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pgal { background: radial-gradient(60% 80% at 80% 0%, rgba(var(--bt-glow-rgb), 0.28) 0%, transparent 65%), linear-gradient(180deg, var(--bt-b2) 0%, var(--bt-b4) 55%, var(--bt-b5) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pgal__item { border-color: var(--bt-line-hi); box-shadow: 0 22px 44px -24px rgba(0, 0, 0, 0.8); }
+
+/* product films: black glass again, gold side glow */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-reels--product { background: radial-gradient(45% 60% at 0% 50%, rgba(var(--bt-glow-rgb), 0.2) 0%, transparent 70%), radial-gradient(45% 60% at 100% 50%, rgba(var(--bt-glow-rgb), 0.16) 0%, transparent 70%), linear-gradient(180deg, var(--bt-b5) 0%, var(--bt-b0) 22%, var(--bt-b0) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-reels--product :is(h2, h3) em { color: var(--bt-gold); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-reels--product :is([class*="eyebrow"], [class*="kicker"]) { color: var(--bt-gold); }
+
+/* reviews: warm copper, gold stars + foil button */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdx-rev { background: linear-gradient(180deg, var(--bt-b0) 0%, var(--bt-b4) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-reviews { background: linear-gradient(180deg, var(--bt-b4) 0%, var(--bt-b6) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdx-rev, .pdp-reviews) :is([class*="star"], [class*="stars"]) { color: var(--bt-gold); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdx-rev, .pdp-reviews) [class*="bar"] :is(span, i) { background: var(--bt-btn); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdx-rev, .pdp-reviews) :is(button, .pdp-btn, a[class*="write"]) { background: rgba(var(--bt-gold-rgb), 0.12); color: var(--bt-gold-hi); border: 1px solid var(--bt-line-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdx-rev, .pdp-reviews) hr { border-color: var(--bt-line-hi); }
+
+/* FAQ: dark roast, gold plus buttons */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-faq { background: linear-gradient(180deg, var(--bt-b6) 0%, var(--bt-b3) 45%, var(--bt-b2) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-faq details { background: linear-gradient(160deg, rgba(var(--bt-tint-rgb), 0.08), rgba(var(--bt-tint-rgb), 0.02)); border: 1px solid var(--bt-line); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-faq details[open] { border-color: var(--bt-gold); box-shadow: 0 16px 34px -20px rgba(var(--bt-glow-rgb), 0.55); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-faq summary :is(svg, span[class*="icon"], i) { background: var(--bt-btn); color: var(--bt-on); border-radius: 50%; }
+
+/* pair it with: amber to copper, gold bundle card */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pair { background: radial-gradient(60% 70% at 20% 30%, rgba(var(--bt-glow-rgb), 0.28) 0%, transparent 65%), linear-gradient(180deg, var(--bt-b2) 0%, var(--bt-b7) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pair__card { background: linear-gradient(135deg, rgba(var(--bt-gold-rgb), 0.16), rgba(var(--bt-amber-rgb), 0.22)); border: 1px solid var(--bt-line-hi); box-shadow: 0 26px 50px -28px rgba(0, 0, 0, 0.8); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pair :is(.hoa-pair__save, [class*="save"]) { color: var(--bt-gold-hi); }
+
+/* you may also like: black glass with a gold crown glow */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-related { background: radial-gradient(60% 40% at 50% 0%, rgba(var(--bt-glow-rgb), 0.22) 0%, transparent 70%), linear-gradient(180deg, var(--bt-b7) 0%, var(--bt-on) 28%, var(--bt-b0) 100%); }
+
+/* finale (Discovery Set): ember glow dropping into the black footer */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-finale { background: radial-gradient(70% 60% at 30% 50%, rgba(var(--bt-glow-rgb), 0.3) 0%, transparent 70%), linear-gradient(180deg, var(--bt-b0) 0%, var(--bt-b4) 70%, var(--bt-b0) 100%); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-banner { background: linear-gradient(135deg, var(--bt-b6) 0%, var(--bt-b2) 100%); border: 1px solid var(--bt-line-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-banner :is(h2, h3, .pdp-heading) { color: var(--bt-gold-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-banner :is([class*="eyebrow"], [class*="kicker"]) { color: var(--bt-gold); }
+
+/* gold section eyebrows everywhere */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body main :is([class*="eyebrow"], [class*="kicker"], .pdp-heading__eyebrow, .pdp-faq__eyebrow) { color: var(--bt-gold); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-benefit__icon { color: var(--bt-gold); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdp-benefit__icon img { filter: brightness(0) saturate(100%) invert(78%) sepia(45%) saturate(560%) hue-rotate(2deg) brightness(98%); }
+
+/* ---- dividers + selection ---- */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(hr, .pdp-benefits, .pdp-delivery) { border-color: var(--bt-line); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) ::selection { background: var(--bt-gold); color: var(--bt-on); }
+
+/* the V1 / V2 pill picks up the same gold */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) .hoa-vswitch button[aria-pressed="true"] { background: var(--bt-btn); color: var(--bt-on); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdp-btn, .sn-add) { transition: none; }
+}
+
+/* leftover dark buttons: bundle add + write a review get the gold foil / gold outline */
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pair :is(button, [class*="add"]):not([class*="save"]) { background: var(--bt-btn); color: var(--bt-on); border-color: transparent; box-shadow: 0 14px 34px -14px rgba(var(--bt-glow-rgb), 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body :is(.pdx-rev, .pdp-reviews) :is([class*="write"], [class*="Write"]) { background: rgba(var(--bt-gold-rgb), 0.12) !important; color: var(--bt-gold-hi) !important; border: 1px solid var(--bt-line-hi) !important; }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .hoa-pair :is(a, .hoa-pair__more) { color: var(--bt-gold-hi); }
+html.hoa-v2.hoa-pdp:is([data-bottle="oud-fury"], [data-bottle="agha-blue"]) body .pdx-btn { background: var(--bt-btn); color: var(--bt-on); border-color: transparent; box-shadow: 0 14px 34px -14px rgba(var(--bt-glow-rgb), 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.45); }
