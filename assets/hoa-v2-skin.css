@@ -170,5 +170,45 @@ html.hoa-v2.hoa-pdp { --hoa-strip-h: 0px; }
 html.hoa-v2.hoa-pdp .hoa-strip-section { display: none !important; }
 html.hoa-v2.hoa-pdp:has(.hoa-strip) { --pdp-header-offset: 96px; }
 @media (max-width: 767px) { html.hoa-v2.hoa-pdp:has(.hoa-strip) { --pdp-header-offset: 72px; } }
-html.hoa-v2.hoa-pdp body .hoa-header.header,
-html.hoa-v2.hoa-pdp body .hoa-header.header.scrolled { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
+/* V2 nav: always a floating glass pill (no dependency on the scrolled class) */
+html.hoa-v2 body .hoa-header.header {
+  left: 50%;
+  right: auto;
+  width: 100%;
+  height: 76px;
+  margin-top: 0;
+  transform: translateX(-50%);
+  border-radius: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  transition: width 0.6s var(--hoa-ease), height 0.6s var(--hoa-ease), margin 0.6s var(--hoa-ease), border-radius 0.6s var(--hoa-ease), background-color 0.5s var(--hoa-ease), box-shadow 0.5s var(--hoa-ease), color 0.5s var(--hoa-ease);
+}
+/* scrolled: shrinks into a rounder floating pill */
+html.hoa-v2.hoa-scrolled body .hoa-header.header {
+  width: min(1180px, calc(100% - 32px));
+  height: 64px;
+  margin-top: 14px;
+  border-radius: 999px;
+}
+html.hoa-v2 body .hoa-header.header .hoa-header__inner { padding-left: 28px; padding-right: 28px; }
+html.hoa-v2 body .hoa-header.header .hoa-header__logo { max-height: 34px; width: auto; }
+html.hoa-v2 body .hoa-header .hoa-header__nav a { letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; font-weight: 500; opacity: 0.88; transition: opacity 0.3s; }
+html.hoa-v2 body .hoa-header .hoa-header__nav a:hover,
+html.hoa-v2 body .hoa-header .hoa-header__nav a[aria-current="page"] { opacity: 1; }
+/* over black (product page) the glass is smoky instead of milky */
+html.hoa-v2.hoa-pdp body .hoa-header.header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+/* full-screen menu: drop the glass */
+html.hoa-v2.hoa-menu-open body .hoa-header.header,
+html.hoa-v2 .hoa-menu-open .hoa-header.header { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: transparent; box-shadow: none; }
+@media (max-width: 767px) {
+  html.hoa-v2 body .hoa-header.header { height: 64px; }
+  html.hoa-v2.hoa-scrolled body .hoa-header.header { height: 56px; margin-top: 10px; width: calc(100% - 20px); }
+  html.hoa-v2 body .hoa-header.header .hoa-header__inner { padding-left: 16px; padding-right: 16px; }
+}

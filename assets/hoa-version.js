@@ -12,6 +12,10 @@
   root.classList.toggle('hoa-v2', v === '2');
   var h = /(?:\/products\/|[?&]p=)([a-z0-9-]+)/.exec(location.pathname + location.search);
   if (h || /product\.html$/.test(location.pathname)) { root.classList.add('hoa-pdp'); root.setAttribute('data-bottle', h ? h[1] : 'oud-fury'); }
+  /* html.hoa-scrolled once the page leaves the top: the V2 nav shrinks from a full-width bar into a rounder pill */
+  function tick() { root.classList.toggle('hoa-scrolled', (window.pageYOffset || root.scrollTop) > 24); }
+  window.addEventListener('scroll', tick, { passive: true });
+  tick();
   function pill() {
     var box = document.createElement('div');
     box.className = 'hoa-vswitch';
